@@ -1,0 +1,32 @@
+{
+    "compilerOptions": {
+        "target": "esnext",
+        "moduleResolution": "node",
+        "module": "esnext",
+        "strict": true,
+        "alwaysStrict": true,
+        "outDir": "./dist",
+        "rootDir": "./",
+        "baseUrl": "./src",
+        "declaration": true,
+        "declarationMap": true,
+        "declarationDir": "./dist/types",
+        "allowJs": false,
+        // "noEmit": true ,   
+        "removeComments": false,
+        "forceConsistentCasingInFileNames": true,
+        "esModuleInterop": true,
+        "lib": [
+            "DOM",
+        ],
+        "paths": {
+            "~/*": ["./*"]
+        }
+    },
+    "include": [
+        "src",
+    ],
+    "exclude": [
+        "src/**/*.test.ts",
+    ]
+}
