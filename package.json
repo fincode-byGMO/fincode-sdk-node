@@ -19,5 +19,6 @@
   },
   "scripts": {
     "lint": "eslint . --ext .ts,.js"
-  }
+  },
+  "dependencies": {}
 }
