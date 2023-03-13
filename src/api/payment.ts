@@ -60,7 +60,7 @@ class Payment {
                         resolve(payment)
                     } else {
                         try {
-                            const errRes = (JSON.parse(json) as APIRawErrorResponse)
+                            const errRes = json as APIRawErrorResponse
                             const err = formatErrorResponse(errRes)
                             reject(err)
                         } catch (e) {
@@ -111,7 +111,7 @@ class Payment {
                         resolve(list)
                     } else {
                         try {
-                            const errRes = (JSON.parse(json) as APIRawErrorResponse)
+                            const errRes = json as APIRawErrorResponse
                             const err = formatErrorResponse(errRes)
                             reject(err)
                         } catch (e) {
@@ -159,7 +159,7 @@ class Payment {
                         resolve(payment)
                     } else {
                         try {
-                            const errRes = (JSON.parse(json) as APIRawErrorResponse)
+                            const errRes = json as APIRawErrorResponse
                             const err = formatErrorResponse(errRes)
                             reject(err)
                         } catch (e) {
@@ -208,7 +208,7 @@ class Payment {
                         resolve(payment)
                     } else {
                         try {
-                            const errRes = (JSON.parse(json) as APIRawErrorResponse)
+                            const errRes = json as APIRawErrorResponse
                             const err = formatErrorResponse(errRes)
                             reject(err)
                         } catch (e) {
@@ -257,7 +257,7 @@ class Payment {
                         resolve(payment)
                     } else {
                         try {
-                            const errRes = (JSON.parse(json) as APIRawErrorResponse)
+                            const errRes = json as APIRawErrorResponse
                             const err = formatErrorResponse(errRes)
                             reject(err)
                         } catch (e) {
@@ -306,7 +306,7 @@ class Payment {
                         resolve(payment)
                     } else {
                         try {
-                            const errRes = (JSON.parse(json) as APIRawErrorResponse)
+                            const errRes = json as APIRawErrorResponse
                             const err = formatErrorResponse(errRes)
                             reject(err)
                         } catch (e) {
@@ -355,7 +355,7 @@ class Payment {
                         resolve(payment)
                     } else {
                         try {
-                            const errRes = (JSON.parse(json) as APIRawErrorResponse)
+                            const errRes = json as APIRawErrorResponse
                             const err = formatErrorResponse(errRes)
                             reject(err)
                         } catch (e) {
@@ -405,7 +405,7 @@ class Payment {
                         resolve(payment)
                     } else {
                         try {
-                            const errRes = (JSON.parse(json) as APIRawErrorResponse)
+                            const errRes = json as APIRawErrorResponse
                             const err = formatErrorResponse(errRes)
                             reject(err)
                         } catch (e) {
@@ -454,7 +454,7 @@ class Payment {
                         resolve(payment)
                     } else {
                         try {
-                            const errRes = (JSON.parse(json) as APIRawErrorResponse)
+                            const errRes = json as APIRawErrorResponse
                             const err = formatErrorResponse(errRes)
                             reject(err)
                         } catch (e) {
@@ -503,7 +503,7 @@ class Payment {
                         resolve(res)
                     } else {
                         try {
-                            const errRes = (JSON.parse(json) as APIRawErrorResponse)
+                            const errRes = json as APIRawErrorResponse
                             const err = formatErrorResponse(errRes)
                             reject(err)
                         } catch (e) {
@@ -551,7 +551,7 @@ class Payment {
                         resolve(res)
                     } else {
                         try {
-                            const errRes = (JSON.parse(json) as APIRawErrorResponse)
+                            const errRes = json as APIRawErrorResponse
                             const err = formatErrorResponse(errRes)
                             reject(err)
                         } catch (e) {
@@ -600,7 +600,7 @@ class Payment {
                         resolve(payment)
                     } else {
                         try {
-                            const errRes = (JSON.parse(json) as APIRawErrorResponse)
+                            const errRes = json as APIRawErrorResponse
                             const err = formatErrorResponse(errRes)
                             reject(err)
                         } catch (e) {

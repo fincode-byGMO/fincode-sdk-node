@@ -1,18 +1,18 @@
 import {
     APIRawErrorResponse,
-    CardObject,
-    DeletingCardResponse,
+    DeletingPlanResponse,
     ListResponse,
-    RegisteringCardRequest,
-    UpdatingCardRequest,
+    PlanObject,
+    RegisteringPlanRequest,
+    RetrievingPlantListPagination,
+    UpdatingPlanRequest,
     createUnknownError,
     formatErrorResponse
 } from "../types"
 import { FincodeConfig } from "./fincode"
 import { createFincodeRequest } from "./http"
 
-class Card {
-
+class Plan {
     private readonly _config: FincodeConfig
 
     constructor(config: FincodeConfig) {
@@ -20,24 +20,23 @@ class Card {
     }
 
     /**
-     * **Create a card**
+     * **Register a plan**
      * 
-     * corresponding to `POST /v1/customers/:customer_id/cards`
+     * corresponding to `POST /v1/plans`
      * 
      * if rejected, the error is a instance of `FincodeError`
      */
     public register(
-        customerId: string,
-        body: RegisteringCardRequest,
-        header: Parameters<typeof createFincodeRequest>[4]
-    ): Promise<CardObject> {
+        body: RegisteringPlanRequest,
+        headers: Parameters<typeof createFincodeRequest>[4],
+    ): Promise<PlanObject> {
         return new Promise((resolve, reject) => {
             const req = createFincodeRequest(
                 this._config,
                 "POST",
-                `/v1/customers/${customerId}/cards`,
+                `/v1/plans`,
                 JSON.stringify(body),
-                header,
+                headers,
             )
 
             req.on("response", res => {
@@ -48,9 +47,9 @@ class Card {
                 res.on("end", () => {
                     const json = JSON.parse(body.join(""))
                     if (res.statusCode === 200) {
-                        const payment = json as CardObject
+                        const plan = json as PlanObject
 
-                        resolve(payment)
+                        resolve(plan)
                     } else {
                         try {
                             const errRes = json as APIRawErrorResponse
@@ -69,23 +68,24 @@ class Card {
     }
 
     /**
-     * **Retrieve card list of a customer**
+     * **Retrieve plan list**
      * 
-     * corresponding to `GET /v1/customers/:customer_id/cards`
+     * corresponding to `GET /v1/plans`
      * 
      * if rejected, the error is a instance of `FincodeError`
      */
     public retrieveList(
-        customerId: string,
-        header: Parameters<typeof createFincodeRequest>[4]
-    ): Promise<ListResponse<CardObject>> {
+        pagination: RetrievingPlantListPagination,
+        headers: Parameters<typeof createFincodeRequest>[4],
+    ): Promise<ListResponse<PlanObject>> {
         return new Promise((resolve, reject) => {
             const req = createFincodeRequest(
                 this._config,
                 "GET",
-                `/v1/customers/${customerId}/cards`,
+                `/v1/plans`,
                 undefined,
-                header,
+                headers,
+                { pagination: pagination },
             )
 
             req.on("response", res => {
@@ -96,9 +96,9 @@ class Card {
                 res.on("end", () => {
                     const json = JSON.parse(body.join(""))
                     if (res.statusCode === 200) {
-                        const payment = json as ListResponse<CardObject>
+                        const list = json as ListResponse<PlanObject>
 
-                        resolve(payment)
+                        resolve(list)
                     } else {
                         try {
                             const errRes = json as APIRawErrorResponse
@@ -117,24 +117,23 @@ class Card {
     }
 
     /**
-     * **Retrieve a card of customer**
+     * **Retrieve a plan**
      * 
-     * corresponding to `GET /v1/customers/:customer_id/cards/:id`
+     * corresponding to `GET /v1/plans/:id`
      * 
      * if rejected, the error is a instance of `FincodeError`
      */
     public retrieve(
-        customerId: string,
         id: string,
-        header: Parameters<typeof createFincodeRequest>[4]
-    ): Promise<CardObject> {
+        headers: Parameters<typeof createFincodeRequest>[4],
+    ): Promise<PlanObject> {
         return new Promise((resolve, reject) => {
             const req = createFincodeRequest(
                 this._config,
                 "GET",
-                `/v1/customers/${customerId}/cards/${id}`,
+                `/v1/plans/${id}`,
                 undefined,
-                header,
+                headers,
             )
 
             req.on("response", res => {
@@ -145,9 +144,9 @@ class Card {
                 res.on("end", () => {
                     const json = JSON.parse(body.join(""))
                     if (res.statusCode === 200) {
-                        const payment = json as CardObject
+                        const plan = json as PlanObject
 
-                        resolve(payment)
+                        resolve(plan)
                     } else {
                         try {
                             const errRes = json as APIRawErrorResponse
@@ -166,25 +165,24 @@ class Card {
     }
 
     /**
-     * **Update a card of customer**
+     * **Update a plan**
      * 
-     * corresponding to `PUT /v1/customers/:customer_id/cards/:id`
+     * corresponding to `PUT /v1/plans/:id`
      * 
      * if rejected, the error is a instance of `FincodeError`
      */
     public update(
-        customerId: string,
         id: string,
-        body: UpdatingCardRequest,
-        header: Parameters<typeof createFincodeRequest>[4]
-    ): Promise<CardObject> {
+        body: UpdatingPlanRequest,
+        headers: Parameters<typeof createFincodeRequest>[4],
+    ): Promise<PlanObject> {
         return new Promise((resolve, reject) => {
             const req = createFincodeRequest(
                 this._config,
                 "PUT",
-                `/v1/customers/${customerId}/cards/${id}`,
+                `/v1/plans/${id}`,
                 JSON.stringify(body),
-                header,
+                headers,
             )
 
             req.on("response", res => {
@@ -195,9 +193,9 @@ class Card {
                 res.on("end", () => {
                     const json = JSON.parse(body.join(""))
                     if (res.statusCode === 200) {
-                        const payment = json as CardObject
+                        const plan = json as PlanObject
 
-                        resolve(payment)
+                        resolve(plan)
                     } else {
                         try {
                             const errRes = json as APIRawErrorResponse
@@ -216,24 +214,23 @@ class Card {
     }
 
     /**
-     * **Delete a card of customer**
+     * **Delete a plan**
      * 
-     * corresponding to `DELETE /v1/customers/:customer_id/cards/:id`
+     * corresponding to `DELETE /v1/plans/:id`
      * 
      * if rejected, the error is a instance of `FincodeError`
      */
     public delete(
-        customerId: string,
         id: string,
-        header: Parameters<typeof createFincodeRequest>[4]
-    ): Promise<DeletingCardResponse> {
+        headers: Parameters<typeof createFincodeRequest>[4],
+    ): Promise<DeletingPlanResponse> {
         return new Promise((resolve, reject) => {
             const req = createFincodeRequest(
                 this._config,
                 "DELETE",
-                `/v1/customers/${customerId}/cards/${id}`,
+                `/v1/plans/${id}`,
                 undefined,
-                header,
+                headers,
             )
 
             req.on("response", res => {
@@ -244,9 +241,9 @@ class Card {
                 res.on("end", () => {
                     const json = JSON.parse(body.join(""))
                     if (res.statusCode === 200) {
-                        const payment = json as DeletingCardResponse
+                        const plan = json as DeletingPlanResponse
 
-                        resolve(payment)
+                        resolve(plan)
                     } else {
                         try {
                             const errRes = json as APIRawErrorResponse
@@ -264,5 +261,4 @@ class Card {
         })
     }
 }
-
-export { Card }
+export { Plan }

@@ -19,7 +19,7 @@ export interface Pagination {
      */
     sort?: Sort[] | null
 
-    buildQuery(): URLSearchParams
+    buildParams(): URLSearchParams
 }
 
 export type Sort = {

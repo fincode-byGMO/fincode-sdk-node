@@ -228,7 +228,7 @@ export class RetrievingCustomerListPagination implements Pagination {
         }
     }
 
-    buildQuery(): URLSearchParams {
+    buildParams(): URLSearchParams {
         const params = new URLSearchParams()
 
         Object.entries(this)

@@ -1,4 +1,4 @@
-import { Pagination } from "./pagination"
+import { Pagination, Sort } from "./pagination"
 
 export type PlanObject = {
     /**
@@ -76,7 +76,7 @@ export type PlanObject = {
 /**
  * Pagination object of Retrieving a list of plans. (used for `GET /v1/plans`)
  */
-export type RetrievingPlantListPagination = Pagination & {
+export class RetrievingPlantListPagination implements Pagination {
     /**
      * Plan Name.
      */
@@ -115,6 +115,44 @@ export type RetrievingPlantListPagination = Pagination & {
      * Format: `yyyy/MM/dd`
      */
     update_date_to?: string | null
+
+    /**
+     * Maximum number of items to return.
+     */
+    limit?: string | null
+
+    /**
+     * Number of this page.
+     */
+    page?: string | null
+
+    /**
+     * Flag to retrieve only the total number of items.
+     */
+    count_only?: boolean | null
+
+    /**
+     * Sort 
+     */
+    sort?: Sort[] | null
+
+    buildParams(): URLSearchParams {
+        const params = new URLSearchParams()
+
+        Object.entries(this)
+            .filter(([_, value]) => value !== undefined)
+            .map<[string, string]>(([key, value]) => {
+                if (key === "sort") {
+                    return [key, (value as Sort[]).map((sort) => `${sort.key} ${sort.order}`).join(",")]
+                } else {
+                    return [key, value as string]
+                }
+            })
+            .forEach(([key, value]) => params.append(key, value))
+
+
+        return params
+    }
 }
 
 /**
@@ -197,4 +235,78 @@ export type UpdatingPlanRequest = {
      * Interval count.
      */
     interval_count?: 1 | 2 | 3 | 6 | null
+}
+
+/**
+ * Response object of Deleting a plan. (used for `DELETE /v1/plans/{plan_id}`)
+ */
+export type DeletingPlanResponse = {
+    /**
+     * Plan ID.
+     */
+    id: string
+
+    /**
+     * Plan name.
+     */
+    plan_name: string
+
+    /**
+     * Description of this plan.
+     */
+    description?: string | null
+
+    /**
+     * Amount
+     */
+    amount: number
+
+    /**
+     * Tax
+     */
+    tax: number
+
+    /**
+     * total amount
+     */
+    total_amount: number
+
+    /**
+     * Interval pattern.
+     * 
+     * - `month`: Monthly
+     * - `year`: Yearly
+     */
+    interval_pattern: "month" | "year"
+
+    /**
+     * Interval count.
+     * 
+     * How many intervals are there in a cycle.
+     */
+    interval_count: 1 | 2 | 3 | 6
+
+    /**
+     * Whether this plan is used or not.
+     */
+    used_flag: "0" | "1"
+
+    /**
+     * Whether this plan is deleted or not.
+     */
+    delete_flag: "0" | "1"
+
+    /**
+     * Date this plan was created.
+     * 
+     * Format: `yyyy/MM/dd HH:mm:ss.SSS`
+     */
+    created: string
+
+    /**
+     * Date this plan was updated.
+     * 
+     * Format: `yyyy/MM/dd HH:mm:ss.SSS`
+     */
+    updated?: string | null
 }
