@@ -1,18 +1,17 @@
 import {
     APIRawErrorResponse,
-    CreatingCustomerRequest,
-    CustomerObject,
-    DeletingCustomerResponse,
+    CardObject,
+    DeletingCardResponse,
     ListResponse,
-    RetrievingCustomerListPagination,
-    UpdatingCustomerRequest,
+    RegisteringCardRequest,
+    UpdatingCardRequest,
     createUnknownError,
     formatErrorResponse
 } from "../types"
 import { FincodeConfig } from "./fincode"
 import { createFincodeRequest } from "./http"
 
-class Customer {
+class Card {
 
     private readonly _config: FincodeConfig
 
@@ -21,21 +20,22 @@ class Customer {
     }
 
     /**
-     * **Create a customer**
+     * **Create a card**
      * 
-     * corresponding to `POST /v1/customers`
+     * corresponding to `POST /v1/customers/:customer_id/cards`
      * 
      * if rejected, the error is a instance of `FincodeError`
      */
-    public create(
-        body: CreatingCustomerRequest,
+    public register(
+        customerId: string,
+        body: RegisteringCardRequest,
         header: Parameters<typeof createFincodeRequest>[4]
-    ): Promise<CustomerObject> {
+    ): Promise<CardObject> {
         return new Promise((resolve, reject) => {
             const req = createFincodeRequest(
                 this._config,
                 "POST",
-                `/v1/customers`,
+                `/v1/customers/${customerId}/cards`,
                 JSON.stringify(body),
                 header,
             )
@@ -48,7 +48,7 @@ class Customer {
                 res.on("end", () => {
                     const json = JSON.parse(body.join(""))
                     if (res.statusCode === 200) {
-                        const payment = json as CustomerObject
+                        const payment = json as CardObject
 
                         resolve(payment)
                     } else {
@@ -69,24 +69,23 @@ class Customer {
     }
 
     /**
-     * **Retrieve customer list**
+     * **Retrieve card list of a customer**
      * 
-     * corresponding to `GET /v1/customers`
+     * corresponding to `GET /v1/customers/:customer_id/cards`
      * 
      * if rejected, the error is a instance of `FincodeError`
      */
     public retrieveList(
-        pagination?: RetrievingCustomerListPagination,
-        header?: Parameters<typeof createFincodeRequest>[4]
-    ): Promise<ListResponse<CustomerObject>> {
+        customerId: string,
+        header: Parameters<typeof createFincodeRequest>[4]
+    ): Promise<ListResponse<CardObject>> {
         return new Promise((resolve, reject) => {
             const req = createFincodeRequest(
                 this._config,
                 "GET",
-                `/v1/customers`,
+                `/v1/customers/${customerId}/cards`,
                 undefined,
                 header,
-                { pagination: pagination }
             )
 
             req.on("response", res => {
@@ -97,7 +96,7 @@ class Customer {
                 res.on("end", () => {
                     const json = JSON.parse(body.join(""))
                     if (res.statusCode === 200) {
-                        const payment = json as ListResponse<CustomerObject>
+                        const payment = json as ListResponse<CardObject>
 
                         resolve(payment)
                     } else {
@@ -118,21 +117,22 @@ class Customer {
     }
 
     /**
-     * **Retrieve a customer**
+     * **Retrieve a card of customer**
      * 
-     * corresponding to `GET /v1/customers/:id`
+     * corresponding to `GET /v1/customers/:customer_id/cards/:id`
      * 
      * if rejected, the error is a instance of `FincodeError`
      */
     public retrieve(
+        customerId: string,
         id: string,
-        header?: Parameters<typeof createFincodeRequest>[4]
-    ): Promise<CustomerObject> {
+        header: Parameters<typeof createFincodeRequest>[4]
+    ): Promise<CardObject> {
         return new Promise((resolve, reject) => {
             const req = createFincodeRequest(
                 this._config,
                 "GET",
-                `/v1/customers/${id}`,
+                `/v1/customers/${customerId}/cards/${id}`,
                 undefined,
                 header,
             )
@@ -145,7 +145,7 @@ class Customer {
                 res.on("end", () => {
                     const json = JSON.parse(body.join(""))
                     if (res.statusCode === 200) {
-                        const payment = json as CustomerObject
+                        const payment = json as CardObject
 
                         resolve(payment)
                     } else {
@@ -166,22 +166,23 @@ class Customer {
     }
 
     /**
-     * **Update a customer**
+     * **Update a card of customer**
      * 
-     * corresponding to `PUT /v1/customers/:id`
+     * corresponding to `PUT /v1/customers/:customer_id/cards/:id`
      * 
      * if rejected, the error is a instance of `FincodeError`
      */
     public update(
+        customerId: string,
         id: string,
-        body: UpdatingCustomerRequest,
-        header?: Parameters<typeof createFincodeRequest>[4]
-    ): Promise<CustomerObject> {
+        body: UpdatingCardRequest,
+        header: Parameters<typeof createFincodeRequest>[4]
+    ): Promise<CardObject> {
         return new Promise((resolve, reject) => {
             const req = createFincodeRequest(
                 this._config,
                 "PUT",
-                `/v1/customers/${id}`,
+                `/v1/customers/${customerId}/cards/${id}`,
                 JSON.stringify(body),
                 header,
             )
@@ -194,7 +195,7 @@ class Customer {
                 res.on("end", () => {
                     const json = JSON.parse(body.join(""))
                     if (res.statusCode === 200) {
-                        const payment = json as CustomerObject
+                        const payment = json as CardObject
 
                         resolve(payment)
                     } else {
@@ -215,21 +216,22 @@ class Customer {
     }
 
     /**
-     * **Delete a customer**
+     * **Delete a card of customer**
      * 
-     * corresponding to `DELETE /v1/customers/:id`
+     * corresponding to `DELETE /v1/customers/:customer_id/cards/:id`
      * 
      * if rejected, the error is a instance of `FincodeError`
      */
     public delete(
+        customerId: string,
         id: string,
-        header?: Parameters<typeof createFincodeRequest>[4]
-    ): Promise<DeletingCustomerResponse> {
+        header: Parameters<typeof createFincodeRequest>[4]
+    ): Promise<DeletingCardResponse> {
         return new Promise((resolve, reject) => {
             const req = createFincodeRequest(
                 this._config,
                 "DELETE",
-                `/v1/customers/${id}`,
+                `/v1/customers/${customerId}/cards/${id}`,
                 undefined,
                 header,
             )
@@ -242,7 +244,7 @@ class Customer {
                 res.on("end", () => {
                     const json = JSON.parse(body.join(""))
                     if (res.statusCode === 200) {
-                        const payment = json as DeletingCustomerResponse
+                        const payment = json as DeletingCardResponse
 
                         resolve(payment)
                     } else {
@@ -262,4 +264,5 @@ class Customer {
         })
     }
 }
-export { Customer }
+
+export { Card }
