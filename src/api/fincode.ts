@@ -1,3 +1,4 @@
+import { Customer } from "./customer"
 import { Payment } from "./payment"
 
 type FincodeConfig = {
@@ -17,10 +18,19 @@ class Fincode {
         }
 
         this.config = config
-        this.payment = new Payment(config)
     }
 
-    public readonly payment: Payment
+    private _payment?: Payment
+    get payment(): Payment {
+        if (!this._payment) { this._payment = new Payment(this.config) }
+        return this._payment
+    }
+
+    private _customer?: Customer
+    get customer(): Customer {
+        if (!this._customer) { this._customer = new Customer(this.config) }
+        return this._customer
+    }
 }
 export { Fincode, FincodeConfig }
 
