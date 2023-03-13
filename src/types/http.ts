@@ -1,4 +1,4 @@
-export type FincodeRequestHeader = Record<string, string | undefined>
+export type FincodeRequestHeader = Record<string, string>
 
 export const createFincodeRequestHeader = (params?: {
     apiVersion?: string
@@ -6,11 +6,12 @@ export const createFincodeRequestHeader = (params?: {
     idempotentKey?: string
     tenantShopId?: string
 }): FincodeRequestHeader => {
-    return {
-        "Api-Version": params?.apiVersion,
-        "Authorization": params?.authorization,
-        "Tenant-Shop-Id": params?.tenantShopId,
-        "idempotent_key": params?.idempotentKey,
-        "Content-Type": "application/json; charset=utf-8",
-    }
+    const header: FincodeRequestHeader = {}
+
+    if (params?.apiVersion) { header["API-Version"] = params.apiVersion }
+    if (params?.authorization) { header["Authorization"] = params.authorization }
+    if (params?.idempotentKey) { header["idempotent_key"] = params.idempotentKey }
+    if (params?.tenantShopId) { header["tenant_shop_id"] = params.tenantShopId }
+
+    return header
 }

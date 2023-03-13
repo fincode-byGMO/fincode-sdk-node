@@ -1,27 +1,28 @@
-interface FincodeInstance {
+import { Payment } from "./payment"
+
+type FincodeConfig = {
     version: string | undefined
     isTest: boolean
     apiKey: string
 }
 
-class Fincode implements FincodeInstance {
-    public _version: string | undefined
-    get version() { return this._version }
-
-    public _isTest: boolean
-    get isTest() { return this._isTest }
-
-    public _apiKey: string
-    get apiKey() { return this._apiKey }
-    set apiKey(value: string) { this._apiKey = value }
+class Fincode {
+    public readonly config: FincodeConfig
 
     constructor(apiKey: string, isTest: boolean = true, version?: string) {
-        this._version = version
-        this._isTest = isTest
-        this._apiKey = apiKey
+        const config = {
+            version,
+            isTest,
+            apiKey,
+        }
+
+        this.config = config
+        this.payment = new Payment(config)
     }
+
+    public readonly payment: Payment
 }
-export { Fincode, FincodeInstance }
+export { Fincode, FincodeConfig }
 
 type FincodeInitConfig = {
     isTest?: boolean

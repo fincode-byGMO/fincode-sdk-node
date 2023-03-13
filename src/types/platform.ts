@@ -1,369 +1,402 @@
-import { Pagination } from "./pagination"
-import Shop from "./shop"
+import { Pagination, Sort } from "./pagination"
+import * as Shop from "./shop"
 
-namespace Platform {
+/**
+ * Pagination object for Retrieving platform shops list
+ */
+export class RetrievingPlatformShopListPagination implements Pagination {
+    /**
+     * Shop ID
+     */
+    id?: string | null
 
     /**
-     * Pagination object for Retrieving platform shops list
+     * Shop name
      */
-    export type RetrievingShopListPagination = Pagination & {
-        /**
-         * Shop ID
-         */
-        id?: string | null
-
-        /**
-         * Shop name
-         */
-        shop_name?: string | null
-
-        /**
-         * Shop email address
-         */
-        shop_mail_address?: string | null
-
-        /**
-         * Created timestamp (from)
-         * 
-         * Format: `yyyy/MM/dd`
-         */
-        created_from?: string | null
-
-        /**
-         * Created timestamp (to)
-         * 
-         * Format: `yyyy/MM/dd`
-         */
-        created_to?: string | null
-    }
+    shop_name?: string | null
 
     /**
-     * Request object for Updating platform shop
+     * Shop email address
      */
-    export type UpdatingRequest = {
-        /**
-         * Examination master ID
-         * 
-         * - `vm`: Visa/Mastercard
-         * - `jad`: JCB/American Express/Diners
-         * - `konbini`: Konbini
-         */
-        id?: Shop.ExaminationMaster | null
-
-        /**
-         * Platform rate
-         */
-        platform_rate?: string | null
-
-        /**
-         * Fixed fee
-         */
-        fixed_fee?: string | null
-    }
+    shop_mail_address?: string | null
 
     /**
-     * Platform account object
+     * Created timestamp (from)
+     * 
+     * Format: `yyyy/MM/dd`
      */
-    export type Account = {
-        /**
-         * Account ID
-         */
-        account_id: string
-
-        /**
-         * Deposit ID
-         */
-        id: string
-
-        /**
-         * Shop ID
-         */
-        shop_id: string
-
-        /**
-         * Date of deposit
-         * 
-         * Format: `yyyy/MM/dd HH:mm`
-         */
-        schedled_deposit_date: string
-
-        /**
-         * Date the aggregate deposit starts
-         * 
-         * Format: `yyyy/MM/dd HH:mm`
-         */
-        aggregate_term_start: string
-
-        /**
-         * Date the aggregate deposit ends
-         * 
-         * Format: `yyyy/MM/dd HH:mm`
-         */
-        aggregate_term_end: string
-
-        /**
-         * Deposit date
-         */
-        deposit_date?: string | null
-
-        payment_deadline?: string | null
-        payment_completion_date?: string | null
-
-        /**
-         * Deposit status code
-         */
-        status_code: DepositStatusCode
-
-        /**
-         * Count
-         */
-        count: number
-
-        /**
-         * Settlement amount
-         */
-        settlement_amount: number
-
-        /**
-         * Bank transfer fee
-         */
-        bank_transfer_fee: number
-
-        /**
-         * Total amount
-         */
-        total_amount: number
-
-        /**
-         * Fee amount
-         */
-        fee_amount: number
-
-        /**
-         * Platform fee amount
-         */
-        platform_fee_amount: number
-
-        /**
-         * Platform fee tax amount
-         */
-        platform_fee_tax_amount: number
-
-        /**
-         * tax_amount
-         */
-        tax_amount: number
-
-        /**
-         * Deposit amount
-         */
-        deposit_amount: number
-
-        /**
-         * Verified flag
-         */
-        verified: boolean
-
-        /**
-         * Created timestamp
-         * 
-         * Format: `yyyy/MM/dd HH:mm:ss.SSS`
-         */
-        created: string
-
-        /**
-         * Updated timestamp
-         * 
-         * Format: `yyyy/MM/dd HH:mm:ss.SSS`
-         */
-        updated?: string | null
-    }
+    created_from?: string | null
 
     /**
-     * Pagination object for Retrieving platform accounts list
+     * Created timestamp (to)
+     * 
+     * Format: `yyyy/MM/dd`
      */
-    export type RetrievingAccountListPagination = Omit<Pagination, "sort"> & {
-        /**
-         * Month the deposit was processed
-         */
-        processed?: string | null
-
-        /**
-         * Status
-         */
-        status?: DepositStatusCode | null
-
-        /**
-         * Deposit scheduled date
-         * 
-         * Format: `yyyy/MM/dd`
-         */
-        scheduled?: string | null
-
-        /**
-         * Deposit scheduled date (from)
-         * 
-         * Format: `yyyy/MM/dd`
-         */
-        scheduled_from?: string | null
-
-        /**
-         * Deposit scheduled date (to)
-         * 
-         * Format: `yyyy/MM/dd`
-         */
-        scheduled_to?: string | null
-    }
+    created_to?: string | null
 
     /**
-     * Account summary object
+     * Maximum number of items to return.
      */
-    export type AccountSummary = {
-        /**
-         * Summary ID
-         */
-        summary_id: number
-
-        /**
-         * Account ID
-         */
-        account_id: number
-
-        /**
-         * Shop ID
-         */
-        shop_id: string
-
-        /**
-         * Date the deposit is scheduled
-         * 
-         * Format: `yyyy/MM/dd HH:mm`
-         */
-        scheduled_deposit_date: string
-
-        /**
-         * Date the aggregate deposit starts
-         * 
-         * Format: `yyyy/MM/dd HH:mm`
-         */
-        aggregate_term_start: string
-
-        /**
-         * Date the aggregate deposit ends
-         * 
-         * Format: `yyyy/MM/dd HH:mm`
-         */
-        aggregate_term_end: string
-
-        /**
-         * Deposit date
-         * 
-         * Format: `yyyy/MM/dd HH:mm`
-         */
-        deposit_date?: string | null
-
-        /**
-         * Count
-         */
-        count: number
-
-        /**
-         * Settlement amount
-         */
-        settlement_amount: number
-
-        /**
-         * Bank transfer fee
-         */
-        bank_transfer_fee: number
-
-        /**
-         * Total amount
-         */
-        total_amount: number
-
-        /**
-         * Fee amount
-         */
-        fee_amount: number
-
-        /**
-         * Platform fee amount
-         */
-        platform_fee_amount: number
-
-        /**
-         * Platform fee tax amount
-         */
-        platform_fee_tax_amount: number
-
-        /**
-         * Tax amount
-         */
-        tax_amount: number
-
-        /**
-         * Deposit amount
-         */
-        deposit_amount: number
-
-        /**
-         * Verified flag
-         */
-        verified: boolean
-
-        /**
-         * Created timestamp
-         * 
-         * Format: `yyyy/MM/dd HH:mm:ss.SSS`
-         */
-        created: string
-
-        /**
-         * Updated timestamp
-         * 
-         * Format: `yyyy/MM/dd HH:mm:ss.SSS`
-         */
-        updated?: string | null
-    }
+    limit?: string | null
 
     /**
-     * Pagination object for Retrieving platform account summary list
+     * Number of this page.
      */
-    export type RetrievingAccountSummaryListPagination = Omit<Pagination, "sort"> & {
-        /**
-         * Date the deposit is scheduled (from)
-         * 
-         * Format: `yyyy/MM/dd`
-         */
-        scheduled_from?: string | null
+    page?: string | null
 
-        /**
-         * Date the deposit is scheduled (to)
-         * 
-         * Format: `yyyy/MM/dd`
-         */
-        scheduled_to?: string | null
+    /**
+     * Flag to retrieve only the total number of items.
+     */
+    count_only?: boolean | null
+
+    /**
+     * Sort 
+     */
+    sort?: Sort[] | null
+
+    buildQuery(): URLSearchParams {
+        const param = new URLSearchParams()
+
+        Object.entries(this)
+            .filter(([_, value]) => value !== null)
+            .map<[string, string]>(([key, value]) => {
+                if (key === "sort") {
+                    const v = (value as Sort[]).map(s => `${s.key} ${s.order}`).join(",")
+                    return [key, v]
+                } else {
+                    return [key, value as string]
+                }
+            })
+            .forEach(([key, value]) => param.append(key, value))
+
+        return param
     }
+}
+
+/**
+ * Request object for Updating platform shop
+ */
+export type UpdatingPlatformRequest = {
+    /**
+     * Examination master ID
+     * 
+     * - `vm`: Visa/Mastercard
+     * - `jad`: JCB/American Express/Diners
+     * - `konbini`: Konbini
+     */
+    id?: Shop.ExaminationMaster | null
+
+    /**
+     * Platform rate
+     */
+    platform_rate?: string | null
+
+    /**
+     * Fixed fee
+     */
+    fixed_fee?: string | null
+}
+
+/**
+ * Platform account object
+ */
+export type Account = {
+    /**
+     * Account ID
+     */
+    account_id: string
+
+    /**
+     * Deposit ID
+     */
+    id: string
+
+    /**
+     * Shop ID
+     */
+    shop_id: string
+
+    /**
+     * Date of deposit
+     * 
+     * Format: `yyyy/MM/dd HH:mm`
+     */
+    schedled_deposit_date: string
+
+    /**
+     * Date the aggregate deposit starts
+     * 
+     * Format: `yyyy/MM/dd HH:mm`
+     */
+    aggregate_term_start: string
+
+    /**
+     * Date the aggregate deposit ends
+     * 
+     * Format: `yyyy/MM/dd HH:mm`
+     */
+    aggregate_term_end: string
+
+    /**
+     * Deposit date
+     */
+    deposit_date?: string | null
+
+    payment_deadline?: string | null
+    payment_completion_date?: string | null
 
     /**
      * Deposit status code
-     * 
-     * - `3001`: before deposit amount is confirmed
-     * - `3002`: after deposit amount is confirmed
-     * - `3003`: already deposited
-     * - `3004`: depositing was stopped
-     * - `3005`: some errors has occurred during deposit
-     * - `3006`: under invoice
-     * - `3007`: some errors has occurred during invoice
-     * - `3008`: invoice was stopped
-     * - `3009`: already invoiced
-     * - `3010`: identity verification document is not uploaded
-     * - `3011`: deposit has already been completed
-     * - `3012`: before deposit
-     * - `3013`: contract failed 
      */
-    export type DepositStatusCode = 3001 | 3002 | 3003 | 3004 | 3005 | 3006 | 3007 | 3008 | 3009 | 3010 | 3011 | 3012 | 3013
+    status_code: DepositStatusCode
+
+    /**
+     * Count
+     */
+    count: number
+
+    /**
+     * Settlement amount
+     */
+    settlement_amount: number
+
+    /**
+     * Bank transfer fee
+     */
+    bank_transfer_fee: number
+
+    /**
+     * Total amount
+     */
+    total_amount: number
+
+    /**
+     * Fee amount
+     */
+    fee_amount: number
+
+    /**
+     * Platform fee amount
+     */
+    platform_fee_amount: number
+
+    /**
+     * Platform fee tax amount
+     */
+    platform_fee_tax_amount: number
+
+    /**
+     * tax_amount
+     */
+    tax_amount: number
+
+    /**
+     * Deposit amount
+     */
+    deposit_amount: number
+
+    /**
+     * Verified flag
+     */
+    verified: boolean
+
+    /**
+     * Created timestamp
+     * 
+     * Format: `yyyy/MM/dd HH:mm:ss.SSS`
+     */
+    created: string
+
+    /**
+     * Updated timestamp
+     * 
+     * Format: `yyyy/MM/dd HH:mm:ss.SSS`
+     */
+    updated?: string | null
 }
 
-export default Platform
+/**
+ * Pagination object for Retrieving platform accounts list
+ */
+export type RetrievingAccountListPagination = Omit<Pagination, "sort"> & {
+    /**
+     * Month the deposit was processed
+     */
+    processed?: string | null
+
+    /**
+     * Status
+     */
+    status?: DepositStatusCode | null
+
+    /**
+     * Deposit scheduled date
+     * 
+     * Format: `yyyy/MM/dd`
+     */
+    scheduled?: string | null
+
+    /**
+     * Deposit scheduled date (from)
+     * 
+     * Format: `yyyy/MM/dd`
+     */
+    scheduled_from?: string | null
+
+    /**
+     * Deposit scheduled date (to)
+     * 
+     * Format: `yyyy/MM/dd`
+     */
+    scheduled_to?: string | null
+}
+
+/**
+ * Account summary object
+ */
+export type AccountSummary = {
+    /**
+     * Summary ID
+     */
+    summary_id: number
+
+    /**
+     * Account ID
+     */
+    account_id: number
+
+    /**
+     * Shop ID
+     */
+    shop_id: string
+
+    /**
+     * Date the deposit is scheduled
+     * 
+     * Format: `yyyy/MM/dd HH:mm`
+     */
+    scheduled_deposit_date: string
+
+    /**
+     * Date the aggregate deposit starts
+     * 
+     * Format: `yyyy/MM/dd HH:mm`
+     */
+    aggregate_term_start: string
+
+    /**
+     * Date the aggregate deposit ends
+     * 
+     * Format: `yyyy/MM/dd HH:mm`
+     */
+    aggregate_term_end: string
+
+    /**
+     * Deposit date
+     * 
+     * Format: `yyyy/MM/dd HH:mm`
+     */
+    deposit_date?: string | null
+
+    /**
+     * Count
+     */
+    count: number
+
+    /**
+     * Settlement amount
+     */
+    settlement_amount: number
+
+    /**
+     * Bank transfer fee
+     */
+    bank_transfer_fee: number
+
+    /**
+     * Total amount
+     */
+    total_amount: number
+
+    /**
+     * Fee amount
+     */
+    fee_amount: number
+
+    /**
+     * Platform fee amount
+     */
+    platform_fee_amount: number
+
+    /**
+     * Platform fee tax amount
+     */
+    platform_fee_tax_amount: number
+
+    /**
+     * Tax amount
+     */
+    tax_amount: number
+
+    /**
+     * Deposit amount
+     */
+    deposit_amount: number
+
+    /**
+     * Verified flag
+     */
+    verified: boolean
+
+    /**
+     * Created timestamp
+     * 
+     * Format: `yyyy/MM/dd HH:mm:ss.SSS`
+     */
+    created: string
+
+    /**
+     * Updated timestamp
+     * 
+     * Format: `yyyy/MM/dd HH:mm:ss.SSS`
+     */
+    updated?: string | null
+}
+
+/**
+ * Pagination object for Retrieving platform account summary list
+ */
+export type RetrievingAccountSummaryListPagination = Omit<Pagination, "sort"> & {
+    /**
+     * Date the deposit is scheduled (from)
+     * 
+     * Format: `yyyy/MM/dd`
+     */
+    scheduled_from?: string | null
+
+    /**
+     * Date the deposit is scheduled (to)
+     * 
+     * Format: `yyyy/MM/dd`
+     */
+    scheduled_to?: string | null
+}
+
+/**
+ * Deposit status code
+ * 
+ * - `3001`: before deposit amount is confirmed
+ * - `3002`: after deposit amount is confirmed
+ * - `3003`: already deposited
+ * - `3004`: depositing was stopped
+ * - `3005`: some errors has occurred during deposit
+ * - `3006`: under invoice
+ * - `3007`: some errors has occurred during invoice
+ * - `3008`: invoice was stopped
+ * - `3009`: already invoiced
+ * - `3010`: identity verification document is not uploaded
+ * - `3011`: deposit has already been completed
+ * - `3012`: before deposit
+ * - `3013`: contract failed 
+ */
+export type DepositStatusCode = 3001 | 3002 | 3003 | 3004 | 3005 | 3006 | 3007 | 3008 | 3009 | 3010 | 3011 | 3012 | 3013
