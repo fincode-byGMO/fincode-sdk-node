@@ -7,13 +7,13 @@ import {
     Executing3DSecureAuthResponse,
     ExecutingPaymentAfter3DSecureRequest,
     ExecutingPaymentRequest,
-    FincodeRequestHeader,
     ListResponse,
     PaymentObject,
     ReauthorizingPaymentRequest,
     RegisteringPaymentRequest,
     Retrieving3DSecureAuthResponse,
     RetrievingBarcodeInfoRequest,
+    RetrievingPaymentListPagination,
     createUnknownError,
     formatErrorResponse,
 } from "../types"
@@ -35,7 +35,7 @@ class Payment {
      * if rejected, the error is a instance of `FincodeError`
      */
     public register(
-        reqBody: RegisteringPaymentRequest,
+        body: RegisteringPaymentRequest,
         header?: Parameters<typeof createFincodeRequest>[4]
     ): Promise<PaymentObject> {
         return new Promise((resolve, reject) => {
@@ -43,7 +43,7 @@ class Payment {
                 this._config,
                 "POST",
                 `/v1/payments`,
-                JSON.stringify(reqBody),
+                JSON.stringify(body),
                 header,
             )
 
@@ -83,6 +83,7 @@ class Payment {
      * if rejected, the error is a instance of `FincodeError`
      */
     public retrieveList(
+        pagination?: RetrievingPaymentListPagination,
         header?: Parameters<typeof createFincodeRequest>[4]
     ): Promise<ListResponse<PaymentObject>> {
         return new Promise((resolve, reject) => {
@@ -92,6 +93,9 @@ class Payment {
                 `/v1/payments`,
                 undefined,
                 header,
+                {
+                    pagination: pagination,
+                },
             )
 
             req.on("response", res => {

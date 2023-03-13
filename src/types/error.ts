@@ -181,8 +181,6 @@ export const lookupErrorType = (code: string): APIErrorType => {
     const indexCode = matches[2]
     const checkID = matches[3]
 
-    console.log({ functionalCode, indexCode, checkID })
-
     /**
      * Authorization Error
      */
