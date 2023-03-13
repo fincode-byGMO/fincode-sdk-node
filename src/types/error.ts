@@ -1,15 +1,53 @@
-export type APIErrorResponse = {
-    errors: APIError[]
+export type APIRawErrorResponse = {
+    errors: APIRawError[]
 }
-
 export type APIRawError = {
     error_code: string
     error_messaage: string
 }
 
+
 export type APIError = {
     type: APIErrorType
     raw: APIRawError
+}
+
+/**
+ * This error is thrown when fincode API responded some Error
+ * 
+ * @member {string} name - Error name
+ * @member {Array<Object>} errors - List of `APIError`
+ * @member {string} message - Error message
+ */
+export class FincodeError implements Error {
+    public readonly name = "FincodeError"
+    public readonly errors: APIError[]
+    public readonly message: string = "fincode API responded some Error"
+    constructor(errors: APIError[]) {
+        this.errors = errors
+    }
+}
+
+export const formatErrorResponse = (res: APIRawErrorResponse): FincodeError => {
+
+    const errors: APIError[] = []
+    for (const e of res.errors) {
+        errors.push({
+            type: lookupErrorType(e.error_code),
+            raw: e
+        })
+    }
+
+    return new FincodeError(errors)
+}
+export const createUnknownError = (message: string = "Unknown Error"): FincodeError => {
+    return new FincodeError([{
+        type: "UNKNOWN_ERROR",
+        raw: {
+            error_code: "UNKNOWN_ERROR",
+            error_messaage: message,
+        }
+    }])
 }
 
 export type APIErrorType =
@@ -79,25 +117,25 @@ export const lookupErrorType = (code: string): APIErrorType => {
      * Error occurred in backward of fincode
      */
     // invalid parameter
-    if ("E9993134001") return "INVALID_PARAMETER"
+    if (code === "E9993134001") return "INVALID_PARAMETER"
     // this transaction has already been completed
-    if ("E9993134002") return "PAYMENT_ERROR"
+    if (code === "E9993134002") return "PAYMENT_ERROR"
     // updating failed
-    if ("E9993134003") return "PAYMENT_ERROR"
+    if (code === "E9993134003") return "PAYMENT_ERROR"
     // invalid pay_type
-    if ("E9993134004") return "PAYMENT_ERROR"
+    if (code === "E9993134004") return "PAYMENT_ERROR"
     // invalid card number
-    if ("E9993134005") return "PAYMENT_ERROR"
+    if (code === "E9993134005") return "PAYMENT_ERROR"
     // some error occurred by marchant configuration
-    if ("E9993134006") return "PAYMENT_ERROR"
+    if (code === "E9993134006") return "PAYMENT_ERROR"
     // invalid card information
-    if ("E9993134007") return "PAYMENT_ERROR"
+    if (code === "E9993134007") return "PAYMENT_ERROR"
     // not enough information
-    if ("E9993134008") return "PAYMENT_ERROR"
+    if (code === "E9993134008") return "PAYMENT_ERROR"
     // network error
-    if ("E9993134009") return "PAYMENT_ERROR"
+    if (code === "E9993134009") return "PAYMENT_ERROR"
     // unknown error
-    if ("E9993134999") return "PAYMENT_ERROR"
+    if (code === "E9993134999") return "PAYMENT_ERROR"
     // G Errors
     if (gErrorCodes.includes(code)) return "PAYMENT_ERROR"
 
@@ -105,33 +143,33 @@ export const lookupErrorType = (code: string): APIErrorType => {
      * Idempotency Error
      */
     // duplicated idempotency key
-    if ("E9991001001") return "IDEMPOTENCY_ERROR"
+    if (code === "E9991001001") return "IDEMPOTENCY_ERROR"
 
     /**
      * System Error
      */
     // Database
-    if ("E9991001002") return "UNKNOWN_ERROR"
+    if (code === "E9991001002") return "UNKNOWN_ERROR"
     // Network
-    if ("E9991001003") return "UNKNOWN_ERROR"
+    if (code === "E9991001003") return "UNKNOWN_ERROR"
     // Timeout
-    if ("E9991001004") return "UNKNOWN_ERROR"
+    if (code === "E9991001004") return "UNKNOWN_ERROR"
     // Unknown Error
-    if ("E9991001999") return "UNKNOWN_ERROR"
+    if (code === "E9991001999") return "UNKNOWN_ERROR"
 
     /**
      * Request Error
      */
     // Bad request body
-    if ("E9992001001") return "BAD_REQUEST"
+    if (code === "E9992001001") return "BAD_REQUEST"
     // Bad request with 404
-    if ("E9992001002") return "BAD_REQUEST"
+    if (code === "E9992001002") return "BAD_REQUEST"
     // Bad request with 405
-    if ("E9992001003") return "BAD_REQUEST"
+    if (code === "E9992001003") return "BAD_REQUEST"
     // Not acceptable with 406
-    if ("E9992001004") return "BAD_REQUEST"
+    if (code === "E9992001004") return "BAD_REQUEST"
     // Unsupported media type with 415
-    if ("E9992001005") return "BAD_REQUEST"
+    if (code === "E9992001005") return "BAD_REQUEST"
 
 
     const matches = code.match(errorCodeFormat)
@@ -139,9 +177,11 @@ export const lookupErrorType = (code: string): APIErrorType => {
         throw new Error('Invalid error code. It seems not to be fincode error code.')
     }
 
-    const functionalCode = matches[0]
-    const indexCode = matches[1]
-    const checkID = matches[2]
+    const functionalCode = matches[1]
+    const indexCode = matches[2]
+    const checkID = matches[3]
+
+    console.log({ functionalCode, indexCode, checkID })
 
     /**
      * Authorization Error
