@@ -262,3 +262,4 @@ class Customer {
         })
     }
 }
+export { Customer }
