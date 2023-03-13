@@ -1,3 +1,4 @@
+import { Card } from "./card"
 import { Customer } from "./customer"
 import { Payment } from "./payment"
 
@@ -30,6 +31,12 @@ class Fincode {
     get customer(): Customer {
         if (!this._customer) { this._customer = new Customer(this.config) }
         return this._customer
+    }
+
+    private _card?: Card
+    get card(): Card {
+        if (!this._card) { this._card = new Card(this.config) }
+        return this._card
     }
 }
 export { Fincode, FincodeConfig }
