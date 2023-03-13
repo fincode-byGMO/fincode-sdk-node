@@ -593,7 +593,7 @@ export class RetrievingPaymentListPagination implements Pagination {
         }
     }
 
-    buildQuery(): URLSearchParams {
+    buildParams(): URLSearchParams {
         const params = new URLSearchParams()
 
         Object.entries(this)

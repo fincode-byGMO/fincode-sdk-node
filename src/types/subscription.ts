@@ -380,7 +380,7 @@ export class RetrievingSubscriptionListPagination implements Pagination {
         }
     }
 
-    buildQuery(): URLSearchParams {
+    buildParams(): URLSearchParams {
         const params = new URLSearchParams()
 
         Object.entries(this)
@@ -512,7 +512,7 @@ export class RetrievingSubscriptionResultListPagination implements Pagination {
         }
     }
 
-    buildQuery(): URLSearchParams {
+    buildParams(): URLSearchParams {
         const params = new URLSearchParams()
 
         Object.entries(this)

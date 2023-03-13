@@ -54,7 +54,7 @@ export class RetrievingPlatformShopListPagination implements Pagination {
      */
     sort?: Sort[] | null
 
-    buildQuery(): URLSearchParams {
+    buildParams(): URLSearchParams {
         const param = new URLSearchParams()
 
         Object.entries(this)

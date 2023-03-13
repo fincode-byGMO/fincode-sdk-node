@@ -26,7 +26,7 @@ const createFincodeRequest = (
     let queryStr = ""
     if (query) {
         const { pagination, ...rest } = query
-        const pgnParams = pagination?.buildQuery()
+        const pgnParams = pagination?.buildParams()
         const restParams = new URLSearchParams(rest)
 
         const params = new URLSearchParams({

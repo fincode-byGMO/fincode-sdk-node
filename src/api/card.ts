@@ -53,7 +53,7 @@ class Card {
                         resolve(payment)
                     } else {
                         try {
-                            const errRes = (JSON.parse(json) as APIRawErrorResponse)
+                            const errRes = json as APIRawErrorResponse
                             const err = formatErrorResponse(errRes)
                             reject(err)
                         } catch (e) {
@@ -101,7 +101,7 @@ class Card {
                         resolve(payment)
                     } else {
                         try {
-                            const errRes = (JSON.parse(json) as APIRawErrorResponse)
+                            const errRes = json as APIRawErrorResponse
                             const err = formatErrorResponse(errRes)
                             reject(err)
                         } catch (e) {
@@ -150,7 +150,7 @@ class Card {
                         resolve(payment)
                     } else {
                         try {
-                            const errRes = (JSON.parse(json) as APIRawErrorResponse)
+                            const errRes = json as APIRawErrorResponse
                             const err = formatErrorResponse(errRes)
                             reject(err)
                         } catch (e) {
@@ -200,7 +200,7 @@ class Card {
                         resolve(payment)
                     } else {
                         try {
-                            const errRes = (JSON.parse(json) as APIRawErrorResponse)
+                            const errRes = json as APIRawErrorResponse
                             const err = formatErrorResponse(errRes)
                             reject(err)
                         } catch (e) {
@@ -249,7 +249,7 @@ class Card {
                         resolve(payment)
                     } else {
                         try {
-                            const errRes = (JSON.parse(json) as APIRawErrorResponse)
+                            const errRes = json as APIRawErrorResponse
                             const err = formatErrorResponse(errRes)
                             reject(err)
                         } catch (e) {

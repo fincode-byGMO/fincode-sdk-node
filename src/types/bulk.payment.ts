@@ -208,7 +208,7 @@ export class BulkPaymentPagination implements Pagination {
         }
     }
 
-    buildQuery(): URLSearchParams {
+    buildParams(): URLSearchParams {
         const params = new URLSearchParams()
 
         Object.entries(this)
@@ -307,7 +307,7 @@ export class BulkPaymentDetailPagination implements Pagination {
         }
     }
 
-    buildQuery(): URLSearchParams {
+    buildParams(): URLSearchParams {
         const params = new URLSearchParams()
 
         Object.entries(this)
