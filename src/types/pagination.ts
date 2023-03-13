@@ -1,4 +1,4 @@
-export type Pagination = {
+export interface Pagination {
     /**
      * Maximum number of items to return.
      */
@@ -19,7 +19,7 @@ export type Pagination = {
      */
     sort?: Sort[] | null
 
-
+    buildQuery(): URLSearchParams
 }
 
 export type Sort = {
