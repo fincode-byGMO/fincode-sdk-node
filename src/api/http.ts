@@ -44,7 +44,6 @@ const createFincodeRequest = (
         idempotentKey: headers?.idempotentKey,
         tenantShopId: headers?.tenantShopId,
     })
-    console.log(_headers)
 
     const options: https.RequestOptions = {
         method: method,

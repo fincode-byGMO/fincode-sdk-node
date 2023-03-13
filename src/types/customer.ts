@@ -155,7 +155,7 @@ export type CreatingCustomerRequest = {
 /**
  * Pagination object of Retrieving a list of customers. (used for GET /v1/customers)
  */
-export class RetrievingCustomersPagination implements Pagination {
+export class RetrievingCustomerListPagination implements Pagination {
     /**
      * Customer ID
      */
