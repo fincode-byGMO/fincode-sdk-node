@@ -1,5 +1,13 @@
-import { CapturingPaymentRequest, ExecutingPaymentRequest, FincodeError, RegisteringPaymentRequest } from '../types'
-import { FincodeInitConfig, createFincode } from './fincode'
+import {
+    CapturingPaymentRequest,
+    ExecutingPaymentRequest,
+    FincodeError,
+    RegisteringPaymentRequest
+} from '../../types'
+import {
+    FincodeInitConfig,
+    createFincode
+} from './fincode'
 
 const secretKey = "m_test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 

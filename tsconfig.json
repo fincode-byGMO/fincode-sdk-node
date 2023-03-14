@@ -2,7 +2,7 @@
     "compilerOptions": {
         "target": "esnext",
         "moduleResolution": "node",
-        "module": "esnext",
+        "module": "CommonJS",
         "strict": true,
         "alwaysStrict": true,
         "outDir": "./dist",
@@ -10,7 +10,7 @@
         "baseUrl": "./src",
         "declaration": true,
         "declarationMap": true,
-        "declarationDir": "./dist/types",
+        "declarationDir": "./dist",
         "allowJs": false,
         // "noEmit": true ,   
         "removeComments": false,
