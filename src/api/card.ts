@@ -29,7 +29,7 @@ class Card {
     public register(
         customerId: string,
         body: RegisteringCardRequest,
-        header: Parameters<typeof createFincodeRequest>[4]
+        header?: Parameters<typeof createFincodeRequest>[4]
     ): Promise<CardObject> {
         return new Promise((resolve, reject) => {
             const req = createFincodeRequest(
@@ -77,7 +77,7 @@ class Card {
      */
     public retrieveList(
         customerId: string,
-        header: Parameters<typeof createFincodeRequest>[4]
+        header?: Parameters<typeof createFincodeRequest>[4]
     ): Promise<ListResponse<CardObject>> {
         return new Promise((resolve, reject) => {
             const req = createFincodeRequest(
@@ -126,7 +126,7 @@ class Card {
     public retrieve(
         customerId: string,
         id: string,
-        header: Parameters<typeof createFincodeRequest>[4]
+        header?: Parameters<typeof createFincodeRequest>[4]
     ): Promise<CardObject> {
         return new Promise((resolve, reject) => {
             const req = createFincodeRequest(
@@ -176,7 +176,7 @@ class Card {
         customerId: string,
         id: string,
         body: UpdatingCardRequest,
-        header: Parameters<typeof createFincodeRequest>[4]
+        header?: Parameters<typeof createFincodeRequest>[4]
     ): Promise<CardObject> {
         return new Promise((resolve, reject) => {
             const req = createFincodeRequest(
@@ -225,7 +225,7 @@ class Card {
     public delete(
         customerId: string,
         id: string,
-        header: Parameters<typeof createFincodeRequest>[4]
+        header?: Parameters<typeof createFincodeRequest>[4]
     ): Promise<DeletingCardResponse> {
         return new Promise((resolve, reject) => {
             const req = createFincodeRequest(

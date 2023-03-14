@@ -332,7 +332,7 @@ export class BulkPaymentDetailPagination implements Pagination {
 /**
  * Object of bulk payment detail
  */
-export type BulkPaymentDetail = {
+export type BulkPaymentDetailObject = {
     /**
      * Bulk payment ID.
      */
@@ -448,6 +448,21 @@ export type BulkPaymentDetail = {
      * Format: `yyyy/MM/dd HH:mm:ss.SSS`
      */
     updated?: string | null
+}
+
+/**
+ * Response object for Deleting bulk payment
+ */
+export type DeletingBulkPaymentResponse = {
+    /**
+     * Bulk payment ID.
+     */
+    id: string
+
+    /**
+     * Whether or not the bulk payment was deleted.
+     */
+    deleted: "0" | "1"
 }
 
 /**

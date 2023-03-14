@@ -75,8 +75,8 @@ class Plan {
      * if rejected, the error is a instance of `FincodeError`
      */
     public retrieveList(
-        pagination: RetrievingPlantListPagination,
-        headers: Parameters<typeof createFincodeRequest>[4],
+        pagination?: RetrievingPlantListPagination,
+        headers?: Parameters<typeof createFincodeRequest>[4],
     ): Promise<ListResponse<PlanObject>> {
         return new Promise((resolve, reject) => {
             const req = createFincodeRequest(

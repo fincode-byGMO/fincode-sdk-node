@@ -29,7 +29,7 @@ class Customer {
      */
     public create(
         body: CreatingCustomerRequest,
-        header: Parameters<typeof createFincodeRequest>[4]
+        header?: Parameters<typeof createFincodeRequest>[4]
     ): Promise<CustomerObject> {
         return new Promise((resolve, reject) => {
             const req = createFincodeRequest(

@@ -19,7 +19,7 @@ class CardRegistrationSession {
      */
     public create(
         body: CreatingCardRegistrationSessionRequest,
-        header: Parameters<typeof createFincodeRequest>[4]
+        header?: Parameters<typeof createFincodeRequest>[4]
     ): Promise<CardRegistrationSessionObject> {
         return new Promise((resolve, reject) => {
             const req = createFincodeRequest(

@@ -19,7 +19,7 @@ class PaymentSession {
      */
     public create(
         body: CreatingPaymentSessionRequest,
-        header: Parameters<typeof createFincodeRequest>[4]
+        header?: Parameters<typeof createFincodeRequest>[4]
     ): Promise<PaymentSessionObject> {
         return new Promise((resolve, reject) => {
             const req = createFincodeRequest(
