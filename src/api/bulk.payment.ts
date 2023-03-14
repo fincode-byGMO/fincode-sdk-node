@@ -1,17 +1,21 @@
 import {
     APIRawErrorResponse,
-    CardObject,
-    DeletingCardResponse,
+    BulkPaymentDetailObject,
+    BulkPaymentDetailPagination,
+    BulkPaymentObject,
+    BulkPaymentPagination,
+    DeletingBulkPaymentResponse,
     ListResponse,
-    RegisteringCardRequest,
-    UpdatingCardRequest,
+    createFincodeRequestHeader,
     createUnknownError,
-    formatErrorResponse
+    formatErrorResponse,
 } from "../types"
 import { FincodeConfig } from "./fincode"
-import { createFincodeRequest } from "./http"
+import { createFincodeRequest, createFincodeRequestURL } from "./http"
+import FormData from "form-data"
+import * as https from "https"
 
-class Card {
+class BulkPayment {
 
     private readonly _config: FincodeConfig
 
@@ -20,37 +24,56 @@ class Card {
     }
 
     /**
-     * **Create a card**
+     * **Register a bulk card payment**
      * 
-     * corresponding to `POST /v1/customers/:customer_id/cards`
+     * corresponding to `POST /v1/payments/bulk`
      * 
      * if rejected, the error is a instance of `FincodeError`
      */
     public register(
-        customerId: string,
-        body: RegisteringCardRequest,
+        jsonFile: Buffer,
+        payType: "Card",
+        processDate: string,
         header?: Parameters<typeof createFincodeRequest>[4]
-    ): Promise<CardObject> {
-        return new Promise((resolve, reject) => {
-            const req = createFincodeRequest(
-                this._config,
-                "POST",
-                `/v1/customers/${customerId}/cards`,
-                JSON.stringify(body),
-                header,
-            )
+    ): Promise<BulkPaymentObject> {
 
-            req.on("response", res => {
+        return new Promise((resolve, reject) => {
+
+            const _header = createFincodeRequestHeader({
+                apiVersion: this._config.version,
+                authorization: this._config.apiKey,
+                idempotentKey: header?.idempotentKey,
+                tenantShopId: header?.tenantShopId,
+            })
+
+            const form = new FormData()
+            form.append("file", jsonFile, {
+                contentType: "application/json",
+            })
+
+            const options: https.RequestOptions = {
+                method: "POST",
+                headers: _header,
+            }
+
+            const url = createFincodeRequestURL(this._config, "/v1/payments/bulk", {
+                pay_type: payType,
+                process_plan_date: processDate,
+            })
+
+            const req = https.request(url, options)
+            req.write(form)
+            req.on("response", (res) => {
                 const body: string[] = []
-                res.on("data", chunk => {
+                res.on("data", (chunk) => {
                     body.push(chunk)
                 })
                 res.on("end", () => {
                     const json = JSON.parse(body.join(""))
                     if (res.statusCode === 200) {
-                        const payment = json as CardObject
+                        const bulk = json as BulkPaymentObject
 
-                        resolve(payment)
+                        resolve(bulk)
                     } else {
                         try {
                             const errRes = json as APIRawErrorResponse
@@ -69,23 +92,24 @@ class Card {
     }
 
     /**
-     * **Retrieve card list of a customer**
+     * **Retrieve bulk card payment list**
      * 
-     * corresponding to `GET /v1/customers/:customer_id/cards`
+     * corresponding to `GET /v1/payments/bulk`
      * 
      * if rejected, the error is a instance of `FincodeError`
      */
     public retrieveList(
-        customerId: string,
-        header?: Parameters<typeof createFincodeRequest>[4]
-    ): Promise<ListResponse<CardObject>> {
+        pagination?: BulkPaymentPagination,
+        header?: Parameters<typeof createFincodeRequest>[4],
+    ): Promise<ListResponse<BulkPaymentObject>> {
         return new Promise((resolve, reject) => {
             const req = createFincodeRequest(
                 this._config,
                 "GET",
-                `/v1/customers/${customerId}/cards`,
+                `/v1/payments/bulk`,
                 undefined,
                 header,
+                { pagination: pagination }
             )
 
             req.on("response", res => {
@@ -96,9 +120,8 @@ class Card {
                 res.on("end", () => {
                     const json = JSON.parse(body.join(""))
                     if (res.statusCode === 200) {
-                        const payment = json as ListResponse<CardObject>
-
-                        resolve(payment)
+                        const list = json as ListResponse<BulkPaymentObject>
+                        resolve(list)
                     } else {
                         try {
                             const errRes = json as APIRawErrorResponse
@@ -117,24 +140,25 @@ class Card {
     }
 
     /**
-     * **Retrieve a card of customer**
+     * **Retrieve a bulk card payment detail**
      * 
-     * corresponding to `GET /v1/customers/:customer_id/cards/:id`
+     * corresponding to `GET /v1/payments/bulk/:id`
      * 
      * if rejected, the error is a instance of `FincodeError`
      */
-    public retrieve(
-        customerId: string,
+    public retrieveDetail(
         id: string,
-        header?: Parameters<typeof createFincodeRequest>[4]
-    ): Promise<CardObject> {
+        pagination?: BulkPaymentDetailPagination,
+        header?: Parameters<typeof createFincodeRequest>[4],
+    ): Promise<BulkPaymentDetailObject> {
         return new Promise((resolve, reject) => {
             const req = createFincodeRequest(
                 this._config,
                 "GET",
-                `/v1/customers/${customerId}/cards/${id}`,
+                `/v1/payments/bulk/${id}`,
                 undefined,
                 header,
+                { pagination: pagination }
             )
 
             req.on("response", res => {
@@ -145,9 +169,8 @@ class Card {
                 res.on("end", () => {
                     const json = JSON.parse(body.join(""))
                     if (res.statusCode === 200) {
-                        const payment = json as CardObject
-
-                        resolve(payment)
+                        const detail = json as BulkPaymentDetailObject
+                        resolve(detail)
                     } else {
                         try {
                             const errRes = json as APIRawErrorResponse
@@ -166,72 +189,21 @@ class Card {
     }
 
     /**
-     * **Update a card of customer**
+     * **Delete a bulk card payment**
      * 
-     * corresponding to `PUT /v1/customers/:customer_id/cards/:id`
-     * 
-     * if rejected, the error is a instance of `FincodeError`
-     */
-    public update(
-        customerId: string,
-        id: string,
-        body: UpdatingCardRequest,
-        header?: Parameters<typeof createFincodeRequest>[4]
-    ): Promise<CardObject> {
-        return new Promise((resolve, reject) => {
-            const req = createFincodeRequest(
-                this._config,
-                "PUT",
-                `/v1/customers/${customerId}/cards/${id}`,
-                JSON.stringify(body),
-                header,
-            )
-
-            req.on("response", res => {
-                const body: string[] = []
-                res.on("data", chunk => {
-                    body.push(chunk)
-                })
-                res.on("end", () => {
-                    const json = JSON.parse(body.join(""))
-                    if (res.statusCode === 200) {
-                        const payment = json as CardObject
-
-                        resolve(payment)
-                    } else {
-                        try {
-                            const errRes = json as APIRawErrorResponse
-                            const err = formatErrorResponse(errRes)
-                            reject(err)
-                        } catch (e) {
-                            const message = (e instanceof Error) ? e.message : undefined
-                            const err = createUnknownError(message)
-                            reject(err)
-                        }
-                    }
-                })
-            })
-            req.end()
-        })
-    }
-
-    /**
-     * **Delete a card of customer**
-     * 
-     * corresponding to `DELETE /v1/customers/:customer_id/cards/:id`
+     * corresponding to `DELETE /v1/payments/bulk/:id`
      * 
      * if rejected, the error is a instance of `FincodeError`
      */
     public delete(
-        customerId: string,
         id: string,
-        header?: Parameters<typeof createFincodeRequest>[4]
-    ): Promise<DeletingCardResponse> {
+        header?: Parameters<typeof createFincodeRequest>[4],
+    ): Promise<DeletingBulkPaymentResponse> {
         return new Promise((resolve, reject) => {
             const req = createFincodeRequest(
                 this._config,
                 "DELETE",
-                `/v1/customers/${customerId}/cards/${id}`,
+                `/v1/payments/bulk/${id}`,
                 undefined,
                 header,
             )
@@ -244,9 +216,8 @@ class Card {
                 res.on("end", () => {
                     const json = JSON.parse(body.join(""))
                     if (res.statusCode === 200) {
-                        const payment = json as DeletingCardResponse
-
-                        resolve(payment)
+                        const detail = json as DeletingBulkPaymentResponse
+                        resolve(detail)
                     } else {
                         try {
                             const errRes = json as APIRawErrorResponse
@@ -263,6 +234,6 @@ class Card {
             req.end()
         })
     }
-}
 
-export { Card }
+}
+export { BulkPayment }
