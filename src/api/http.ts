@@ -3,8 +3,37 @@ import { FincodeConfig } from "./fincode"
 import { createFincodeRequestHeader } from "../types/http"
 import { Pagination } from "../types/pagination"
 
-const BASE_URL_V1 = "https://api.fincode.jp/v1"
-const BASE_URL_V1_TEST = "https://api.fincode.jp/test/v1"
+const BASE_URL = "https://api.fincode.jp"
+const BASE_URL_TEST = "https://api.test.fincode.jp"
+
+const createFincodeRequestURL = (
+    config: FincodeConfig,
+    path: string,
+    query?: {
+        pagination?: Pagination
+        pay_type?: string
+        process_plan_date?: string
+    }
+): string => {
+
+    const baseUrl = config.isTest ? BASE_URL_TEST : BASE_URL
+
+    let queryStr = ""
+    if (query) {
+        const { pagination, ...rest } = query
+        const pgnParams = pagination?.buildParams()
+        const restParams = new URLSearchParams(rest)
+
+        const params = new URLSearchParams({
+            ...Object.fromEntries(pgnParams?.entries() || []),
+            ...Object.fromEntries(restParams.entries()),
+        })
+        queryStr = params.toString() ? `?${params.toString()}` : ""
+    }
+
+    return `${baseUrl}${path}${queryStr}`
+}
+export { createFincodeRequestURL }
 
 const createFincodeRequest = (
     config: FincodeConfig,
@@ -17,26 +46,12 @@ const createFincodeRequest = (
     },
     query?: {
         pagination?: Pagination
-        payType?: string
+        pay_type?: string
+        process_plan_date?: string
     }
 ) => {
 
-    const baseUrl = config.isTest ? BASE_URL_V1_TEST : BASE_URL_V1
-
-    let queryStr = ""
-    if (query) {
-        const { pagination, ...rest } = query
-        const pgnParams = pagination?.buildParams()
-        const restParams = new URLSearchParams(rest)
-
-        const params = new URLSearchParams({
-            ...Object.fromEntries(pgnParams?.entries() || []),
-            ...Object.fromEntries(restParams.entries()),
-        })
-        queryStr = `?${params.toString()}`
-    }
-
-    const url = `${baseUrl}${path}${queryStr}`
+    const url = createFincodeRequestURL(config, path, query)
 
     const _headers = createFincodeRequestHeader({
         apiVersion: config.version,

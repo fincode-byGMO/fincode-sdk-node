@@ -20,5 +20,7 @@
   "scripts": {
     "lint": "eslint . --ext .ts,.js"
   },
-  "dependencies": {}
+  "dependencies": {
+    "form-data": "^4.0.0"
+  }
 }

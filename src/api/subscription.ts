@@ -21,7 +21,7 @@ class Subscription {
     public register(
         customerId: string,
         body: RegisteringSubscriptionRequest,
-        header: Parameters<typeof createFincodeRequest>[4]
+        header?: Parameters<typeof createFincodeRequest>[4]
     ): Promise<SubscriptionObject> {
         return new Promise((resolve, reject) => {
             const req = createFincodeRequest(
@@ -67,8 +67,8 @@ class Subscription {
      * if rejected, the error is a instance of `FincodeError`
      */
     public retrieveList(
-        pagination: RetrievingSubscriptionListPagination,
-        header: Parameters<typeof createFincodeRequest>[4]
+        pagination?: RetrievingSubscriptionListPagination,
+        header?: Parameters<typeof createFincodeRequest>[4]
     ): Promise<ListResponse<SubscriptionObject>> {
         return new Promise((resolve, reject) => {
             const req = createFincodeRequest(
@@ -117,7 +117,7 @@ class Subscription {
      */
     public retrieve(
         id: string,
-        header: Parameters<typeof createFincodeRequest>[4]
+        header?: Parameters<typeof createFincodeRequest>[4]
     ): Promise<SubscriptionObject> {
         return new Promise((resolve, reject) => {
             const req = createFincodeRequest(
@@ -165,7 +165,7 @@ class Subscription {
     public update(
         id: string,
         body: UpdatingSubscriptionRequest,
-        header: Parameters<typeof createFincodeRequest>[4]
+        header?: Parameters<typeof createFincodeRequest>[4]
     ): Promise<SubscriptionObject> {
         return new Promise((resolve, reject) => {
             const req = createFincodeRequest(
@@ -214,7 +214,7 @@ class Subscription {
      */
     public cancel(
         id: string,
-        header: Parameters<typeof createFincodeRequest>[4],
+        header?: Parameters<typeof createFincodeRequest>[4],
     ): Promise<CancelingSubscriptionResponse> {
         return new Promise((resolve, reject) => {
             const req = createFincodeRequest(
@@ -223,7 +223,7 @@ class Subscription {
                 `/v1/subscriptions/${id}`,
                 undefined,
                 header,
-                { payType: "Card" }
+                { pay_type: "Card" }
             )
 
             req.on("response", res => {
@@ -265,7 +265,7 @@ class Subscription {
     public retrieveResultList(
         id: string,
         pagination: RetrievingSubscriptionResultListPagination,
-        header: Parameters<typeof createFincodeRequest>[4]
+        header?: Parameters<typeof createFincodeRequest>[4]
     ): Promise<ListResponse<SubscriptionResultObject>> {
         return new Promise((resolve, reject) => {
             const req = createFincodeRequest(
