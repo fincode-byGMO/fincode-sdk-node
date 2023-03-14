@@ -1,3 +1,4 @@
+import { BulkPayment } from "./bulk.payment"
 import { Card } from "./card"
 import { Customer } from "./customer"
 import { Payment } from "./payment"
@@ -65,6 +66,12 @@ class Fincode {
     get cardRegistrationSession(): CardRegistrationSession {
         if (!this._cardRegistrationSession) { this._cardRegistrationSession = new CardRegistrationSession(this.config) }
         return this._cardRegistrationSession
+    }
+
+    private _bulkPayment?: BulkPayment
+    get bulkPayment(): BulkPayment {
+        if (!this._bulkPayment) { this._bulkPayment = new BulkPayment(this.config) }
+        return this._bulkPayment
     }
 }
 export { Fincode, FincodeConfig }
