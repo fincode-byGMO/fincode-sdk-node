@@ -1,4 +1,16 @@
-import { APIRawErrorResponse, CancelingSubscriptionResponse, ListResponse, RegisteringSubscriptionRequest, RetrievingSubscriptionListPagination, RetrievingSubscriptionResultListPagination, SubscriptionObject, SubscriptionResultObject, UpdatingSubscriptionRequest, createUnknownError, formatErrorResponse } from "../types"
+import {
+    APIRawErrorResponse,
+    CancelingSubscriptionResponse,
+    ListResponse,
+    RegisteringSubscriptionRequest,
+    RetrievingSubscriptionListPagination,
+    RetrievingSubscriptionResultListPagination,
+    SubscriptionObject,
+    SubscriptionResultObject,
+    UpdatingSubscriptionRequest,
+    createUnknownError,
+    formatErrorResponse
+} from "../../types/index"
 import { FincodeConfig } from "./fincode"
 import { createFincodeRequest } from "./http"
 

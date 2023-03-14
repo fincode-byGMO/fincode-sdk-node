@@ -22,7 +22,7 @@ export type APIError = {
 export class FincodeError implements Error {
     public readonly name = "FincodeError"
     public readonly errors: APIError[]
-    public readonly message: string = "fincode API responded some Error"
+    public readonly message: string = "Some errors occurred in fincode-node"
     constructor(errors: APIError[]) {
         this.errors = errors
     }

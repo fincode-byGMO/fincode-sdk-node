@@ -1,4 +1,6 @@
-export interface Pagination {
+import { QueryBuilder } from "./queryBuilder"
+
+export interface Pagination extends QueryBuilder {
     /**
      * Maximum number of items to return.
      */
@@ -18,8 +20,6 @@ export interface Pagination {
      * Sort 
      */
     sort?: Sort[] | null
-
-    buildParams(): URLSearchParams
 }
 
 export type Sort = {
