@@ -16,7 +16,7 @@ import {
     RetrievingPaymentListPagination,
     createUnknownError,
     formatErrorResponse,
-} from "../types"
+} from "../../types/index"
 import { FincodeConfig } from "./fincode"
 import { createFincodeRequest } from "./http"
 

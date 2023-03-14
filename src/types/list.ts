@@ -1,15 +1,15 @@
 export type ListResponse<T> = {
-    total_count: number
+    total_count?: number
 
-    last_page: number
+    last_page?: number
 
-    current_page: number
+    current_page?: number
 
-    limit: number
+    limit?: number
 
-    link_next: string
+    link_next?: string
 
-    link_previos: string
+    link_previous?: string
 
-    list: T[]
+    list?: T[]
 }

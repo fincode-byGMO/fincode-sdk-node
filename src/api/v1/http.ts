@@ -1,7 +1,8 @@
 import * as https from "https"
 import { FincodeConfig } from "./fincode"
-import { createFincodeRequestHeader } from "../types/http"
-import { Pagination } from "../types/pagination"
+import { createFincodeRequestHeader } from "../../types/http"
+import { Pagination } from "../../types/pagination"
+import { SearchParams } from "../../types/searchParams"
 
 const BASE_URL = "https://api.fincode.jp"
 const BASE_URL_TEST = "https://api.test.fincode.jp"
@@ -11,6 +12,7 @@ const createFincodeRequestURL = (
     path: string,
     query?: {
         pagination?: Pagination
+        searchParams?: SearchParams
         pay_type?: string
         process_plan_date?: string
     }
@@ -20,12 +22,14 @@ const createFincodeRequestURL = (
 
     let queryStr = ""
     if (query) {
-        const { pagination, ...rest } = query
+        const { pagination, searchParams, ...rest } = query
         const pgnParams = pagination?.buildParams()
+        const sParams = searchParams?.buildParams()
         const restParams = new URLSearchParams(rest)
 
         const params = new URLSearchParams({
             ...Object.fromEntries(pgnParams?.entries() || []),
+            ...Object.fromEntries(sParams?.entries() || []),
             ...Object.fromEntries(restParams.entries()),
         })
         queryStr = params.toString() ? `?${params.toString()}` : ""

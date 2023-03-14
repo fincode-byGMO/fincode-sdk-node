@@ -1,4 +1,4 @@
-import { APIRawErrorResponse, CreatingCardRegistrationSessionRequest, CardRegistrationSessionObject, createUnknownError, formatErrorResponse } from "../types"
+import { APIRawErrorResponse, CreatingCardRegistrationSessionRequest, CardRegistrationSessionObject, createUnknownError, formatErrorResponse } from "../../types/index"
 import { FincodeConfig } from "./fincode"
 import { createFincodeRequest } from "./http"
 
