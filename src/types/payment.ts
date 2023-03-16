@@ -1,5 +1,5 @@
-import * as Card from "./card"
-import { Pagination, Sort } from "./pagination"
+import * as Card from "./card.js"
+import { Pagination, Sort } from "./pagination.js"
 
 /**
  * Payment Object
@@ -1146,8 +1146,9 @@ export type CancelingPaymentRequest = {
      * Payment method you want to use in this payment execution.
      * 
      * - `Card`: card payment.
+     * - `Konbini`: konbini payment.
      */
-    pay_type: "Card"
+    pay_type: "Card" | "Konbini"
 
     /**
      * access ID issued for this payment to use in this payment context.
@@ -1334,7 +1335,7 @@ export type ThreeDSecureAuthResult = "Y" | "N" | "U" | "A" | "C" | "R"
 /**
  * Request object of Retrieving Barcode Information (used for PUT /v1/payments/{id}/barcode)
  */
-export type RetrievingBarcodeInfoRequest = {
+export type GeneratingKonbiniPaymentBarcodeRequest = {
     /**
      * Payment method you want to use in this payment execution.
      * 

@@ -1,8 +1,8 @@
-import * as https from "https"
-import { FincodeConfig } from "./fincode"
-import { createFincodeRequestHeader } from "../../types/http"
-import { Pagination } from "../../types/pagination"
-import { SearchParams } from "../../types/searchParams"
+import fetch, { RequestInit } from "node-fetch"
+import { FincodeConfig } from "./fincode.js"
+import { createFincodeRequestHeader } from "../../types/http.js"
+import { Pagination } from "../../types/pagination.js"
+import { SearchParams } from "../../types/searchParams.js"
 
 const BASE_URL = "https://api.fincode.jp"
 const BASE_URL_TEST = "https://api.test.fincode.jp"
@@ -39,7 +39,7 @@ const createFincodeRequestURL = (
 }
 export { createFincodeRequestURL }
 
-const createFincodeRequest = (
+const createFincodeRequestFetch = (
     config: FincodeConfig,
     method: "POST" | "GET" | "PUT" | "DELETE",
     path: string,
@@ -64,15 +64,20 @@ const createFincodeRequest = (
         tenantShopId: headers?.tenantShopId,
     })
 
-    const options: https.RequestOptions = {
+    const options: RequestInit = {
         method: method,
         headers: _headers,
+        body: data,
     }
 
-    const req = https.request(url, options)
-    req.write(data)
+    console.log({
+        url,
+        options,
+    })
 
-    return req
+    return () => fetch(url, options)
 }
 
-export { createFincodeRequest }
+export { createFincodeRequestFetch }
+
+export type FincodePartialRequestHeader = Parameters<typeof createFincodeRequestFetch>[4]
