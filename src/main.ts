@@ -1,6 +1,6 @@
-import { createFincode } from "./api/v1/index"
-import { FincodeError, RetrievingCustomerListPagination } from "./types/index"
-
+import fetch from "node-fetch"
+import { createFincode } from "./api/v1/index.js"
+import { FincodeError, RetrievingCustomerListPagination } from "./types/index.js"
 
 const secretKey = "m_test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 
@@ -11,13 +11,22 @@ const main = async () => {
     })
 
     try {
-        const { total_count } = await fincode.customer.retrieveList(pagination)
-        console.log(total_count)
+
+        // const { total_count } = await fincode.customer.retrieveList(pagination)
+        // console.log(total_count)
+
+        const zipCode = "2110016"
+        const zipSearch = await fetch(
+            `https://zipcloud.ibsnet.co.jp/api/search?zipcode=${zipCode}`,
+            {
+                method: "GET",
+            }
+        ).then((res) => res.json())
+        console.log(zipSearch)
+
     } catch (e) {
         console.log("main catch")
-        if (e instanceof FincodeError) {
-            console.log(e.errors[0])
-        }
+        console.log(e)
     }
 }
 

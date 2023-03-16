@@ -6,7 +6,9 @@ export const createFincodeRequestHeader = (params?: {
     idempotentKey?: string
     tenantShopId?: string
 }): FincodeRequestHeader => {
-    const header: FincodeRequestHeader = {}
+    const header: FincodeRequestHeader = {
+        "Content-Type": "application/json;charset=UTF-8",
+    }
 
     if (params?.apiVersion) { header["API-Version"] = params.apiVersion }
     if (params?.authorization) { header["Authorization"] = params.authorization }

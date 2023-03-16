@@ -1,6 +1,6 @@
-import * as Contract from "./contract";
-import { Pagination, Sort } from "./pagination";
-import * as Shop from "./shop";
+import * as Contract from "./contract.js"
+import { Pagination, Sort } from "./pagination.js"
+import * as Shop from "./shop.js"
 
 /**
      * Pagination object for Retrieving tenant shops list

@@ -8,9 +8,9 @@ import {
     UpdatingCustomerRequest,
     createUnknownError,
     formatErrorResponse
-} from "../../types/index"
-import { FincodeConfig } from "./fincode"
-import { createFincodeRequest } from "./http"
+} from "../../types/index.js"
+import { FincodeConfig } from "./fincode.js"
+import { createFincodeRequestFetch, FincodePartialRequestHeader } from "./http.js"
 
 class Customer {
 
@@ -23,252 +23,251 @@ class Customer {
     /**
      * **Create a customer**
      * 
-     * corresponding to `POST /v1/customers`
+     * corresponds to `POST /v1/customers`
      * 
-     * if rejected, the error is a instance of `FincodeError`
+     * if the Promise is rejected, the error is an instance of `FincodeError`
      */
     public create(
         body: CreatingCustomerRequest,
-        header?: Parameters<typeof createFincodeRequest>[4]
+        header?: FincodePartialRequestHeader
     ): Promise<CustomerObject> {
         return new Promise((resolve, reject) => {
-            const req = createFincodeRequest(
+            const fetch = createFincodeRequestFetch(
                 this._config,
                 "POST",
-                `/v1/customers`,
+                "/v1/customers",
                 JSON.stringify(body),
                 header,
+                {},
             )
 
-            req.on("response", res => {
-                const body: string[] = []
-                res.on("data", chunk => {
-                    body.push(chunk)
-                })
-                res.on("end", () => {
-                    const json = JSON.parse(body.join(""))
-                    if (res.statusCode === 200) {
-                        const payment = json as CustomerObject
-
-                        resolve(payment)
-                    } else {
-                        try {
-                            const errRes = json as APIRawErrorResponse
-                            const err = formatErrorResponse(errRes)
-                            reject(err)
-                        } catch (e) {
-                            const message = (e instanceof Error) ? e.message : undefined
-                            const err = createUnknownError(message)
-                            reject(err)
-                        }
-                    }
-                })
+            fetch().then((res) => {
+                if (res.ok) {
+                    res.json().then((json) => {
+                        const customer = json as CustomerObject
+                        resolve(customer)
+                    }).catch((e) => {
+                        const message = (e instanceof Error) ? e.message : undefined
+                        const err = createUnknownError(message)
+                        reject(err)
+                    })
+                } else {
+                    res.json().then((json) => {
+                        const errRes = json as APIRawErrorResponse
+                        const err = formatErrorResponse(errRes)
+                        reject(err)
+                    }).catch((e) => {
+                        const message = (e instanceof Error) ? e.message : undefined
+                        const err = createUnknownError(message)
+                        reject(err)
+                    })
+                }
+            }).catch((e) => {
+                const message = (e instanceof Error) ? e.message : undefined
+                const err = createUnknownError(message)
+                reject(err)
             })
-            req.end()
         })
     }
 
     /**
      * **Retrieve customer list**
      * 
-     * corresponding to `GET /v1/customers`
+     * corresponds to `GET /v1/customers`
      * 
-     * if rejected, the error is a instance of `FincodeError`
+     * if the Promise is rejected, the error is an instance of `FincodeError`
      */
     public retrieveList(
         pagination?: RetrievingCustomerListPagination,
-        header?: Parameters<typeof createFincodeRequest>[4]
+        header?: FincodePartialRequestHeader
     ): Promise<ListResponse<CustomerObject>> {
         return new Promise((resolve, reject) => {
-            try {
-                const req = createFincodeRequest(
-                    this._config,
-                    "GET",
-                    `/v1/customers`,
-                    undefined,
-                    header,
-                    { pagination: pagination }
-                )
+            const fetch = createFincodeRequestFetch(
+                this._config,
+                "GET",
+                "/v1/customers",
+                undefined,
+                header,
+                { pagination },
+            )
 
-                req.on("response", res => {
-                    const body: string[] = []
-                    res.on("data", (chunk) => {
-                        body.push(`${chunk}`)
-                    })
-                    res.on("end", () => {
-                        const json = JSON.parse(body.join(""))
-                        if (res.statusCode === 200) {
-                            const payment = json as ListResponse<CustomerObject>
-                            resolve(payment)
-                        } else {
-                            const errRes = json as APIRawErrorResponse
-                            const err = formatErrorResponse(errRes)
-                            reject(err)
-                        }
-                    })
-                    res.on("error", (e) => {
-                        const err = createUnknownError(e.message)
+            fetch().then((res) => {
+                if (res.ok) {
+                    res.json().then((json) => {
+                        const list = json as ListResponse<CustomerObject>
+                        resolve(list)
+                    }).catch((e) => {
+                        const message = (e instanceof Error) ? e.message : undefined
+                        const err = createUnknownError(message)
                         reject(err)
                     })
-                })
-                req.on("error", (e) => {
-                    const err = createUnknownError(e.message)
-                    console.log("on error")
-                    reject(err)
-                })
-
-                req.end()
-
-            } catch (e) {
-                const message = (e instanceof TypeError) ? e.message : "woa"
+                } else {
+                    res.json().then((json) => {
+                        const errRes = json as APIRawErrorResponse
+                        const err = formatErrorResponse(errRes)
+                        reject(err)
+                    }).catch((e) => {
+                        const message = (e instanceof Error) ? e.message : undefined
+                        const err = createUnknownError(message)
+                        reject(err)
+                    })
+                }
+            }).catch((e) => {
+                const message = (e instanceof Error) ? e.message : undefined
                 const err = createUnknownError(message)
                 reject(err)
-            }
+            })
         })
     }
 
     /**
      * **Retrieve a customer**
      * 
-     * corresponding to `GET /v1/customers/:id`
+     * corresponds to `GET /v1/customers/:id`
      * 
-     * if rejected, the error is a instance of `FincodeError`
+     * if the Promise is rejected, the error is an instance of `FincodeError`
      */
     public retrieve(
         id: string,
-        header?: Parameters<typeof createFincodeRequest>[4]
+        header?: FincodePartialRequestHeader
     ): Promise<CustomerObject> {
         return new Promise((resolve, reject) => {
-            const req = createFincodeRequest(
+            const fetch = createFincodeRequestFetch(
                 this._config,
                 "GET",
                 `/v1/customers/${id}`,
                 undefined,
                 header,
+                {},
             )
 
-            req.on("response", res => {
-                const body: string[] = []
-                res.on("data", chunk => {
-                    body.push(chunk)
-                })
-                res.on("end", () => {
-                    const json = JSON.parse(body.join(""))
-                    if (res.statusCode === 200) {
-                        const payment = json as CustomerObject
-
-                        resolve(payment)
-                    } else {
-                        try {
-                            const errRes = json as APIRawErrorResponse
-                            const err = formatErrorResponse(errRes)
-                            reject(err)
-                        } catch (e) {
-                            const message = (e instanceof Error) ? e.message : undefined
-                            const err = createUnknownError(message)
-                            reject(err)
-                        }
-                    }
-                })
+            fetch().then((res) => {
+                if (res.ok) {
+                    res.json().then((json) => {
+                        const customer = json as CustomerObject
+                        resolve(customer)
+                    }).catch((e) => {
+                        const message = (e instanceof Error) ? e.message : undefined
+                        const err = createUnknownError(message)
+                        reject(err)
+                    })
+                } else {
+                    res.json().then((json) => {
+                        const errRes = json as APIRawErrorResponse
+                        const err = formatErrorResponse(errRes)
+                        reject(err)
+                    }).catch((e) => {
+                        const message = (e instanceof Error) ? e.message : undefined
+                        const err = createUnknownError(message)
+                        reject(err)
+                    })
+                }
+            }).catch((e) => {
+                const message = (e instanceof Error) ? e.message : undefined
+                const err = createUnknownError(message)
+                reject(err)
             })
-            req.end()
         })
     }
 
     /**
      * **Update a customer**
      * 
-     * corresponding to `PUT /v1/customers/:id`
+     * corresponds to `PUT /v1/customers/:id`
      * 
-     * if rejected, the error is a instance of `FincodeError`
+     * if the Promise is rejected, the error is an instance of `FincodeError`
      */
     public update(
         id: string,
         body: UpdatingCustomerRequest,
-        header?: Parameters<typeof createFincodeRequest>[4]
+        header?: FincodePartialRequestHeader
     ): Promise<CustomerObject> {
         return new Promise((resolve, reject) => {
-            const req = createFincodeRequest(
+            const fetch = createFincodeRequestFetch(
                 this._config,
                 "PUT",
                 `/v1/customers/${id}`,
                 JSON.stringify(body),
                 header,
+                {},
             )
 
-            req.on("response", res => {
-                const body: string[] = []
-                res.on("data", chunk => {
-                    body.push(chunk)
-                })
-                res.on("end", () => {
-                    const json = JSON.parse(body.join(""))
-                    if (res.statusCode === 200) {
-                        const payment = json as CustomerObject
-
-                        resolve(payment)
-                    } else {
-                        try {
-                            const errRes = json as APIRawErrorResponse
-                            const err = formatErrorResponse(errRes)
-                            reject(err)
-                        } catch (e) {
-                            const message = (e instanceof Error) ? e.message : undefined
-                            const err = createUnknownError(message)
-                            reject(err)
-                        }
-                    }
-                })
+            fetch().then((res) => {
+                if (res.ok) {
+                    res.json().then((json) => {
+                        const customer = json as CustomerObject
+                        resolve(customer)
+                    }).catch((e) => {
+                        const message = (e instanceof Error) ? e.message : undefined
+                        const err = createUnknownError(message)
+                        reject(err)
+                    })
+                } else {
+                    res.json().then((json) => {
+                        const errRes = json as APIRawErrorResponse
+                        const err = formatErrorResponse(errRes)
+                        reject(err)
+                    }).catch((e) => {
+                        const message = (e instanceof Error) ? e.message : undefined
+                        const err = createUnknownError(message)
+                        reject(err)
+                    })
+                }
+            }).catch((e) => {
+                const message = (e instanceof Error) ? e.message : undefined
+                const err = createUnknownError(message)
+                reject(err)
             })
-            req.end()
         })
     }
 
     /**
      * **Delete a customer**
      * 
-     * corresponding to `DELETE /v1/customers/:id`
+     * corresponds to `DELETE /v1/customers/:id`
      * 
-     * if rejected, the error is a instance of `FincodeError`
+     * if the Promise is rejected, the error is an instance of `FincodeError`
      */
     public delete(
         id: string,
-        header?: Parameters<typeof createFincodeRequest>[4]
+        header?: FincodePartialRequestHeader
     ): Promise<DeletingCustomerResponse> {
         return new Promise((resolve, reject) => {
-            const req = createFincodeRequest(
+            const fetch = createFincodeRequestFetch(
                 this._config,
                 "DELETE",
                 `/v1/customers/${id}`,
                 undefined,
                 header,
+                {},
             )
 
-            req.on("response", res => {
-                const body: string[] = []
-                res.on("data", chunk => {
-                    body.push(chunk)
-                })
-                res.on("end", () => {
-                    const json = JSON.parse(body.join(""))
-                    if (res.statusCode === 200) {
-                        const payment = json as DeletingCustomerResponse
-
-                        resolve(payment)
-                    } else {
-                        try {
-                            const errRes = json as APIRawErrorResponse
-                            const err = formatErrorResponse(errRes)
-                            reject(err)
-                        } catch (e) {
-                            const message = (e instanceof Error) ? e.message : undefined
-                            const err = createUnknownError(message)
-                            reject(err)
-                        }
-                    }
-                })
+            fetch().then((res) => {
+                if (res.ok) {
+                    res.json().then((json) => {
+                        const customer = json as DeletingCustomerResponse
+                        resolve(customer)
+                    }).catch((e) => {
+                        const message = (e instanceof Error) ? e.message : undefined
+                        const err = createUnknownError(message)
+                        reject(err)
+                    })
+                } else {
+                    res.json().then((json) => {
+                        const errRes = json as APIRawErrorResponse
+                        const err = formatErrorResponse(errRes)
+                        reject(err)
+                    }).catch((e) => {
+                        const message = (e instanceof Error) ? e.message : undefined
+                        const err = createUnknownError(message)
+                        reject(err)
+                    })
+                }
+            }).catch((e) => {
+                const message = (e instanceof Error) ? e.message : undefined
+                const err = createUnknownError(message)
+                reject(err)
             })
-            req.end()
         })
     }
 }
