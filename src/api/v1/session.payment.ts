@@ -23,7 +23,7 @@ class PaymentSession {
      * 
      * if the Promise is rejected, the error is an instance of `FincodeError`
      * 
-     * @param {RegisteringPaymentRequest} body
+     * @param {CreatingPaymentSessionRequest} body
      * @param {FincodePartialRequestHeader} [header]
      * 
      * @returns {Promise<PaymentSessionObject>}
@@ -45,8 +45,8 @@ class PaymentSession {
             fetch().then((res) => {
                 if (res.ok) {
                     res.json().then((json) => {
-                        const payment = json as PaymentSessionObject
-                        resolve(payment)
+                        const session = json as PaymentSessionObject
+                        resolve(session)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
                         const err = createUnknownError(message)
