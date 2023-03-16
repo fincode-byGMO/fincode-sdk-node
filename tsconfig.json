@@ -2,15 +2,12 @@
     "compilerOptions": {
         "target": "esnext",
         "moduleResolution": "node",
-        "module": "CommonJS",
+        "module": "esnext",
         "strict": true,
         "alwaysStrict": true,
         "outDir": "./dist",
-        "rootDir": "./",
-        "baseUrl": "./src",
         "declaration": true,
-        "declarationMap": true,
-        "declarationDir": "./dist",
+        // "declarationMap": true,
         "allowJs": false,
         // "noEmit": true ,   
         "removeComments": false,
@@ -24,9 +21,10 @@
         }
     },
     "include": [
-        "src",
+        "src/**/*",
     ],
     "exclude": [
         "src/**/*.test.ts",
+        "dist",
     ]
 }

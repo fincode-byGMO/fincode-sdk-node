@@ -1,4 +1,4 @@
-import { Pagination, Sort } from "./pagination"
+import { Pagination, Sort } from "./pagination.js"
 
 /**
      * Bulk payment object
