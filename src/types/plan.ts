@@ -76,7 +76,7 @@ export type PlanObject = {
 /**
  * Pagination object of Retrieving a list of plans. (used for `GET /v1/plans`)
  */
-export class RetrievingPlantListPagination implements Pagination {
+export class RetrievingPlanListPagination implements Pagination {
     /**
      * Plan Name.
      */
@@ -156,9 +156,9 @@ export class RetrievingPlantListPagination implements Pagination {
 }
 
 /**
- * Request object of Registering a plan. (used for `POST /v1/plans`)
+ * Request object of Creating a plan. (used for `POST /v1/plans`)
  */
-export type RegisteringPlanRequest = {
+export type CreatingPlanRequest = {
     /**
      * Plan ID.
      */
