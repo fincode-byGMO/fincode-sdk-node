@@ -1,7 +1,7 @@
 /**
      * Card registration session object
      */
-export interface CardRegistrationSessionObject {
+export type CardRegistrationSessionObject = {
     /**
      * Card registration session ID
      */
