@@ -6,7 +6,7 @@ import {
     ListResponse,
     RetrievingCustomerListPagination,
     UpdatingCustomerRequest,
-    createUnknownError,
+    createError,
     formatErrorResponse
 } from "../../types/index.js"
 import { FincodeConfig } from "./fincode.js"
@@ -48,7 +48,7 @@ class Customer {
                         resolve(customer)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 } else {
@@ -58,13 +58,13 @@ class Customer {
                         reject(err)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 }
             }).catch((e) => {
                 const message = (e instanceof Error) ? e.message : undefined
-                const err = createUnknownError(message)
+                const err = createError(message, "SDK_ERROR")
                 reject(err)
             })
         })
@@ -98,7 +98,7 @@ class Customer {
                         resolve(list)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 } else {
@@ -108,13 +108,13 @@ class Customer {
                         reject(err)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 }
             }).catch((e) => {
                 const message = (e instanceof Error) ? e.message : undefined
-                const err = createUnknownError(message)
+                const err = createError(message, "SDK_ERROR")
                 reject(err)
             })
         })
@@ -148,7 +148,7 @@ class Customer {
                         resolve(customer)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 } else {
@@ -158,13 +158,13 @@ class Customer {
                         reject(err)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 }
             }).catch((e) => {
                 const message = (e instanceof Error) ? e.message : undefined
-                const err = createUnknownError(message)
+                const err = createError(message, "SDK_ERROR")
                 reject(err)
             })
         })
@@ -199,7 +199,7 @@ class Customer {
                         resolve(customer)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 } else {
@@ -209,13 +209,13 @@ class Customer {
                         reject(err)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 }
             }).catch((e) => {
                 const message = (e instanceof Error) ? e.message : undefined
-                const err = createUnknownError(message)
+                const err = createError(message, "SDK_ERROR")
                 reject(err)
             })
         })
@@ -249,7 +249,7 @@ class Customer {
                         resolve(customer)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 } else {
@@ -259,13 +259,13 @@ class Customer {
                         reject(err)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 }
             }).catch((e) => {
                 const message = (e instanceof Error) ? e.message : undefined
-                const err = createUnknownError(message)
+                const err = createError(message, "SDK_ERROR")
                 reject(err)
             })
         })

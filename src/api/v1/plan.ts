@@ -1,4 +1,4 @@
-import { APIRawErrorResponse, CreatingPlanRequest, DeletingPlanResponse, ListResponse, PlanObject, RetrievingPlanListPagination, UpdatingPlanRequest, createUnknownError, formatErrorResponse } from "../../types/index.js"
+import { APIRawErrorResponse, CreatingPlanRequest, DeletingPlanResponse, ListResponse, PlanObject, RetrievingPlanListPagination, UpdatingPlanRequest, createError, formatErrorResponse } from "../../types/index.js"
 import { FincodeConfig } from "./fincode.js"
 import { createFincodeRequestFetch, FincodePartialRequestHeader } from "./http.js"
 
@@ -43,7 +43,7 @@ class Plan {
                         resolve(payment)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 } else {
@@ -53,13 +53,13 @@ class Plan {
                         reject(err)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 }
             }).catch((e) => {
                 const message = (e instanceof Error) ? e.message : undefined
-                const err = createUnknownError(message)
+                const err = createError(message, "SDK_ERROR")
                 reject(err)
             })
         })
@@ -97,7 +97,7 @@ class Plan {
                         resolve(list)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 } else {
@@ -107,13 +107,13 @@ class Plan {
                         reject(err)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 }
             }).catch((e) => {
                 const message = (e instanceof Error) ? e.message : undefined
-                const err = createUnknownError(message)
+                const err = createError(message, "SDK_ERROR")
                 reject(err)
             })
         })
@@ -152,7 +152,7 @@ class Plan {
                         resolve(plan)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 } else {
@@ -162,13 +162,13 @@ class Plan {
                         reject(err)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 }
             }).catch((e) => {
                 const message = (e instanceof Error) ? e.message : undefined
-                const err = createUnknownError(message)
+                const err = createError(message, "SDK_ERROR")
                 reject(err)
             })
         })
@@ -209,7 +209,7 @@ class Plan {
                         resolve(plan)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 } else {
@@ -219,13 +219,13 @@ class Plan {
                         reject(err)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 }
             }).catch((e) => {
                 const message = (e instanceof Error) ? e.message : undefined
-                const err = createUnknownError(message)
+                const err = createError(message, "SDK_ERROR")
                 reject(err)
             })
         })
@@ -264,7 +264,7 @@ class Plan {
                         resolve(resp)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 } else {
@@ -274,13 +274,13 @@ class Plan {
                         reject(err)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 }
             }).catch((e) => {
                 const message = (e instanceof Error) ? e.message : undefined
-                const err = createUnknownError(message)
+                const err = createError(message, "SDK_ERROR")
                 reject(err)
             })
         })

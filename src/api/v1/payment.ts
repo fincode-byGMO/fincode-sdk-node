@@ -14,7 +14,7 @@ import {
     Retrieving3DSecureAuthResponse,
     GeneratingKonbiniPaymentBarcodeRequest,
     RetrievingPaymentListPagination,
-    createUnknownError,
+    createError,
     formatErrorResponse
 } from "../../types/index.js"
 import { FincodeConfig } from "./fincode.js"
@@ -61,7 +61,7 @@ class Payment {
                         resolve(payment)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 } else {
@@ -71,13 +71,13 @@ class Payment {
                         reject(err)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 }
             }).catch((e) => {
                 const message = (e instanceof Error) ? e.message : undefined
-                const err = createUnknownError(message)
+                const err = createError(message, "SDK_ERROR")
                 reject(err)
             })
         })
@@ -118,7 +118,7 @@ class Payment {
                         resolve(payment)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 } else {
@@ -128,13 +128,13 @@ class Payment {
                         reject(err)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 }
             }).catch((e) => {
                 const message = (e instanceof Error) ? e.message : undefined
-                const err = createUnknownError(message)
+                const err = createError(message, "SDK_ERROR")
                 reject(err)
             })
         })
@@ -173,7 +173,7 @@ class Payment {
                         resolve(list)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 } else {
@@ -183,13 +183,13 @@ class Payment {
                         reject(err)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 }
             }).catch((e) => {
                 const message = (e instanceof Error) ? e.message : undefined
-                const err = createUnknownError(message)
+                const err = createError(message, "SDK_ERROR")
                 reject(err)
             })
         })
@@ -228,7 +228,7 @@ class Payment {
                         resolve(payment)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 } else {
@@ -238,13 +238,13 @@ class Payment {
                         reject(err)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 }
             }).catch((e) => {
                 const message = (e instanceof Error) ? e.message : undefined
-                const err = createUnknownError(message)
+                const err = createError(message, "SDK_ERROR")
                 reject(err)
             })
         })
@@ -284,7 +284,7 @@ class Payment {
                         resolve(payment)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 } else {
@@ -294,13 +294,13 @@ class Payment {
                         reject(err)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 }
             }).catch((e) => {
                 const message = (e instanceof Error) ? e.message : undefined
-                const err = createUnknownError(message)
+                const err = createError(message, "SDK_ERROR")
                 reject(err)
             })
         })
@@ -341,7 +341,7 @@ class Payment {
                         resolve(payment)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 } else {
@@ -351,13 +351,13 @@ class Payment {
                         reject(err)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 }
             }).catch((e) => {
                 const message = (e instanceof Error) ? e.message : undefined
-                const err = createUnknownError(message)
+                const err = createError(message, "SDK_ERROR")
                 reject(err)
             })
         })
@@ -392,7 +392,7 @@ class Payment {
                         resolve(payment)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 } else {
@@ -402,13 +402,13 @@ class Payment {
                         reject(err)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 }
             }).catch((e) => {
                 const message = (e instanceof Error) ? e.message : undefined
-                const err = createUnknownError(message)
+                const err = createError(message, "SDK_ERROR")
                 reject(err)
             })
         })
@@ -443,7 +443,7 @@ class Payment {
                         resolve(payment)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 } else {
@@ -453,13 +453,13 @@ class Payment {
                         reject(err)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 }
             }).catch((e) => {
                 const message = (e instanceof Error) ? e.message : undefined
-                const err = createUnknownError(message)
+                const err = createError(message, "SDK_ERROR")
                 reject(err)
             })
         })
@@ -501,7 +501,7 @@ class Payment {
                         resolve(payment)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 } else {
@@ -511,13 +511,13 @@ class Payment {
                         reject(err)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 }
             }).catch((e) => {
                 const message = (e instanceof Error) ? e.message : undefined
-                const err = createUnknownError(message)
+                const err = createError(message, "SDK_ERROR")
                 reject(err)
             })
         })
@@ -558,7 +558,7 @@ class Payment {
                         resolve(tdsAuthResult)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 } else {
@@ -568,13 +568,13 @@ class Payment {
                         reject(err)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 }
             }).catch((e) => {
                 const message = (e instanceof Error) ? e.message : undefined
-                const err = createUnknownError(message)
+                const err = createError(message, "SDK_ERROR")
                 reject(err)
             })
         })
@@ -613,7 +613,7 @@ class Payment {
                         resolve(tdsAuthResult)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 } else {
@@ -623,13 +623,13 @@ class Payment {
                         reject(err)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 }
             }).catch((e) => {
                 const message = (e instanceof Error) ? e.message : undefined
-                const err = createUnknownError(message)
+                const err = createError(message, "SDK_ERROR")
                 reject(err)
             })
         })
@@ -670,7 +670,7 @@ class Payment {
                         resolve(payment)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 } else {
@@ -680,13 +680,13 @@ class Payment {
                         reject(err)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 }
             }).catch((e) => {
                 const message = (e instanceof Error) ? e.message : undefined
-                const err = createUnknownError(message)
+                const err = createError(message, "SDK_ERROR")
                 reject(err)
             })
         })

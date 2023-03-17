@@ -7,12 +7,11 @@ import {
     PaymentBulkObject,
     RetrievingPaymentBulkDetailPagination,
     RetrievingPaymentBulkPagination,
-    createFincodeRequestHeader,
-    createUnknownError,
+    createError,
     formatErrorResponse
 } from "../../types/index.js"
 import { FincodeConfig } from "./fincode.js"
-import { createFincodeRequestFetch, createFincodeRequestURL, FincodePartialRequestHeader } from "./http.js"
+import { createFincodeRequestFetch, FincodePartialRequestHeader } from "./http.js"
 
 class PaymentBulk {
 
@@ -70,7 +69,7 @@ class PaymentBulk {
                         resolve(bulk)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 } else {
@@ -80,13 +79,13 @@ class PaymentBulk {
                         reject(err)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 }
             }).catch((e) => {
                 const message = (e instanceof Error) ? e.message : undefined
-                const err = createUnknownError(message)
+                const err = createError(message, "SDK_ERROR")
                 reject(err)
             })
         })
@@ -126,7 +125,7 @@ class PaymentBulk {
                         resolve(bulkList)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 } else {
@@ -136,13 +135,13 @@ class PaymentBulk {
                         reject(err)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 }
             }).catch((e) => {
                 const message = (e instanceof Error) ? e.message : undefined
-                const err = createUnknownError(message)
+                const err = createError(message, "SDK_ERROR")
                 reject(err)
             })
         })
@@ -184,7 +183,7 @@ class PaymentBulk {
                         resolve(bulkDetail)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 } else {
@@ -194,13 +193,13 @@ class PaymentBulk {
                         reject(err)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 }
             }).catch((e) => {
                 const message = (e instanceof Error) ? e.message : undefined
-                const err = createUnknownError(message)
+                const err = createError(message, "SDK_ERROR")
                 reject(err)
             })
         })
@@ -239,7 +238,7 @@ class PaymentBulk {
                         resolve(deleteResult)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 } else {
@@ -249,13 +248,13 @@ class PaymentBulk {
                         reject(err)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 }
             }).catch((e) => {
                 const message = (e instanceof Error) ? e.message : undefined
-                const err = createUnknownError(message)
+                const err = createError(message, "SDK_ERROR")
                 reject(err)
             })
         })
