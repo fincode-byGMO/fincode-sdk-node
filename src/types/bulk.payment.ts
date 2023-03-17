@@ -3,7 +3,7 @@ import { Pagination, Sort } from "./pagination.js"
 /**
      * Bulk payment object
      */
-export type BulkPaymentObject = {
+export type PaymentBulkObject = {
     /**
      * Bulk payment ID.
      */
@@ -30,7 +30,7 @@ export type BulkPaymentObject = {
      * - `COMPLETED`: Completed.
      * - `ERROR`: Some error occurred.
      */
-    status: BulkPaymentStatus
+    status: PaymentBulkStatus
 
     /**
      * Payment method type.
@@ -99,7 +99,7 @@ export type BulkPaymentObject = {
 /**
  * Pagination object for Retrieving bulk payments
  */
-export class BulkPaymentPagination implements Pagination {
+export class RetrievingPaymentBulkPagination implements Pagination {
     /**
      * Maximum number of items to return.
      */
@@ -143,7 +143,7 @@ export class BulkPaymentPagination implements Pagination {
      * - `COMPLETED`: Completed.
      * - `ERROR`: Some error occurred.
      */
-    status?: BulkPaymentStatus[] | null
+    status?: PaymentBulkStatus[] | null
 
     /**
      * Payment method type.
@@ -185,7 +185,7 @@ export class BulkPaymentPagination implements Pagination {
         sort?: Sort[] | null
         process_plan_date_from?: string | null
         process_plan_date_to?: string | null
-        status?: BulkPaymentStatus[] | null
+        status?: PaymentBulkStatus[] | null
         pay_type?: "Card" | null
         file_name?: string | null
         delete_flag?: "0" | "1" | null
@@ -218,7 +218,7 @@ export class BulkPaymentPagination implements Pagination {
                     const v = (value as Sort[]).map((s) => `${s.key} ${s.order}`).join(",")
                     return [key, v]
                 } else if (key === "status" && value) {
-                    const v = (value as BulkPaymentStatus[]).join(",")
+                    const v = (value as PaymentBulkStatus[]).join(",")
                     return [key, v]
                 } else {
                     return [key, value as string]
@@ -233,12 +233,12 @@ export class BulkPaymentPagination implements Pagination {
 /**
  * Request object for Registering bulk payment
  */
-export type RegisteringBulkPaymentRequest = {}
+export type RegisteringPaymentBulkRequest = {}
 
 /**
  * Pagination object for Retrieving bulk payment details
  */
-export class BulkPaymentDetailPagination implements Pagination {
+export class RetrievingPaymentBulkDetailPagination implements Pagination {
     /**
      * Bulk payment ID.
      */
@@ -332,7 +332,7 @@ export class BulkPaymentDetailPagination implements Pagination {
 /**
  * Object of bulk payment detail
  */
-export type BulkPaymentDetailObject = {
+export type PaymentBulkDetailObject = {
     /**
      * Bulk payment ID.
      */
@@ -453,7 +453,7 @@ export type BulkPaymentDetailObject = {
 /**
  * Response object for Deleting bulk payment
  */
-export type DeletingBulkPaymentResponse = {
+export type DeletingPaymentBulkResponse = {
     /**
      * Bulk payment ID.
      */
@@ -474,7 +474,7 @@ export type DeletingBulkPaymentResponse = {
  * - `COMPLETED`: Completed.
  * - `ERROR`: Some error occurred.
  */
-export type BulkPaymentStatus = 'CHECKING' | 'CHECKED' | 'RUNNING' | 'COMPLETED' | 'ERROR'
+export type PaymentBulkStatus = 'CHECKING' | 'CHECKED' | 'RUNNING' | 'COMPLETED' | 'ERROR'
 
 
 

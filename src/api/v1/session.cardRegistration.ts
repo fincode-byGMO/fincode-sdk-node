@@ -8,7 +8,7 @@ import {
 import { FincodeConfig } from "./fincode.js"
 import { createFincodeRequestFetch, FincodePartialRequestHeader } from "./http.js"
 
-class PaymentSession {
+class CardRegistrationSession {
 
     private readonly _config: FincodeConfig
 
@@ -17,7 +17,7 @@ class PaymentSession {
     }
 
     /**
-     * **Create a payment session**
+     * **Create a card registration session**
      * 
      * corresponds to `POST /v1/sessions`
      * 
@@ -72,4 +72,4 @@ class PaymentSession {
     }
 }
 
-export { PaymentSession }
+export { CardRegistrationSession }
