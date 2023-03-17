@@ -6,7 +6,7 @@ import {
     SubscriptionObject,
     RetrievingSubscriptionListPagination,
     UpdatingSubscriptionRequest,
-    createUnknownError,
+    createError,
     formatErrorResponse,
     SubscriptionResultObject,
     RetrievingSubscriptionResultListPagination
@@ -55,7 +55,7 @@ class Subscription {
                         resolve(payment)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 } else {
@@ -65,13 +65,13 @@ class Subscription {
                         reject(err)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 }
             }).catch((e) => {
                 const message = (e instanceof Error) ? e.message : undefined
-                const err = createUnknownError(message)
+                const err = createError(message, "SDK_ERROR")
                 reject(err)
             })
         })
@@ -109,7 +109,7 @@ class Subscription {
                         resolve(list)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 } else {
@@ -119,13 +119,13 @@ class Subscription {
                         reject(err)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 }
             }).catch((e) => {
                 const message = (e instanceof Error) ? e.message : undefined
-                const err = createUnknownError(message)
+                const err = createError(message, "SDK_ERROR")
                 reject(err)
             })
         })
@@ -164,7 +164,7 @@ class Subscription {
                         resolve(subscription)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 } else {
@@ -174,13 +174,13 @@ class Subscription {
                         reject(err)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 }
             }).catch((e) => {
                 const message = (e instanceof Error) ? e.message : undefined
-                const err = createUnknownError(message)
+                const err = createError(message, "SDK_ERROR")
                 reject(err)
             })
         })
@@ -221,7 +221,7 @@ class Subscription {
                         resolve(subscription)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 } else {
@@ -231,13 +231,13 @@ class Subscription {
                         reject(err)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 }
             }).catch((e) => {
                 const message = (e instanceof Error) ? e.message : undefined
-                const err = createUnknownError(message)
+                const err = createError(message, "SDK_ERROR")
                 reject(err)
             })
         })
@@ -276,7 +276,7 @@ class Subscription {
                         resolve(resp)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 } else {
@@ -286,13 +286,13 @@ class Subscription {
                         reject(err)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 }
             }).catch((e) => {
                 const message = (e instanceof Error) ? e.message : undefined
-                const err = createUnknownError(message)
+                const err = createError(message, "SDK_ERROR")
                 reject(err)
             })
         })
@@ -333,7 +333,7 @@ class Subscription {
                         resolve(list)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 } else {
@@ -343,13 +343,13 @@ class Subscription {
                         reject(err)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 }
             }).catch((e) => {
                 const message = (e instanceof Error) ? e.message : undefined
-                const err = createUnknownError(message)
+                const err = createError(message, "SDK_ERROR")
                 reject(err)
             })
         })

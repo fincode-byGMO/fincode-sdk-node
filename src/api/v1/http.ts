@@ -13,8 +13,16 @@ const createFincodeRequestURL = (
     query?: {
         pagination?: Pagination
         searchParams?: SearchParams
-        pay_type?: string
-        process_plan_date?: string
+        // GET /v1/payments/bulk/:id
+        pay_type?: string | null
+        process_plan_date?: string | null
+
+        // GET /v1/platforms
+        id?: string | null
+        shop_name?: string | null
+        shop_mail_address?: string | null
+        created_from?: string | null
+        created_to?: string | null
     }
 ): string => {
 
@@ -25,7 +33,12 @@ const createFincodeRequestURL = (
         const { pagination, searchParams, ...rest } = query
         const pgnParams = pagination?.buildParams()
         const sParams = searchParams?.buildParams()
-        const restParams = new URLSearchParams(rest)
+        const restParams = new URLSearchParams()
+        for (const [key, value] of Object.entries(rest)) {
+            if (value !== undefined && value !== null) {
+                restParams.append(key, value)
+            }
+        }
 
         const params = new URLSearchParams({
             ...Object.fromEntries(pgnParams?.entries() || []),
@@ -50,8 +63,17 @@ const createFincodeRequestFetch = (
     },
     query?: {
         pagination?: Pagination
-        pay_type?: string
-        process_plan_date?: string
+
+        // GET /v1/payments/bulk/:id
+        pay_type?: string | null
+        process_plan_date?: string | null
+
+        // GET /v1/platforms
+        id?: string | null
+        shop_name?: string | null
+        shop_mail_address?: string | null
+        created_from?: string | null
+        created_to?: string | null
     }
 ) => {
 

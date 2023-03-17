@@ -2,7 +2,7 @@ import {
     APIRawErrorResponse,
     CreatingPaymentSessionRequest,
     PaymentSessionObject,
-    createUnknownError,
+    createError,
     formatErrorResponse
 } from "../../types/index.js"
 import { FincodeConfig } from "./fincode.js"
@@ -49,7 +49,7 @@ class PaymentSession {
                         resolve(session)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 } else {
@@ -59,13 +59,13 @@ class PaymentSession {
                         reject(err)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
-                        const err = createUnknownError(message)
+                        const err = createError(message, "SDK_ERROR")
                         reject(err)
                     })
                 }
             }).catch((e) => {
                 const message = (e instanceof Error) ? e.message : undefined
-                const err = createUnknownError(message)
+                const err = createError(message, "SDK_ERROR")
                 reject(err)
             })
         })
