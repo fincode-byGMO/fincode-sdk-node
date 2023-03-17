@@ -40,11 +40,15 @@ export const formatErrorResponse = (res: APIRawErrorResponse): FincodeError => {
 
     return new FincodeError(errors)
 }
-export const createUnknownError = (message: string = "Unknown Error"): FincodeError => {
+export const createError = (
+    message: string = "Unknown Error",
+    type: APIErrorType = "UNKNOWN_ERROR",
+    rawCode: string = "UNKNOWN_ERROR",
+): FincodeError => {
     return new FincodeError([{
-        type: "UNKNOWN_ERROR",
+        type: type,
         raw: {
-            error_code: "UNKNOWN_ERROR",
+            error_code: rawCode,
             error_messaage: message,
         }
     }])
@@ -55,6 +59,11 @@ export type APIErrorType =
      * 不明なエラー ( Unknown Error )
      */
     'UNKNOWN_ERROR' |
+
+    /**
+     * SDK内部エラー ( SDK Internal Error )
+     */
+    'SDK_ERROR' |
 
     /**
      * APIバージョン指定におけるエラー ( Invalid API Version )
