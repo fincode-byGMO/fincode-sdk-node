@@ -7,7 +7,9 @@ import {
     RetrievingSubscriptionListPagination,
     UpdatingSubscriptionRequest,
     createUnknownError,
-    formatErrorResponse
+    formatErrorResponse,
+    SubscriptionResultObject,
+    RetrievingSubscriptionResultListPagination
 } from "../../types/index.js"
 import { FincodeConfig } from "./fincode.js"
 import { createFincodeRequestFetch, FincodePartialRequestHeader } from "./http.js"
@@ -296,6 +298,62 @@ class Subscription {
         })
     }
 
+    /**
+     * **Retrieve subscription result list**
+     * 
+     * corresponds to `GET /v1/subscriptions/:id/result`
+     * 
+     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * 
+     * @param {string} id
+     * @param {RetrievingSubscriptionResultListPagination} [pagination]
+     * @param {FincodePartialRequestHeader} [header]
+     * 
+     * @returns {Promise<ListResponse<SubscriptionResultObject>>}
+     */
+    public retrieveResultList(
+        id: string,
+        pagination?: RetrievingSubscriptionResultListPagination,
+        header?: FincodePartialRequestHeader,
+    ): Promise<ListResponse<SubscriptionResultObject>> {
+        return new Promise((resolve, reject) => {
+            const fetch = createFincodeRequestFetch(
+                this._config,
+                "GET",
+                `/v1/subscriptions/${id}/result`,
+                undefined,
+                header,
+                { pagination: pagination },
+            )
+
+            fetch().then((res) => {
+                if (res.ok) {
+                    res.json().then((json) => {
+                        const list = json as ListResponse<SubscriptionResultObject>
+                        resolve(list)
+                    }).catch((e) => {
+                        const message = (e instanceof Error) ? e.message : undefined
+                        const err = createUnknownError(message)
+                        reject(err)
+                    })
+                } else {
+                    res.json().then((json) => {
+                        const errRes = json as APIRawErrorResponse
+                        const err = formatErrorResponse(errRes)
+                        reject(err)
+                    }).catch((e) => {
+                        const message = (e instanceof Error) ? e.message : undefined
+                        const err = createUnknownError(message)
+                        reject(err)
+                    })
+                }
+            }).catch((e) => {
+                const message = (e instanceof Error) ? e.message : undefined
+                const err = createUnknownError(message)
+                reject(err)
+            })
+        })
+    }
 }
 
 export { Subscription }

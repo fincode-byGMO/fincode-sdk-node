@@ -1,239 +1,265 @@
-// import {
-//     APIRawErrorResponse,
-//     BulkPaymentDetailObject,
-//     BulkPaymentDetailPagination,
-//     BulkPaymentObject,
-//     BulkPaymentPagination,
-//     DeletingBulkPaymentResponse,
-//     ListResponse,
-//     createFincodeRequestHeader,
-//     createUnknownError,
-//     formatErrorResponse,
-// } from "../../types/index"
-// import { FincodeConfig } from "./fincode"
-// import { createFincodeRequest, createFincodeRequestURL } from "./http"
-// import FormData from "form-data"
-// import * as https from "https"
+import FormData from "form-data"
+import {
+    APIRawErrorResponse,
+    DeletingPaymentBulkResponse,
+    ListResponse,
+    PaymentBulkDetailObject,
+    PaymentBulkObject,
+    RetrievingPaymentBulkDetailPagination,
+    RetrievingPaymentBulkPagination,
+    createFincodeRequestHeader,
+    createUnknownError,
+    formatErrorResponse
+} from "../../types/index.js"
+import { FincodeConfig } from "./fincode.js"
+import { createFincodeRequestFetch, createFincodeRequestURL, FincodePartialRequestHeader } from "./http.js"
 
-// class BulkPayment {
+class PaymentBulk {
 
-//     private readonly _config: FincodeConfig
+    private readonly _config: FincodeConfig
 
-//     constructor(config: FincodeConfig) {
-//         this._config = config
-//     }
+    constructor(config: FincodeConfig) {
+        this._config = config
+    }
 
-//     /**
-//      * **Register a bulk card payment**
-//      *
-//      * corresponds to `POST /v1/payments/bulk`
-//      *
-//      * if the Promise is rejected, the error is an instance of `FincodeError`
-//      */
-//     public register(
-//         jsonFile: Buffer,
-//         payType: "Card",
-//         processDate: string,
-//         header?: Parameters<typeof createFincodeRequest>[4]
-//     ): Promise<BulkPaymentObject> {
+    /**
+     * **Register a payment bulk**
+     * 
+     * corresponds to `POST /v1/sessions`
+     * 
+     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * 
+     * @param {CreatingCardRegistrationSessionRequest} body
+     * @param {FincodePartialRequestHeader} [header]
+     * 
+     * @returns {Promise<PaymentBulkObject>}
+     */
+    public create(
+        payType: "Card",
+        processPlanDate: string,
+        file: Buffer | string,
+        fileName: string,
+        header?: FincodePartialRequestHeader
+    ): Promise<PaymentBulkObject> {
 
-//         return new Promise((resolve, reject) => {
+        // multipart-form-data
+        const formData = new FormData()
+        const fileAppendOptions: FormData.AppendOptions = {
+            filename: fileName,
+            contentType: "application/json"
+        }
+        formData.append("file", file, fileAppendOptions)
 
-//             const _header = createFincodeRequestHeader({
-//                 apiVersion: this._config.version,
-//                 authorization: this._config.apiKey,
-//                 idempotentKey: header?.idempotentKey,
-//                 tenantShopId: header?.tenantShopId,
-//             })
+        const fetch = createFincodeRequestFetch(
+            this._config,
+            "POST",
+            "/v1/payments/bulk",
+            formData,
+            header,
+            {
+                pay_type: payType,
+                process_plan_date: processPlanDate,
+            },
+        )
 
-//             const form = new FormData()
-//             form.append("file", jsonFile, {
-//                 contentType: "application/json",
-//             })
+        return new Promise((resolve, reject) => {
+            fetch().then((res) => {
+                if (res.ok) {
+                    res.json().then((json) => {
+                        const bulk = json as PaymentBulkObject
+                        resolve(bulk)
+                    }).catch((e) => {
+                        const message = (e instanceof Error) ? e.message : undefined
+                        const err = createUnknownError(message)
+                        reject(err)
+                    })
+                } else {
+                    res.json().then((json) => {
+                        const errRes = json as APIRawErrorResponse
+                        const err = formatErrorResponse(errRes)
+                        reject(err)
+                    }).catch((e) => {
+                        const message = (e instanceof Error) ? e.message : undefined
+                        const err = createUnknownError(message)
+                        reject(err)
+                    })
+                }
+            }).catch((e) => {
+                const message = (e instanceof Error) ? e.message : undefined
+                const err = createUnknownError(message)
+                reject(err)
+            })
+        })
+    }
 
-//             const options: https.RequestOptions = {
-//                 method: "POST",
-//                 headers: _header,
-//             }
+    /**
+     * **Retrieve payment bulk list**
+     * 
+     * corresponds to `GET /v1/payments/bulk`
+     * 
+     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * 
+     * @param {RetrievingPaymentBulkPagination} [pagination]
+     * @param {FincodePartialRequestHeader} [header]
+     * 
+     * @returns {Promise<ListResponse<PaymentBulkObject>>}
+     */
+    public retrieveList(
+        pagination?: RetrievingPaymentBulkPagination,
+        header?: FincodePartialRequestHeader,
+    ): Promise<ListResponse<PaymentBulkObject>> {
 
-//             const url = createFincodeRequestURL(this._config, "/v1/payments/bulk", {
-//                 pay_type: payType,
-//                 process_plan_date: processDate,
-//             })
+        const fetch = createFincodeRequestFetch(
+            this._config,
+            "GET",
+            "/v1/payments/bulk",
+            undefined,
+            header,
+            { pagination: pagination },
+        )
 
-//             const req = https.request(url, options)
-//             req.write(form)
-//             req.on("response", (res) => {
-//                 const body: string[] = []
-//                 res.on("data", (chunk) => {
-//                     body.push(chunk)
-//                 })
-//                 res.on("end", () => {
-//                     const json = JSON.parse(body.join(""))
-//                     if (res.statusCode === 200) {
-//                         const bulk = json as BulkPaymentObject
+        return new Promise((resolve, reject) => {
+            fetch().then((res) => {
+                if (res.ok) {
+                    res.json().then((json) => {
+                        const bulkList = json as ListResponse<PaymentBulkObject>
+                        resolve(bulkList)
+                    }).catch((e) => {
+                        const message = (e instanceof Error) ? e.message : undefined
+                        const err = createUnknownError(message)
+                        reject(err)
+                    })
+                } else {
+                    res.json().then((json) => {
+                        const errRes = json as APIRawErrorResponse
+                        const err = formatErrorResponse(errRes)
+                        reject(err)
+                    }).catch((e) => {
+                        const message = (e instanceof Error) ? e.message : undefined
+                        const err = createUnknownError(message)
+                        reject(err)
+                    })
+                }
+            }).catch((e) => {
+                const message = (e instanceof Error) ? e.message : undefined
+                const err = createUnknownError(message)
+                reject(err)
+            })
+        })
+    }
 
-//                         resolve(bulk)
-//                     } else {
-//                         try {
-//                             const errRes = json as APIRawErrorResponse
-//                             const err = formatErrorResponse(errRes)
-//                             reject(err)
-//                         } catch (e) {
-//                             const message = (e instanceof Error) ? e.message : undefined
-//                             const err = createUnknownError(message)
-//                             reject(err)
-//                         }
-//                     }
-//                 })
-//             })
-//             req.end()
-//         })
-//     }
+    /**
+     * **Retrieve details of a payment bulk**
+     * 
+     * corresponds to `GET /v1/payments/bulk/:id`
+     * 
+     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * 
+     * @param {string} id
+     * @param {RetrievingPaymentBulkDetailPagination} [pagination]
+     * @param {FincodePartialRequestHeader} [header]
+     * 
+     * @returns {Promise<PaymentBulkDetailObject>}
+     */
+    public retrieveDetail(
+        id: string,
+        pagination?: RetrievingPaymentBulkDetailPagination,
+        header?: FincodePartialRequestHeader,
+    ): Promise<PaymentBulkDetailObject> {
 
-//     /**
-//      * **Retrieve bulk card payment list**
-//      *
-//      * corresponds to `GET /v1/payments/bulk`
-//      *
-//      * if the Promise is rejected, the error is an instance of `FincodeError`
-//      */
-//     public retrieveList(
-//         pagination?: BulkPaymentPagination,
-//         header?: Parameters<typeof createFincodeRequest>[4],
-//     ): Promise<ListResponse<BulkPaymentObject>> {
-//         return new Promise((resolve, reject) => {
-//             const req = createFincodeRequest(
-//                 this._config,
-//                 "GET",
-//                 `/v1/payments/bulk`,
-//                 undefined,
-//                 header,
-//                 { pagination: pagination }
-//             )
+        const fetch = createFincodeRequestFetch(
+            this._config,
+            "GET",
+            `/v1/payments/bulk/${id}`,
+            undefined,
+            header,
+            { pagination: pagination },
+        )
 
-//             req.on("response", res => {
-//                 const body: string[] = []
-//                 res.on("data", chunk => {
-//                     body.push(chunk)
-//                 })
-//                 res.on("end", () => {
-//                     const json = JSON.parse(body.join(""))
-//                     if (res.statusCode === 200) {
-//                         const list = json as ListResponse<BulkPaymentObject>
-//                         resolve(list)
-//                     } else {
-//                         try {
-//                             const errRes = json as APIRawErrorResponse
-//                             const err = formatErrorResponse(errRes)
-//                             reject(err)
-//                         } catch (e) {
-//                             const message = (e instanceof Error) ? e.message : undefined
-//                             const err = createUnknownError(message)
-//                             reject(err)
-//                         }
-//                     }
-//                 })
-//             })
-//             req.end()
-//         })
-//     }
+        return new Promise((resolve, reject) => {
+            fetch().then((res) => {
+                if (res.ok) {
+                    res.json().then((json) => {
+                        const bulkDetail = json as PaymentBulkDetailObject
+                        resolve(bulkDetail)
+                    }).catch((e) => {
+                        const message = (e instanceof Error) ? e.message : undefined
+                        const err = createUnknownError(message)
+                        reject(err)
+                    })
+                } else {
+                    res.json().then((json) => {
+                        const errRes = json as APIRawErrorResponse
+                        const err = formatErrorResponse(errRes)
+                        reject(err)
+                    }).catch((e) => {
+                        const message = (e instanceof Error) ? e.message : undefined
+                        const err = createUnknownError(message)
+                        reject(err)
+                    })
+                }
+            }).catch((e) => {
+                const message = (e instanceof Error) ? e.message : undefined
+                const err = createUnknownError(message)
+                reject(err)
+            })
+        })
+    }
 
-//     /**
-//      * **Retrieve a bulk card payment detail**
-//      *
-//      * corresponds to `GET /v1/payments/bulk/:id`
-//      *
-//      * if the Promise is rejected, the error is an instance of `FincodeError`
-//      */
-//     public retrieveDetail(
-//         id: string,
-//         pagination?: BulkPaymentDetailPagination,
-//         header?: Parameters<typeof createFincodeRequest>[4],
-//     ): Promise<BulkPaymentDetailObject> {
-//         return new Promise((resolve, reject) => {
-//             const req = createFincodeRequest(
-//                 this._config,
-//                 "GET",
-//                 `/v1/payments/bulk/${id}`,
-//                 undefined,
-//                 header,
-//                 { pagination: pagination }
-//             )
+    /**
+     * **Delete a payment bulk**
+     * 
+     * corresponds to `DELETE /v1/payments/bulk/:id`
+     * 
+     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * 
+     * @param {string} id
+     * @param {FincodePartialRequestHeader} [header]
+     * 
+     * @returns {Promise<DeletingPaymentBulkResponse>}
+     */
+    public delete(
+        id: string,
+        header?: FincodePartialRequestHeader,
+    ): Promise<DeletingPaymentBulkResponse> {
 
-//             req.on("response", res => {
-//                 const body: string[] = []
-//                 res.on("data", chunk => {
-//                     body.push(chunk)
-//                 })
-//                 res.on("end", () => {
-//                     const json = JSON.parse(body.join(""))
-//                     if (res.statusCode === 200) {
-//                         const detail = json as BulkPaymentDetailObject
-//                         resolve(detail)
-//                     } else {
-//                         try {
-//                             const errRes = json as APIRawErrorResponse
-//                             const err = formatErrorResponse(errRes)
-//                             reject(err)
-//                         } catch (e) {
-//                             const message = (e instanceof Error) ? e.message : undefined
-//                             const err = createUnknownError(message)
-//                             reject(err)
-//                         }
-//                     }
-//                 })
-//             })
-//             req.end()
-//         })
-//     }
+        const fetch = createFincodeRequestFetch(
+            this._config,
+            "DELETE",
+            `/v1/payments/bulk/${id}`,
+            undefined,
+            header,
+        )
 
-//     /**
-//      * **Delete a bulk card payment**
-//      *
-//      * corresponds to `DELETE /v1/payments/bulk/:id`
-//      *
-//      * if the Promise is rejected, the error is an instance of `FincodeError`
-//      */
-//     public delete(
-//         id: string,
-//         header?: Parameters<typeof createFincodeRequest>[4],
-//     ): Promise<DeletingBulkPaymentResponse> {
-//         return new Promise((resolve, reject) => {
-//             const req = createFincodeRequest(
-//                 this._config,
-//                 "DELETE",
-//                 `/v1/payments/bulk/${id}`,
-//                 undefined,
-//                 header,
-//             )
+        return new Promise((resolve, reject) => {
+            fetch().then((res) => {
+                if (res.ok) {
+                    res.json().then((json) => {
+                        const deleteResult = json as DeletingPaymentBulkResponse
+                        resolve(deleteResult)
+                    }).catch((e) => {
+                        const message = (e instanceof Error) ? e.message : undefined
+                        const err = createUnknownError(message)
+                        reject(err)
+                    })
+                } else {
+                    res.json().then((json) => {
+                        const errRes = json as APIRawErrorResponse
+                        const err = formatErrorResponse(errRes)
+                        reject(err)
+                    }).catch((e) => {
+                        const message = (e instanceof Error) ? e.message : undefined
+                        const err = createUnknownError(message)
+                        reject(err)
+                    })
+                }
+            }).catch((e) => {
+                const message = (e instanceof Error) ? e.message : undefined
+                const err = createUnknownError(message)
+                reject(err)
+            })
+        })
+    }
+}
 
-//             req.on("response", res => {
-//                 const body: string[] = []
-//                 res.on("data", chunk => {
-//                     body.push(chunk)
-//                 })
-//                 res.on("end", () => {
-//                     const json = JSON.parse(body.join(""))
-//                     if (res.statusCode === 200) {
-//                         const detail = json as DeletingBulkPaymentResponse
-//                         resolve(detail)
-//                     } else {
-//                         try {
-//                             const errRes = json as APIRawErrorResponse
-//                             const err = formatErrorResponse(errRes)
-//                             reject(err)
-//                         } catch (e) {
-//                             const message = (e instanceof Error) ? e.message : undefined
-//                             const err = createUnknownError(message)
-//                             reject(err)
-//                         }
-//                     }
-//                 })
-//             })
-//             req.end()
-//         })
-//     }
-
-// }
-// export { BulkPayment }
+export { PaymentBulk }
