@@ -1,6 +1,6 @@
 import { Card } from "./card.js"
 import { Customer } from "./customer.js"
-// import { BulkPayment } from "./bulk.payment"
+// import { PaymentBulk } from "./bulk.payment"
 // import { Payment } from "./payment"
 // import { Plan } from "./plan"
 // import { CardRegistrationSession } from "./session.cardRegistration"
@@ -69,9 +69,9 @@ class Fincode {
     //     return this._cardRegistrationSession
     // }
 
-    // private _bulkPayment?: BulkPayment
-    // get bulkPayment(): BulkPayment {
-    //     if (!this._bulkPayment) { this._bulkPayment = new BulkPayment(this.config) }
+    // private _bulkPayment?: PaymentBulk
+    // get bulkPayment(): PaymentBulk {
+    //     if (!this._bulkPayment) { this._bulkPayment = new PaymentBulk(this.config) }
     //     return this._bulkPayment
     // }
 }

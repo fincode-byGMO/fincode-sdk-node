@@ -1,4 +1,4 @@
-import fetch, { RequestInit } from "node-fetch"
+import fetch, { BodyInit, RequestInit } from "node-fetch"
 import { FincodeConfig } from "./fincode.js"
 import { createFincodeRequestHeader } from "../../types/http.js"
 import { Pagination } from "../../types/pagination.js"
@@ -43,7 +43,7 @@ const createFincodeRequestFetch = (
     config: FincodeConfig,
     method: "POST" | "GET" | "PUT" | "DELETE",
     path: string,
-    data?: string,
+    data?: BodyInit | null,
     headers?: {
         idempotentKey?: string
         tenantShopId?: string
@@ -69,12 +69,6 @@ const createFincodeRequestFetch = (
         headers: _headers,
         body: data,
     }
-
-    console.log({
-        url,
-        options,
-    })
-
     return () => fetch(url, options)
 }
 
