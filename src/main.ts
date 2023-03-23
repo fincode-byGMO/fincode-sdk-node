@@ -1,6 +1,6 @@
 import fetch from "node-fetch"
-import { createFincode } from "./api/v1/index.js"
-import { FincodeError, RetrievingCustomerListPagination } from "./types/index.js"
+import { createFincode } from "./api/v1/index"
+import { FincodeError, RetrievingCustomerListPagination } from "./types/index"
 
 const secretKey = "m_test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 

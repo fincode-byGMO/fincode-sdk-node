@@ -1,14 +1,15 @@
 import {
     APIRawErrorResponse,
     ListResponse,
+    PlatformShopsSearchParams,
     RetrievingPlatformShopListPagination,
     ShopObject,
     UpdatingPlatformRequest,
     createError,
     formatErrorResponse
-} from "../../types/index.js"
-import { FincodeConfig } from "./fincode.js"
-import { createFincodeRequestFetch, FincodePartialRequestHeader } from "./http.js"
+} from "../../types/index"
+import { FincodeConfig } from "./fincode"
+import { createFincodeRequestFetch, FincodePartialRequestHeader } from "./http"
 
 class Platform {
 
@@ -31,13 +32,7 @@ class Platform {
      */
     public retrieveList(
         pagination?: RetrievingPlatformShopListPagination,
-        query?: {
-            id?: string | null,
-            shop_name?: string | null,
-            shop_mail_address?: string | null,
-            created_from?: string | null,
-            created_to?: string | null,
-        },
+        searchParams?: PlatformShopsSearchParams,
         header?: FincodePartialRequestHeader
     ): Promise<ListResponse<ShopObject>> {
         return new Promise((resolve, reject) => {
@@ -49,11 +44,7 @@ class Platform {
                 header,
                 {
                     pagination: pagination,
-                    id: query?.id,
-                    shop_name: query?.shop_name,
-                    shop_mail_address: query?.shop_mail_address,
-                    created_from: query?.created_from,
-                    created_to: query?.created_to,
+                    searchParams: searchParams,
                 },
             )
 
@@ -161,9 +152,8 @@ class Platform {
                 this._config,
                 "PUT",
                 `/v1/platforms/${id}`,
-                undefined,
+                JSON.stringify(body),
                 header,
-                body,
             )
 
             fetch().then((res) => {

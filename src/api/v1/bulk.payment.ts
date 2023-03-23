@@ -9,9 +9,9 @@ import {
     RetrievingPaymentBulkPagination,
     createError,
     formatErrorResponse
-} from "../../types/index.js"
-import { FincodeConfig } from "./fincode.js"
-import { createFincodeRequestFetch, FincodePartialRequestHeader } from "./http.js"
+} from "../../types/index"
+import { FincodeConfig } from "./fincode"
+import { createFincodeRequestFetch, FincodePartialRequestHeader } from "./http"
 
 class PaymentBulk {
 
@@ -56,8 +56,10 @@ class PaymentBulk {
             formData,
             header,
             {
-                pay_type: payType,
-                process_plan_date: processPlanDate,
+                keyValues: {
+                    pay_type: payType,
+                    process_plan_date: processPlanDate,
+                }
             },
         )
 

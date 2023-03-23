@@ -1,8 +1,9 @@
+import { FincodeConfig } from "./fincode"
+import { createFincodeRequestHeader } from "../../types/http"
+import { Pagination } from "../../types/pagination"
+import { SearchParams } from "../../types/searchParams"
+import { HttpsProxyAgent } from "https-proxy-agent"
 import fetch, { BodyInit, RequestInit } from "node-fetch"
-import { FincodeConfig } from "./fincode.js"
-import { createFincodeRequestHeader } from "../../types/http.js"
-import { Pagination } from "../../types/pagination.js"
-import { SearchParams } from "../../types/searchParams.js"
 
 const BASE_URL = "https://api.fincode.jp"
 const BASE_URL_TEST = "https://api.test.fincode.jp"
@@ -13,16 +14,8 @@ const createFincodeRequestURL = (
     query?: {
         pagination?: Pagination
         searchParams?: SearchParams
-        // GET /v1/payments/bulk/:id
-        pay_type?: string | null
-        process_plan_date?: string | null
 
-        // GET /v1/platforms
-        id?: string | null
-        shop_name?: string | null
-        shop_mail_address?: string | null
-        created_from?: string | null
-        created_to?: string | null
+        keyValues?: Record<string, string | number | boolean | null | undefined>
     }
 ): string => {
 
@@ -30,20 +23,15 @@ const createFincodeRequestURL = (
 
     let queryStr = ""
     if (query) {
-        const { pagination, searchParams, ...rest } = query
+        const { pagination, searchParams, keyValues } = query
         const pgnParams = pagination?.buildParams()
         const sParams = searchParams?.buildParams()
-        const restParams = new URLSearchParams()
-        for (const [key, value] of Object.entries(rest)) {
-            if (value !== undefined && value !== null) {
-                restParams.append(key, value)
-            }
-        }
+        const kvParams = keyValues ? new URLSearchParams(Object.entries(keyValues).toString()) : undefined
 
         const params = new URLSearchParams({
             ...Object.fromEntries(pgnParams?.entries() || []),
             ...Object.fromEntries(sParams?.entries() || []),
-            ...Object.fromEntries(restParams.entries()),
+            ...Object.fromEntries(kvParams?.entries() || []),
         })
         queryStr = params.toString() ? `?${params.toString()}` : ""
     }
@@ -56,24 +44,16 @@ const createFincodeRequestFetch = (
     config: FincodeConfig,
     method: "POST" | "GET" | "PUT" | "DELETE",
     path: string,
-    data?: BodyInit | null,
+    data?: BodyInit,
     headers?: {
         idempotentKey?: string
         tenantShopId?: string
     },
     query?: {
         pagination?: Pagination
+        searchParams?: SearchParams
 
-        // GET /v1/payments/bulk/:id
-        pay_type?: string | null
-        process_plan_date?: string | null
-
-        // GET /v1/platforms
-        id?: string | null
-        shop_name?: string | null
-        shop_mail_address?: string | null
-        created_from?: string | null
-        created_to?: string | null
+        keyValues?: Record<string, string | number | boolean | null | undefined>
     }
 ) => {
 
@@ -86,10 +66,16 @@ const createFincodeRequestFetch = (
         tenantShopId: headers?.tenantShopId,
     })
 
+    let proxyAgent: HttpsProxyAgent | undefined = undefined
+    if (process.env.HTTPS_PROXY) {
+        proxyAgent = new HttpsProxyAgent(process.env.HTTPS_PROXY)
+    }
+
     const options: RequestInit = {
         method: method,
         headers: _headers,
         body: data,
+        agent: proxyAgent
     }
     return () => fetch(url, options)
 }
