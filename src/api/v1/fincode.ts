@@ -1,5 +1,11 @@
-import { Card } from "./card.js"
-import { Customer } from "./customer.js"
+import { PaymentBulk } from "./bulk.payment"
+import { Card } from "./card"
+import { Customer } from "./customer"
+import { Payment } from "./payment"
+import { Plan } from "./plan"
+import { CardRegistrationSession } from "./session.cardRegistration"
+import { PaymentSession } from "./session.payment"
+import { Subscription } from "./subscription"
 // import { PaymentBulk } from "./bulk.payment"
 // import { Payment } from "./payment"
 // import { Plan } from "./plan"
@@ -39,41 +45,41 @@ class Fincode {
         return this._card
     }
 
-    // private _payment?: Payment
-    // get payment(): Payment {
-    //     if (!this._payment) { this._payment = new Payment(this.config) }
-    //     return this._payment
-    // }
+    private _payment?: Payment
+    get payment(): Payment {
+        if (!this._payment) { this._payment = new Payment(this.config) }
+        return this._payment
+    }
 
-    // private _plan?: Plan
-    // get plan(): Plan {
-    //     if (!this._plan) { this._plan = new Plan(this.config) }
-    //     return this._plan
-    // }
+    private _plan?: Plan
+    get plan(): Plan {
+        if (!this._plan) { this._plan = new Plan(this.config) }
+        return this._plan
+    }
 
-    // private _subscription?: Subscription
-    // get subscription(): Subscription {
-    //     if (!this._subscription) { this._subscription = new Subscription(this.config) }
-    //     return this._subscription
-    // }
+    private _subscription?: Subscription
+    get subscription(): Subscription {
+        if (!this._subscription) { this._subscription = new Subscription(this.config) }
+        return this._subscription
+    }
 
-    // private _paymentSession?: PaymentSession
-    // get paymentSession(): PaymentSession {
-    //     if (!this._paymentSession) { this._paymentSession = new PaymentSession(this.config) }
-    //     return this._paymentSession
-    // }
+    private _paymentSession?: PaymentSession
+    get paymentSession(): PaymentSession {
+        if (!this._paymentSession) { this._paymentSession = new PaymentSession(this.config) }
+        return this._paymentSession
+    }
 
-    // private _cardRegistrationSession?: CardRegistrationSession
-    // get cardRegistrationSession(): CardRegistrationSession {
-    //     if (!this._cardRegistrationSession) { this._cardRegistrationSession = new CardRegistrationSession(this.config) }
-    //     return this._cardRegistrationSession
-    // }
+    private _cardRegistrationSession?: CardRegistrationSession
+    get cardRegistrationSession(): CardRegistrationSession {
+        if (!this._cardRegistrationSession) { this._cardRegistrationSession = new CardRegistrationSession(this.config) }
+        return this._cardRegistrationSession
+    }
 
-    // private _bulkPayment?: PaymentBulk
-    // get bulkPayment(): PaymentBulk {
-    //     if (!this._bulkPayment) { this._bulkPayment = new PaymentBulk(this.config) }
-    //     return this._bulkPayment
-    // }
+    private _bulkPayment?: PaymentBulk
+    get bulkPayment(): PaymentBulk {
+        if (!this._bulkPayment) { this._bulkPayment = new PaymentBulk(this.config) }
+        return this._bulkPayment
+    }
 }
 export { Fincode, FincodeConfig }
 

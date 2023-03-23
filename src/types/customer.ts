@@ -1,4 +1,4 @@
-import { Pagination, Sort } from "./pagination.js"
+import { Pagination, Sort } from "./pagination"
 
 /**
  * Customer object
@@ -241,6 +241,7 @@ export class RetrievingCustomerListPagination implements Pagination {
                     return [key, value as string]
                 }
             })
+            .forEach(([key, value]) => params.append(key, value))
 
         return params
     }

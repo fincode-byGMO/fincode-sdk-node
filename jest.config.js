@@ -1,10 +1,14 @@
 export default {
-  preset: "ts-jest/presets/default-esm",
+  preset: "ts-jest",
+  testEnvironment: "node",
+  moduleFileExtensions: ["ts", "tsx", "js"],
   transform: {
-    "^.+\\.tsx?$": [
-      "ts-jest", {
-        "tsconfig": "tsconfig.json",
-      }
-    ],
+    "^.+\\.(ts|tsx)?$": "ts-jest",
   },
-};
+  testMatch: ["<rootDir>/src/**/*.test.(ts|tsx|js)"],
+  globals: {
+    "ts-jest": {
+      tsConfig: "tsconfig.json",
+    },
+  }
+} 

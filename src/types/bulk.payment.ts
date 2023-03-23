@@ -1,4 +1,4 @@
-import { Pagination, Sort } from "./pagination.js"
+import { Pagination, Sort } from "./pagination"
 
 /**
      * Bulk payment object
@@ -322,7 +322,8 @@ export class RetrievingPaymentBulkDetailPagination implements Pagination {
                 } else {
                     return [key, value as string]
                 }
-            }).forEach(([key, value]) => params.append(key, value))
+            })
+            .forEach(([key, value]) => params.append(key, value))
 
 
         return params

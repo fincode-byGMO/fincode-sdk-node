@@ -1,17 +1,18 @@
+import { PlatformAccountSearchParams } from "~/src/types/searchParams"
 import {
     APIRawErrorResponse,
     ListResponse,
-    PlatformShopsSearchParams,
-    RetrievingPlatformShopListPagination,
+    PlatformAccountObject,
+    PlatformAccountSummaryObject,
+    RetrievingPlatformAccountListPagination,
     ShopObject,
-    UpdatingPlatformRequest,
     createError,
     formatErrorResponse
 } from "../../types/index"
 import { FincodeConfig } from "./fincode"
 import { createFincodeRequestFetch, FincodePartialRequestHeader } from "./http"
 
-class Platform {
+class PlatformAccount {
 
     private readonly _config: FincodeConfig
 
@@ -20,30 +21,33 @@ class Platform {
     }
 
     /**
-     * **Retrieve platform shop list**
+     * **Retrieve platform-account list **
      * 
-     * corresponds to `POST /v1/platforms`
+     * corresponds to `POST /v1/platform_accounts`
      * 
      * if the Promise is rejected, the error is an instance of `FincodeError`
      * 
+     * @param {RetrievingPlatformAccountListPagination} [paginaiton] 
+     * @param {PlatformAccountSearchParams} [searchParams]
      * @param {FincodePartialRequestHeader} [header]
      * 
-     * @returns {Promise<ListResponse<ShopObject>>}
-     */
+     * @returns {Promise<ListResponse<PlatformAccountObject>>} 
+     * 
+    */
     public retrieveList(
-        pagination?: RetrievingPlatformShopListPagination,
-        searchParams?: PlatformShopsSearchParams,
-        header?: FincodePartialRequestHeader
-    ): Promise<ListResponse<ShopObject>> {
+        paginaiton?: RetrievingPlatformAccountListPagination,
+        searchParams?: PlatformAccountSearchParams,
+        header?: FincodePartialRequestHeader,
+    ): Promise<ListResponse<PlatformAccountObject>> {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
                 this._config,
                 "POST",
-                "/v1/platforms",
+                "/v1/plans",
                 undefined,
                 header,
                 {
-                    pagination: pagination,
+                    pagination: paginaiton,
                     searchParams: searchParams,
                 },
             )
@@ -51,7 +55,7 @@ class Platform {
             fetch().then((res) => {
                 if (res.ok) {
                     res.json().then((json) => {
-                        const list = json as ListResponse<ShopObject>
+                        const list = json as ListResponse<PlatformAccountObject>
                         resolve(list)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
@@ -74,30 +78,31 @@ class Platform {
                 const err = createError(message, "SDK_ERROR")
                 reject(err)
             })
-        })
+        }
+        )
     }
 
     /**
-     * **Retrieve a platform shop**
+     * **Retrieve a platform-account*
      * 
-     * corresponds to `GET /v1/platforms/:id`
+     * corresponds to `GET /v1/platform_accounts/:id`
      * 
      * if the Promise is rejected, the error is an instance of `FincodeError`
      * 
-     * @param {string} id - Platform shop ID
+     * @param {string} id
      * @param {FincodePartialRequestHeader} [header]
      * 
-     * @returns {Promise<ShopObject>}
+     * @returns {Promise<PlatformAccountObject>}
      */
     public retrieve(
         id: string,
         header?: FincodePartialRequestHeader,
-    ): Promise<ShopObject> {
+    ): Promise<PlatformAccountObject> {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
                 this._config,
                 "GET",
-                `/v1/platforms/${id}`,
+                `/v1/platform_accounts/${id}`,
                 undefined,
                 header,
             )
@@ -105,8 +110,8 @@ class Platform {
             fetch().then((res) => {
                 if (res.ok) {
                     res.json().then((json) => {
-                        const shop = json as ShopObject
-                        resolve(shop)
+                        const platformAccount = json as PlatformAccountObject
+                        resolve(platformAccount)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
                         const err = createError(message, "SDK_ERROR")
@@ -128,39 +133,42 @@ class Platform {
                 const err = createError(message, "SDK_ERROR")
                 reject(err)
             })
-        })
+        }
+        )
     }
 
     /**
-     * **Update a platform shop**
+     * **Retrieve a platform-account summary*
      * 
-     * corresponds to `PUT /v1/platforms/:id`
+     * corresponds to `GET /v1/platform_accounts/:id/summary`
      * 
      * if the Promise is rejected, the error is an instance of `FincodeError`
      * 
-     * @param {string} id - Platform shop ID
+     * @param {string} id
+     * @param {FincodePartialRequestHeader} [header]
      * 
-     * @returns {Promise<ShopObject>}
+     * @returns {Promise<PlatformAccountObject>}
      */
-    public update(
+
+    public retrieveSummary(
         id: string,
-        body: UpdatingPlatformRequest,
         header?: FincodePartialRequestHeader,
-    ): Promise<ShopObject> {
+    ): Promise<PlatformAccountSummaryObject> {
+
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
                 this._config,
-                "PUT",
-                `/v1/platforms/${id}`,
-                JSON.stringify(body),
+                "GET",
+                `/v1/platform_accounts/${id}/summary`,
+                undefined,
                 header,
             )
 
             fetch().then((res) => {
                 if (res.ok) {
                     res.json().then((json) => {
-                        const shop = json as ShopObject
-                        resolve(shop)
+                        const platformAccount = json as PlatformAccountSummaryObject
+                        resolve(platformAccount)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
                         const err = createError(message, "SDK_ERROR")
@@ -182,8 +190,7 @@ class Platform {
                 const err = createError(message, "SDK_ERROR")
                 reject(err)
             })
-        })
+        }
+        )
     }
 }
-
-export { Platform }

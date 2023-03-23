@@ -3,7 +3,7 @@ export type APIRawErrorResponse = {
 }
 export type APIRawError = {
     error_code: string
-    error_messaage: string
+    error_message: string
 }
 
 
@@ -49,7 +49,7 @@ export const createError = (
         type: type,
         raw: {
             error_code: rawCode,
-            error_messaage: message,
+            error_message: message,
         }
     }])
 }
