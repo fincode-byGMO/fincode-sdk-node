@@ -1,4 +1,4 @@
-import * as Shop from "./shop.js"
+import * as Shop from "./shop"
 /**
      * Contract object
      */

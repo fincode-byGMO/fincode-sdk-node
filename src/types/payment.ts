@@ -1,5 +1,5 @@
-import * as Card from "./card.js"
-import { Pagination, Sort } from "./pagination.js"
+import * as Card from "./card"
+import { Pagination, Sort } from "./pagination"
 
 /**
  * Payment Object

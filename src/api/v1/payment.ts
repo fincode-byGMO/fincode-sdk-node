@@ -16,9 +16,9 @@ import {
     RetrievingPaymentListPagination,
     createError,
     formatErrorResponse
-} from "../../types/index.js"
-import { FincodeConfig } from "./fincode.js"
-import { createFincodeRequestFetch, FincodePartialRequestHeader } from "./http.js"
+} from "../../types/index"
+import { FincodeConfig } from "./fincode"
+import { createFincodeRequestFetch, FincodePartialRequestHeader } from "./http"
 
 class Payment {
 
@@ -51,7 +51,6 @@ class Payment {
                 "/v1/payments",
                 JSON.stringify(body),
                 header,
-                {},
             )
 
             fetch().then((res) => {

@@ -1,4 +1,4 @@
-import { QueryBuilder } from "./queryBuilder.js"
+import { QueryBuilder } from "./queryBuilder"
 
 export interface Pagination extends QueryBuilder {
     /**

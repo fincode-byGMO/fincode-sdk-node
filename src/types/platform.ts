@@ -1,5 +1,33 @@
-import { Pagination, Sort } from "./pagination.js"
-import * as Shop from "./shop.js"
+import { Pagination, Sort } from "./pagination"
+import { SearchParams } from "./searchParams"
+import * as Shop from "./shop"
+
+/**
+ * Search Params object for Retrieving platform shops list
+ */
+
+export class PlatformShopsSearchParams implements SearchParams {
+    id?: string | null
+    shop_name?: string | null
+    shop_mail_address?: string | null
+    created_from?: string | null
+    created_to?: string | null
+
+    buildParams(): URLSearchParams {
+        const param = new URLSearchParams()
+
+        Object.entries(this)
+            .filter(([_, value]) => value !== null)
+            .map<[string, string]>(([key, value]) => {
+                return [key, value as string]
+            })
+            .forEach(([key, value]) => {
+                param.append(key, value)
+            })
+
+        return param
+    }
+}
 
 /**
  * Pagination object for Retrieving platform shops list
@@ -100,7 +128,7 @@ export type UpdatingPlatformRequest = {
 /**
  * Platform account object
  */
-export type Account = {
+export type PlatformAccountObject = {
     /**
      * Account ID
      */
@@ -218,7 +246,7 @@ export type Account = {
 /**
  * Pagination object for Retrieving platform accounts list
  */
-export type RetrievingAccountListPagination = Omit<Pagination, "sort"> & {
+export type RetrievingPlatformAccountListPagination = Omit<Pagination, "sort"> & {
     /**
      * Month the deposit was processed
      */
@@ -254,7 +282,7 @@ export type RetrievingAccountListPagination = Omit<Pagination, "sort"> & {
 /**
  * Account summary object
  */
-export type AccountSummary = {
+export type PlatformAccountSummaryObject = {
     /**
      * Summary ID
      */
@@ -366,7 +394,7 @@ export type AccountSummary = {
 /**
  * Pagination object for Retrieving platform account summary list
  */
-export type RetrievingAccountSummaryListPagination = Omit<Pagination, "sort"> & {
+export type RetrievinggPlatformAccountSummaryListPagination = Omit<Pagination, "sort"> & {
     /**
      * Date the deposit is scheduled (from)
      * 

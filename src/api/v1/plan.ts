@@ -1,6 +1,6 @@
-import { APIRawErrorResponse, CreatingPlanRequest, DeletingPlanResponse, ListResponse, PlanObject, RetrievingPlanListPagination, UpdatingPlanRequest, createError, formatErrorResponse } from "../../types/index.js"
-import { FincodeConfig } from "./fincode.js"
-import { createFincodeRequestFetch, FincodePartialRequestHeader } from "./http.js"
+import { APIRawErrorResponse, CreatingPlanRequest, DeletingPlanResponse, ListResponse, PlanObject, RetrievingPlanListPagination, UpdatingPlanRequest, createError, formatErrorResponse } from "../../types/index"
+import { FincodeConfig } from "./fincode"
+import { createFincodeRequestFetch, FincodePartialRequestHeader } from "./http"
 
 class Plan {
 

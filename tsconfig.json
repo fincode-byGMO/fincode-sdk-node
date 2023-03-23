@@ -1,14 +1,14 @@
 {
     "compilerOptions": {
-        "target": "esnext",
+        "target": "ESNext",
         "moduleResolution": "node",
-        "module": "esnext",
+        "module": "ESNext",
         "strict": true,
         "alwaysStrict": true,
         "outDir": "./dist",
         "declaration": true,
         // "declarationMap": true,
-        "allowJs": false,
+        "allowJs": true,
         // "noEmit": true ,   
         "removeComments": false,
         "forceConsistentCasingInFileNames": true,
@@ -23,8 +23,4 @@
     "include": [
         "src/**/*",
     ],
-    "exclude": [
-        "src/**/*.test.ts",
-        "dist",
-    ]
 }

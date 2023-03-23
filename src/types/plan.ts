@@ -1,4 +1,4 @@
-import { Pagination, Sort } from "./pagination.js"
+import { Pagination, Sort } from "./pagination"
 
 export type PlanObject = {
     /**
