@@ -1,10 +1,11 @@
 import * as Contract from "./contract"
 import { Pagination, Sort } from "./pagination"
+import { SearchParams } from "./searchParams"
 import * as Shop from "./shop"
 
 /**
-     * Pagination object for Retrieving tenant shops list
-     */
+ * Pagination object for Retrieving tenant shops list
+ */
 export class RetrievingTenantShopListPagination implements Pagination {
     /**
      * Shop ID
@@ -96,6 +97,48 @@ export class RetrievingTenantShopListPagination implements Pagination {
             .forEach(([key, value]) => params.append(key, value))
 
         return params
+    }
+}
+
+/**
+ * Search Params object for Retrieving tenant shops list
+ */
+export class TenantShopsSearchParams implements SearchParams {
+    id?: string | null
+    shop_name?: string | null
+    shop_mail_address?: string | null
+    created_from?: string | null
+    created_to?: string | null
+
+    constructor(args?: {
+        id?: string | null
+        shop_name?: string | null
+        shop_mail_address?: string | null
+        created_from?: string | null
+        created_to?: string | null
+    }) {
+        if (args) {
+            this.id = args.id
+            this.shop_name = args.shop_name
+            this.shop_mail_address = args.shop_mail_address
+            this.created_from = args.created_from
+            this.created_to = args.created_to
+        }
+    }
+
+    buildParams(): URLSearchParams {
+        const param = new URLSearchParams()
+
+        Object.entries(this)
+            .filter(([_, value]) => value !== null)
+            .map<[string, string]>(([key, value]) => {
+                return [key, value as string]
+            })
+            .forEach(([key, value]) => {
+                param.append(key, value)
+            })
+
+        return param
     }
 }
 
@@ -421,9 +464,9 @@ export type UpdatingTenantRequest = {
 }
 
 /**
- * Request object for Claiming tenant shop examination
+ * Request object for Requesting tenant shop examination
  */
-export type ClaimingExaminationRequest = {
+export type RequestingExaminationRequest = {
     /**
      * Shop ID
      */
@@ -436,9 +479,9 @@ export type ClaimingExaminationRequest = {
 }
 
 /**
- * Response object for Claiming tenant shop examination
+ * Response object for Requesting tenant shop examination
  */
-export type ClaimingExaminationResponse = {
+export type RequestingExaminationResponse = {
     /**
      * Shop ID
      */
