@@ -26,6 +26,11 @@ class Customer {
      * corresponds to `POST /v1/customers`
      * 
      * if the Promise is rejected, the error is an instance of `FincodeError`
+     * 
+     * @param {CreatingCustomerRequest} body - request body
+     * @param {FincodePartialRequestHeader} [header] - request header
+     * 
+     * @returns {Promise<CustomerObject>} - created customer
      */
     public create(
         body: CreatingCustomerRequest,

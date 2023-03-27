@@ -2,7 +2,7 @@ import * as Shop from "./shop"
 /**
      * Contract object
      */
-export type ContractOnject = {
+export type ContractObject = {
     /**
      * Shop ID
      */
