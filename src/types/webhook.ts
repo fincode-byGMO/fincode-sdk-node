@@ -54,7 +54,7 @@ export type Event =
 /**
  * Request object for Registering a webhook
  */
-export type RegisteringWebhookRequest = {
+export type SubscribingWebhookRequest = {
     /**
      * Webhook ID
      */
@@ -84,4 +84,12 @@ export type UpdatingWebhookRequest = {
      * Trigger event
      */
     event?: Event | null
+}
+
+/**
+ * Response object for Deleting a webhook
+ */
+export type DeletingWebhookResponse = {
+    id: string
+    delete_flag: "0" | "1"
 }

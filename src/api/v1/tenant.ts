@@ -469,8 +469,11 @@ class Tenant {
      * 
      * if the Promise is rejected, the error is an instance of `FincodeError`
      * 
+     * @param {RetrievingTenantShopListPagination} [pagination]
+     * @param {TenantShopsSearchParams} [searchParams]
      * @param {FincodePartialRequestHeader} [header]
      * 
+     * @returns {Promise<ListResponse<ShopObject>>}
      */
     public retrieveList(
         pagination?: RetrievingTenantShopListPagination,
@@ -519,3 +522,4 @@ class Tenant {
         })
     }
 }
+export { Tenant }
