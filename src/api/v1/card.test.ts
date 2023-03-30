@@ -1,4 +1,4 @@
-import { CardObject, RegisteringCardRequest, UpdatingCardRequest } from "./../../types"
+import { CardObject, FincodeError, RegisteringCardRequest, UpdatingCardRequest } from "./../../types"
 import { FincodeInitConfig, createFincode } from "./fincode"
 
 const secretKey = "m_test_NjY2YjRhNDItOWFjMS00ZWI5LTk5MmYtYjVlYjFkMGM5YWZiZjE2NDY0MDItODUwNS00NWIzLWE0MjAtNTQ1ZGE2MWNmZWM5c18yMjA4MDQwMjkwMA"
@@ -8,7 +8,7 @@ describe("Card API testing", () => {
     const config: FincodeInitConfig = { isTest: true }
     const fincode = createFincode(secretKey, config)
 
-    const cardToken = "62333833343735636632656562316265643335346338316636333630353238396638633862373737626532653331393836383639363038373234303931646531"
+    const cardToken = "36366332633163313635643138643132613034383635396565613263663835373563623737323266313461666164356632623335633838383737323631663433"
     if (!cardToken) {
         throw new Error("Please provide card token")
     }
@@ -82,5 +82,13 @@ describe("Card API testing", () => {
         expect(res.id).toBe(card.id)
         expect(res.customer_id).toBe(customerId)
         expect(res.delete_flag).toBe("1")
+
+        try {
+            await fincode.card.retrieve(customerId, card.id)
+        } catch (e) {
+            expect(e).toBeInstanceOf(FincodeError)
+            const err = e as FincodeError
+            expect(err.errors[0].type).toBe('RESOURCE_NOT_FOUND')
+        }
     })
 })
