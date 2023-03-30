@@ -179,12 +179,12 @@ export type CreatingPlanRequest = {
     /**
      * Amount
      */
-    amount: number
+    amount: string
 
     /**
      * Tax
      */
-    tax?: number | null
+    tax?: string | null
 
     /**
      * Interval pattern.
@@ -199,7 +199,7 @@ export type CreatingPlanRequest = {
      * 
      * How many intervals are there in a cycle.
      */
-    interval_count?: 1 | 2 | 3 | 6 | null
+    interval_count?: "1" | "2" | "3" | "6" | null
 }
 
 /**
@@ -219,12 +219,12 @@ export type UpdatingPlanRequest = {
     /**
      * Amount
      */
-    amount?: number | null
+    amount?: string | null
 
     /**
      * Tax
      */
-    tax?: number | null
+    tax?: string | null
 
     /**
      * Interval pattern.
@@ -234,7 +234,7 @@ export type UpdatingPlanRequest = {
     /**
      * Interval count.
      */
-    interval_count?: 1 | 2 | 3 | 6 | null
+    interval_count?: "1" | "2" | "3" | "6" | null
 }
 
 /**
