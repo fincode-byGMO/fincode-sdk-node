@@ -89,7 +89,7 @@ class Subscription {
      * @returns {Promise<ListResponse<SubscriptionObject>>}
      */
     public retrieveList(
-        pagination?: RetrievingSubscriptionListPagination,
+        pagination: RetrievingSubscriptionListPagination,
         header?: FincodePartialRequestHeader,
     ): Promise<ListResponse<SubscriptionObject>> {
         return new Promise((resolve, reject) => {
@@ -139,12 +139,14 @@ class Subscription {
      * if the Promise is rejected, the error is an instance of `FincodeError`
      * 
      * @param {string} id
+     * @param {string} payType
      * @param {FincodePartialRequestHeader} [header]
      * 
      * @returns {Promise<SubscriptionObject>}
      */
     public retrieve(
         id: string,
+        payType: "Card",
         header?: FincodePartialRequestHeader,
     ): Promise<SubscriptionObject> {
         return new Promise((resolve, reject) => {
@@ -154,7 +156,11 @@ class Subscription {
                 `/v1/subscriptions/${id}`,
                 undefined,
                 header,
-                {},
+                {
+                    keyValues: {
+                        pay_type: payType,
+                    }
+                },
             )
 
             fetch().then((res) => {
@@ -251,12 +257,14 @@ class Subscription {
      * if the Promise is rejected, the error is an instance of `FincodeError`
      * 
      * @param {string} id
+     * @param {string} payType
      * @param {FincodePartialRequestHeader} [header]
      * 
      * @returns {Promise<DeletingSubscriptionResponse>}
      */
     public cancel(
         id: string,
+        payType: "Card",
         header?: FincodePartialRequestHeader,
     ): Promise<CancelingSubscriptionResponse> {
         return new Promise((resolve, reject) => {
@@ -266,7 +274,11 @@ class Subscription {
                 `/v1/subscriptions/${id}`,
                 undefined,
                 header,
-                {},
+                {
+                    keyValues: {
+                        pay_type: payType,
+                    },
+                },
             )
 
             fetch().then((res) => {

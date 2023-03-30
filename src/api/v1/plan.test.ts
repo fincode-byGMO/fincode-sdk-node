@@ -7,7 +7,6 @@ import { FincodeInitConfig, createFincode } from "./fincode"
 const secretKey = "m_test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 
 describe("Plan API testing", () => {
-    const customerId = "fincode-node-customer"
     const config: FincodeInitConfig = { isTest: true }
     const fincode = createFincode(secretKey, config)
 
