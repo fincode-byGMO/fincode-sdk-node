@@ -3,15 +3,13 @@ import { Card } from "./card"
 import { Customer } from "./customer"
 import { Payment } from "./payment"
 import { Plan } from "./plan"
+import { Platform } from "./platform"
+import { PlatformAccount } from "./platform_account"
 import { CardRegistrationSession } from "./session.cardRegistration"
 import { PaymentSession } from "./session.payment"
 import { Subscription } from "./subscription"
-// import { PaymentBulk } from "./bulk.payment"
-// import { Payment } from "./payment"
-// import { Plan } from "./plan"
-// import { CardRegistrationSession } from "./session.cardRegistration"
-// import { PaymentSession } from "./session.payment"
-// import { Subscription } from "./subscription"
+import { Tenant } from "./tenant"
+import { Webhook } from "./webhook"
 
 type FincodeConfig = {
     version: string | undefined
@@ -79,6 +77,30 @@ class Fincode {
     get bulkPayment(): PaymentBulk {
         if (!this._bulkPayment) { this._bulkPayment = new PaymentBulk(this.config) }
         return this._bulkPayment
+    }
+
+    private _platform?: Platform
+    get platform(): Platform {
+        if (!this._platform) { this._platform = new Platform(this.config) }
+        return this._platform
+    }
+
+    private _platformAccount?: PlatformAccount
+    get platformAccount(): PlatformAccount {
+        if (!this._platformAccount) { this._platformAccount = new PlatformAccount(this.config) }
+        return this._platformAccount
+    }
+
+    private _tenant?: Tenant
+    get tenant(): Tenant {
+        if (!this._tenant) { this._tenant = new Tenant(this.config) }
+        return this._tenant
+    }
+
+    private _webhook?: Webhook
+    get webhook(): Webhook {
+        if (!this._webhook) { this._webhook = new Webhook(this.config) }
+        return this._webhook
     }
 }
 export { Fincode, FincodeConfig }

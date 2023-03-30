@@ -129,17 +129,17 @@ export type CreatingCustomerRequest = {
     /**
      * 1st line of the customer's billing address.
      */
-    addr_line1?: string | null
+    addr_line_1?: string | null
 
     /**
      * 2nd line of the customer's billing address.
      */
-    addr_line2?: string | null
+    addr_line_2?: string | null
 
     /**
      * 3rd line of the customer's billing address.
      */
-    addr_line3?: string | null
+    addr_line_3?: string | null
 
     /**
      * Postal code of the customer's billing address.
@@ -284,17 +284,17 @@ export type UpdatingCustomerRequest = {
     /**
      * 1st line of the customer's billing address.
      */
-    addr_line1?: string | null
+    addr_line_1?: string | null
 
     /**
      * 2nd line of the customer's billing address.
      */
-    addr_line2?: string | null
+    addr_line_2?: string | null
 
     /**
      * 3rd line of the customer's billing address.
      */
-    addr_line3?: string | null
+    addr_line_3?: string | null
 
     /**
      * Postal code of the customer's billing address.
