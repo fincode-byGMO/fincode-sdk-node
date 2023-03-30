@@ -10,6 +10,7 @@ export type APIRawError = {
 export type APIError = {
     type: APIErrorType
     raw: APIRawError
+    status?: number
 }
 
 /**
@@ -23,16 +24,16 @@ export class FincodeError implements Error {
     public readonly name = "FincodeError"
     public readonly errors: APIError[]
     public readonly message: string = "Some errors occurred in fincode-node"
-    constructor(errors: APIError[]) {
+    constructor(errors: APIError[], statusCode?: number) {
         this.errors = errors
     }
 }
 
-export const formatErrorResponse = (res: APIRawErrorResponse): FincodeError => {
-
+export const formatErrorResponse = (res: APIRawErrorResponse, status: number): FincodeError => {
     const errors: APIError[] = []
     for (const e of res.errors) {
         errors.push({
+            status: status,
             type: lookupErrorType(e.error_code),
             raw: e
         })
@@ -44,8 +45,10 @@ export const createError = (
     message: string = "Unknown Error",
     type: APIErrorType = "UNKNOWN_ERROR",
     rawCode: string = "UNKNOWN_ERROR",
+    status?: number
 ): FincodeError => {
     return new FincodeError([{
+        status: status,
         type: type,
         raw: {
             error_code: rawCode,

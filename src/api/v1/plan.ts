@@ -49,7 +49,7 @@ class Plan {
                 } else {
                     res.json().then((json) => {
                         const errRes = json as APIRawErrorResponse
-                        const err = formatErrorResponse(errRes)
+                        const err = formatErrorResponse(errRes, res.status)
                         reject(err)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
@@ -103,7 +103,7 @@ class Plan {
                 } else {
                     res.json().then((json) => {
                         const errRes = json as APIRawErrorResponse
-                        const err = formatErrorResponse(errRes)
+                        const err = formatErrorResponse(errRes, res.status)
                         reject(err)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
@@ -158,7 +158,7 @@ class Plan {
                 } else {
                     res.json().then((json) => {
                         const errRes = json as APIRawErrorResponse
-                        const err = formatErrorResponse(errRes)
+                        const err = formatErrorResponse(errRes, res.status)
                         reject(err)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
@@ -215,7 +215,7 @@ class Plan {
                 } else {
                     res.json().then((json) => {
                         const errRes = json as APIRawErrorResponse
-                        const err = formatErrorResponse(errRes)
+                        const err = formatErrorResponse(errRes, res.status)
                         reject(err)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
@@ -270,7 +270,7 @@ class Plan {
                 } else {
                     res.json().then((json) => {
                         const errRes = json as APIRawErrorResponse
-                        const err = formatErrorResponse(errRes)
+                        const err = formatErrorResponse(errRes, res.status)
                         reject(err)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
