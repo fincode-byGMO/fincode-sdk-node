@@ -212,6 +212,20 @@ export type RegisteringSubscriptionRequest = {
      * Webhook target URL.
      */
     send_url?: string | null
+
+    client_field_1?: string | null
+    client_field_2?: string | null
+    client_field_3?: string | null
+
+    /**
+     * Initial amount.
+     */
+    initial_amount?: string | null
+
+    /**
+     * Initial tax.
+     */
+    initial_tax?: string | null
 }
 
 /**

@@ -26,7 +26,16 @@ const createFincodeRequestURL = (
         const { pagination, searchParams, keyValues } = query
         const pgnParams = pagination?.buildParams()
         const sParams = searchParams?.buildParams()
-        const kvParams = keyValues ? new URLSearchParams(Object.entries(keyValues).toString()) : undefined
+        const kvParams = keyValues ? (() => {
+            const params = new URLSearchParams()
+            for (const [key, value] of Object.entries(keyValues)) {
+                if (value === undefined || value === null) {
+                    continue
+                }
+                params.append(key, String(value))
+            }
+            return params
+        })() : undefined
 
         const params = new URLSearchParams({
             ...Object.fromEntries(pgnParams?.entries() || []),
