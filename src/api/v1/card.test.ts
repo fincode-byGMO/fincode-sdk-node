@@ -1,4 +1,4 @@
-import { CardObject, RegisteringCardRequest, UpdatingCardRequest } from "./../../types"
+import { CardObject, FincodeError, RegisteringCardRequest, UpdatingCardRequest } from "./../../types"
 import { FincodeInitConfig, createFincode } from "./fincode"
 
 const secretKey = "m_test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
@@ -82,5 +82,13 @@ describe("Card API testing", () => {
         expect(res.id).toBe(card.id)
         expect(res.customer_id).toBe(customerId)
         expect(res.delete_flag).toBe("1")
+
+        try {
+            await fincode.card.retrieve(customerId, card.id)
+        } catch (e) {
+            expect(e).toBeInstanceOf(FincodeError)
+            const err = e as FincodeError
+            expect(err.errors[0].type).toBe('RESOURCE_NOT_FOUND')
+        }
     })
 })
