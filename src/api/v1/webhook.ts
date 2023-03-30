@@ -1,4 +1,4 @@
-import { APIRawErrorResponse, DeletingWebhookResponse, ListResponse, SubscribingWebhookRequest, UpdatingWebhookRequest, WebhookObject, createError, formatErrorResponse } from "~/src/types";
+import { APIRawErrorResponse, DeletingWebhookResponse, ListResponse, SubscribingWebhookRequest, UpdatingWebhookRequest, WebhookObject, createError, formatErrorResponse } from "./../../types";
 import { FincodePartialRequestHeader, createFincodeRequestFetch } from "./http";
 import { FincodeConfig } from "./fincode";
 
@@ -51,7 +51,7 @@ export class Webhook {
                 } else {
                     res.json().then((json) => {
                         const errRes = json as APIRawErrorResponse
-                        const err = formatErrorResponse(errRes)
+                        const err = formatErrorResponse(errRes, res.status)
                         reject(err)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
@@ -106,7 +106,7 @@ export class Webhook {
                 } else {
                     res.json().then((json) => {
                         const errRes = json as APIRawErrorResponse
-                        const err = formatErrorResponse(errRes)
+                        const err = formatErrorResponse(errRes, res.status)
                         reject(err)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
@@ -158,7 +158,7 @@ export class Webhook {
                 } else {
                     res.json().then((json) => {
                         const errRes = json as APIRawErrorResponse
-                        const err = formatErrorResponse(errRes)
+                        const err = formatErrorResponse(errRes, res.status)
                         reject(err)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
@@ -215,7 +215,7 @@ export class Webhook {
                 } else {
                     res.json().then((json) => {
                         const errRes = json as APIRawErrorResponse
-                        const err = formatErrorResponse(errRes)
+                        const err = formatErrorResponse(errRes, res.status)
                         reject(err)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
@@ -269,7 +269,7 @@ export class Webhook {
                 } else {
                     res.json().then((json) => {
                         const errRes = json as APIRawErrorResponse
-                        const err = formatErrorResponse(errRes)
+                        const err = formatErrorResponse(errRes, res.status)
                         reject(err)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
