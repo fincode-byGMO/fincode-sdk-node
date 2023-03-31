@@ -1,7 +1,8 @@
 {
   "name": "fincode-node",
   "version": "0.0.0",
-  "types": "./dist/",
+  "types": "./dist/main.d.js",
+  "main": "./dist/main.js",
   "type": "module",
   "author": "GMO Epsilon, Inc.",
   "license": "MIT",
