@@ -13,7 +13,7 @@ describe("Card-Registration Session API testing", () => {
 
     let session: CardRegistrationSessionObject | undefined
 
-    it("Create payment session", async () => {
+    it("Create card-registration session", async () => {
 
         const current = new Date()
         const expire = new Date(current.getTime() + 60 * 60 * 1000) // + 1 hour
