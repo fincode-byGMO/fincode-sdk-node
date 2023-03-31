@@ -158,7 +158,10 @@ class Tenant {
                 "PUT",
                 `/v1/contracts/examinations/tenants/${id}`,
                 JSON.stringify(body),
-                header,
+                {
+                    ...header,
+                    tenantShopId: id,
+                },
             )
 
             fetch().then((res) => {
@@ -212,7 +215,10 @@ class Tenant {
                 "GET",
                 `/v1/contracts/examinations/tenants/${id}`,
                 undefined,
-                header,
+                {
+                    ...header,
+                    tenantShopId: id,
+                },
             )
 
             fetch().then((res) => {
@@ -320,7 +326,10 @@ class Tenant {
                 "GET",
                 `/v1/contracts/${id}`,
                 undefined,
-                header,
+                {
+                    ...header,
+                    tenantShopId: id,
+                },
             )
 
             fetch().then((res) => {
