@@ -38,7 +38,7 @@ class Platform {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
                 this._config,
-                "POST",
+                "GET",
                 "/v1/platforms",
                 undefined,
                 header,
