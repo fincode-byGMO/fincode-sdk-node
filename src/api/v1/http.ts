@@ -57,6 +57,7 @@ const createFincodeRequestFetch = (
     headers?: {
         idempotentKey?: string
         tenantShopId?: string
+        contentType?: string
     },
     query?: {
         pagination?: Pagination
@@ -73,6 +74,7 @@ const createFincodeRequestFetch = (
         authorization: `Bearer ${config.apiKey}`,
         idempotentKey: headers?.idempotentKey,
         tenantShopId: headers?.tenantShopId,
+        contentType: headers?.contentType || "application/json",
     })
 
     let proxyAgent: HttpsProxyAgent | undefined = undefined

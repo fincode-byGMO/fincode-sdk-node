@@ -3,6 +3,7 @@ import {
     APIRawErrorResponse,
     DeletingPaymentBulkResponse,
     ListResponse,
+    ListWithErrors,
     PaymentBulkDetailObject,
     PaymentBulkObject,
     RetrievingPaymentBulkDetailPagination,
@@ -33,7 +34,7 @@ class PaymentBulk {
      * 
      * @returns {Promise<PaymentBulkObject>}
      */
-    public create(
+    public register(
         payType: "Card",
         processPlanDate: string,
         file: Buffer | string,
@@ -43,18 +44,24 @@ class PaymentBulk {
 
         // multipart-form-data
         const formData = new FormData()
-        const fileAppendOptions: FormData.AppendOptions = {
-            filename: fileName,
-            contentType: "application/json"
-        }
-        formData.append("file", file, fileAppendOptions)
+        formData.append(
+            "file",
+            file,
+            {
+                filename: fileName,
+                contentType: "application/json"
+            }
+        )
 
         const fetch = createFincodeRequestFetch(
             this._config,
             "POST",
             "/v1/payments/bulk",
             formData,
-            header,
+            {
+                ...header,
+                contentType: `multipart/form-data; boundary=${formData.getBoundary()}`
+            },
             {
                 keyValues: {
                     pay_type: payType,
@@ -162,11 +169,11 @@ class PaymentBulk {
      * 
      * @returns {Promise<PaymentBulkDetailObject>}
      */
-    public retrieveDetail(
+    public retrieveDetailList(
         id: string,
-        pagination?: RetrievingPaymentBulkDetailPagination,
+        pagination: RetrievingPaymentBulkDetailPagination,
         header?: FincodePartialRequestHeader,
-    ): Promise<PaymentBulkDetailObject> {
+    ): Promise<ListWithErrors<PaymentBulkDetailObject>> {
 
         const fetch = createFincodeRequestFetch(
             this._config,
