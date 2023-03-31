@@ -5,6 +5,7 @@ export const createFincodeRequestHeader = (params?: {
     authorization?: string
     idempotentKey?: string
     tenantShopId?: string
+    contentType?: string
 }): FincodeRequestHeader => {
     const header: FincodeRequestHeader = {
         "Content-Type": "application/json;charset=UTF-8",
@@ -14,6 +15,7 @@ export const createFincodeRequestHeader = (params?: {
     if (params?.authorization) { header["Authorization"] = params.authorization }
     if (params?.idempotentKey) { header["idempotent_key"] = params.idempotentKey }
     if (params?.tenantShopId) { header["tenant_shop_id"] = params.tenantShopId }
+    if (params?.contentType) { header["Content-Type"] = params.contentType }
 
     return header
 }

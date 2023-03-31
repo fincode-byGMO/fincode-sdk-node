@@ -463,7 +463,7 @@ export type DeletingPaymentBulkResponse = {
     /**
      * Whether or not the bulk payment was deleted.
      */
-    deleted: "0" | "1"
+    delete_flag: "0" | "1"
 }
 
 /**

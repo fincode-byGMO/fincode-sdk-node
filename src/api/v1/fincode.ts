@@ -73,10 +73,10 @@ class Fincode {
         return this._cardRegistrationSession
     }
 
-    private _bulkPayment?: PaymentBulk
-    get bulkPayment(): PaymentBulk {
-        if (!this._bulkPayment) { this._bulkPayment = new PaymentBulk(this.config) }
-        return this._bulkPayment
+    private _paymentBulk?: PaymentBulk
+    get paymentBulk(): PaymentBulk {
+        if (!this._paymentBulk) { this._paymentBulk = new PaymentBulk(this.config) }
+        return this._paymentBulk
     }
 
     private _platform?: Platform
