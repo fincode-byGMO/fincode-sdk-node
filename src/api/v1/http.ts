@@ -77,6 +77,7 @@ const createFincodeRequestFetch = (
         contentType: headers?.contentType || "application/json",
     })
 
+
     let proxyAgent: HttpsProxyAgent | undefined = undefined
     if (process.env.HTTPS_PROXY) {
         proxyAgent = new HttpsProxyAgent(process.env.HTTPS_PROXY)
