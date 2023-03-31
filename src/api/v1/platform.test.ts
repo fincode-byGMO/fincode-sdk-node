@@ -4,7 +4,7 @@ import { FincodeInitConfig, createFincode } from "./fincode"
 const secretKey = "m_test_NjY2YjRhNDItOWFjMS00ZWI5LTk5MmYtYjVlYjFkMGM5YWZiZjE2NDY0MDItODUwNS00NWIzLWE0MjAtNTQ1ZGE2MWNmZWM5c18yMjA4MDQwMjkwMA"
 const shopId = "s_22080402900"
 
-describe("Plan API testing", () => {
+describe("Platform API testing", () => {
     const config: FincodeInitConfig = { isTest: true }
     const fincode = createFincode(secretKey, config)
 
