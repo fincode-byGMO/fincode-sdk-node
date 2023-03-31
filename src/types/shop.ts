@@ -54,6 +54,10 @@ export type ShopObject = {
 
     /**
      * Shop type
+     * 
+     * - `(null)`: Standard shop
+     * - `platform`: Platform
+     * - `tenant`: Tenant (child shop of platform)
      */
     shop_type: ShopType
 

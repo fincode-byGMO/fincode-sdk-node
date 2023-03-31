@@ -112,7 +112,7 @@ export type UpdatingPlatformRequest = {
      * - `jad`: JCB/American Express/Diners
      * - `konbini`: Konbini
      */
-    id?: Shop.ExaminationMaster | null
+    examination_master_id?: Shop.ExaminationMaster | null
 
     /**
      * Platform rate
