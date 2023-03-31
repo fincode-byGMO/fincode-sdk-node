@@ -1,16 +1,17 @@
 import {
     CreatingPaymentSessionRequest,
-    PaymentSessionObject,
+    CardRegistrationSessionObject,
+    CreatingCardRegistrationSessionRequest,
 } from "./../../types"
 import { FincodeInitConfig, createFincode } from "./fincode"
 
 const secretKey = "m_test_NjY2YjRhNDItOWFjMS00ZWI5LTk5MmYtYjVlYjFkMGM5YWZiZjE2NDY0MDItODUwNS00NWIzLWE0MjAtNTQ1ZGE2MWNmZWM5c18yMjA4MDQwMjkwMA"
 
-describe("Payment Session API testing", () => {
+describe("Card-Registration Session API testing", () => {
     const config: FincodeInitConfig = { isTest: true }
     const fincode = createFincode(secretKey, config)
 
-    let session: PaymentSessionObject | undefined
+    let session: CardRegistrationSessionObject | undefined
 
     it("Create payment session", async () => {
 
@@ -24,33 +25,16 @@ describe("Payment Session API testing", () => {
         const expireSecond = String(expire.getSeconds()).padStart(2, "0")
         const expireStr = `${expireYear}/${expireMonth}/${expireDate} ${expireHour}:${expireMinute}:${expireSecond}`
 
-        const orderId = `f-node_${Date.now()}`
-
-        const reqBody: CreatingPaymentSessionRequest = {
+        const reqBody: CreatingCardRegistrationSessionRequest = {
             expire: expireStr,
             shop_service_name: "fincode Node.js",
-            transaction: {
-                order_id: orderId,
-                pay_type: ["Card"],
-                amount: "1000",
-                client_field_1: "fincode Node.js",
-            },
-            card: {
-                job_code: "CAPTURE",
-            }
         }
 
-        const res = await fincode.paymentSession.create(reqBody)
+        const res = await fincode.cardRegistrationSession.create(reqBody)
 
         expect(res.id).toBeDefined()
         expect(res.expire).toBe(`${reqBody.expire}.000`)
         expect(res.shop_service_name).toBe(reqBody.shop_service_name)
-        expect(res.transaction.order_id).toBe(reqBody.transaction.order_id)
-        expect(res.transaction.pay_type).toEqual(reqBody.transaction.pay_type)
-        expect(res.transaction.amount).toBe(Number(reqBody.transaction.amount))
-        expect(res.transaction.client_field_1).toBe(reqBody.transaction.client_field_1)
-        expect(res.card.job_code).toBe(reqBody.card?.job_code)
-        expect(res.status).toBe("CREATE")
         expect(res.link_url).toBeDefined()
 
         session = res
