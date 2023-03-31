@@ -1,6 +1,6 @@
 import {
     CreatingPaymentSessionRequest,
-    FincodeError, PaymentSessionObject,
+    PaymentSessionObject,
 } from "./../../types"
 import { FincodeInitConfig, createFincode } from "./fincode"
 
@@ -10,7 +10,7 @@ describe("Payment Session API testing", () => {
     const config: FincodeInitConfig = { isTest: true }
     const fincode = createFincode(secretKey, config)
 
-    let paymentSession: PaymentSessionObject | undefined
+    let session: PaymentSessionObject | undefined
 
     it("Create payment session", async () => {
 
@@ -52,5 +52,7 @@ describe("Payment Session API testing", () => {
         expect(res.card.job_code).toBe(reqBody.card?.job_code)
         expect(res.status).toBe("CREATE")
         expect(res.link_url).toBeDefined()
+
+        session = res
     })
 })
