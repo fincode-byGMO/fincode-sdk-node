@@ -1,5 +1,4 @@
 import {
-    CreatingPaymentSessionRequest,
     CardRegistrationSessionObject,
     CreatingCardRegistrationSessionRequest,
 } from "./../../types"
