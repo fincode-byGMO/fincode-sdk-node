@@ -41,8 +41,8 @@ class PlatformAccount {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
                 this._config,
-                "POST",
-                "/v1/plans",
+                "GET",
+                "/v1/platform_accounts",
                 undefined,
                 header,
                 {
@@ -149,10 +149,10 @@ class PlatformAccount {
      * @returns {Promise<PlatformAccountObject>}
      */
 
-    public retrieveSummary(
+    public retrieveSummaryList(
         id: string,
         header?: FincodePartialRequestHeader,
-    ): Promise<PlatformAccountSummaryObject> {
+    ): Promise<ListResponse<PlatformAccountSummaryObject>> {
 
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
@@ -166,7 +166,7 @@ class PlatformAccount {
             fetch().then((res) => {
                 if (res.ok) {
                     res.json().then((json) => {
-                        const platformAccount = json as PlatformAccountSummaryObject
+                        const platformAccount = json as ListResponse<PlatformAccountSummaryObject>
                         resolve(platformAccount)
                     }).catch((e) => {
                         const message = (e instanceof Error) ? e.message : undefined
