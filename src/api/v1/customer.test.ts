@@ -9,7 +9,7 @@ describe("Customer API testing", () => {
     const config: FincodeInitConfig = { isTest: true }
 
     const fincode = createFincode(secretKey, config)
-    it("create a customer", async () => {
+    it("Create a customer", async () => {
         const reqBody: CreatingCustomerRequest = {
             id: customerId,
         }
@@ -32,7 +32,7 @@ describe("Customer API testing", () => {
         addr_state: "000",
         addr_city: "Tokyo",
     }
-    it("update a customer", async () => {
+    it("Update a customer", async () => {
 
         const res = await fincode.customer.update(customerId, updatingReqBody)
 
@@ -49,7 +49,7 @@ describe("Customer API testing", () => {
         expect(res.addr_state).toBe(updatingReqBody.addr_state)
         expect(res.addr_city).toBe(updatingReqBody.addr_city)
     })
-    it("get a customer", async () => {
+    it("Retrieve a customer", async () => {
 
         const res = await fincode.customer.retrieve(customerId)
 
@@ -66,7 +66,12 @@ describe("Customer API testing", () => {
         expect(res.addr_state).toBe(updatingReqBody.addr_state)
         expect(res.addr_city).toBe(updatingReqBody.addr_city)
     })
-    it("delete a customer", async () => {
+    it("Retrieve customer list", async () => {
+        const res = await fincode.customer.retrieveList()
+
+        expect(res.list?.length).toBeGreaterThan(0)
+    })
+    it("Delete a customer", async () => {
         const res = await fincode.customer.delete(customerId)
         expect(res.id).toBe(customerId)
         expect(res.delete_flag).toBe("1")
