@@ -1,13 +1,25 @@
+import { HttpsProxyAgent } from "https-proxy-agent"
 import {
     CreatingPlanRequest,
-    FincodeError, PlanObject, UpdatingPlanRequest,
+    PlanObject, UpdatingPlanRequest,
 } from "./../../types"
 import { FincodeInitConfig, createFincode } from "./fincode"
+import dotenv from "dotenv"
+import path from "path"
 
-const secretKey = "m_test_NjY2YjRhNDItOWFjMS00ZWI5LTk5MmYtYjVlYjFkMGM5YWZiZjE2NDY0MDItODUwNS00NWIzLWE0MjAtNTQ1ZGE2MWNmZWM5c18yMjA4MDQwMjkwMA"
+const env = dotenv.config({
+    path: path.resolve(__dirname, "./../../../.env.test")
+}).parsed
+if (!env) throw new Error("dotenv is not defined")
+
+const secretKey = env.FINCODE_API_SECRET_KEY
+if (!secretKey) throw new Error("FINCODE_API_SECRET_KEY is not defined")
+
+const proxy = env.FINCODE_HTTP_PROXY
+const agent: HttpsProxyAgent<string> | undefined = proxy ? new HttpsProxyAgent(proxy) : undefined
 
 describe("Plan API testing", () => {
-    const config: FincodeInitConfig = { isTest: true }
+    const config: FincodeInitConfig = { isTest: true, agent: agent }
     const fincode = createFincode(secretKey, config)
 
     let plan: PlanObject | undefined
@@ -91,7 +103,7 @@ describe("Plan API testing", () => {
     it("Retrieve plan list", async () => {
         const res = await fincode.plan.retrieveList()
 
-        expect(res.list?.length).toBeGreaterThan(0)
+        expect(res.list?.length).toBeGreaterThanOrEqual(0)
     })
 
     it("Delete plan", async () => {

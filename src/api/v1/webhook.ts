@@ -1,14 +1,28 @@
-import { APIRawErrorResponse, DeletingWebhookResponse, ListResponse, SubscribingWebhookRequest, UpdatingWebhookRequest, WebhookObject, createError, formatErrorResponse } from "./../../types";
+import {
+    DeletingWebhookResponse,
+    ListResponse,
+    SubscribingWebhookRequest,
+    UpdatingWebhookRequest,
+    WebhookObject,
+
+    APIErrorResponse,
+    FincodeAPIError,
+    FincodeSDKError,
+} from "./../../types";
 import { FincodePartialRequestHeader, createFincodeRequestFetch } from "./http";
 import { FincodeConfig } from "./fincode";
+import { RequestInit } from "node-fetch";
+import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_errorMessages";
 
 
 export class Webhook {
 
     private readonly _config: FincodeConfig
+    private readonly _agent: RequestInit["agent"]
 
-    constructor(config: FincodeConfig) {
+    constructor(config: FincodeConfig, agent?: RequestInit["agent"]) {
         this._config = config
+        this._agent = agent
     }
 
 
@@ -36,32 +50,26 @@ export class Webhook {
                 `/v1/webhook_settings`,
                 JSON.stringify(body),
                 header,
+                undefined,
+                this._agent,
             )
 
             fetch().then((res) => {
-                if (res.ok) {
-                    res.json().then((json) => {
+                res.json().then((json) => {
+                    if (res.ok) {
                         const res = json as WebhookObject
                         resolve(res)
-                    }).catch((e) => {
-                        const message = (e instanceof Error) ? e.message : undefined
-                        const err = createError(message, "SDK_ERROR")
-                        reject(err)
-                    })
-                } else {
-                    res.json().then((json) => {
-                        const errRes = json as APIRawErrorResponse
-                        const err = formatErrorResponse(errRes, res.status)
-                        reject(err)
-                    }).catch((e) => {
-                        const message = (e instanceof Error) ? e.message : undefined
-                        const err = createError(message, "SDK_ERROR")
-                        reject(err)
-                    })
-                }
+                    } else {
+                        const errRes = json as APIErrorResponse
+                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
+                        reject(e)
+                    }
+                }).catch((e) => {
+                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
+                    reject(err)
+                })
             }).catch((e) => {
-                const message = (e instanceof Error) ? e.message : undefined
-                const err = createError(message, "SDK_ERROR")
+                const err = new FincodeSDKError(getFetchErrorMessage(), e)
                 reject(err)
             })
         })
@@ -91,32 +99,26 @@ export class Webhook {
                 `/v1/webhook_settings/${id}`,
                 undefined,
                 header,
+                undefined,
+                this._agent,
             )
 
             fetch().then((res) => {
-                if (res.ok) {
-                    res.json().then((json) => {
+                res.json().then((json) => {
+                    if (res.ok) {
                         const res = json as WebhookObject
                         resolve(res)
-                    }).catch((e) => {
-                        const message = (e instanceof Error) ? e.message : undefined
-                        const err = createError(message, "SDK_ERROR")
-                        reject(err)
-                    })
-                } else {
-                    res.json().then((json) => {
-                        const errRes = json as APIRawErrorResponse
-                        const err = formatErrorResponse(errRes, res.status)
-                        reject(err)
-                    }).catch((e) => {
-                        const message = (e instanceof Error) ? e.message : undefined
-                        const err = createError(message, "SDK_ERROR")
-                        reject(err)
-                    })
-                }
+                    } else {
+                        const errRes = json as APIErrorResponse
+                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
+                        reject(e)
+                    }
+                }).catch((e) => {
+                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
+                    reject(err)
+                })
             }).catch((e) => {
-                const message = (e instanceof Error) ? e.message : undefined
-                const err = createError(message, "SDK_ERROR")
+                const err = new FincodeSDKError(getFetchErrorMessage(), e)
                 reject(err)
             })
         })
@@ -143,32 +145,26 @@ export class Webhook {
                 `/v1/webhook_settings`,
                 undefined,
                 header,
+                undefined,
+                this._agent,
             )
 
             fetch().then((res) => {
-                if (res.ok) {
-                    res.json().then((json) => {
+                res.json().then((json) => {
+                    if (res.ok) {
                         const res = json as ListResponse<WebhookObject>
                         resolve(res)
-                    }).catch((e) => {
-                        const message = (e instanceof Error) ? e.message : undefined
-                        const err = createError(message, "SDK_ERROR")
-                        reject(err)
-                    })
-                } else {
-                    res.json().then((json) => {
-                        const errRes = json as APIRawErrorResponse
-                        const err = formatErrorResponse(errRes, res.status)
-                        reject(err)
-                    }).catch((e) => {
-                        const message = (e instanceof Error) ? e.message : undefined
-                        const err = createError(message, "SDK_ERROR")
-                        reject(err)
-                    })
-                }
+                    } else {
+                        const errRes = json as APIErrorResponse
+                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
+                        reject(e)
+                    }
+                }).catch((e) => {
+                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
+                    reject(err)
+                })
             }).catch((e) => {
-                const message = (e instanceof Error) ? e.message : undefined
-                const err = createError(message, "SDK_ERROR")
+                const err = new FincodeSDKError(getFetchErrorMessage(), e)
                 reject(err)
             })
         })
@@ -200,32 +196,26 @@ export class Webhook {
                 `/v1/webhook_settings/${id}`,
                 JSON.stringify(body),
                 header,
+                undefined,
+                this._agent,
             )
 
             fetch().then((res) => {
-                if (res.ok) {
-                    res.json().then((json) => {
+                res.json().then((json) => {
+                    if (res.ok) {
                         const res = json as WebhookObject
                         resolve(res)
-                    }).catch((e) => {
-                        const message = (e instanceof Error) ? e.message : undefined
-                        const err = createError(message, "SDK_ERROR")
-                        reject(err)
-                    })
-                } else {
-                    res.json().then((json) => {
-                        const errRes = json as APIRawErrorResponse
-                        const err = formatErrorResponse(errRes, res.status)
-                        reject(err)
-                    }).catch((e) => {
-                        const message = (e instanceof Error) ? e.message : undefined
-                        const err = createError(message, "SDK_ERROR")
-                        reject(err)
-                    })
-                }
+                    } else {
+                        const errRes = json as APIErrorResponse
+                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
+                        reject(e)
+                    }
+                }).catch((e) => {
+                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
+                    reject(err)
+                })
             }).catch((e) => {
-                const message = (e instanceof Error) ? e.message : undefined
-                const err = createError(message, "SDK_ERROR")
+                const err = new FincodeSDKError(getFetchErrorMessage(), e)
                 reject(err)
             })
         })
@@ -254,32 +244,26 @@ export class Webhook {
                 `/v1/webhook_settings/${id}`,
                 undefined,
                 header,
+                undefined,
+                this._agent,
             )
 
             fetch().then((res) => {
-                if (res.ok) {
-                    res.json().then((json) => {
+                res.json().then((json) => {
+                    if (res.ok) {
                         const res = json as DeletingWebhookResponse
                         resolve(res)
-                    }).catch((e) => {
-                        const message = (e instanceof Error) ? e.message : undefined
-                        const err = createError(message, "SDK_ERROR")
-                        reject(err)
-                    })
-                } else {
-                    res.json().then((json) => {
-                        const errRes = json as APIRawErrorResponse
-                        const err = formatErrorResponse(errRes, res.status)
-                        reject(err)
-                    }).catch((e) => {
-                        const message = (e instanceof Error) ? e.message : undefined
-                        const err = createError(message, "SDK_ERROR")
-                        reject(err)
-                    })
-                }
+                    } else {
+                        const errRes = json as APIErrorResponse
+                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
+                        reject(e)
+                    }
+                }).catch((e) => {
+                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
+                    reject(err)
+                })
             }).catch((e) => {
-                const message = (e instanceof Error) ? e.message : undefined
-                const err = createError(message, "SDK_ERROR")
+                const err = new FincodeSDKError(getFetchErrorMessage(), e)
                 reject(err)
             })
         })

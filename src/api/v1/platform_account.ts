@@ -1,22 +1,27 @@
 import { PlatformAccountSearchParams } from "./../../types/searchParams"
 import {
-    APIRawErrorResponse,
     ListResponse,
     PlatformAccountObject,
     PlatformAccountSummaryObject,
     RetrievingPlatformAccountListPagination,
-    createError,
-    formatErrorResponse
+
+    APIErrorResponse,
+    FincodeAPIError,
+    FincodeSDKError,
 } from "../../types/index"
 import { FincodeConfig } from "./fincode"
 import { createFincodeRequestFetch, FincodePartialRequestHeader } from "./http"
+import { RequestInit } from "node-fetch"
+import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_errorMessages"
 
 class PlatformAccount {
 
     private readonly _config: FincodeConfig
+    private readonly _agent: RequestInit["agent"]
 
-    constructor(config: FincodeConfig) {
+    constructor(config: FincodeConfig, agent?: RequestInit["agent"]) {
         this._config = config
+        this._agent = agent
     }
 
     /**
@@ -49,36 +54,28 @@ class PlatformAccount {
                     pagination: paginaiton,
                     searchParams: searchParams,
                 },
+                this._agent,
             )
 
             fetch().then((res) => {
-                if (res.ok) {
-                    res.json().then((json) => {
+                res.json().then((json) => {
+                    if (res.ok) {
                         const list = json as ListResponse<PlatformAccountObject>
                         resolve(list)
-                    }).catch((e) => {
-                        const message = (e instanceof Error) ? e.message : undefined
-                        const err = createError(message, "SDK_ERROR")
-                        reject(err)
-                    })
-                } else {
-                    res.json().then((json) => {
-                        const errRes = json as APIRawErrorResponse
-                        const err = formatErrorResponse(errRes, res.status)
-                        reject(err)
-                    }).catch((e) => {
-                        const message = (e instanceof Error) ? e.message : undefined
-                        const err = createError(message, "SDK_ERROR")
-                        reject(err)
-                    })
-                }
+                    } else {
+                        const errRes = json as APIErrorResponse
+                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
+                        reject(e)
+                    }
+                }).catch((e) => {
+                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
+                    reject(err)
+                })
             }).catch((e) => {
-                const message = (e instanceof Error) ? e.message : undefined
-                const err = createError(message, "SDK_ERROR")
+                const err = new FincodeSDKError(getFetchErrorMessage(), e)
                 reject(err)
             })
-        }
-        )
+        })
     }
 
     /**
@@ -104,36 +101,29 @@ class PlatformAccount {
                 `/v1/platform_accounts/${id}`,
                 undefined,
                 header,
+                undefined,
+                this._agent,
             )
 
             fetch().then((res) => {
-                if (res.ok) {
-                    res.json().then((json) => {
+                res.json().then((json) => {
+                    if (res.ok) {
                         const platformAccount = json as PlatformAccountObject
                         resolve(platformAccount)
-                    }).catch((e) => {
-                        const message = (e instanceof Error) ? e.message : undefined
-                        const err = createError(message, "SDK_ERROR")
-                        reject(err)
-                    })
-                } else {
-                    res.json().then((json) => {
-                        const errRes = json as APIRawErrorResponse
-                        const err = formatErrorResponse(errRes, res.status)
-                        reject(err)
-                    }).catch((e) => {
-                        const message = (e instanceof Error) ? e.message : undefined
-                        const err = createError(message, "SDK_ERROR")
-                        reject(err)
-                    })
-                }
+                    } else {
+                        const errRes = json as APIErrorResponse
+                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
+                        reject(e)
+                    }
+                }).catch((e) => {
+                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
+                    reject(err)
+                })
             }).catch((e) => {
-                const message = (e instanceof Error) ? e.message : undefined
-                const err = createError(message, "SDK_ERROR")
+                const err = new FincodeSDKError(getFetchErrorMessage(), e)
                 reject(err)
             })
-        }
-        )
+        })
     }
 
     /**
@@ -161,36 +151,29 @@ class PlatformAccount {
                 `/v1/platform_accounts/${id}/summary`,
                 undefined,
                 header,
+                undefined,
+                this._agent,
             )
 
             fetch().then((res) => {
-                if (res.ok) {
-                    res.json().then((json) => {
-                        const platformAccount = json as ListResponse<PlatformAccountSummaryObject>
-                        resolve(platformAccount)
-                    }).catch((e) => {
-                        const message = (e instanceof Error) ? e.message : undefined
-                        const err = createError(message, "SDK_ERROR")
-                        reject(err)
-                    })
-                } else {
-                    res.json().then((json) => {
-                        const errRes = json as APIRawErrorResponse
-                        const err = formatErrorResponse(errRes, res.status)
-                        reject(err)
-                    }).catch((e) => {
-                        const message = (e instanceof Error) ? e.message : undefined
-                        const err = createError(message, "SDK_ERROR")
-                        reject(err)
-                    })
-                }
+                res.json().then((json) => {
+                    if (res.ok) {
+                        const list = json as ListResponse<PlatformAccountSummaryObject>
+                        resolve(list)
+                    } else {
+                        const errRes = json as APIErrorResponse
+                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
+                        reject(e)
+                    }
+                }).catch((e) => {
+                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
+                    reject(err)
+                })
             }).catch((e) => {
-                const message = (e instanceof Error) ? e.message : undefined
-                const err = createError(message, "SDK_ERROR")
+                const err = new FincodeSDKError(getFetchErrorMessage(), e)
                 reject(err)
             })
-        }
-        )
+        })
     }
 }
 export { PlatformAccount }

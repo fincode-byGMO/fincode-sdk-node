@@ -1,5 +1,5 @@
+import { RequestInit } from "node-fetch"
 import {
-    APIRawErrorResponse,
     ContractObject,
     CreatingTenantRequest,
     CreatingTenantResponse,
@@ -14,18 +14,23 @@ import {
     TenantShopsSearchParams,
     UpdatingExaminationInfoRequest,
     UpdatingTenantRequest,
-    createError,
-    formatErrorResponse
+
+    APIErrorResponse,
+    FincodeAPIError,
+    FincodeSDKError,
 } from "../../types/index"
 import { FincodeConfig } from "./fincode"
 import { createFincodeRequestFetch, FincodePartialRequestHeader } from "./http"
+import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_errorMessages"
 
 class Tenant {
 
     private readonly _config: FincodeConfig
+    private readonly _agent: RequestInit["agent"]
 
-    constructor(config: FincodeConfig) {
+    constructor(config: FincodeConfig, agent?: RequestInit["agent"]) {
         this._config = config
+        this._agent = agent
     }
 
     /**
@@ -49,32 +54,26 @@ class Tenant {
                 `/v1/join_tenants`,
                 JSON.stringify(body),
                 header,
+                undefined,
+                this._agent,
             )
 
             fetch().then((res) => {
-                if (res.ok) {
-                    res.json().then((json) => {
-                        const res = json as CreatingTenantResponse
-                        resolve(res)
-                    }).catch((e) => {
-                        const message = (e instanceof Error) ? e.message : undefined
-                        const err = createError(message, "SDK_ERROR")
-                        reject(err)
-                    })
-                } else {
-                    res.json().then((json) => {
-                        const errRes = json as APIRawErrorResponse
-                        const err = formatErrorResponse(errRes, res.status)
-                        reject(err)
-                    }).catch((e) => {
-                        const message = (e instanceof Error) ? e.message : undefined
-                        const err = createError(message, "SDK_ERROR")
-                        reject(err)
-                    })
-                }
+                res.json().then((json) => {
+                    if (res.ok) {
+                        const tenant = json as CreatingTenantResponse
+                        resolve(tenant)
+                    } else {
+                        const errRes = json as APIErrorResponse
+                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
+                        reject(e)
+                    }
+                }).catch((e) => {
+                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
+                    reject(err)
+                })
             }).catch((e) => {
-                const message = (e instanceof Error) ? e.message : undefined
-                const err = createError(message, "SDK_ERROR")
+                const err = new FincodeSDKError(getFetchErrorMessage(), e)
                 reject(err)
             })
         })
@@ -103,32 +102,26 @@ class Tenant {
                 `/v1/tenant_entries`,
                 JSON.stringify(body),
                 header,
+                undefined,
+                this._agent,
             )
 
             fetch().then((res) => {
-                if (res.ok) {
-                    res.json().then((json) => {
-                        const res = json as RegisteringTenantResponse
-                        resolve(res)
-                    }).catch((e) => {
-                        const message = (e instanceof Error) ? e.message : undefined
-                        const err = createError(message, "SDK_ERROR")
-                        reject(err)
-                    })
-                } else {
-                    res.json().then((json) => {
-                        const errRes = json as APIRawErrorResponse
-                        const err = formatErrorResponse(errRes, res.status)
-                        reject(err)
-                    }).catch((e) => {
-                        const message = (e instanceof Error) ? e.message : undefined
-                        const err = createError(message, "SDK_ERROR")
-                        reject(err)
-                    })
-                }
+                res.json().then((json) => {
+                    if (res.ok) {
+                        const tenant = json as RegisteringTenantResponse
+                        resolve(tenant)
+                    } else {
+                        const errRes = json as APIErrorResponse
+                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
+                        reject(e)
+                    }
+                }).catch((e) => {
+                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
+                    reject(err)
+                })
             }).catch((e) => {
-                const message = (e instanceof Error) ? e.message : undefined
-                const err = createError(message, "SDK_ERROR")
+                const err = new FincodeSDKError(getFetchErrorMessage(), e)
                 reject(err)
             })
         })
@@ -162,32 +155,26 @@ class Tenant {
                     ...header,
                     tenantShopId: id,
                 },
+                undefined,
+                this._agent,
             )
 
             fetch().then((res) => {
-                if (res.ok) {
-                    res.json().then((json) => {
-                        const res = json as ExaminationInfo
-                        resolve(res)
-                    }).catch((e) => {
-                        const message = (e instanceof Error) ? e.message : undefined
-                        const err = createError(message, "SDK_ERROR")
-                        reject(err)
-                    })
-                } else {
-                    res.json().then((json) => {
-                        const errRes = json as APIRawErrorResponse
-                        const err = formatErrorResponse(errRes, res.status)
-                        reject(err)
-                    }).catch((e) => {
-                        const message = (e instanceof Error) ? e.message : undefined
-                        const err = createError(message, "SDK_ERROR")
-                        reject(err)
-                    })
-                }
+                res.json().then((json) => {
+                    if (res.ok) {
+                        const tenant = json as ExaminationInfo
+                        resolve(tenant)
+                    } else {
+                        const errRes = json as APIErrorResponse
+                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
+                        reject(e)
+                    }
+                }).catch((e) => {
+                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
+                    reject(err)
+                })
             }).catch((e) => {
-                const message = (e instanceof Error) ? e.message : undefined
-                const err = createError(message, "SDK_ERROR")
+                const err = new FincodeSDKError(getFetchErrorMessage(), e)
                 reject(err)
             })
         })
@@ -219,32 +206,26 @@ class Tenant {
                     ...header,
                     tenantShopId: id,
                 },
+                undefined,
+                this._agent,
             )
 
             fetch().then((res) => {
-                if (res.ok) {
-                    res.json().then((json) => {
-                        const res = json as ExaminationInfo
-                        resolve(res)
-                    }).catch((e) => {
-                        const message = (e instanceof Error) ? e.message : undefined
-                        const err = createError(message, "SDK_ERROR")
-                        reject(err)
-                    })
-                } else {
-                    res.json().then((json) => {
-                        const errRes = json as APIRawErrorResponse
-                        const err = formatErrorResponse(errRes, res.status)
-                        reject(err)
-                    }).catch((e) => {
-                        const message = (e instanceof Error) ? e.message : undefined
-                        const err = createError(message, "SDK_ERROR")
-                        reject(err)
-                    })
-                }
+                res.json().then((json) => {
+                    if (res.ok) {
+                        const tenant = json as ExaminationInfo
+                        resolve(tenant)
+                    } else {
+                        const errRes = json as APIErrorResponse
+                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
+                        reject(e)
+                    }
+                }).catch((e) => {
+                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
+                    reject(err)
+                })
             }).catch((e) => {
-                const message = (e instanceof Error) ? e.message : undefined
-                const err = createError(message, "SDK_ERROR")
+                const err = new FincodeSDKError(getFetchErrorMessage(), e)
                 reject(err)
             })
         })
@@ -273,32 +254,26 @@ class Tenant {
                 `/v1/contracts/examinations`,
                 JSON.stringify(body),
                 header,
+                undefined,
+                this._agent,
             )
 
             fetch().then((res) => {
-                if (res.ok) {
-                    res.json().then((json) => {
-                        const res = json as RequestingExaminationResponse
-                        resolve(res)
-                    }).catch((e) => {
-                        const message = (e instanceof Error) ? e.message : undefined
-                        const err = createError(message, "SDK_ERROR")
-                        reject(err)
-                    })
-                } else {
-                    res.json().then((json) => {
-                        const errRes = json as APIRawErrorResponse
-                        const err = formatErrorResponse(errRes, res.status)
-                        reject(err)
-                    }).catch((e) => {
-                        const message = (e instanceof Error) ? e.message : undefined
-                        const err = createError(message, "SDK_ERROR")
-                        reject(err)
-                    })
-                }
+                res.json().then((json) => {
+                    if (res.ok) {
+                        const tenant = json as RequestingExaminationResponse
+                        resolve(tenant)
+                    } else {
+                        const errRes = json as APIErrorResponse
+                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
+                        reject(e)
+                    }
+                }).catch((e) => {
+                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
+                    reject(err)
+                })
             }).catch((e) => {
-                const message = (e instanceof Error) ? e.message : undefined
-                const err = createError(message, "SDK_ERROR")
+                const err = new FincodeSDKError(getFetchErrorMessage(), e)
                 reject(err)
             })
         })
@@ -330,32 +305,26 @@ class Tenant {
                     ...header,
                     tenantShopId: id,
                 },
+                undefined,
+                this._agent,
             )
 
             fetch().then((res) => {
-                if (res.ok) {
-                    res.json().then((json) => {
-                        const res = json as ContractObject
-                        resolve(res)
-                    }).catch((e) => {
-                        const message = (e instanceof Error) ? e.message : undefined
-                        const err = createError(message, "SDK_ERROR")
-                        reject(err)
-                    })
-                } else {
-                    res.json().then((json) => {
-                        const errRes = json as APIRawErrorResponse
-                        const err = formatErrorResponse(errRes, res.status)
-                        reject(err)
-                    }).catch((e) => {
-                        const message = (e instanceof Error) ? e.message : undefined
-                        const err = createError(message, "SDK_ERROR")
-                        reject(err)
-                    })
-                }
+                res.json().then((json) => {
+                    if (res.ok) {
+                        const tenant = json as ContractObject
+                        resolve(tenant)
+                    } else {
+                        const errRes = json as APIErrorResponse
+                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
+                        reject(e)
+                    }
+                }).catch((e) => {
+                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
+                    reject(err)
+                })
             }).catch((e) => {
-                const message = (e instanceof Error) ? e.message : undefined
-                const err = createError(message, "SDK_ERROR")
+                const err = new FincodeSDKError(getFetchErrorMessage(), e)
                 reject(err)
             })
         })
@@ -386,32 +355,26 @@ class Tenant {
                 `/v1/tenants/${id}`,
                 JSON.stringify(body),
                 header,
+                undefined,
+                this._agent,
             )
 
             fetch().then((res) => {
-                if (res.ok) {
-                    res.json().then((json) => {
-                        const res = json as ShopObject
-                        resolve(res)
-                    }).catch((e) => {
-                        const message = (e instanceof Error) ? e.message : undefined
-                        const err = createError(message, "SDK_ERROR")
-                        reject(err)
-                    })
-                } else {
-                    res.json().then((json) => {
-                        const errRes = json as APIRawErrorResponse
-                        const err = formatErrorResponse(errRes, res.status)
-                        reject(err)
-                    }).catch((e) => {
-                        const message = (e instanceof Error) ? e.message : undefined
-                        const err = createError(message, "SDK_ERROR")
-                        reject(err)
-                    })
-                }
+                res.json().then((json) => {
+                    if (res.ok) {
+                        const tenant = json as ShopObject
+                        resolve(tenant)
+                    } else {
+                        const errRes = json as APIErrorResponse
+                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
+                        reject(e)
+                    }
+                }).catch((e) => {
+                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
+                    reject(err)
+                })
             }).catch((e) => {
-                const message = (e instanceof Error) ? e.message : undefined
-                const err = createError(message, "SDK_ERROR")
+                const err = new FincodeSDKError(getFetchErrorMessage(), e)
                 reject(err)
             })
         })
@@ -440,32 +403,26 @@ class Tenant {
                 `/v1/tenants/${id}`,
                 undefined,
                 header,
+                undefined,
+                this._agent,
             )
 
             fetch().then((res) => {
-                if (res.ok) {
-                    res.json().then((json) => {
-                        const res = json as ShopObject
-                        resolve(res)
-                    }).catch((e) => {
-                        const message = (e instanceof Error) ? e.message : undefined
-                        const err = createError(message, "SDK_ERROR")
-                        reject(err)
-                    })
-                } else {
-                    res.json().then((json) => {
-                        const errRes = json as APIRawErrorResponse
-                        const err = formatErrorResponse(errRes, res.status)
-                        reject(err)
-                    }).catch((e) => {
-                        const message = (e instanceof Error) ? e.message : undefined
-                        const err = createError(message, "SDK_ERROR")
-                        reject(err)
-                    })
-                }
+                res.json().then((json) => {
+                    if (res.ok) {
+                        const tenant = json as ShopObject
+                        resolve(tenant)
+                    } else {
+                        const errRes = json as APIErrorResponse
+                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
+                        reject(e)
+                    }
+                }).catch((e) => {
+                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
+                    reject(err)
+                })
             }).catch((e) => {
-                const message = (e instanceof Error) ? e.message : undefined
-                const err = createError(message, "SDK_ERROR")
+                const err = new FincodeSDKError(getFetchErrorMessage(), e)
                 reject(err)
             })
         })
@@ -499,33 +456,26 @@ class Tenant {
                 {
                     pagination: pagination,
                     searchParams: searchParams,
-                }
+                },
+                this._agent,
             )
 
             fetch().then((res) => {
-                if (res.ok) {
-                    res.json().then((json) => {
-                        const res = json as ListResponse<ShopObject>
-                        resolve(res)
-                    }).catch((e) => {
-                        const message = (e instanceof Error) ? e.message : undefined
-                        const err = createError(message, "SDK_ERROR")
-                        reject(err)
-                    })
-                } else {
-                    res.json().then((json) => {
-                        const errRes = json as APIRawErrorResponse
-                        const err = formatErrorResponse(errRes, res.status)
-                        reject(err)
-                    }).catch((e) => {
-                        const message = (e instanceof Error) ? e.message : undefined
-                        const err = createError(message, "SDK_ERROR")
-                        reject(err)
-                    })
-                }
+                res.json().then((json) => {
+                    if (res.ok) {
+                        const tenantList = json as ListResponse<ShopObject>
+                        resolve(tenantList)
+                    } else {
+                        const errRes = json as APIErrorResponse
+                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
+                        reject(e)
+                    }
+                }).catch((e) => {
+                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
+                    reject(err)
+                })
             }).catch((e) => {
-                const message = (e instanceof Error) ? e.message : undefined
-                const err = createError(message, "SDK_ERROR")
+                const err = new FincodeSDKError(getFetchErrorMessage(), e)
                 reject(err)
             })
         })

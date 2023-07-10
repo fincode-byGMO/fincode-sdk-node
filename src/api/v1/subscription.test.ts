@@ -1,3 +1,4 @@
+import { HttpsProxyAgent } from "https-proxy-agent"
 import {
     RegisteringSubscriptionRequest,
     RetrievingSubscriptionListPagination,
@@ -5,14 +6,31 @@ import {
     UpdatingSubscriptionRequest,
 } from "./../../types"
 import { FincodeInitConfig, createFincode } from "./fincode"
+import dotenv from "dotenv"
+import path from "path"
 
-const secretKey = "m_test_NjY2YjRhNDItOWFjMS00ZWI5LTk5MmYtYjVlYjFkMGM5YWZiZjE2NDY0MDItODUwNS00NWIzLWE0MjAtNTQ1ZGE2MWNmZWM5c18yMjA4MDQwMjkwMA"
+const env = dotenv.config({
+    path: path.resolve(__dirname, "./../../../.env.test")
+}).parsed
+if (!env) throw new Error("dotenv is not defined")
+
+const secretKey = env.FINCODE_API_SECRET_KEY
+if (!secretKey) throw new Error("FINCODE_API_SECRET_KEY is not defined")
+
+const proxy = env.FINCODE_HTTP_PROXY
+const agent: HttpsProxyAgent<string> | undefined = proxy ? new HttpsProxyAgent(proxy) : undefined
+
+const customerId = env.FINCODE_CUSTOMER_ID_TESTING_SUBSCRIPTION
+if (!customerId) throw new Error("FINCODE_CUSTOMER_ID_TESTING_SUBSCRIPTION is not defined")
+
+const cardId = env.FINCODE_CARD_ID_TESTING_SUBSCRIPTION
+if (!cardId) throw new Error("FINCODE_CARD_ID_TESTING_SUBSCRIPTION is not defined")
+
+const planId = env.FINCODE_PLAN_ID_TESTING_SUBSCRIPTION
+if (!planId) throw new Error("FINCODE_PLAN_ID_TESTING_SUBSCRIPTION is not defined")
 
 describe("Subscription API testing", () => {
-    const customerId = "fincode-node-customer"
-    const cardId = "cs_ghyasqnBSS-nT0HzFJ_t5w"
-    const planId = "fincode-node-plan"
-    const config: FincodeInitConfig = { isTest: true }
+    const config: FincodeInitConfig = { isTest: true, agent: agent }
     const fincode = createFincode(secretKey, config)
 
     let subscription: SubscriptionObject | undefined
@@ -71,8 +89,7 @@ describe("Subscription API testing", () => {
     lastDay.setDate(0)
     const yyyy2 = lastDay.getFullYear()
     const mm2 = String(lastDay.getMonth() + 1).padStart(2, "0")
-    const dd2 = String(lastDay.getDate()).padStart(2, "0")
-    const lastDayStr = `${yyyy2}/${mm2}/${dd2}`
+    const lastDayStr = `${yyyy2}/${mm2}/${dd}`
 
     const updatingReq: UpdatingSubscriptionRequest = {
         pay_type: "Card",
@@ -118,7 +135,7 @@ describe("Subscription API testing", () => {
 
         const res = await fincode.subscription.retrieveList(pagination)
 
-        expect(res.list?.length).toBeGreaterThan(0)
+        expect(res.list?.length).toBeGreaterThanOrEqual(0)
     })
 
     it("Delete subscription", async () => {

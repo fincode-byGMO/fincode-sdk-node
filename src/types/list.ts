@@ -1,4 +1,4 @@
-import { APIRawError } from "./error"
+import { APIErrorObject } from "./error"
 
 export type ListResponse<T> = {
     total_count?: number | null
@@ -29,7 +29,7 @@ export type ListWithErrors<T> = {
     error_detail?: {
         number?: string
         order_id?: string
-        errors?: APIRawError[]
+        errors?: APIErrorObject[]
     }[] | null
 
     list?: T[] | null

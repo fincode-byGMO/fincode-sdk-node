@@ -1,25 +1,30 @@
+import { RequestInit } from "node-fetch"
 import {
-    APIRawErrorResponse,
     RegisteringSubscriptionRequest,
     CancelingSubscriptionResponse,
     ListResponse,
     SubscriptionObject,
     RetrievingSubscriptionListPagination,
     UpdatingSubscriptionRequest,
-    createError,
-    formatErrorResponse,
     SubscriptionResultObject,
-    RetrievingSubscriptionResultListPagination
+    RetrievingSubscriptionResultListPagination,
+
+    APIErrorResponse,
+    FincodeAPIError,
+    FincodeSDKError,
 } from "../../types/index"
 import { FincodeConfig } from "./fincode"
 import { createFincodeRequestFetch, FincodePartialRequestHeader } from "./http"
+import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_errorMessages"
 
 class Subscription {
 
     private readonly _config: FincodeConfig
+    private readonly _agent: RequestInit["agent"]
 
-    constructor(config: FincodeConfig) {
+    constructor(config: FincodeConfig, agent?: RequestInit["agent"]) {
         this._config = config
+        this._agent = agent
     }
 
     /**
@@ -45,33 +50,26 @@ class Subscription {
                 "/v1/subscriptions",
                 JSON.stringify(body),
                 header,
-                {},
+                undefined,
+                this._agent,
             )
 
             fetch().then((res) => {
-                if (res.ok) {
-                    res.json().then((json) => {
-                        const payment = json as SubscriptionObject
-                        resolve(payment)
-                    }).catch((e) => {
-                        const message = (e instanceof Error) ? e.message : undefined
-                        const err = createError(message, "SDK_ERROR")
-                        reject(err)
-                    })
-                } else {
-                    res.json().then((json) => {
-                        const errRes = json as APIRawErrorResponse
-                        const err = formatErrorResponse(errRes, res.status)
-                        reject(err)
-                    }).catch((e) => {
-                        const message = (e instanceof Error) ? e.message : undefined
-                        const err = createError(message, "SDK_ERROR")
-                        reject(err)
-                    })
-                }
+                res.json().then((json) => {
+                    if (res.ok) {
+                        const subscription = json as SubscriptionObject
+                        resolve(subscription)
+                    } else {
+                        const errRes = json as APIErrorResponse
+                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
+                        reject(e)
+                    }
+                }).catch((e) => {
+                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
+                    reject(err)
+                })
             }).catch((e) => {
-                const message = (e instanceof Error) ? e.message : undefined
-                const err = createError(message, "SDK_ERROR")
+                const err = new FincodeSDKError(getFetchErrorMessage(), e)
                 reject(err)
             })
         })
@@ -100,32 +98,25 @@ class Subscription {
                 undefined,
                 header,
                 { pagination: pagination },
+                this._agent,
             )
 
             fetch().then((res) => {
-                if (res.ok) {
-                    res.json().then((json) => {
+                res.json().then((json) => {
+                    if (res.ok) {
                         const list = json as ListResponse<SubscriptionObject>
                         resolve(list)
-                    }).catch((e) => {
-                        const message = (e instanceof Error) ? e.message : undefined
-                        const err = createError(message, "SDK_ERROR")
-                        reject(err)
-                    })
-                } else {
-                    res.json().then((json) => {
-                        const errRes = json as APIRawErrorResponse
-                        const err = formatErrorResponse(errRes, res.status)
-                        reject(err)
-                    }).catch((e) => {
-                        const message = (e instanceof Error) ? e.message : undefined
-                        const err = createError(message, "SDK_ERROR")
-                        reject(err)
-                    })
-                }
+                    } else {
+                        const errRes = json as APIErrorResponse
+                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
+                        reject(e)
+                    }
+                }).catch((e) => {
+                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
+                    reject(err)
+                })
             }).catch((e) => {
-                const message = (e instanceof Error) ? e.message : undefined
-                const err = createError(message, "SDK_ERROR")
+                const err = new FincodeSDKError(getFetchErrorMessage(), e)
                 reject(err)
             })
         })
@@ -161,32 +152,25 @@ class Subscription {
                         pay_type: payType,
                     }
                 },
+                this._agent,
             )
 
             fetch().then((res) => {
-                if (res.ok) {
-                    res.json().then((json) => {
+                res.json().then((json) => {
+                    if (res.ok) {
                         const subscription = json as SubscriptionObject
                         resolve(subscription)
-                    }).catch((e) => {
-                        const message = (e instanceof Error) ? e.message : undefined
-                        const err = createError(message, "SDK_ERROR")
-                        reject(err)
-                    })
-                } else {
-                    res.json().then((json) => {
-                        const errRes = json as APIRawErrorResponse
-                        const err = formatErrorResponse(errRes, res.status)
-                        reject(err)
-                    }).catch((e) => {
-                        const message = (e instanceof Error) ? e.message : undefined
-                        const err = createError(message, "SDK_ERROR")
-                        reject(err)
-                    })
-                }
+                    } else {
+                        const errRes = json as APIErrorResponse
+                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
+                        reject(e)
+                    }
+                }).catch((e) => {
+                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
+                    reject(err)
+                })
             }).catch((e) => {
-                const message = (e instanceof Error) ? e.message : undefined
-                const err = createError(message, "SDK_ERROR")
+                const err = new FincodeSDKError(getFetchErrorMessage(), e)
                 reject(err)
             })
         })
@@ -217,33 +201,26 @@ class Subscription {
                 `/v1/subscriptions/${id}`,
                 JSON.stringify(body),
                 header,
-                {},
+                undefined,
+                this._agent,
             )
 
             fetch().then((res) => {
-                if (res.ok) {
-                    res.json().then((json) => {
+                res.json().then((json) => {
+                    if (res.ok) {
                         const subscription = json as SubscriptionObject
                         resolve(subscription)
-                    }).catch((e) => {
-                        const message = (e instanceof Error) ? e.message : undefined
-                        const err = createError(message, "SDK_ERROR")
-                        reject(err)
-                    })
-                } else {
-                    res.json().then((json) => {
-                        const errRes = json as APIRawErrorResponse
-                        const err = formatErrorResponse(errRes, res.status)
-                        reject(err)
-                    }).catch((e) => {
-                        const message = (e instanceof Error) ? e.message : undefined
-                        const err = createError(message, "SDK_ERROR")
-                        reject(err)
-                    })
-                }
+                    } else {
+                        const errRes = json as APIErrorResponse
+                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
+                        reject(e)
+                    }
+                }).catch((e) => {
+                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
+                    reject(err)
+                })
             }).catch((e) => {
-                const message = (e instanceof Error) ? e.message : undefined
-                const err = createError(message, "SDK_ERROR")
+                const err = new FincodeSDKError(getFetchErrorMessage(), e)
                 reject(err)
             })
         })
@@ -279,32 +256,25 @@ class Subscription {
                         pay_type: payType,
                     },
                 },
+                this._agent,
             )
 
             fetch().then((res) => {
-                if (res.ok) {
-                    res.json().then((json) => {
-                        const resp = json as CancelingSubscriptionResponse
-                        resolve(resp)
-                    }).catch((e) => {
-                        const message = (e instanceof Error) ? e.message : undefined
-                        const err = createError(message, "SDK_ERROR")
-                        reject(err)
-                    })
-                } else {
-                    res.json().then((json) => {
-                        const errRes = json as APIRawErrorResponse
-                        const err = formatErrorResponse(errRes, res.status)
-                        reject(err)
-                    }).catch((e) => {
-                        const message = (e instanceof Error) ? e.message : undefined
-                        const err = createError(message, "SDK_ERROR")
-                        reject(err)
-                    })
-                }
+                res.json().then((json) => {
+                    if (res.ok) {
+                        const subscription = json as CancelingSubscriptionResponse
+                        resolve(subscription)
+                    } else {
+                        const errRes = json as APIErrorResponse
+                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
+                        reject(e)
+                    }
+                }).catch((e) => {
+                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
+                    reject(err)
+                })
             }).catch((e) => {
-                const message = (e instanceof Error) ? e.message : undefined
-                const err = createError(message, "SDK_ERROR")
+                const err = new FincodeSDKError(getFetchErrorMessage(), e)
                 reject(err)
             })
         })
@@ -336,32 +306,25 @@ class Subscription {
                 undefined,
                 header,
                 { pagination: pagination },
+                this._agent,
             )
 
             fetch().then((res) => {
-                if (res.ok) {
-                    res.json().then((json) => {
+                res.json().then((json) => {
+                    if (res.ok) {
                         const list = json as ListResponse<SubscriptionResultObject>
                         resolve(list)
-                    }).catch((e) => {
-                        const message = (e instanceof Error) ? e.message : undefined
-                        const err = createError(message, "SDK_ERROR")
-                        reject(err)
-                    })
-                } else {
-                    res.json().then((json) => {
-                        const errRes = json as APIRawErrorResponse
-                        const err = formatErrorResponse(errRes, res.status)
-                        reject(err)
-                    }).catch((e) => {
-                        const message = (e instanceof Error) ? e.message : undefined
-                        const err = createError(message, "SDK_ERROR")
-                        reject(err)
-                    })
-                }
+                    } else {
+                        const errRes = json as APIErrorResponse
+                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
+                        reject(e)
+                    }
+                }).catch((e) => {
+                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
+                    reject(err)
+                })
             }).catch((e) => {
-                const message = (e instanceof Error) ? e.message : undefined
-                const err = createError(message, "SDK_ERROR")
+                const err = new FincodeSDKError(getFetchErrorMessage(), e)
                 reject(err)
             })
         })
