@@ -1,0 +1,56 @@
+import { RequestInit } from "node-fetch";
+import { PaymentBulk } from "./bulk.payment";
+import { Card } from "./card";
+import { Customer } from "./customer";
+import { Payment } from "./payment";
+import { Plan } from "./plan";
+import { Platform } from "./platform";
+import { PlatformAccount } from "./platform_account";
+import { CardRegistrationSession } from "./session.cardRegistration";
+import { PaymentSession } from "./session.payment";
+import { Subscription } from "./subscription";
+import { Tenant } from "./tenant";
+import { Webhook } from "./webhook";
+type FincodeConfig = {
+    version: string | undefined;
+    isTest: boolean;
+    apiKey: string;
+};
+declare class Fincode {
+    readonly config: FincodeConfig;
+    readonly agent?: RequestInit["agent"];
+    constructor(apiKey: string, isTest?: boolean, version?: string, agent?: RequestInit["agent"]);
+    private _customer?;
+    get customer(): Customer;
+    private _card?;
+    get card(): Card;
+    private _payment?;
+    get payment(): Payment;
+    private _plan?;
+    get plan(): Plan;
+    private _subscription?;
+    get subscription(): Subscription;
+    private _paymentSession?;
+    get paymentSession(): PaymentSession;
+    private _cardRegistrationSession?;
+    get cardRegistrationSession(): CardRegistrationSession;
+    private _paymentBulk?;
+    get paymentBulk(): PaymentBulk;
+    private _platform?;
+    get platform(): Platform;
+    private _platformAccount?;
+    get platformAccount(): PlatformAccount;
+    private _tenant?;
+    get tenant(): Tenant;
+    private _webhook?;
+    get webhook(): Webhook;
+}
+export { Fincode, FincodeConfig };
+type FincodeInitConfig = {
+    isTest?: boolean;
+    version?: string;
+    agent?: RequestInit["agent"];
+};
+export type { FincodeInitConfig };
+declare const createFincode: (apiKey: string, config?: FincodeInitConfig) => Fincode;
+export { createFincode };
