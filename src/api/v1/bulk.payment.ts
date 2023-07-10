@@ -1,6 +1,5 @@
 import FormData from "form-data"
 import {
-    APIRawErrorResponse,
     DeletingPaymentBulkResponse,
     ListResponse,
     ListWithErrors,
@@ -8,18 +7,24 @@ import {
     PaymentBulkObject,
     RetrievingPaymentBulkDetailPagination,
     RetrievingPaymentBulkPagination,
-    createError,
-    formatErrorResponse
+
+    APIErrorResponse,
+    FincodeAPIError,
+    FincodeSDKError,
 } from "../../types/index"
 import { FincodeConfig } from "./fincode"
 import { createFincodeRequestFetch, FincodePartialRequestHeader } from "./http"
+import { RequestInit } from "node-fetch"
+import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_errorMessages"
 
 class PaymentBulk {
 
     private readonly _config: FincodeConfig
+    private readonly _agent: RequestInit["agent"]
 
-    constructor(config: FincodeConfig) {
+    constructor(config: FincodeConfig, agent?: RequestInit["agent"]) {
         this._config = config
+        this._agent = agent
     }
 
     /**
@@ -68,33 +73,26 @@ class PaymentBulk {
                     process_plan_date: processPlanDate,
                 }
             },
+            this._agent,
         )
 
         return new Promise((resolve, reject) => {
             fetch().then((res) => {
-                if (res.ok) {
-                    res.json().then((json) => {
+                res.json().then((json) => {
+                    if (res.ok) {
                         const bulk = json as PaymentBulkObject
                         resolve(bulk)
-                    }).catch((e) => {
-                        const message = (e instanceof Error) ? e.message : undefined
-                        const err = createError(message, "SDK_ERROR")
+                    } else {
+                        const errRes = json as APIErrorResponse
+                        const err = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
                         reject(err)
-                    })
-                } else {
-                    res.json().then((json) => {
-                        const errRes = json as APIRawErrorResponse
-                        const err = formatErrorResponse(errRes, res.status)
-                        reject(err)
-                    }).catch((e) => {
-                        const message = (e instanceof Error) ? e.message : undefined
-                        const err = createError(message, "SDK_ERROR")
-                        reject(err)
-                    })
-                }
+                    }
+                }).catch((e) => {
+                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
+                    reject(err)
+                })
             }).catch((e) => {
-                const message = (e instanceof Error) ? e.message : undefined
-                const err = createError(message, "SDK_ERROR")
+                const err = new FincodeSDKError(getFetchErrorMessage(), e)
                 reject(err)
             })
         })
@@ -124,33 +122,26 @@ class PaymentBulk {
             undefined,
             header,
             { pagination: pagination },
+            this._agent,
         )
 
         return new Promise((resolve, reject) => {
             fetch().then((res) => {
-                if (res.ok) {
-                    res.json().then((json) => {
+                res.json().then((json) => {
+                    if (res.ok) {
                         const bulkList = json as ListResponse<PaymentBulkObject>
                         resolve(bulkList)
-                    }).catch((e) => {
-                        const message = (e instanceof Error) ? e.message : undefined
-                        const err = createError(message, "SDK_ERROR")
+                    } else {
+                        const errRes = json as APIErrorResponse
+                        const err = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
                         reject(err)
-                    })
-                } else {
-                    res.json().then((json) => {
-                        const errRes = json as APIRawErrorResponse
-                        const err = formatErrorResponse(errRes, res.status)
-                        reject(err)
-                    }).catch((e) => {
-                        const message = (e instanceof Error) ? e.message : undefined
-                        const err = createError(message, "SDK_ERROR")
-                        reject(err)
-                    })
-                }
+                    }
+                }).catch((e) => {
+                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
+                    reject(err)
+                })
             }).catch((e) => {
-                const message = (e instanceof Error) ? e.message : undefined
-                const err = createError(message, "SDK_ERROR")
+                const err = new FincodeSDKError(getFetchErrorMessage(), e)
                 reject(err)
             })
         })
@@ -182,33 +173,26 @@ class PaymentBulk {
             undefined,
             header,
             { pagination: pagination },
+            this._agent,
         )
 
         return new Promise((resolve, reject) => {
             fetch().then((res) => {
-                if (res.ok) {
-                    res.json().then((json) => {
-                        const bulkDetail = json as PaymentBulkDetailObject
-                        resolve(bulkDetail)
-                    }).catch((e) => {
-                        const message = (e instanceof Error) ? e.message : undefined
-                        const err = createError(message, "SDK_ERROR")
+                res.json().then((json) => {
+                    if (res.ok) {
+                        const bulkDetailList = json as ListWithErrors<PaymentBulkDetailObject>
+                        resolve(bulkDetailList)
+                    } else {
+                        const errRes = json as APIErrorResponse
+                        const err = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
                         reject(err)
-                    })
-                } else {
-                    res.json().then((json) => {
-                        const errRes = json as APIRawErrorResponse
-                        const err = formatErrorResponse(errRes, res.status)
-                        reject(err)
-                    }).catch((e) => {
-                        const message = (e instanceof Error) ? e.message : undefined
-                        const err = createError(message, "SDK_ERROR")
-                        reject(err)
-                    })
-                }
+                    }
+                }).catch((e) => {
+                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
+                    reject(err)
+                })
             }).catch((e) => {
-                const message = (e instanceof Error) ? e.message : undefined
-                const err = createError(message, "SDK_ERROR")
+                const err = new FincodeSDKError(getFetchErrorMessage(), e)
                 reject(err)
             })
         })
@@ -237,33 +221,27 @@ class PaymentBulk {
             `/v1/payments/bulk/${id}`,
             undefined,
             header,
+            undefined,
+            this._agent
         )
 
         return new Promise((resolve, reject) => {
             fetch().then((res) => {
-                if (res.ok) {
-                    res.json().then((json) => {
+                res.json().then((json) => {
+                    if (res.ok) {
                         const deleteResult = json as DeletingPaymentBulkResponse
                         resolve(deleteResult)
-                    }).catch((e) => {
-                        const message = (e instanceof Error) ? e.message : undefined
-                        const err = createError(message, "SDK_ERROR")
+                    } else {
+                        const errRes = json as APIErrorResponse
+                        const err = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
                         reject(err)
-                    })
-                } else {
-                    res.json().then((json) => {
-                        const errRes = json as APIRawErrorResponse
-                        const err = formatErrorResponse(errRes, res.status)
-                        reject(err)
-                    }).catch((e) => {
-                        const message = (e instanceof Error) ? e.message : undefined
-                        const err = createError(message, "SDK_ERROR")
-                        reject(err)
-                    })
-                }
+                    }
+                }).catch((e) => {
+                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
+                    reject(err)
+                })
             }).catch((e) => {
-                const message = (e instanceof Error) ? e.message : undefined
-                const err = createError(message, "SDK_ERROR")
+                const err = new FincodeSDKError(getFetchErrorMessage(), e)
                 reject(err)
             })
         })

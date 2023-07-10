@@ -13,11 +13,10 @@
     "@types/node-fetch": "^2.6.2",
     "@typescript-eslint/eslint-plugin": "^5.48.1",
     "@typescript-eslint/parser": "^5.48.1",
+    "dotenv": "^16.3.1",
     "eslint": "^8.31.0",
     "eslint-plugin-jest": "^27.2.1",
-    "https-proxy-agent": "^5.0.1",
     "jest": "^29.0.0",
-    "node-fetch": "2.6.9",
     "ts-jest": "^29.0.0",
     "ts-node": "^10.9.1",
     "typescript": "^4.9.4"
@@ -26,10 +25,22 @@
     "lint": "eslint . --ext .ts,.js",
     "build": "tsc",
 
-    "test": "jest ./src/api/",
-    "test:v1": "jest ./src/api/v1/"
+    "test:v1/bulk.payment": "jest ./src/api/v1/bulk.payment.test.ts --silent=false --verbose false --no-cache",
+    "test:v1/card": "jest ./src/api/v1/card.test.ts --silent=false --verbose false --no-cache",
+    "test:v1/customer": "jest ./src/api/v1/customer.test.ts --silent=false --verbose false --no-cache",
+    "test:v1/payment": "jest ./src/api/v1/payment.test.ts --silent=false --verbose false --no-cache",
+    "test:v1/plan": "jest ./src/api/v1/plan.test.ts --silent=false --verbose false --no-cache",
+    "test:v1/platform_account": "jest ./src/api/v1/platform_account.test.ts --silent=false --verbose false --no-cache",
+    "test:v1/session.cardRegistration": "jest ./src/api/v1/session.cardRegistration.test.ts --silent=false --verbose false --no-cache",
+    "test:v1/session.payment": "jest ./src/api/v1/session.payment.test.ts --silent=false --verbose false --no-cache",
+    "test:v1/subscription": "jest ./src/api/v1/subscription.test.ts --silent=false --verbose false --no-cache",
+    "test:v1/tenant": "jest ./src/api/v1/tenant.test.ts --silent=false --verbose false --no-cache",
+    "test:v1-sh": "./test.v1.sh",
+    "test:v1": "yarn test:v1/bulk.payment & yarn test:v1/card & yarn test:v1/customer & yarn test:v1/payment & yarn test:v1/plan & yarn test:v1/platform_account & yarn test:v1/session.cardRegistration & yarn test:v1/session.payment & yarn test:v1/subscription & yarn test:v1/tenant"
   },
   "dependencies": {
-    "form-data": "^4.0.0"
+    "form-data": "^4.0.0",
+    "https-proxy-agent": "^7.0.0",
+    "node-fetch": "^2.6.12"
   }
 }

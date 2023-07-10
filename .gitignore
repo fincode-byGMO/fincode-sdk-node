@@ -68,5 +68,6 @@ $RECYCLE.BIN/
 *.lnk
 
 .env
+.env.test
 
 .npmrc
