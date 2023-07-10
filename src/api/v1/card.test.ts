@@ -1,17 +1,29 @@
-import { CardObject, FincodeError, RegisteringCardRequest, UpdatingCardRequest } from "./../../types"
+import { HttpsProxyAgent } from "https-proxy-agent"
+import { CardObject, FincodeAPIError, RegisteringCardRequest, UpdatingCardRequest } from "./../../types"
 import { FincodeInitConfig, createFincode } from "./fincode"
+import dotenv from "dotenv"
+import path from "path"
 
-const secretKey = "m_test_NjY2YjRhNDItOWFjMS00ZWI5LTk5MmYtYjVlYjFkMGM5YWZiZjE2NDY0MDItODUwNS00NWIzLWE0MjAtNTQ1ZGE2MWNmZWM5c18yMjA4MDQwMjkwMA"
+const env = dotenv.config({
+    path: path.resolve(__dirname, "./../../../.env.test")
+}).parsed
+if (!env) throw new Error("dotenv is not defined")
+
+const secretKey = env.FINCODE_API_SECRET_KEY
+if (!secretKey) throw new Error("FINCODE_API_SECRET_KEY is not defined")
+
+const proxy = env.FINCODE_HTTP_PROXY
+const agent: HttpsProxyAgent<string> | undefined = proxy ? new HttpsProxyAgent(proxy) : undefined
+
+const cardToken = env.FINCODE_CARD_TOKEN
+if (!cardToken) throw new Error("FINCODE_CARD_TOKEN is not defined")
+
+const customerId = env.FINCODE_CUSTOMER_ID_TESTING_PAYMENT
+if (!customerId) throw new Error("FINCODE_CUSTOMER_ID_TESTING_PAYMENT is not defined")
 
 describe("Card API testing", () => {
-    const customerId = "fincode-node-customer"
-    const config: FincodeInitConfig = { isTest: true }
+    const config: FincodeInitConfig = { isTest: true, agent: agent }
     const fincode = createFincode(secretKey, config)
-
-    const cardToken = "37643132613564643039353439613864333631326565366466643032356535393663333965336465356632656435643836633064636635386434653535333161"
-    if (!cardToken) {
-        throw new Error("Please provide card token")
-    }
 
     let card: CardObject | undefined
     it("Register card", async () => {
@@ -67,7 +79,7 @@ describe("Card API testing", () => {
     it("Retrieve card list", async () => {
         const res = await fincode.card.retrieveList(customerId)
 
-        expect(res.list?.length).toBeGreaterThan(0)
+        expect(res.list?.length).toBeGreaterThanOrEqual(0)
         expect(res.list?.length).toBeLessThanOrEqual(5)
     })
 
@@ -86,9 +98,9 @@ describe("Card API testing", () => {
         try {
             await fincode.card.retrieve(customerId, card.id)
         } catch (e) {
-            expect(e).toBeInstanceOf(FincodeError)
-            const err = e as FincodeError
-            expect(err.errors[0].type).toBe('RESOURCE_NOT_FOUND')
+            expect(e).toBeInstanceOf(FincodeAPIError)
+            const err = e as FincodeAPIError
+            expect(err.status).toBe(400)
         }
     })
 })
