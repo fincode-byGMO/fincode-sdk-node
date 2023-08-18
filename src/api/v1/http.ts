@@ -18,7 +18,7 @@ const createFincodeRequestURL = (
     }
 ): string => {
 
-    const baseUrl = config.isTest ? BASE_URL_TEST : BASE_URL
+    const baseUrl = config.fincodeEnv == "test" ? BASE_URL_TEST : BASE_URL
 
     let queryStr = ""
     if (query) {

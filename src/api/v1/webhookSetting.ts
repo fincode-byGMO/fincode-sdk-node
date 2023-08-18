@@ -8,13 +8,13 @@ import {
     APIErrorResponse,
     FincodeAPIError,
     FincodeSDKError,
-} from "./../../types";
+} from "../../types";
 import { FincodePartialRequestHeader, createFincodeRequestFetch } from "./http";
 import { FincodeConfig } from "./fincode";
 import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_errorMessages";
 
 
-export class Webhook {
+export class WebhookSetting {
 
     private readonly _config: FincodeConfig
 
@@ -36,7 +36,7 @@ export class Webhook {
     * @returns {Promise<WebhookObject>} Webhook object
     */
 
-    public subscribe(
+    public create(
         body: SubscribingWebhookRequest,
         header?: FincodePartialRequestHeader,
     ): Promise<WebhookObject> {
