@@ -854,7 +854,7 @@ export type StatusUpdatedNotification = {
      * - `708`: Examination has been failed.
      * - `709`: This shop has been canceled.
      */
-    status_code?: 701 | 702 | 703 | 704 | 705 | 706 | 707 | 708 | 709 | null
+    status_code?: ExaminationStatusCode | null
 
     /**
      * Status title
@@ -876,6 +876,23 @@ export type StatusUpdatedNotification = {
      */
     is_updated?: boolean | null
 }
+
+/**
+ * Examination status code
+ * 
+ * - `701`: This shop has not applied yet.
+ * - `702`: This shop has applied.
+ * - `703`: Waiting examination.
+ * - `704`: Examination is now in progress.
+ * - `705`: Examination is pending.
+ * - `706`: Examination has been successfully completed.
+ * - `707`: Available for use.
+ * - `708`: Examination has been failed.
+ * - `709`: This shop has been canceled.
+ */
+export type ExaminationStatusCode = 701 | 702 | 703 | 704 | 705 | 706 | 707 | 708 | 709
+
+export type ContractAquirer = "UC" | "TFC" | "JCB/AMEX" | "DINERS" | "APPLE PAY UC" | "APPLE PAY JCB/AMEX" | "PAYSLE" | "PAYPAY"
 
 /**
  * Contract status (v2)

@@ -1,13 +1,13 @@
 import {
-    DeletingWebhookResponse,
     ListResponse,
-    SubscribingWebhookRequest,
-    UpdatingWebhookRequest,
-    WebhookObject,
 
     APIErrorResponse,
     FincodeAPIError,
     FincodeSDKError,
+    CreatingWebhookSettingRequest,
+    WebhookSettingObject,
+    UpdatingWebhookSettingRequest,
+    DeletingWebhookSettingResponse,
 } from "../../types";
 import { FincodePartialRequestHeader, createFincodeRequestFetch } from "./http";
 import { FincodeConfig } from "./fincode";
@@ -30,16 +30,16 @@ export class WebhookSetting {
     * 
     * if the Promise is rejected, the error is an instance of `FincodeError`
     * 
-    * @param {SubscribingWebhookRequest} body Request object for Registering a webhook
+    * @param {SubscribingWebhookRequest} body Request object for Creating a webhook
     * @param {FincodePartialRequestHeader} [header]
     * 
     * @returns {Promise<WebhookObject>} Webhook object
     */
 
     public create(
-        body: SubscribingWebhookRequest,
+        body: CreatingWebhookSettingRequest,
         header?: FincodePartialRequestHeader,
-    ): Promise<WebhookObject> {
+    ): Promise<WebhookSettingObject> {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
                 this._config,
@@ -53,7 +53,7 @@ export class WebhookSetting {
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
-                        const res = json as WebhookObject
+                        const res = json as WebhookSettingObject
                         resolve(res)
                     } else {
                         const errRes = json as APIErrorResponse
@@ -87,7 +87,7 @@ export class WebhookSetting {
     public retrieve(
         id: string,
         header?: FincodePartialRequestHeader,
-    ): Promise<WebhookObject> {
+    ): Promise<WebhookSettingObject> {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
                 this._config,
@@ -101,7 +101,7 @@ export class WebhookSetting {
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
-                        const res = json as WebhookObject
+                        const res = json as WebhookSettingObject
                         resolve(res)
                     } else {
                         const errRes = json as APIErrorResponse
@@ -132,7 +132,7 @@ export class WebhookSetting {
      */
     public retrieveList(
         header?: FincodePartialRequestHeader,
-    ): Promise<ListResponse<WebhookObject>> {
+    ): Promise<Pick<ListResponse<WebhookSettingObject>, "list">> {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
                 this._config,
@@ -146,7 +146,7 @@ export class WebhookSetting {
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
-                        const res = json as ListResponse<WebhookObject>
+                        const res = json as ListResponse<WebhookSettingObject>
                         resolve(res)
                     } else {
                         const errRes = json as APIErrorResponse
@@ -172,7 +172,7 @@ export class WebhookSetting {
      * if the Promise is rejected, the error is an instance of `FincodeError`
      * 
      * @param {string} id Webhook ID
-     * @param {UpdatingWebhookRequest} body Request object for Registering a webhook
+     * @param {UpdatingWebhookRequest} body Request object for Creating a webhook
      * @param {FincodePartialRequestHeader} [header]
      * 
      * @returns {Promise<WebhookObject>} Webhook object
@@ -180,9 +180,9 @@ export class WebhookSetting {
 
     public update(
         id: string,
-        body: UpdatingWebhookRequest,
+        body: UpdatingWebhookSettingRequest,
         header?: FincodePartialRequestHeader,
-    ): Promise<WebhookObject> {
+    ): Promise<WebhookSettingObject> {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
                 this._config,
@@ -196,7 +196,7 @@ export class WebhookSetting {
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
-                        const res = json as WebhookObject
+                        const res = json as WebhookSettingObject
                         resolve(res)
                     } else {
                         const errRes = json as APIErrorResponse
@@ -229,7 +229,7 @@ export class WebhookSetting {
     public delete(
         id: string,
         header?: FincodePartialRequestHeader,
-    ): Promise<DeletingWebhookResponse> {
+    ): Promise<DeletingWebhookSettingResponse> {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
                 this._config,
@@ -243,7 +243,7 @@ export class WebhookSetting {
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
-                        const res = json as DeletingWebhookResponse
+                        const res = json as DeletingWebhookSettingResponse
                         resolve(res)
                     } else {
                         const errRes = json as APIErrorResponse

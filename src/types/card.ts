@@ -106,9 +106,9 @@ export type CardBrand = "VISA" | "MASTER" | "JCB" | "AMEX" | "DINERS"
 export type CardType = "0" | "1" | "2" | "3"
 
 /**
- * Request object of Registering Card (used for POST /v1/customers/{customer_id}/cards)
+ * Request object of Creating Card (used for POST /v1/customers/{customer_id}/cards)
  */
-export type RegisteringCardRequest = {
+export type CreatingCardRequest = {
     /**
      * Flag that means the customer uses this card by default or not.
      * 

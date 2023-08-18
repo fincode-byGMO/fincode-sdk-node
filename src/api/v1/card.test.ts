@@ -1,5 +1,5 @@
 import { HttpsProxyAgent } from "https-proxy-agent"
-import { CardObject, FincodeAPIError, RegisteringCardRequest, UpdatingCardRequest } from "./../../types"
+import { CardObject, FincodeAPIError, CreatingCardRequest, UpdatingCardRequest } from "./../../types"
 import { FincodeInitOptions, createFincode } from "./fincode"
 import dotenv from "dotenv"
 import path from "path"
@@ -31,7 +31,7 @@ describe("Card API testing", () => {
 
     let card: CardObject | undefined
     it("Register card", async () => {
-        const req: RegisteringCardRequest = {
+        const req: CreatingCardRequest = {
             default_flag: "1",
             token: cardToken,
         }

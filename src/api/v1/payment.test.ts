@@ -2,7 +2,7 @@ import {
     CapturingPaymentRequest,
     ExecutingPaymentRequest,
     PaymentObject,
-    RegisteringPaymentRequest
+    CreatingPaymentRequest
 } from '../../types'
 import {
     FincodeInitOptions,
@@ -40,8 +40,8 @@ describe("Payment API testing", () => {
     let payment: PaymentObject | undefined
 
     describe("payment without 3D secure", () => {
-        it("Registering payment", async () => {
-            const registerReq: RegisteringPaymentRequest = {
+        it("Creating payment", async () => {
+            const registerReq: CreatingPaymentRequest = {
                 pay_type: "Card",
                 job_code: "AUTH",
                 amount: "100",
