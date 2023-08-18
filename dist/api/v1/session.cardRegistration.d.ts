@@ -1,11 +1,9 @@
-import { RequestInit } from "node-fetch";
 import { CreatingCardRegistrationSessionRequest, CardRegistrationSessionObject } from "../../types/index";
 import { FincodeConfig } from "./fincode";
 import { FincodePartialRequestHeader } from "./http";
 declare class CardRegistrationSession {
     private readonly _config;
-    private readonly _agent;
-    constructor(config: FincodeConfig, agent?: RequestInit["agent"]);
+    constructor(config: FincodeConfig);
     /**
      * **Create a card registration session**
      *

@@ -130,9 +130,9 @@ export type SubscriptionObject = {
     updated?: string | null;
 };
 /**
- * Request object for Registering a subscription (used for `POST /v1/subscriptions`)
+ * Request object for Creating a subscription (used for `POST /v1/subscriptions`)
  */
-export type RegisteringSubscriptionRequest = {
+export type CreatingSubscriptionRequest = {
     /**
      * Subscription ID.
      */

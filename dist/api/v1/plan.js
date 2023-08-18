@@ -3,10 +3,8 @@ import { createFincodeRequestFetch } from "./http";
 import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_errorMessages";
 class Plan {
     _config;
-    _agent;
-    constructor(config, agent) {
+    constructor(config) {
         this._config = config;
-        this._agent = agent;
     }
     /**
      * **Register a plan**
@@ -15,14 +13,14 @@ class Plan {
      * w
      * if the Promise is rejected, the error is an instance of `FincodeError`
      *
-     * @param {RegisteringPaymentRequest} body
+     * @param {CreatingPaymentRequest} body
      * @param {FincodePartialRequestHeader} [header]
      *
      * @returns {Promise<PlanObject>}
      */
     create(body, header) {
         return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(this._config, "POST", "/v1/plans", JSON.stringify(body), header, undefined, this._agent);
+            const fetch = createFincodeRequestFetch(this._config, "POST", "/v1/plans", JSON.stringify(body), header, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -51,7 +49,7 @@ class Plan {
      */
     retrieveList(pagination, header) {
         return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(this._config, "GET", "/v1/plans", undefined, header, { pagination: pagination }, this._agent);
+            const fetch = createFincodeRequestFetch(this._config, "GET", "/v1/plans", undefined, header, { pagination: pagination });
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -81,7 +79,7 @@ class Plan {
      */
     retrieve(id, header) {
         return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(this._config, "GET", `/v1/plans/${id}`, undefined, header, undefined, this._agent);
+            const fetch = createFincodeRequestFetch(this._config, "GET", `/v1/plans/${id}`, undefined, header, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -112,7 +110,7 @@ class Plan {
      */
     update(id, body, header) {
         return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(this._config, "PUT", `/v1/plans/${id}`, JSON.stringify(body), header, undefined, this._agent);
+            const fetch = createFincodeRequestFetch(this._config, "PUT", `/v1/plans/${id}`, JSON.stringify(body), header, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -148,7 +146,7 @@ class Plan {
      */
     delete(id, header) {
         return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(this._config, "DELETE", `/v1/plans/${id}`, undefined, header, undefined, this._agent);
+            const fetch = createFincodeRequestFetch(this._config, "DELETE", `/v1/plans/${id}`, undefined, header, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {

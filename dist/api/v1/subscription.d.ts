@@ -1,11 +1,9 @@
-import { RequestInit } from "node-fetch";
-import { RegisteringSubscriptionRequest, CancelingSubscriptionResponse, ListResponse, SubscriptionObject, RetrievingSubscriptionListPagination, UpdatingSubscriptionRequest, SubscriptionResultObject, RetrievingSubscriptionResultListPagination } from "../../types/index";
+import { CreatingSubscriptionRequest, CancelingSubscriptionResponse, ListResponse, SubscriptionObject, RetrievingSubscriptionListPagination, UpdatingSubscriptionRequest, SubscriptionResultObject, RetrievingSubscriptionResultListPagination } from "../../types/index";
 import { FincodeConfig } from "./fincode";
 import { FincodePartialRequestHeader } from "./http";
 declare class Subscription {
     private readonly _config;
-    private readonly _agent;
-    constructor(config: FincodeConfig, agent?: RequestInit["agent"]);
+    constructor(config: FincodeConfig);
     /**
      * **Register a subscription**
      *
@@ -13,12 +11,12 @@ declare class Subscription {
      *
      * if the Promise is rejected, the error is an instance of `FincodeError`
      *
-     * @param {RegisteringPaymentRequest} body
+     * @param {CreatingPaymentRequest} body
      * @param {FincodePartialRequestHeader} [header]
      *
      * @returns {Promise<SubscriptionObject>}
      */
-    register(body: RegisteringSubscriptionRequest, header?: FincodePartialRequestHeader): Promise<SubscriptionObject>;
+    create(body: CreatingSubscriptionRequest, header?: FincodePartialRequestHeader): Promise<SubscriptionObject>;
     /**
      * **Retrieve subscription list**
      *

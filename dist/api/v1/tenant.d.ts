@@ -1,13 +1,25 @@
-import { RequestInit } from "node-fetch";
-import { ContractObject, CreatingTenantWithExistingUserRequest, CreatingTenantWithExistingUserResponse, ExaminationInfo, ListResponse, CreatingTenantWithNewUserRequest, CreatingTenantWithNewUserResponse, RequestingExaminationRequest, RequestingExaminationResponse, RetrievingTenantShopListPagination, ShopObject, TenantShopsSearchParams, UpdatingExaminationInfoRequest, UpdatingTenantRequest } from "../../types/index";
+import { ContractObject, CreatingTenantWithExistingUserRequest, CreatingTenantWithExistingUserResponse, ExaminationInfo, ListResponse, CreatingTenantWithNewUserRequest, CreatingTenantWithNewUserResponse, RequestingExaminationRequest, RequestingExaminationResponse, RetrievingTenantShopListPagination, ShopObject, TenantShopsSearchParams, UpdatingExaminationInfoRequest, UpdatingTenantRequest, ExaminationInfo_V2, UpdatingExaminationInfoRequest_V2 } from "../../types/index";
 import { FincodeConfig } from "./fincode";
 import { FincodePartialRequestHeader } from "./http";
+/**
+ * @typedef {Object} Tenant
+ * @property {Function} createWithExistingUser - Create a tenant with existing platform user
+ * @property {Function} createWithNewUser - Create a tenant with new user
+ * @property {Function} updateExaminationInfo - *deprecated* Use `updateExaminationInfoV2` instead
+ * @property {Function} retrieveExaminationInfo - *deprecated* Use `retrieveExaminationInfoV2` instead
+ * @property {Function} requestExamination - Requesting a contract examination
+ * @property {Function} retrieveContract - Retrieve contract information of a tenant
+ * @property {Function} update - Update a tenant
+ * @property {Function} retrieve - Retrieve a tenant
+ * @property {Function} retrieveList - Retrieve tenant list
+ * @property {Function} retrieveExaminationInfoV2 - Retrieve contract examination information of a tenant
+ */
 declare class Tenant {
     private readonly _config;
-    private readonly _agent;
-    constructor(config: FincodeConfig, agent?: RequestInit["agent"]);
+    constructor(config: FincodeConfig);
     /**
-     * **Create a tenant**
+     *
+     * **Create a tenant with existing platform user**
      *
      * corresponds to `POST /v1/join_tenants`
      *
@@ -16,9 +28,9 @@ declare class Tenant {
      * @param {CreatingTenantWithExistingUserRequest} body
      * @param {FincodePartialRequestHeader} [header]
      */
-    create(body: CreatingTenantWithExistingUserRequest, header?: FincodePartialRequestHeader): Promise<CreatingTenantWithExistingUserResponse>;
+    createWithExistingUser(body: CreatingTenantWithExistingUserRequest, header?: FincodePartialRequestHeader): Promise<CreatingTenantWithExistingUserResponse>;
     /**
-     * **Register a tenant**
+     * **Create a tenant with new user**
      *
      * corresponds to `POST /v1/tenant_entries`
      *
@@ -29,8 +41,10 @@ declare class Tenant {
      *
      * @returns {Promise<CreatingTenantWithExistingUserResponse>}
      */
-    register(body: CreatingTenantWithNewUserRequest, header?: FincodePartialRequestHeader): Promise<CreatingTenantWithNewUserResponse>;
+    createWithNewUser(body: CreatingTenantWithNewUserRequest, header?: FincodePartialRequestHeader): Promise<CreatingTenantWithNewUserResponse>;
     /**
+     * @deprecated Use `updateExaminationInfoV2` instead
+     *
      * **Update contract examination information of a tenant**
      *
      * corresponds to `PUT /v1/contracts/examinations/tenants/:id`
@@ -45,6 +59,8 @@ declare class Tenant {
      */
     updateExaminationInfo(id: string, body: UpdatingExaminationInfoRequest, header?: FincodePartialRequestHeader): Promise<ExaminationInfo>;
     /**
+     * @deprecated Use `retrieveExaminationInfoV2` instead
+     *
      * **Retrieve contract examination information of a tenant**
      *
      * corresponds to `GET /v1/contracts/examinations/tenants/:id`
@@ -124,5 +140,21 @@ declare class Tenant {
      * @returns {Promise<ListResponse<ShopObject>>}
      */
     retrieveList(pagination?: RetrievingTenantShopListPagination, searchParams?: TenantShopsSearchParams, header?: FincodePartialRequestHeader): Promise<ListResponse<ShopObject>>;
+    /**
+     * **Retrieve contract examination information of a tenant**
+     *
+     * corresponds to `GET /v1/contracts/examinations_v2/tenants/:id`
+     *
+     * if the Promise is rejected, the error is an instance of `FincodeError`
+     */
+    retrieveExaminationInfoV2(id: string, header?: FincodePartialRequestHeader): Promise<ExaminationInfo_V2>;
+    /**
+     * **Update contract examination information of a tenant**
+     *
+     * corresponds to `PUT /v1/contracts/examinations_v2/tenants/:id`
+     *
+     * if the Promise is rejected, the error is an instance of `FincodeError`
+     */
+    updateExaminationInfoV2(id: string, body: UpdatingExaminationInfoRequest_V2, header?: FincodePartialRequestHeader): Promise<ExaminationInfo_V2>;
 }
 export { Tenant };

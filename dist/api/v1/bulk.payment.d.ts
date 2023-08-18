@@ -2,11 +2,9 @@
 import { DeletingPaymentBulkResponse, ListResponse, ListWithErrors, PaymentBulkDetailObject, PaymentBulkObject, RetrievingPaymentBulkDetailPagination, RetrievingPaymentBulkPagination } from "../../types/index";
 import { FincodeConfig } from "./fincode";
 import { FincodePartialRequestHeader } from "./http";
-import { RequestInit } from "node-fetch";
 declare class PaymentBulk {
     private readonly _config;
-    private readonly _agent;
-    constructor(config: FincodeConfig, agent?: RequestInit["agent"]);
+    constructor(config: FincodeConfig);
     /**
      * **Register a payment bulk**
      *
@@ -19,7 +17,7 @@ declare class PaymentBulk {
      *
      * @returns {Promise<PaymentBulkObject>}
      */
-    register(payType: "Card", processPlanDate: string, file: Buffer | string, fileName: string, header?: FincodePartialRequestHeader): Promise<PaymentBulkObject>;
+    create(payType: "Card", processPlanDate: string, file: Buffer | string, fileName: string, header?: FincodePartialRequestHeader): Promise<PaymentBulkObject>;
     /**
      * **Retrieve payment bulk list**
      *

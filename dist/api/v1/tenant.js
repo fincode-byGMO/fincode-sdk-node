@@ -1,15 +1,27 @@
 import { FincodeAPIError, FincodeSDKError, } from "../../types/index";
 import { createFincodeRequestFetch } from "./http";
 import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_errorMessages";
+/**
+ * @typedef {Object} Tenant
+ * @property {Function} createWithExistingUser - Create a tenant with existing platform user
+ * @property {Function} createWithNewUser - Create a tenant with new user
+ * @property {Function} updateExaminationInfo - *deprecated* Use `updateExaminationInfoV2` instead
+ * @property {Function} retrieveExaminationInfo - *deprecated* Use `retrieveExaminationInfoV2` instead
+ * @property {Function} requestExamination - Requesting a contract examination
+ * @property {Function} retrieveContract - Retrieve contract information of a tenant
+ * @property {Function} update - Update a tenant
+ * @property {Function} retrieve - Retrieve a tenant
+ * @property {Function} retrieveList - Retrieve tenant list
+ * @property {Function} retrieveExaminationInfoV2 - Retrieve contract examination information of a tenant
+ */
 class Tenant {
     _config;
-    _agent;
-    constructor(config, agent) {
+    constructor(config) {
         this._config = config;
-        this._agent = agent;
     }
     /**
-     * **Create a tenant**
+     *
+     * **Create a tenant with existing platform user**
      *
      * corresponds to `POST /v1/join_tenants`
      *
@@ -18,9 +30,9 @@ class Tenant {
      * @param {CreatingTenantWithExistingUserRequest} body
      * @param {FincodePartialRequestHeader} [header]
      */
-    create(body, header) {
+    createWithExistingUser(body, header) {
         return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(this._config, "POST", `/v1/join_tenants`, JSON.stringify(body), header, undefined, this._agent);
+            const fetch = createFincodeRequestFetch(this._config, "POST", `/v1/join_tenants`, JSON.stringify(body), header, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -43,7 +55,7 @@ class Tenant {
         });
     }
     /**
-     * **Register a tenant**
+     * **Create a tenant with new user**
      *
      * corresponds to `POST /v1/tenant_entries`
      *
@@ -54,9 +66,9 @@ class Tenant {
      *
      * @returns {Promise<CreatingTenantWithExistingUserResponse>}
      */
-    register(body, header) {
+    createWithNewUser(body, header) {
         return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(this._config, "POST", `/v1/tenant_entries`, JSON.stringify(body), header, undefined, this._agent);
+            const fetch = createFincodeRequestFetch(this._config, "POST", `/v1/tenant_entries`, JSON.stringify(body), header, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -79,6 +91,8 @@ class Tenant {
         });
     }
     /**
+     * @deprecated Use `updateExaminationInfoV2` instead
+     *
      * **Update contract examination information of a tenant**
      *
      * corresponds to `PUT /v1/contracts/examinations/tenants/:id`
@@ -96,12 +110,12 @@ class Tenant {
             const fetch = createFincodeRequestFetch(this._config, "PUT", `/v1/contracts/examinations/tenants/${id}`, JSON.stringify(body), {
                 ...header,
                 tenantShopId: id,
-            }, undefined, this._agent);
+            }, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
-                        const tenant = json;
-                        resolve(tenant);
+                        const examInfo = json;
+                        resolve(examInfo);
                     }
                     else {
                         const errRes = json;
@@ -119,6 +133,8 @@ class Tenant {
         });
     }
     /**
+     * @deprecated Use `retrieveExaminationInfoV2` instead
+     *
      * **Retrieve contract examination information of a tenant**
      *
      * corresponds to `GET /v1/contracts/examinations/tenants/:id`
@@ -135,12 +151,12 @@ class Tenant {
             const fetch = createFincodeRequestFetch(this._config, "GET", `/v1/contracts/examinations/tenants/${id}`, undefined, {
                 ...header,
                 tenantShopId: id,
-            }, undefined, this._agent);
+            }, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
-                        const tenant = json;
-                        resolve(tenant);
+                        const examInfo = json;
+                        resolve(examInfo);
                     }
                     else {
                         const errRes = json;
@@ -171,7 +187,7 @@ class Tenant {
      */
     requestExamination(body, header) {
         return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(this._config, "POST", `/v1/contracts/examinations`, JSON.stringify(body), header, undefined, this._agent);
+            const fetch = createFincodeRequestFetch(this._config, "POST", `/v1/contracts/examinations`, JSON.stringify(body), header, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -210,12 +226,12 @@ class Tenant {
             const fetch = createFincodeRequestFetch(this._config, "GET", `/v1/contracts/${id}`, undefined, {
                 ...header,
                 tenantShopId: id,
-            }, undefined, this._agent);
+            }, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
-                        const tenant = json;
-                        resolve(tenant);
+                        const contract = json;
+                        resolve(contract);
                     }
                     else {
                         const errRes = json;
@@ -247,7 +263,7 @@ class Tenant {
      */
     update(id, body, header) {
         return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(this._config, "PUT", `/v1/tenants/${id}`, JSON.stringify(body), header, undefined, this._agent);
+            const fetch = createFincodeRequestFetch(this._config, "PUT", `/v1/tenants/${id}`, JSON.stringify(body), header, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -283,7 +299,7 @@ class Tenant {
      */
     retrieve(id, header) {
         return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(this._config, "GET", `/v1/tenants/${id}`, undefined, header, undefined, this._agent);
+            const fetch = createFincodeRequestFetch(this._config, "GET", `/v1/tenants/${id}`, undefined, header, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -323,7 +339,7 @@ class Tenant {
             const fetch = createFincodeRequestFetch(this._config, "GET", "/v1/tenants", undefined, header, {
                 pagination: pagination,
                 searchParams: searchParams,
-            }, this._agent);
+            });
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -338,6 +354,71 @@ class Tenant {
                 }).catch((e) => {
                     const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e);
                     reject(err);
+                });
+            }).catch((e) => {
+                const err = new FincodeSDKError(getFetchErrorMessage(), e);
+                reject(err);
+            });
+        });
+    }
+    /**
+     * **Retrieve contract examination information of a tenant**
+     *
+     * corresponds to `GET /v1/contracts/examinations_v2/tenants/:id`
+     *
+     * if the Promise is rejected, the error is an instance of `FincodeError`
+     */
+    retrieveExaminationInfoV2(id, header) {
+        return new Promise((resolve, reject) => {
+            const fetch = createFincodeRequestFetch(this._config, "GET", `/v1/contracts/examinations_v2/tenants/${id}`, undefined, {
+                ...header,
+                tenantShopId: id,
+            }, undefined);
+            fetch().then((res) => {
+                res.json().then((json) => {
+                    if (res.ok) {
+                        const examInfo = json;
+                        resolve(examInfo);
+                    }
+                    else {
+                        const errRes = json;
+                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message);
+                        reject(e);
+                    }
+                }).catch((e) => {
+                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e);
+                    reject(err);
+                }).catch((e) => {
+                    const err = new FincodeSDKError(getFetchErrorMessage(), e);
+                    reject(err);
+                });
+            });
+        });
+    }
+    /**
+     * **Update contract examination information of a tenant**
+     *
+     * corresponds to `PUT /v1/contracts/examinations_v2/tenants/:id`
+     *
+     * if the Promise is rejected, the error is an instance of `FincodeError`
+     */
+    updateExaminationInfoV2(id, body, header) {
+        return new Promise((resolve, reject) => {
+            const fetch = createFincodeRequestFetch(this._config, "PUT", `/v1/contracts/examinations_v2/tenants/${id}`, JSON.stringify(body), {
+                ...header,
+                tenantShopId: id,
+            }, undefined);
+            fetch().then((res) => {
+                res.json().then((json) => {
+                    if (res.ok) {
+                        const examInfo = json;
+                        resolve(examInfo);
+                    }
+                    else {
+                        const errRes = json;
+                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message);
+                        reject(e);
+                    }
                 });
             }).catch((e) => {
                 const err = new FincodeSDKError(getFetchErrorMessage(), e);

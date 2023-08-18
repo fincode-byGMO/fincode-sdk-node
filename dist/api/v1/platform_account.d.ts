@@ -2,11 +2,9 @@ import { PlatformAccountSearchParams } from "./../../types/searchParams";
 import { ListResponse, PlatformAccountObject, PlatformAccountSummaryObject, RetrievingPlatformAccountListPagination } from "../../types/index";
 import { FincodeConfig } from "./fincode";
 import { FincodePartialRequestHeader } from "./http";
-import { RequestInit } from "node-fetch";
 declare class PlatformAccount {
     private readonly _config;
-    private readonly _agent;
-    constructor(config: FincodeConfig, agent?: RequestInit["agent"]);
+    constructor(config: FincodeConfig);
     /**
      * **Retrieve platform-account list **
      *
@@ -23,7 +21,7 @@ declare class PlatformAccount {
     */
     retrieveList(paginaiton?: RetrievingPlatformAccountListPagination, searchParams?: PlatformAccountSearchParams, header?: FincodePartialRequestHeader): Promise<ListResponse<PlatformAccountObject>>;
     /**
-     * **Retrieve a platform-account*
+     * **Retrieve a platform-account**
      *
      * corresponds to `GET /v1/platform_accounts/:id`
      *

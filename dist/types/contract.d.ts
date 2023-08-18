@@ -1,7 +1,7 @@
 import * as Shop from "./shop";
 /**
-     * Contract object
-     */
+ * Contract object
+ */
 export type ContractObject = {
     /**
      * Shop ID
@@ -182,7 +182,7 @@ export type ContractDetail = {
      *
      * (for `company` examination)
      */
-    capital?: string | null;
+    capital?: number | null;
     /**
      * Establishment date
      *
@@ -196,7 +196,7 @@ export type ContractDetail = {
      *
      * (for `company` examination)
      */
-    yearly_sales?: string | null;
+    yearly_sales?: number | null;
     /**
      * Business description
      *
@@ -722,7 +722,7 @@ export type StatusUpdatedNotification = {
      * - `708`: Examination has been failed.
      * - `709`: This shop has been canceled.
      */
-    status_code?: 701 | 702 | 703 | 704 | 705 | 706 | 707 | 708 | 709 | null;
+    status_code?: ExaminationStatusCode | null;
     /**
      * Status title
      *
@@ -741,4 +741,275 @@ export type StatusUpdatedNotification = {
      * Whether or not update has been occurred.
      */
     is_updated?: boolean | null;
+};
+/**
+ * Examination status code
+ *
+ * - `701`: This shop has not applied yet.
+ * - `702`: This shop has applied.
+ * - `703`: Waiting examination.
+ * - `704`: Examination is now in progress.
+ * - `705`: Examination is pending.
+ * - `706`: Examination has been successfully completed.
+ * - `707`: Available for use.
+ * - `708`: Examination has been failed.
+ * - `709`: This shop has been canceled.
+ */
+export type ExaminationStatusCode = 701 | 702 | 703 | 704 | 705 | 706 | 707 | 708 | 709;
+export type ContractAquirer = "UC" | "TFC" | "JCB/AMEX" | "DINERS" | "APPLE PAY UC" | "APPLE PAY JCB/AMEX" | "PAYSLE" | "PAYPAY";
+/**
+ * Contract status (v2)
+ *
+ * - `101`: Before contract
+ * - `102`: Under examination
+ * - `103`: Under examination (Visa/Mastercard is temporary available)
+ * - `105`: Contract canceled
+ * - `106`: Contract failed
+ * - `107`: Contract succeeded
+ */
+export type ContractStatus_V2 = 101 | 102 | 103 | 105 | 106 | 107;
+/**
+ * Contract information object (v2)
+ */
+export type ContractInformation_V2 = {
+    /**
+     * Representative name: Last name
+     */
+    representative_last_name?: string | null;
+    /**
+     * Representative name (kana): Last name
+     */
+    representative_last_name_kana?: string | null;
+    /**
+     * Representative name: First name
+     */
+    representative_first_name?: string | null;
+    /**
+     * Representative name (kana): First name
+     */
+    representative_first_name_kana?: string | null;
+    /**
+     * Representative address: Postal code
+     *
+     * Format: `xxx-xxxx`
+     */
+    representative_postal_code?: string | null;
+    /**
+     * Representative address: Prefecture
+     */
+    representative_prefecture?: string | null;
+    /**
+     * Representative address (kana): Prefecture
+     */
+    representative_prefecture_kana?: string | null;
+    /**
+     * Representative address: Municipality / City
+     */
+    representative_address_municipality?: string | null;
+    /**
+     * Representative address (kana): Municipality / City
+     */
+    representative_address_municipality_kana?: string | null;
+    /**
+     * Representative address: Section / Line 1
+     */
+    representative_address_section?: string | null;
+    /**
+     * Representative address (kana): Section / Line 1
+     */
+    representative_address_section_kana?: string | null;
+    /**
+     * Representative address: Chrome / Line 2
+     */
+    representative_address_chrome?: string | null;
+    /**
+     * Representative address (kana): Chrome / Line 2
+     */
+    representative_address_chrome_kana?: string | null;
+    /**
+     * Representative address: Building name
+     */
+    representative_address_building_name?: string | null;
+    /**
+     * Representative address (kana): Building name
+     */
+    representative_address_building_name_kana?: string | null;
+    /**
+     * Representative birthday
+     *
+     * Format: `yyyy/MM/dd`
+     */
+    representative_birthday?: string | null;
+    /**
+     * Representative gender
+     *
+     * - `0`: Male
+     * - `1`: Female
+     */
+    representative_gender?: 0 | 1 | null;
+    /**
+     * Representative TEL
+     */
+    representative_tel?: string | null;
+    /**
+     * Staff 1 name: Last name
+     */
+    staff1_last_name?: string | null;
+    /**
+     * Staff 1 name (kana): Last name
+     */
+    staff1_last_name_kana?: string | null;
+    /**
+     * Staff 1 name: First name
+     */
+    staff1_first_name?: string | null;
+    /**
+     * Staff 1 name (kana): First name
+     */
+    staff1_first_name_kana?: string | null;
+    /**
+     * Staff 1 info: Company name
+     */
+    staff1_company_name?: string | null;
+    /**
+     * Staff 1 info: Department name
+     */
+    staff1_belongs?: string | null;
+    /**
+     * Staff 1 info: TEL
+     */
+    staff1_tel?: string | null;
+    /**
+     * Staff 1 info: E-mail
+     */
+    staff1_mail?: string | null;
+    /**
+     * Staff 2 name: Last name
+     */
+    staff2_last_name?: string | null;
+    /**
+     * Staff 2 name (kana): Last name
+     */
+    staff2_last_name_kana?: string | null;
+    /**
+     * Staff 2 name: First name
+     */
+    staff2_first_name?: string | null;
+    /**
+     * Staff 2 name (kana): First name
+     */
+    staff2_first_name_kana?: string | null;
+    /**
+     * Staff 2 info: Company name
+     */
+    staff2_company_name?: string | null;
+    /**
+     * Staff 2 info: Department name
+     */
+    staff2_belongs?: string | null;
+    /**
+     * Staff 2 info: TEL
+     */
+    staff2_tel?: string | null;
+    /**
+     * Staff 2 info: E-mail
+     */
+    staff2_mail?: string | null;
+    /**
+     * Business type
+     * - `true`: Company
+     * - `false`: Sole proprietorship
+     */
+    corporate?: boolean | null;
+    /**
+     * Corporate informatioin
+     */
+    corporate_info?: CorporateInformation_V2 | null;
+};
+/**
+ * Corporate information object (v2, but there is no `CorporateInformation` type for v1)
+ */
+export type CorporateInformation_V2 = {
+    /**
+     * Corporate number
+     */
+    corporate_number?: string | null;
+    /**
+     * Corporate name
+     */
+    corporate_name?: string | null;
+    /**
+     * Corporate name (kana)
+     */
+    corporate_name_kana?: string | null;
+    /**
+     * Homepage URL
+     */
+    hp?: string | null;
+    /**
+     * Capital
+     */
+    capital?: number | null;
+    /**
+     * Establishment date
+     *
+     * Format: `yyyy/MM/dd`
+     */
+    established_at?: string | null;
+    /**
+     * Yearly sales
+     */
+    yearly_sales?: number | null;
+    /**
+     * Business description
+     */
+    business_details?: string | null;
+    /**
+     * Company address: Postal code
+     */
+    company_postal_code?: string | null;
+    /**
+     * Company address: Prefecture
+     */
+    company_prefecture?: string | null;
+    /**
+     * Company address (kana): Prefecture
+     */
+    company_prefecture_kana?: string | null;
+    /**
+     * Company address: Municipality / City
+     */
+    company_address_municipality?: string | null;
+    /**
+     * Company address (kana): Municipality / City
+     */
+    company_address_municipality_kana?: string | null;
+    /**
+     * Company address: Section / Line 1
+     */
+    company_address_section?: string | null;
+    /**
+     * Company address (kana): Section / Line 1
+     */
+    company_address_section_kana?: string | null;
+    /**
+     * Company address: Chrome / Line 2
+     */
+    company_address_chrome?: string | null;
+    /**
+     * Company address (kana): Chrome / Line 2
+     */
+    company_address_chrome_kana?: string | null;
+    /**
+     * Company address: Building name
+     */
+    company_address_building_name?: string | null;
+    /**
+     * Company address (kana): Building name
+     */
+    company_address_building_name_kana?: string | null;
+    /**
+     * Company info: TEL
+     */
+    company_tel?: string | null;
 };

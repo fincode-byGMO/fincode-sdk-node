@@ -23,6 +23,8 @@ export class RetrievingPaymentListPagination {
      *
      * - `Card`: Card payment
      * - `Konbini`: Konbini payment
+     * - `Paypay`: PayPay payment
+     * - `Applepay`: Apple Pay payment
      */
     pay_type;
     /**

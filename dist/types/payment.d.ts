@@ -17,9 +17,10 @@ export type PaymentObject = {
      *
      * - `Card`: this payment accepts card.
      * - `Konbini`: this payment accepts konbini.
-     * - `PayPay`: this payment accepts PayPay.
+     * - `Paypay`: this payment accepts PayPay.
+     * - `Applepay`: this payment accepts Apple Pay.
      */
-    pay_type: "Card" | "Konbini" | "PayPay";
+    pay_type: PayType;
     /**
      * Status payment.
      *
@@ -38,7 +39,7 @@ export type PaymentObject = {
     /**
      * The date this payment was processed.
      *
-     * Format: `yyyy/MM/DD HH?:mm?:ss.SSS`
+     * Format: `yyyy/MM/DD HH:mm:ss.SSS`
      */
     process_date: string;
     /**
@@ -48,7 +49,7 @@ export type PaymentObject = {
      * - `AUTH`: fincode authorizes a charge.
      * - `CAPTURE`: fincode captures authorized payment.
      */
-    job_code?: "CHECK" | "AUTH" | "CAPTURE" | null;
+    job_code?: Extract<PaymentJobCode, "CHECK" | "AUTH" | "CAPTURE"> | null;
     /**
      * Code string identifying the product category.
      */
@@ -77,13 +78,13 @@ export type PaymentObject = {
     /**
      * Date this payment was created.
      *
-     * Format: yyyy/MM/dd HH?:mm?:ss.SSS
+     * Format: yyyy/MM/dd HH:mm:ss.SSS
      */
     created?: string | null;
     /**
      * Date this payment was updated.
      *
-     * Format: yyyy/MM/dd HH?:mm?:ss.SSS
+     * Format: yyyy/MM/dd HH:mm:ss.SSS
      */
     updated?: string | null;
     /**
@@ -314,7 +315,95 @@ export type PaymentObject = {
      * if customer paid after canceling, this flag will be set to `1`.
      */
     cancel_overpayment_flag?: "0" | "1" | null;
+    /**
+     * The date PayPay QR Code URL expires.
+     *
+     * Format: `yyyy/MM/dd HH:mm:ss.SSS`
+     */
+    cpde_expiry_date?: string | null;
+    /**
+     * Order description that customer can read on PayPay app.
+     */
+    order_description?: string | null;
+    /**
+     * Capturing order description that customer can read on PayPay app.
+     */
+    capture_description?: string | null;
+    /**
+     * Amount updating order description that customer can read on PayPay app.
+     */
+    update_description?: string | null;
+    /**
+     * Canceling order description that customer can read on PayPay app.
+     */
+    cancel_description?: string | null;
+    /**
+     * Redirect URL that customer will be redirected after finishing payment on PayPay app/website.
+     */
+    redirect_url?: string | null;
+    /**
+     * Redirect Type of PayPay payment.
+     *
+     * - `1`: Web browser. PayPay app/website will open your redirect URL on web browser.
+     * - `2`: Native App. PayPay app/website will open your redirect URL on your app.
+     */
+    redirect_type?: "1" | "2" | null;
+    /**
+     * Store ID of your shop registered on PayPay.
+     */
+    store_id?: string | null;
+    /**
+     * Code ID of PayPay payment.
+     */
+    code_id?: string | null;
+    /**
+     * Code URL of PayPay payment. Customer can pay to access this URL.
+     */
+    code_url?: string | null;
+    /**
+     * Payment ID created by PayPay.
+     */
+    payment_id?: string | null;
+    /**
+     * Payment result code of PayPay payment.
+     */
+    payment_result_code?: string | null;
+    /**
+     * Transaction ID created by PayPay.
+     */
+    merchant_payment_id?: string | null;
+    /**
+     * Transaction Capturing ID created by PayPay.
+     */
+    merchant_capture_id?: string | null;
+    /**
+     * Transaction Updating ID created by PayPay.
+     */
+    merchant_update_id?: string | null;
+    /**
+     * Transaction Reverting ID created by PayPay.
+     */
+    merchant_revert_id?: string | null;
+    /**
+     * Transaction Refunding ID created by PayPay.
+     */
+    merchant_refund_id?: string | null;
+    /**
+     * The date of PayPay payment was executed.
+     *
+     * Format: `yyyy/MM/dd HH:mm:ss.SSS`
+     */
+    payment_date?: string | null;
 };
+/**
+ * Payment Job Code
+ * - `CHECK`: fincode checks if the card is valid
+ * - `AUTH`: fincode authorizes a charge.
+ * - `CAPTURE`: fincode captures authorized payment.
+ * - `SALES`: this payment is counted as sales.
+ * - `CANCEL`: this payment is canceled.
+ */
+export type PaymentJobCode = "CHECK" | "AUTH" | "CAPTURE" | "SALES" | "CANCEL";
 /**
  * The processing result of konbini payment provider.
  *
@@ -370,8 +459,10 @@ export declare class RetrievingPaymentListPagination implements Pagination {
      *
      * - `Card`: Card payment
      * - `Konbini`: Konbini payment
+     * - `Paypay`: PayPay payment
+     * - `Applepay`: Apple Pay payment
      */
-    pay_type: "Card" | "Konbini";
+    pay_type: PayType;
     /**
      * Search string for
      *
@@ -442,7 +533,7 @@ export declare class RetrievingPaymentListPagination implements Pagination {
      * Subscription ID
      */
     subscription_id?: string | null;
-    constructor(pay_type: "Card" | "Konbini", args?: {
+    constructor(pay_type: PayType, args?: {
         limit?: string | null;
         page?: string | null;
         count_only?: boolean | null;
@@ -464,9 +555,9 @@ export declare class RetrievingPaymentListPagination implements Pagination {
     buildParams(): URLSearchParams;
 }
 /**
- * Request object of Registering payment (used for POST /v1/payments)
+ * Request object of Creating payment (used for POST /v1/payments)
  */
-export type RegisteringPaymentRequest = {
+export type CreatingPaymentRequest = {
     /**
      * Payment ID. (sometimes called "Order ID")
      */
@@ -474,9 +565,12 @@ export type RegisteringPaymentRequest = {
     /**
      * Accepted payment method in this payment.
      *
-     * - `Card`: this payment accepts card.
+     * - `Card`: this Payment accepts payment by card.
+     * - `Konbini`: this Payment accepts payment by Konbini.
+     * - `Paypay`: this Payment accepts payment by PayPay.
+     * - `Applepay`: this Payment accepts payment by Apple Pay.
      */
-    pay_type: "Card" | "Konbini";
+    pay_type: PayType;
     /**
      * Job category payment.
      *
@@ -484,7 +578,7 @@ export type RegisteringPaymentRequest = {
      * - `AUTH`: fincode authorizes a charge with sum of "amount" and "tax".
      * - `CAPTURE`: fincode captures authorized charge.
      */
-    job_code?: "CHECK" | "AUTH" | "CAPTURE" | null;
+    job_code?: Extract<PaymentJobCode, "CHECK" | "AUTH" | "CAPTURE"> | null;
     /**
      * Amount payment. this value must be in range of `"0"` to `"9999999"`.
      * If "job_code" param's value is "AUTH" or "CAPTURE", then this param become required.
@@ -526,6 +620,14 @@ export type RegisteringPaymentRequest = {
      * - `3`: fincode API will execute this payment without 3D Secure 2.0 authentication.
      */
     tds2_type?: "2" | "3" | null;
+    /**
+     * Order description that customer can read on PayPay app.
+     */
+    order_description?: string | null;
+    /**
+     * Token that is generated by Apple Device.
+     */
+    token?: string | null;
 };
 /**
  * Request object of Executing payment (used for PUT /v1/payments/{id})
@@ -536,8 +638,10 @@ export type ExecutingPaymentRequest = {
      *
      * - `Card`: card payment.
      * - `Konbini`: konbini payment.
+     * - `Paypay`: PayPay payment.
+     * - `Applepay`: Apple Pay payment.
      */
-    pay_type: "Card" | "Konbini";
+    pay_type: PayType;
     /**
      * access ID issued for this payment to use in this payment context.
      */
@@ -861,6 +965,21 @@ export type ExecutingPaymentRequest = {
      * - `2`: CSS pixel (iOS & Browser)
      */
     win_size_type?: "1" | "2" | null;
+    /**
+     * Redirect URL that customer will be redirected after finishing payment on PayPay app/website.
+     */
+    redirect_url?: string | null;
+    /**
+     * Redirect Type of PayPay payment.
+     *
+     * - `1`: Web browser. PayPay app/website will open your redirect URL on web browser.
+     * - `2`: Native App. PayPay app/website will open your redirect URL on your app.
+     */
+    redirect_type?: "1" | "2" | null;
+    /**
+     * User Agent information of the browser of your URL that customer will be redirected after finishing payment on PayPay app/website.
+     */
+    user_agent?: string | null;
 };
 /**
  * Request object of Capturing payment (used for PUT /v1/payments/{id}/capture)
@@ -871,7 +990,7 @@ export type CapturingPaymentRequest = {
      *
      * - `Card`: card payment.
      */
-    pay_type: "Card";
+    pay_type: Extract<PayType, "Card">;
     /**
      * access ID issued for this payment to use in this payment context.
      */
@@ -899,12 +1018,18 @@ export type CancelingPaymentRequest = {
      *
      * - `Card`: card payment.
      * - `Konbini`: konbini payment.
+     * - `Paypay`: PayPay payment.
+     * - `Applepay`: Apple Pay payment.
      */
-    pay_type: "Card" | "Konbini";
+    pay_type: PayType;
     /**
      * access ID issued for this payment to use in this payment context.
      */
     access_id: string;
+    /**
+     * Order canceling description that customer can read on PayPay app.
+     */
+    cancel_description?: string | null;
 };
 /**
  * Request object of Re-authorization payment (used for PUT /v1/payments/{id}/cancel)
@@ -915,7 +1040,7 @@ export type ReauthorizingPaymentRequest = {
      *
      * - `Card`: card payment.
      */
-    pay_type: "Card";
+    pay_type: Extract<PayType, "Card">;
     /**
      * access ID issued for this payment to use in this payment context.
      */
@@ -942,8 +1067,9 @@ export type ChangingPaymentAmountRequest = {
      * Payment method you want to use in this payment execution.
      *
      * - `Card`: card payment.
+     * - `Paypay`: PayPay payment.
      */
-    pay_type: "Card";
+    pay_type: Extract<PayType, "Card" | "Paypay">;
     /**
      * access ID issued for this payment to use in this payment context.
      */
@@ -955,7 +1081,7 @@ export type ChangingPaymentAmountRequest = {
      * - `AUTH`: fincode authorizes a charge with sum of "amount" and "tax".
      * - `CAPTURE`: fincode captures authorized charge.
      */
-    job_code: "AUTH" | "CAPTURE";
+    job_code: Extract<PaymentJobCode, "AUTH" | "CAPTURE">;
     /**
      * Amount payment. this value must be in range of `"0"` to `"9999999"`.
      * If "job_code" param's value is "AUTH" or "CAPTURE", then this param become required.
@@ -965,6 +1091,10 @@ export type ChangingPaymentAmountRequest = {
      * Tax and shipping fee. if this param is set, "amount" param must also be set.
      */
     tax?: string | null;
+    /**
+     * Order updating description that customer can read on PayPay app.
+     */
+    update_description?: string | null;
 };
 /**
  * Request object of executing payment after 3D Secure (used for PUT /v1/payments/{id}/secure)
@@ -975,7 +1105,7 @@ export type ExecutingPaymentAfter3DSecureRequest = {
      *
      * - `Card`: card payment.
      */
-    pay_type: "Card";
+    pay_type: Extract<PayType, "Card">;
     /**
      * access ID issued for this payment to use in this payment context.
      */
@@ -1039,6 +1169,15 @@ export type Retrieving3DSecureAuthResponse = {
     tds2_trans_result_reason?: string | null;
 };
 /**
+ * Payment method type.
+ *
+ * - `Card`: Card payment
+ * - `Konbini`: Konbini payment
+ * - `Paypay`: PayPay payment
+ * - `Applepay`: Apple Pay payment
+ */
+export type PayType = "Card" | "Konbini" | "Paypay" | "Applepay";
+/**
  * Status of a payment.
  *
  * - `UNPROCESSED`: This payment has been registered but no action has been taken yet.
@@ -1047,8 +1186,10 @@ export type Retrieving3DSecureAuthResponse = {
  * - `CAPTURED`: The sale from this payment has already been captured.
  * - `CANCELED`: This payment is canceled by request.
  * - `AUTHENTICATED`: 3D Secure Authentication has already finished. So this payment is awaiting for Payment-After-3DSecure (PUT /v1/payments/{id}/secure)
+ * - `AWAITING_CUSTOMER_PAYMENT`: This payment is awaiting for customer's payment.
+ * - `EXPIRED`: This payment is expired.
  */
-export type PaymentStatus = "UNPROCESSED" | "CHECKED" | "AUTHORIZED" | "CAPTURED" | "CANCELED" | "AUTHENTICATED";
+export type PaymentStatus = "UNPROCESSED" | "CHECKED" | "AUTHORIZED" | "CAPTURED" | "CANCELED" | "AUTHENTICATED" | "AWAITING_CUSTOMER_PAYMENT" | "EXPIRED";
 /**
  * 3D Secure authentication result.
  *
@@ -1069,7 +1210,7 @@ export type GeneratingKonbiniPaymentBarcodeRequest = {
      *
      * (Currently, only `Konbini` is supported.)
      */
-    pay_type: "Card" | "Konbini";
+    pay_type: Extract<PayType, "Konbini">;
     /**
      * Access ID issued for this payment to use in this payment context.
      */

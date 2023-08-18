@@ -1,4 +1,5 @@
 import { Pagination, Sort } from "./pagination";
+import { PayType } from "./payment";
 /**
      * Bulk payment object
      */
@@ -30,7 +31,7 @@ export type PaymentBulkObject = {
     /**
      * Payment method type.
      */
-    pay_type: "Card";
+    pay_type: Extract<PayType, "Card">;
     /**
      * File name.
      */
@@ -167,17 +168,13 @@ export declare class RetrievingPaymentBulkPagination implements Pagination {
     buildParams(): URLSearchParams;
 }
 /**
- * Request object for Registering bulk payment
+ * Request object for Creating bulk payment
  */
-export type RegisteringPaymentBulkRequest = {};
+export type CreatingPaymentBulkRequest = {};
 /**
  * Pagination object for Retrieving bulk payment details
  */
 export declare class RetrievingPaymentBulkDetailPagination implements Pagination {
-    /**
-     * Bulk payment ID.
-     */
-    id: string;
     /**
      * Payment method types
      */
@@ -210,7 +207,7 @@ export declare class RetrievingPaymentBulkDetailPagination implements Pagination
      * Sort
      */
     sort?: Sort[] | null;
-    constructor(id: string, pay_type: "Card", args?: {
+    constructor(pay_type: "Card", args?: {
         order_id?: string | null;
         status?: OnesPaymentStatus[] | null;
         limit?: string | null;
