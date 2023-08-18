@@ -24,7 +24,7 @@ describe("Payment Session API testing", () => {
         proxyAgent: agent,
     }
 
-    const fincode = createFincode(secretKey, true, options)
+    const fincode = createFincode(secretKey, "test", options)
 
     let session: PaymentSessionObject | undefined
 

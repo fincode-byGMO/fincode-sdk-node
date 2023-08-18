@@ -23,7 +23,7 @@ describe("Platform account API testing", () => {
         proxyAgent: agent,
     }
 
-    const fincode = createFincode(secretKey, true, options)
+    const fincode = createFincode(secretKey, "test", options)
 
     it("Retrieve a platform account", async () => {
         const res = await fincode.platformAccounts.retrieve(accountId)

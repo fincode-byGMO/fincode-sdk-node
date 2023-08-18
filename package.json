@@ -9,7 +9,6 @@
   "private": false,
   "devDependencies": {
     "@types/jest": "^29.0.0",
-    "@types/node": "^18.15.3",
     "@types/node-fetch": "^2.6.2",
     "@typescript-eslint/eslint-plugin": "^5.48.1",
     "@typescript-eslint/parser": "^5.48.1",
@@ -24,7 +23,6 @@
   "scripts": {
     "lint": "eslint . --ext .ts,.js",
     "build": "tsc",
-
     "test:v1/account": "jest ./src/api/v1/account.test.ts --silent=false --verbose false --no-cache",
     "test:v1/bulk.payment": "jest ./src/api/v1/bulk.payment.test.ts --silent=false --verbose false --no-cache",
     "test:v1/card": "jest ./src/api/v1/card.test.ts --silent=false --verbose false --no-cache",
@@ -39,6 +37,7 @@
     "test:v1": "yarn test:v1/account & yarn test:v1/bulk.payment & yarn test:v1/card & yarn test:v1/customer & yarn test:v1/payment & yarn test:v1/plan & yarn test:v1/platform_account & yarn test:v1/session.cardRegistration & yarn test:v1/session.payment & yarn test:v1/subscription & yarn test:v1/tenant"
   },
   "dependencies": {
+    "@types/node": "^20.5.0",
     "form-data": "^4.0.0",
     "https-proxy-agent": "^7.0.0",
     "node-fetch": "^2.6.12"

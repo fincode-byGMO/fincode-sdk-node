@@ -27,7 +27,7 @@ describe("Card API testing", () => {
         proxyAgent: agent,
     }
 
-    const fincode = createFincode(secretKey, true, options)
+    const fincode = createFincode(secretKey, "test", options)
 
     let card: CardObject | undefined
     it("Register card", async () => {
@@ -36,7 +36,7 @@ describe("Card API testing", () => {
             token: cardToken,
         }
 
-        const res = await fincode.cards.register(customerId, req)
+        const res = await fincode.cards.create(customerId, req)
 
         expect(res.id).toBeDefined()
         expect(res.customer_id).toBe(customerId)

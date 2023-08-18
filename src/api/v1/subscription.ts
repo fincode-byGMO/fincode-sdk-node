@@ -36,7 +36,7 @@ class Subscription {
      * 
      * @returns {Promise<SubscriptionObject>}
      */
-    public register(
+    public create(
         body: RegisteringSubscriptionRequest,
         header?: FincodePartialRequestHeader
     ): Promise<SubscriptionObject> {
