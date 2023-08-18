@@ -1,6 +1,5 @@
 import { HttpsProxyAgent } from "https-proxy-agent"
-import { } from "./../../types"
-import { FincodeInitConfig, createFincode } from "./fincode"
+import { FincodeInitOptions, createFincode } from "./fincode"
 import dotenv from "dotenv"
 import path from "path"
 
@@ -19,22 +18,26 @@ const accountId = env.FINCODE_PLATFORM_ACCOUNT_ID_TESTING_PLATFORM_ACCOUNT
 if (!accountId) throw new Error("FINCODE_PLATFORM_ACCOUNT_ID_TESTING_PLATFORM_ACCOUNT is not defined")
 
 describe("Platform account API testing", () => {
-    const config: FincodeInitConfig = { isTest: true, agent: agent }
-    const fincode = createFincode(secretKey, config)
+
+    const options: FincodeInitOptions = {
+        proxyAgent: agent,
+    }
+
+    const fincode = createFincode(secretKey, true, options)
 
     it("Retrieve a platform account", async () => {
-        const res = await fincode.platformAccount.retrieve(accountId)
+        const res = await fincode.platformAccounts.retrieve(accountId)
 
         expect(res.id).toBe(accountId)
         expect(res.status_code).toBeDefined()
     })
     it("Retrieve a platform account list", async () => {
-        const res = await fincode.platformAccount.retrieveList()
+        const res = await fincode.platformAccounts.retrieveList()
 
         expect(res.list?.length).toBeGreaterThanOrEqual(0)
     })
     it("Retrieve a platform account summary list", async () => {
-        const res = await fincode.platformAccount.retrieveSummaryList(accountId)
+        const res = await fincode.platformAccounts.retrieveSummaryList(accountId)
 
         expect(res.list?.length).toBeGreaterThanOrEqual(0)
     })

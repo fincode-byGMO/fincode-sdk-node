@@ -5,7 +5,7 @@ import {
     SubscriptionObject,
     UpdatingSubscriptionRequest,
 } from "./../../types"
-import { FincodeInitConfig, createFincode } from "./fincode"
+import { FincodeInitOptions, createFincode } from "./fincode"
 import dotenv from "dotenv"
 import path from "path"
 
@@ -30,8 +30,12 @@ const planId = env.FINCODE_PLAN_ID_TESTING_SUBSCRIPTION
 if (!planId) throw new Error("FINCODE_PLAN_ID_TESTING_SUBSCRIPTION is not defined")
 
 describe("Subscription API testing", () => {
-    const config: FincodeInitConfig = { isTest: true, agent: agent }
-    const fincode = createFincode(secretKey, config)
+
+    const options: FincodeInitOptions = {
+        proxyAgent: agent,
+    }
+
+    const fincode = createFincode(secretKey, true, options)
 
     let subscription: SubscriptionObject | undefined
 
@@ -58,7 +62,7 @@ describe("Subscription API testing", () => {
             end_month_flag: "0",
         }
 
-        const res = await fincode.subscription.register(req)
+        const res = await fincode.subscriptions.register(req)
 
         expect(res.id).toBeDefined()
         expect(res.pay_type).toBeDefined()
@@ -101,7 +105,7 @@ describe("Subscription API testing", () => {
             throw new Error("Subscription is not created")
         }
 
-        const res = await fincode.subscription.update(subscription.id, updatingReq)
+        const res = await fincode.subscriptions.update(subscription.id, updatingReq)
 
         expect(res.id).toBeDefined()
         expect(res.pay_type).toBeDefined()
@@ -115,7 +119,7 @@ describe("Subscription API testing", () => {
             throw new Error("Subscription is not created")
         }
 
-        const res = await fincode.subscription.retrieve(subscription.id, "Card")
+        const res = await fincode.subscriptions.retrieve(subscription.id, "Card")
 
         expect(res.id).toBeDefined()
         expect(res.id).toBe(subscription.id)
@@ -133,7 +137,7 @@ describe("Subscription API testing", () => {
     it("Retrieve subscription list", async () => {
         const pagination = new RetrievingSubscriptionListPagination("Card")
 
-        const res = await fincode.subscription.retrieveList(pagination)
+        const res = await fincode.subscriptions.retrieveList(pagination)
 
         expect(res.list?.length).toBeGreaterThanOrEqual(0)
     })
@@ -143,7 +147,7 @@ describe("Subscription API testing", () => {
             throw new Error("Subscription is not created")
         }
 
-        const res = await fincode.subscription.cancel(subscription.id, "Card")
+        const res = await fincode.subscriptions.cancel(subscription.id, "Card")
 
         expect(res.id).toBeDefined()
         expect(res.id).toBe(subscription.id)

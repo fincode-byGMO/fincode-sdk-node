@@ -11,18 +11,15 @@ import {
 } from "./../../types";
 import { FincodePartialRequestHeader, createFincodeRequestFetch } from "./http";
 import { FincodeConfig } from "./fincode";
-import { RequestInit } from "node-fetch";
 import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_errorMessages";
 
 
 export class Webhook {
 
     private readonly _config: FincodeConfig
-    private readonly _agent: RequestInit["agent"]
 
-    constructor(config: FincodeConfig, agent?: RequestInit["agent"]) {
+    constructor(config: FincodeConfig) {
         this._config = config
-        this._agent = agent
     }
 
 
@@ -51,7 +48,6 @@ export class Webhook {
                 JSON.stringify(body),
                 header,
                 undefined,
-                this._agent,
             )
 
             fetch().then((res) => {
@@ -100,7 +96,6 @@ export class Webhook {
                 undefined,
                 header,
                 undefined,
-                this._agent,
             )
 
             fetch().then((res) => {
@@ -146,7 +141,6 @@ export class Webhook {
                 undefined,
                 header,
                 undefined,
-                this._agent,
             )
 
             fetch().then((res) => {
@@ -197,7 +191,6 @@ export class Webhook {
                 JSON.stringify(body),
                 header,
                 undefined,
-                this._agent,
             )
 
             fetch().then((res) => {
@@ -245,7 +238,6 @@ export class Webhook {
                 undefined,
                 header,
                 undefined,
-                this._agent,
             )
 
             fetch().then((res) => {

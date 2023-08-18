@@ -1,6 +1,6 @@
 import { HttpsProxyAgent } from "https-proxy-agent"
 import { CardObject, FincodeAPIError, RegisteringCardRequest, UpdatingCardRequest } from "./../../types"
-import { FincodeInitConfig, createFincode } from "./fincode"
+import { FincodeInitOptions, createFincode } from "./fincode"
 import dotenv from "dotenv"
 import path from "path"
 
@@ -15,15 +15,19 @@ if (!secretKey) throw new Error("FINCODE_API_SECRET_KEY is not defined")
 const proxy = env.FINCODE_HTTP_PROXY
 const agent: HttpsProxyAgent<string> | undefined = proxy ? new HttpsProxyAgent(proxy) : undefined
 
-const cardToken = env.FINCODE_CARD_TOKEN
+const cardToken = env.FINCODE_CARD_TOKEN_TESTING_CARD
 if (!cardToken) throw new Error("FINCODE_CARD_TOKEN is not defined")
 
-const customerId = env.FINCODE_CUSTOMER_ID_TESTING_PAYMENT
-if (!customerId) throw new Error("FINCODE_CUSTOMER_ID_TESTING_PAYMENT is not defined")
+const customerId = env.FINCODE_CUSTOMER_ID_TESTING_CARD
+if (!customerId) throw new Error("FINCODE_CUSTOMER_ID_TESTING_CARD is not defined")
 
 describe("Card API testing", () => {
-    const config: FincodeInitConfig = { isTest: true, agent: agent }
-    const fincode = createFincode(secretKey, config)
+
+    const options: FincodeInitOptions = {
+        proxyAgent: agent,
+    }
+
+    const fincode = createFincode(secretKey, true, options)
 
     let card: CardObject | undefined
     it("Register card", async () => {
@@ -32,7 +36,7 @@ describe("Card API testing", () => {
             token: cardToken,
         }
 
-        const res = await fincode.card.register(customerId, req)
+        const res = await fincode.cards.register(customerId, req)
 
         expect(res.id).toBeDefined()
         expect(res.customer_id).toBe(customerId)
@@ -51,7 +55,7 @@ describe("Card API testing", () => {
             throw new Error("Card is not registered")
         }
 
-        const res = await fincode.card.update(customerId, card.id, updatingReqBody)
+        const res = await fincode.cards.update(customerId, card.id, updatingReqBody)
 
         expect(res.id).toBeDefined()
         expect(res.id).toBe(card.id)
@@ -66,7 +70,7 @@ describe("Card API testing", () => {
             throw new Error("Card is not registered")
         }
 
-        const res = await fincode.card.retrieve(customerId, card.id)
+        const res = await fincode.cards.retrieve(customerId, card.id)
 
         expect(res.id).toBeDefined()
         expect(res.id).toBe(card.id)
@@ -77,7 +81,7 @@ describe("Card API testing", () => {
     })
 
     it("Retrieve card list", async () => {
-        const res = await fincode.card.retrieveList(customerId)
+        const res = await fincode.cards.retrieveList(customerId)
 
         expect(res.list?.length).toBeGreaterThanOrEqual(0)
         expect(res.list?.length).toBeLessThanOrEqual(5)
@@ -88,7 +92,7 @@ describe("Card API testing", () => {
             throw new Error("Card is not registered")
         }
 
-        const res = await fincode.card.delete(customerId, card.id)
+        const res = await fincode.cards.delete(customerId, card.id)
 
         expect(res.id).toBeDefined()
         expect(res.id).toBe(card.id)
@@ -96,7 +100,7 @@ describe("Card API testing", () => {
         expect(res.delete_flag).toBe("1")
 
         try {
-            await fincode.card.retrieve(customerId, card.id)
+            await fincode.cards.retrieve(customerId, card.id)
         } catch (e) {
             expect(e).toBeInstanceOf(FincodeAPIError)
             const err = e as FincodeAPIError

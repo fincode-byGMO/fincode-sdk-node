@@ -1,5 +1,5 @@
 import { RequestInit } from "node-fetch";
-import { ContractObject, CreatingTenantRequest, CreatingTenantResponse, ExaminationInfo, ListResponse, RegisteringTenantRequest, RegisteringTenantResponse, RequestingExaminationRequest, RequestingExaminationResponse, RetrievingTenantShopListPagination, ShopObject, TenantShopsSearchParams, UpdatingExaminationInfoRequest, UpdatingTenantRequest } from "../../types/index";
+import { ContractObject, CreatingTenantWithExistingUserRequest, CreatingTenantWithExistingUserResponse, ExaminationInfo, ListResponse, CreatingTenantWithNewUserRequest, CreatingTenantWithNewUserResponse, RequestingExaminationRequest, RequestingExaminationResponse, RetrievingTenantShopListPagination, ShopObject, TenantShopsSearchParams, UpdatingExaminationInfoRequest, UpdatingTenantRequest } from "../../types/index";
 import { FincodeConfig } from "./fincode";
 import { FincodePartialRequestHeader } from "./http";
 declare class Tenant {
@@ -13,10 +13,10 @@ declare class Tenant {
      *
      * if the Promise is rejected, the error is an instance of `FincodeError`
      *
-     * @param {CreatingTenantRequest} body
+     * @param {CreatingTenantWithExistingUserRequest} body
      * @param {FincodePartialRequestHeader} [header]
      */
-    create(body: CreatingTenantRequest, header?: FincodePartialRequestHeader): Promise<CreatingTenantResponse>;
+    create(body: CreatingTenantWithExistingUserRequest, header?: FincodePartialRequestHeader): Promise<CreatingTenantWithExistingUserResponse>;
     /**
      * **Register a tenant**
      *
@@ -24,12 +24,12 @@ declare class Tenant {
      *
      * if the Promise is rejected, the error is an instance of `FincodeError`
      *
-     * @param {CreatingTenantRequest} body
+     * @param {CreatingTenantWithExistingUserRequest} body
      * @param {FincodePartialRequestHeader} [header]
      *
-     * @returns {Promise<CreatingTenantResponse>}
+     * @returns {Promise<CreatingTenantWithExistingUserResponse>}
      */
-    register(body: RegisteringTenantRequest, header?: FincodePartialRequestHeader): Promise<RegisteringTenantResponse>;
+    register(body: CreatingTenantWithNewUserRequest, header?: FincodePartialRequestHeader): Promise<CreatingTenantWithNewUserResponse>;
     /**
      * **Update contract examination information of a tenant**
      *

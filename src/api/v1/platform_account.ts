@@ -11,17 +11,14 @@ import {
 } from "../../types/index"
 import { FincodeConfig } from "./fincode"
 import { createFincodeRequestFetch, FincodePartialRequestHeader } from "./http"
-import { RequestInit } from "node-fetch"
 import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_errorMessages"
 
 class PlatformAccount {
 
     private readonly _config: FincodeConfig
-    private readonly _agent: RequestInit["agent"]
 
-    constructor(config: FincodeConfig, agent?: RequestInit["agent"]) {
+    constructor(config: FincodeConfig) {
         this._config = config
-        this._agent = agent
     }
 
     /**
@@ -54,7 +51,6 @@ class PlatformAccount {
                     pagination: paginaiton,
                     searchParams: searchParams,
                 },
-                this._agent,
             )
 
             fetch().then((res) => {
@@ -79,7 +75,7 @@ class PlatformAccount {
     }
 
     /**
-     * **Retrieve a platform-account*
+     * **Retrieve a platform-account**
      * 
      * corresponds to `GET /v1/platform_accounts/:id`
      * 
@@ -102,7 +98,6 @@ class PlatformAccount {
                 undefined,
                 header,
                 undefined,
-                this._agent,
             )
 
             fetch().then((res) => {
@@ -152,7 +147,6 @@ class PlatformAccount {
                 undefined,
                 header,
                 undefined,
-                this._agent,
             )
 
             fetch().then((res) => {

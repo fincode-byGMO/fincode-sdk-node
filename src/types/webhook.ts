@@ -36,11 +36,19 @@ export type Event =
     "payments.card.cancel" |
     "payments.card.auth" |
     "payments.card.change" |
+    "payments.applepay.regist" |
+    "payments.applepay.exec" |
     "payments.konbini.regist" |
     "payments.konbini.exec" |
     "payments.konbini.cancel" |
     "payments.konbini.complete" |
     "payments.konbini.complete.stub" |
+    "payments.paypay.regist" |
+    "payments.paypay.exec" |
+    "payments.paypay.capture" |
+    "payments.paypay.cancel" |
+    "payments.paypay.change" |
+    "payments.paypay.complete" |
     "card.regist" |
     "card.update" |
     "subscription.card.regist" |
