@@ -3,7 +3,7 @@ import {
     CardObject,
     DeletingCardResponse,
     ListResponse,
-    RegisteringCardRequest,
+    CreatingCardRequest,
     UpdatingCardRequest,
 
     APIErrorResponse,
@@ -31,7 +31,7 @@ class Card {
      */
     public create(
         customerId: string,
-        body: RegisteringCardRequest,
+        body: CreatingCardRequest,
         header?: FincodePartialRequestHeader
     ): Promise<CardObject> {
         return new Promise((resolve, reject) => {

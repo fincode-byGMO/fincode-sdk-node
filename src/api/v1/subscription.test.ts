@@ -1,6 +1,6 @@
 import { HttpsProxyAgent } from "https-proxy-agent"
 import {
-    RegisteringSubscriptionRequest,
+    CreatingSubscriptionRequest,
     RetrievingSubscriptionListPagination,
     SubscriptionObject,
     UpdatingSubscriptionRequest,
@@ -49,7 +49,7 @@ describe("Subscription API testing", () => {
 
 
     it("Create subscription", async () => {
-        const req: RegisteringSubscriptionRequest = {
+        const req: CreatingSubscriptionRequest = {
             pay_type: "Card",
             customer_id: customerId,
             plan_id: planId,

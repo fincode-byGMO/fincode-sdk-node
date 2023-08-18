@@ -29,7 +29,7 @@ class Plan {
      * w
      * if the Promise is rejected, the error is an instance of `FincodeError`
      * 
-     * @param {RegisteringPaymentRequest} body
+     * @param {CreatingPaymentRequest} body
      * @param {FincodePartialRequestHeader} [header]
      * 
      * @returns {Promise<PlanObject>}

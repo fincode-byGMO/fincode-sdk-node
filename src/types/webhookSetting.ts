@@ -1,4 +1,4 @@
-export type WebhookObject = {
+export type WebhookSettingObject = {
     /**
      * Webhook ID
      */
@@ -12,7 +12,14 @@ export type WebhookObject = {
     /**
      * Trigger event
      */
-    event: Event
+    event: WebhookEvent
+
+    /**
+     * Signature
+     * 
+     * if you set this value, you can verify the webhook request is from Fincode by checking `Fincode-Signature` header.
+     */
+    signature?: string | null
 
     /**
      * Created timestamp
@@ -29,7 +36,7 @@ export type WebhookObject = {
     updated?: string | null
 }
 
-export type Event =
+export type WebhookEvent =
     "payments.card.regist" |
     "payments.card.exec" |
     "payments.card.capture" |
@@ -60,9 +67,9 @@ export type Event =
     "contracts.status_code.updated"
 
 /**
- * Request object for Registering a webhook
+ * Request object for Creating a webhook setting
  */
-export type SubscribingWebhookRequest = {
+export type CreatingWebhookSettingRequest = {
     /**
      * Webhook ID
      */
@@ -76,13 +83,21 @@ export type SubscribingWebhookRequest = {
     /**
      * Trigger event
      */
-    event: Event
+    event: WebhookEvent
+
+
+    /**
+     * Signature
+     * 
+     * if you set this value, you can verify the webhook request is from Fincode by checking `Fincode-Signature` header.
+     */
+    signature?: string | null
 }
 
 /**
- * Request object for Updating a webhook
+ * Request object for Updating a webhook setting
  */
-export type UpdatingWebhookRequest = {
+export type UpdatingWebhookSettingRequest = {
     /**
      * URL to send the webhook to
      */
@@ -91,13 +106,20 @@ export type UpdatingWebhookRequest = {
     /**
      * Trigger event
      */
-    event?: Event | null
+    event?: WebhookEvent | null
+
+    /**
+     * Signature
+     * 
+     * if you set this value, you can verify the webhook request is from Fincode by checking `Fincode-Signature` header.
+     */
+    signature?: string | null
 }
 
 /**
- * Response object for Deleting a webhook
+ * Response object for Deleting a webhook setting
  */
-export type DeletingWebhookResponse = {
+export type DeletingWebhookSettingResponse = {
     id: string
     delete_flag: "0" | "1"
 }

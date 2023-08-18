@@ -1,5 +1,5 @@
 import {
-    RegisteringSubscriptionRequest,
+    CreatingSubscriptionRequest,
     CancelingSubscriptionResponse,
     ListResponse,
     SubscriptionObject,
@@ -31,13 +31,13 @@ class Subscription {
      * 
      * if the Promise is rejected, the error is an instance of `FincodeError`
      * 
-     * @param {RegisteringPaymentRequest} body
+     * @param {CreatingPaymentRequest} body
      * @param {FincodePartialRequestHeader} [header]
      * 
      * @returns {Promise<SubscriptionObject>}
      */
     public create(
-        body: RegisteringSubscriptionRequest,
+        body: CreatingSubscriptionRequest,
         header?: FincodePartialRequestHeader
     ): Promise<SubscriptionObject> {
         return new Promise((resolve, reject) => {
