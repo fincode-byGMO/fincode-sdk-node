@@ -3,7 +3,7 @@ import { createFincodeRequestHeader } from "../../types/http";
 const BASE_URL = "https://api.fincode.jp";
 const BASE_URL_TEST = "https://api.test.fincode.jp";
 const createFincodeRequestURL = (config, path, query) => {
-    const baseUrl = config.isTest ? BASE_URL_TEST : BASE_URL;
+    const baseUrl = config.fincodeEnv == "test" ? BASE_URL_TEST : BASE_URL;
     let queryStr = "";
     if (query) {
         const { pagination, searchParams, keyValues } = query;
@@ -29,10 +29,10 @@ const createFincodeRequestURL = (config, path, query) => {
     return `${baseUrl}${path}${queryStr}`;
 };
 export { createFincodeRequestURL };
-const createFincodeRequestFetch = (config, method, path, data, headers, query, agent) => {
+const createFincodeRequestFetch = (config, method, path, data, headers, query) => {
     const url = createFincodeRequestURL(config, path, query);
     const _headers = createFincodeRequestHeader({
-        apiVersion: config.version,
+        apiVersion: config.options.version,
         authorization: `Bearer ${config.apiKey}`,
         idempotentKey: headers?.idempotentKey,
         tenantShopId: headers?.tenantShopId,
@@ -42,7 +42,8 @@ const createFincodeRequestFetch = (config, method, path, data, headers, query, a
         method: method,
         headers: _headers,
         body: data,
-        agent: agent
+        agent: config.options.proxyAgent,
+        timeout: config.options.timeout,
     };
     return () => fetch(url, options);
 };

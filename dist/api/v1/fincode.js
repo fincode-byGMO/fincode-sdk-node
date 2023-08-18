@@ -9,107 +9,90 @@ import { CardRegistrationSession } from "./session.cardRegistration";
 import { PaymentSession } from "./session.payment";
 import { Subscription } from "./subscription";
 import { Tenant } from "./tenant";
-import { Webhook } from "./webhook";
+import { WebhookSetting } from "./webhookSetting";
+import { Account } from "./account";
 class Fincode {
     config;
-    agent;
-    constructor(apiKey, isTest = true, version, agent) {
+    /**
+     * @param apiKey - API key (secret key)
+     */
+    constructor(apiKey, fincodeEnv = "test", initOptions) {
         const config = {
-            version,
-            isTest,
-            apiKey,
+            fincodeEnv: fincodeEnv,
+            apiKey: apiKey,
+            options: initOptions ?? {}
         };
         this.config = config;
-        this.agent = agent;
+        this._customers = new Customer(this.config);
+        this._cards = new Card(this.config);
+        this._payments = new Payment(this.config);
+        this._plans = new Plan(this.config);
+        this._subscriptions = new Subscription(this.config);
+        this._paymentSessions = new PaymentSession(this.config);
+        this._cardRegistrationSessions = new CardRegistrationSession(this.config);
+        this._paymentBulks = new PaymentBulk(this.config);
+        this._platforms = new Platform(this.config);
+        this._platformAccounts = new PlatformAccount(this.config);
+        this._tenants = new Tenant(this.config);
+        this._webhookSettings = new WebhookSetting(this.config);
+        this._accounts = new Account(this.config);
     }
-    _customer;
-    get customer() {
-        if (!this._customer) {
-            this._customer = new Customer(this.config, this.agent);
-        }
-        return this._customer;
+    _accounts;
+    get accounts() {
+        return this._accounts;
     }
-    _card;
-    get card() {
-        if (!this._card) {
-            this._card = new Card(this.config, this.agent);
-        }
-        return this._card;
+    _customers;
+    get customers() {
+        return this._customers;
     }
-    _payment;
-    get payment() {
-        if (!this._payment) {
-            this._payment = new Payment(this.config, this.agent);
-        }
-        return this._payment;
+    _cards;
+    get cards() {
+        return this._cards;
     }
-    _plan;
-    get plan() {
-        if (!this._plan) {
-            this._plan = new Plan(this.config, this.agent);
-        }
-        return this._plan;
+    _payments;
+    get payments() {
+        return this._payments;
     }
-    _subscription;
-    get subscription() {
-        if (!this._subscription) {
-            this._subscription = new Subscription(this.config, this.agent);
-        }
-        return this._subscription;
+    _plans;
+    get plans() {
+        return this._plans;
     }
-    _paymentSession;
-    get paymentSession() {
-        if (!this._paymentSession) {
-            this._paymentSession = new PaymentSession(this.config, this.agent);
-        }
-        return this._paymentSession;
+    _subscriptions;
+    get subscriptions() {
+        return this._subscriptions;
     }
-    _cardRegistrationSession;
-    get cardRegistrationSession() {
-        if (!this._cardRegistrationSession) {
-            this._cardRegistrationSession = new CardRegistrationSession(this.config, this.agent);
-        }
-        return this._cardRegistrationSession;
+    _paymentSessions;
+    get paymentSessions() {
+        return this._paymentSessions;
     }
-    _paymentBulk;
-    get paymentBulk() {
-        if (!this._paymentBulk) {
-            this._paymentBulk = new PaymentBulk(this.config, this.agent);
-        }
-        return this._paymentBulk;
+    _cardRegistrationSessions;
+    get cardRegistrationSessions() {
+        return this._cardRegistrationSessions;
     }
-    _platform;
-    get platform() {
-        if (!this._platform) {
-            this._platform = new Platform(this.config, this.agent);
-        }
-        return this._platform;
+    _paymentBulks;
+    get paymentBulks() {
+        return this._paymentBulks;
     }
-    _platformAccount;
-    get platformAccount() {
-        if (!this._platformAccount) {
-            this._platformAccount = new PlatformAccount(this.config, this.agent);
-        }
-        return this._platformAccount;
+    _platforms;
+    get platforms() {
+        return this._platforms;
     }
-    _tenant;
-    get tenant() {
-        if (!this._tenant) {
-            this._tenant = new Tenant(this.config, this.agent);
-        }
-        return this._tenant;
+    _platformAccounts;
+    get platformAccounts() {
+        return this._platformAccounts;
     }
-    _webhook;
-    get webhook() {
-        if (!this._webhook) {
-            this._webhook = new Webhook(this.config, this.agent);
-        }
-        return this._webhook;
+    _tenants;
+    get tenants() {
+        return this._tenants;
+    }
+    _webhookSettings;
+    get webhookSettings() {
+        return this._webhookSettings;
     }
 }
 export { Fincode };
-const createFincode = (apiKey, config) => {
-    const fincode = new Fincode(apiKey, config?.isTest, config?.version, config?.agent);
+const createFincode = (apiKey, fincodeEnv, options) => {
+    const fincode = new Fincode(apiKey, fincodeEnv, options);
     return fincode;
 };
 export { createFincode };

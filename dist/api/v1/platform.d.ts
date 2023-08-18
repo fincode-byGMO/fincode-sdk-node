@@ -1,11 +1,9 @@
-import { RequestInit } from "node-fetch";
 import { ListResponse, PlatformShopsSearchParams, RetrievingPlatformShopListPagination, ShopObject, UpdatingPlatformRequest } from "../../types/index";
 import { FincodeConfig } from "./fincode";
 import { FincodePartialRequestHeader } from "./http";
 declare class Platform {
     private readonly _config;
-    private readonly _agent;
-    constructor(config: FincodeConfig, agent?: RequestInit["agent"]);
+    constructor(config: FincodeConfig);
     /**
      * **Retrieve platform shop list**
      *

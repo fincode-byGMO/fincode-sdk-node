@@ -78,7 +78,7 @@ export declare class TenantShopsSearchParams implements SearchParams {
     buildParams(): URLSearchParams;
 }
 /**
- * Request object for Creating tenant shop
+ * Request object for Creating tenant shop with existing platform user.
  */
 export type CreatingTenantWithExistingUserRequest = {
     /**
@@ -95,7 +95,7 @@ export type CreatingTenantWithExistingUserRequest = {
     tenant_url_id: string;
 };
 /**
- * Response object for Creating tenant shop
+ * Response object for Creating tenant shop with existing platform user.
  */
 export type CreatingTenantWithExistingUserResponse = {
     /**
@@ -174,7 +174,7 @@ export type CreatingTenantWithExistingUserResponse = {
     updated?: string | null;
 };
 /**
- * Request object for Registering tenant shop
+ * Request object for Creating tenant shop with new tenant user.
  */
 export type CreatingTenantWithNewUserRequest = {
     /**
@@ -195,7 +195,7 @@ export type CreatingTenantWithNewUserRequest = {
     tenant_url_id: string;
 };
 /**
- * Response object for Registering tenant shop
+ * Response object for Creating tenant shop with new tenant user.
  */
 export type CreatingTenantWithNewUserResponse = {
     /**
@@ -424,7 +424,8 @@ export type UpdatingExaminationInfoRequest = {
     bank_account?: Partial<Contract.ContractBankAccount> | null;
 };
 /**
- * Examination information object
+ *
+ * Examination information object (v1)
  */
 export type ExaminationInfo = {
     /**
@@ -505,5 +506,78 @@ export type ExaminationInfo = {
          * Whether or not card info for being billed has been input
          */
         card_info_input: boolean;
+    };
+};
+/**
+ * Request object for Updating tenant shop examination (v2)
+ */
+export type UpdatingExaminationInfoRequest_V2 = {
+    /**
+     * Contract informatioin
+     */
+    contract_info?: Partial<Contract.ContractInformation_V2> | null;
+    /**
+     * Shop information
+     */
+    shop_info?: Partial<Shop.ShopInformation_V2> | null;
+    /**
+     * Bank account information
+     */
+    bank_account_info?: Partial<Contract.ContractBankAccount> | null;
+    /**
+     * Deposit cycle information
+     */
+    deposit_cycle_info?: Partial<{
+        /**
+         * Deposit cycle master ID
+         *
+         * - `1`: 1 time closing per month  with payment on the last day of the following month
+         * - `2`: 2 times closing per month with payment 15 days after each closing
+         * - `3`: 3 times closing per month with payment 10 days after each closing (required to contact fincode support)
+         * - `4`: 6 times closing per month with payment 5 days after each closing (required to contact fincode support)
+         * - `5`: Daily closing with payment 3 business days after each closing (required to contact fincode support)
+         */
+        deposit_cycle_master_id?: Shop.DepositCycleMasterId | null;
+    }> | null;
+    /**
+     * Merchant Category Code (MCC)
+     * (If fincode Team request to fill in this field, please fill in the value.)
+     */
+    merchant_category_code?: string | null;
+};
+/**
+ * Examination information object (v2)
+ */
+export type ExaminationInfo_V2 = {
+    /**
+     * Contract status code
+     */
+    status_code: Contract.ContractStatus_V2;
+    /**
+     * Contract information
+     */
+    contract_info: Contract.ContractInformation_V2;
+    /**
+     * Shop information
+     */
+    shop_info: Shop.ShopInformation_V2;
+    /**
+     * Bank account information
+     */
+    bank_account_info?: Contract.ContractBankAccount;
+    /**
+     * Deposit cycle information
+     */
+    deposit_cycle_info: {
+        /**
+         * Deposit cycle master ID
+         *
+         * - `1`: 1 time closing per month  with payment on the last day of the following month
+         * - `2`: 2 times closing per month with payment 15 days after each closing
+         * - `3`: 3 times closing per month with payment 10 days after each closing (required to contact fincode support)
+         * - `4`: 6 times closing per month with payment 5 days after each closing (required to contact fincode support)
+         * - `5`: Daily closing with payment 3 business days after each closing (required to contact fincode support)
+         */
+        deposit_cycle_master_id: Shop.DepositCycleMasterId;
     };
 };

@@ -3,10 +3,8 @@ import { createFincodeRequestFetch } from "./http";
 import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_errorMessages";
 class PlatformAccount {
     _config;
-    _agent;
-    constructor(config, agent) {
+    constructor(config) {
         this._config = config;
-        this._agent = agent;
     }
     /**
      * **Retrieve platform-account list **
@@ -27,7 +25,7 @@ class PlatformAccount {
             const fetch = createFincodeRequestFetch(this._config, "GET", "/v1/platform_accounts", undefined, header, {
                 pagination: paginaiton,
                 searchParams: searchParams,
-            }, this._agent);
+            });
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -50,7 +48,7 @@ class PlatformAccount {
         });
     }
     /**
-     * **Retrieve a platform-account*
+     * **Retrieve a platform-account**
      *
      * corresponds to `GET /v1/platform_accounts/:id`
      *
@@ -63,7 +61,7 @@ class PlatformAccount {
      */
     retrieve(id, header) {
         return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(this._config, "GET", `/v1/platform_accounts/${id}`, undefined, header, undefined, this._agent);
+            const fetch = createFincodeRequestFetch(this._config, "GET", `/v1/platform_accounts/${id}`, undefined, header, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -99,7 +97,7 @@ class PlatformAccount {
      */
     retrieveSummaryList(id, header) {
         return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(this._config, "GET", `/v1/platform_accounts/${id}/summary`, undefined, header, undefined, this._agent);
+            const fetch = createFincodeRequestFetch(this._config, "GET", `/v1/platform_accounts/${id}/summary`, undefined, header, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {

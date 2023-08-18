@@ -1,11 +1,9 @@
-import { RequestInit } from "node-fetch";
 import { CreatingCustomerRequest, CustomerObject, DeletingCustomerResponse, ListResponse, RetrievingCustomerListPagination, UpdatingCustomerRequest } from "../../types/index";
 import { FincodeConfig } from "./fincode";
 import { FincodePartialRequestHeader } from "./http";
 declare class Customer {
     private readonly _config;
-    private readonly _agent;
-    constructor(config: FincodeConfig, agent?: RequestInit["agent"]);
+    constructor(config: FincodeConfig);
     /**
      * **Create a customer**
      *

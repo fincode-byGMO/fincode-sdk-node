@@ -102,7 +102,7 @@ export type ExaminationMaster = "vm" | "jad" | "konbini";
  * - `4`: 6 times closing per month with payment 5 days after each closing (required to contact fincode support)
  * - `5`: Daily closing with payment 3 business days after each closing (required to contact fincode support)
  */
-export type DepositCycleMasterId = "1" | "2" | "3" | "4" | "5";
+export type DepositCycleMasterId = 1 | 2 | 3 | 4 | 5;
 /**
  * Shop Type
  *
@@ -249,6 +249,165 @@ export type ShopItemDetail = {
     content3_description?: string | null;
     /**
      * Content 3 /3 Unit price
+     */
+    content3_unit_price?: number | null;
+};
+/**
+ * Shop information object (v2, but there is no `ShopInformation` type for v1)
+ */
+export type ShopInformation_V2 = {
+    /**
+     * Shop name that will be displayed on the credit card statement
+     */
+    shop_name: string;
+    /**
+     * Shop name (kana) that will be displayed on the credit card statement
+     */
+    shop_name_kana?: string | null;
+    /**
+     * Shop name (English) that will be displayed on the credit card statement
+     */
+    shop_name_en?: string | null;
+    /**
+     * Support email address
+     */
+    support_mail?: string | null;
+    /**
+     * Support TEL
+     */
+    support_tel?: string | null;
+    /**
+     * unit price of an payment
+     */
+    unit_price?: number | null;
+    /**
+     * Whether or not the shop sells contents that fincode needs long time to examine.
+     */
+    deals_long_apply_content?: boolean | null;
+    /**
+     * Whether or not the shop has a history of losing lawsuits based on the revised Installment Sales Act in Japan.
+     */
+    lost_trial?: boolean | null;
+    /**
+     * Whether or not the shop sells insecure contents.
+     */
+    deals_insecure_content?: boolean | null;
+    /**
+     * Usage of fincode
+     */
+    use_of_fincode?: {
+        /**
+         * Use fincode in Website/Web application
+         */
+        used_on_web?: boolean | null;
+        /**
+         * Use fincode in Mobile application
+         */
+        used_on_app?: boolean | null;
+    };
+    /**
+     * Whether or not service website is visitable when fincode examination is in progress.
+     *
+     * - `true`: fincode Examination team can visit the website.
+     * - `false`: fincode Examination team cannot visit the website.
+     */
+    site_published?: boolean | null;
+    /**
+     * Website information
+     */
+    site_info?: {
+        url?: string | null;
+        /**
+         * Credentials for login (fincode Examination team will use)
+         */
+        credential?: string | null;
+    };
+    /**
+     * This shop has point system or not.
+     */
+    prepaid_point?: boolean | null;
+    /**
+     * Prepaid point information
+     */
+    prepaid_point_info?: {
+        /**
+         * Usage of prepaid point
+         */
+        how_to_use?: string | null;
+        /**
+         * Condition of point expiration (free text)
+         */
+        about_expiration?: string | null;
+    };
+    /**
+     * Type of shop item.
+     */
+    provides?: {
+        /**
+         * This shop provides some products or not.
+         */
+        product?: boolean | null;
+        /**
+         * This shop provides some services or not.
+         */
+        service?: boolean | null;
+        /**
+         * This shop provides some digital contents or not.
+         */
+        digital_content?: boolean | null;
+    };
+    /**
+     * Description of shop item.
+     */
+    content_description?: string | null;
+    /**
+     * Content information: Product
+     */
+    product_content_info?: ContentInformation_V2;
+    /**
+     * Content information: Service
+     */
+    service_content_info?: ContentInformation_V2;
+    /**
+     * Content information: Digital content
+     */
+    digital_content_info?: ContentInformation_V2;
+};
+export type ContentInformation_V2 = {
+    /**
+     * Content 1: Name
+     */
+    content1_name?: string | null;
+    /**
+     * Content 1: Description
+     */
+    content1_description?: string | null;
+    /**
+     * Content 1: Unit price
+     */
+    content1_unit_price?: number | null;
+    /**
+     * Content 2: Name
+     */
+    content2_name?: string | null;
+    /**
+     * Content 2: Description
+     */
+    content2_description?: string | null;
+    /**
+     * Content 2: Unit price
+     */
+    content2_unit_price?: number | null;
+    /**
+     * Content 3: Name
+     */
+    content3_name?: string | null;
+    /**
+     * Content 3: Description
+     */
+    content3_description?: string | null;
+    /**
+     * Content 3: Unit price
      */
     content3_unit_price?: number | null;
 };

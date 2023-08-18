@@ -3,10 +3,8 @@ import { createFincodeRequestFetch } from "./http";
 import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_errorMessages";
 class Subscription {
     _config;
-    _agent;
-    constructor(config, agent) {
+    constructor(config) {
         this._config = config;
-        this._agent = agent;
     }
     /**
      * **Register a subscription**
@@ -15,14 +13,14 @@ class Subscription {
      *
      * if the Promise is rejected, the error is an instance of `FincodeError`
      *
-     * @param {RegisteringPaymentRequest} body
+     * @param {CreatingPaymentRequest} body
      * @param {FincodePartialRequestHeader} [header]
      *
      * @returns {Promise<SubscriptionObject>}
      */
-    register(body, header) {
+    create(body, header) {
         return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(this._config, "POST", "/v1/subscriptions", JSON.stringify(body), header, undefined, this._agent);
+            const fetch = createFincodeRequestFetch(this._config, "POST", "/v1/subscriptions", JSON.stringify(body), header, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -57,7 +55,7 @@ class Subscription {
      */
     retrieveList(pagination, header) {
         return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(this._config, "GET", "/v1/subscriptions", undefined, header, { pagination: pagination }, this._agent);
+            const fetch = createFincodeRequestFetch(this._config, "GET", "/v1/subscriptions", undefined, header, { pagination: pagination });
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -98,7 +96,7 @@ class Subscription {
                 keyValues: {
                     pay_type: payType,
                 }
-            }, this._agent);
+            });
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -135,7 +133,7 @@ class Subscription {
      */
     update(id, body, header) {
         return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(this._config, "PUT", `/v1/subscriptions/${id}`, JSON.stringify(body), header, undefined, this._agent);
+            const fetch = createFincodeRequestFetch(this._config, "PUT", `/v1/subscriptions/${id}`, JSON.stringify(body), header, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -176,7 +174,7 @@ class Subscription {
                 keyValues: {
                     pay_type: payType,
                 },
-            }, this._agent);
+            });
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -213,7 +211,7 @@ class Subscription {
      */
     retrieveResultList(id, pagination, header) {
         return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(this._config, "GET", `/v1/subscriptions/${id}/result`, undefined, header, { pagination: pagination }, this._agent);
+            const fetch = createFincodeRequestFetch(this._config, "GET", `/v1/subscriptions/${id}/result`, undefined, header, { pagination: pagination });
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {

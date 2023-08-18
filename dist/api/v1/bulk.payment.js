@@ -4,10 +4,8 @@ import { createFincodeRequestFetch } from "./http";
 import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_errorMessages";
 class PaymentBulk {
     _config;
-    _agent;
-    constructor(config, agent) {
+    constructor(config) {
         this._config = config;
-        this._agent = agent;
     }
     /**
      * **Register a payment bulk**
@@ -21,7 +19,7 @@ class PaymentBulk {
      *
      * @returns {Promise<PaymentBulkObject>}
      */
-    register(payType, processPlanDate, file, fileName, header) {
+    create(payType, processPlanDate, file, fileName, header) {
         // multipart-form-data
         const formData = new FormData();
         formData.append("file", file, {
@@ -36,7 +34,7 @@ class PaymentBulk {
                 pay_type: payType,
                 process_plan_date: processPlanDate,
             }
-        }, this._agent);
+        });
         return new Promise((resolve, reject) => {
             fetch().then((res) => {
                 res.json().then((json) => {
@@ -72,7 +70,7 @@ class PaymentBulk {
      * @returns {Promise<ListResponse<PaymentBulkObject>>}
      */
     retrieveList(pagination, header) {
-        const fetch = createFincodeRequestFetch(this._config, "GET", "/v1/payments/bulk", undefined, header, { pagination: pagination }, this._agent);
+        const fetch = createFincodeRequestFetch(this._config, "GET", "/v1/payments/bulk", undefined, header, { pagination: pagination });
         return new Promise((resolve, reject) => {
             fetch().then((res) => {
                 res.json().then((json) => {
@@ -109,7 +107,7 @@ class PaymentBulk {
      * @returns {Promise<PaymentBulkDetailObject>}
      */
     retrieveDetailList(id, pagination, header) {
-        const fetch = createFincodeRequestFetch(this._config, "GET", `/v1/payments/bulk/${id}`, undefined, header, { pagination: pagination }, this._agent);
+        const fetch = createFincodeRequestFetch(this._config, "GET", `/v1/payments/bulk/${id}`, undefined, header, { pagination: pagination });
         return new Promise((resolve, reject) => {
             fetch().then((res) => {
                 res.json().then((json) => {
@@ -145,7 +143,7 @@ class PaymentBulk {
      * @returns {Promise<DeletingPaymentBulkResponse>}
      */
     delete(id, header) {
-        const fetch = createFincodeRequestFetch(this._config, "DELETE", `/v1/payments/bulk/${id}`, undefined, header, undefined, this._agent);
+        const fetch = createFincodeRequestFetch(this._config, "DELETE", `/v1/payments/bulk/${id}`, undefined, header, undefined);
         return new Promise((resolve, reject) => {
             fetch().then((res) => {
                 res.json().then((json) => {

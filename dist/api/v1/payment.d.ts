@@ -1,11 +1,9 @@
-import { RequestInit } from "node-fetch";
-import { CancelingPaymentRequest, CapturingPaymentRequest, ChangingPaymentAmountRequest, Executing3DSecureAuthRequest, Executing3DSecureAuthResponse, ExecutingPaymentAfter3DSecureRequest, ExecutingPaymentRequest, ListResponse, PaymentObject, ReauthorizingPaymentRequest, RegisteringPaymentRequest, Retrieving3DSecureAuthResponse, GeneratingKonbiniPaymentBarcodeRequest, RetrievingPaymentListPagination } from "../../types/index";
+import { CancelingPaymentRequest, CapturingPaymentRequest, ChangingPaymentAmountRequest, Executing3DSecureAuthRequest, Executing3DSecureAuthResponse, ExecutingPaymentAfter3DSecureRequest, ExecutingPaymentRequest, ListResponse, PaymentObject, ReauthorizingPaymentRequest, CreatingPaymentRequest, Retrieving3DSecureAuthResponse, GeneratingKonbiniPaymentBarcodeRequest, RetrievingPaymentListPagination } from "../../types/index";
 import { FincodeConfig } from "./fincode";
 import { FincodePartialRequestHeader } from "./http";
 declare class Payment {
     private readonly _config;
-    private readonly _agent;
-    constructor(config: FincodeConfig, agent?: RequestInit["agent"]);
+    constructor(config: FincodeConfig);
     /**
      * **Register a payment**
      *
@@ -13,12 +11,12 @@ declare class Payment {
      *
      * if the Promise is rejected, the error is an instance of `FincodeError`
      *
-     * @param {RegisteringPaymentRequest} body
+     * @param {CreatingPaymentRequest} body
      * @param {FincodePartialRequestHeader} [header]
      *
      * @returns {Promise<PaymentObject>}
      */
-    register(body: RegisteringPaymentRequest, header?: FincodePartialRequestHeader): Promise<PaymentObject>;
+    create(body: CreatingPaymentRequest, header?: FincodePartialRequestHeader): Promise<PaymentObject>;
     /**
      * **Execute a payment**
      *
@@ -119,7 +117,7 @@ declare class Payment {
     /**
      * **Execute a 3D Secure authentication for a payment**
      *
-     * corresponds to `POST /v1/secur2e/:access_id`
+     * corresponds to `PUT /v1/secure2/:access_id`
      *
      * if the Promise is rejected, the error is an instance of `FincodeError`
      *

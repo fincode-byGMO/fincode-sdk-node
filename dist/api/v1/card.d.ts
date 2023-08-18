@@ -1,11 +1,9 @@
-import { RequestInit } from "node-fetch";
-import { CardObject, DeletingCardResponse, ListResponse, RegisteringCardRequest, UpdatingCardRequest } from "../../types/index";
+import { CardObject, DeletingCardResponse, ListResponse, CreatingCardRequest, UpdatingCardRequest } from "../../types/index";
 import { FincodeConfig } from "./fincode";
 import { FincodePartialRequestHeader } from "./http";
 declare class Card {
     private readonly _config;
-    private readonly _agent;
-    constructor(config: FincodeConfig, agent?: RequestInit["agent"]);
+    constructor(config: FincodeConfig);
     /**
      * **Create a card**
      *
@@ -13,7 +11,7 @@ declare class Card {
      *
      * if the Promise is rejected, the error is an instance of `FincodeError`
      */
-    register(customerId: string, body: RegisteringCardRequest, header?: FincodePartialRequestHeader): Promise<CardObject>;
+    create(customerId: string, body: CreatingCardRequest, header?: FincodePartialRequestHeader): Promise<CardObject>;
     /**
      * **Retrieve card list of a customer**
      *

@@ -3,10 +3,8 @@ import { createFincodeRequestFetch } from "./http";
 import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_errorMessages";
 class Platform {
     _config;
-    _agent;
-    constructor(config, agent) {
+    constructor(config) {
         this._config = config;
-        this._agent = agent;
     }
     /**
      * **Retrieve platform shop list**
@@ -24,7 +22,7 @@ class Platform {
             const fetch = createFincodeRequestFetch(this._config, "GET", "/v1/platforms", undefined, header, {
                 pagination: pagination,
                 searchParams: searchParams,
-            }, this._agent);
+            });
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -60,7 +58,7 @@ class Platform {
      */
     retrieve(id, header) {
         return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(this._config, "GET", `/v1/platforms/${id}`, undefined, header, undefined, this._agent);
+            const fetch = createFincodeRequestFetch(this._config, "GET", `/v1/platforms/${id}`, undefined, header, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -95,7 +93,7 @@ class Platform {
      */
     update(id, body, header) {
         return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(this._config, "PUT", `/v1/platforms/${id}`, JSON.stringify(body), header, undefined, this._agent);
+            const fetch = createFincodeRequestFetch(this._config, "PUT", `/v1/platforms/${id}`, JSON.stringify(body), header, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
