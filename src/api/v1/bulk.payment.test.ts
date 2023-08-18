@@ -26,7 +26,7 @@ describe("Payment Bulk API testing", () => {
     const initOptions: FincodeInitOptions = {
         proxyAgent: agent,
     }
-    const fincode = createFincode(secretKey, true, initOptions)
+    const fincode = createFincode(secretKey, "test", initOptions)
 
     let paymentBulk: PaymentBulkObject | undefined
 
@@ -61,7 +61,7 @@ describe("Payment Bulk API testing", () => {
         const processStr = `${processYear}/${processMonth}/${processDate}`
 
         const file = JSON.stringify(testJson)
-        const res = await fincode.paymentBulks.register("Card", processStr, file, `test-${generateRandomString(10)}.json`)
+        const res = await fincode.paymentBulks.create("Card", processStr, file, `test-${generateRandomString(10)}.json`)
 
         expect(res.id).toBeDefined()
         expect(res.process_plan_date).toBe(processStr)

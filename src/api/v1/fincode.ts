@@ -11,7 +11,7 @@ import { CardRegistrationSession } from "./session.cardRegistration"
 import { PaymentSession } from "./session.payment"
 import { Subscription } from "./subscription"
 import { Tenant } from "./tenant"
-import { Webhook } from "./webhook"
+import { WebhookSetting } from "./webhookSetting"
 import { Account } from "./account"
 
 
@@ -31,10 +31,12 @@ export type FincodeInitOptions = {
  * @property {FincodeInitOptions} options - Fincode initialization options
  */
 type FincodeConfig = {
-    isTest: boolean
+    fincodeEnv: FincodeEnvironment
     apiKey: string
     options: FincodeInitOptions
 }
+
+type FincodeEnvironment = "test" | "live"
 
 class Fincode {
     public readonly config: FincodeConfig
@@ -42,9 +44,9 @@ class Fincode {
     /**
      * @param apiKey - API key (secret key)
      */
-    constructor(apiKey: string, isTest: boolean = true, initOptions?: FincodeInitOptions) {
+    constructor(apiKey: string, fincodeEnv: FincodeEnvironment = "test", initOptions?: FincodeInitOptions) {
         const config = {
-            isTest: isTest,
+            fincodeEnv: fincodeEnv,
             apiKey: apiKey,
             options: initOptions ?? {}
         }
@@ -61,7 +63,7 @@ class Fincode {
         this._platforms = new Platform(this.config)
         this._platformAccounts = new PlatformAccount(this.config)
         this._tenants = new Tenant(this.config)
-        this._webhooks = new Webhook(this.config)
+        this._webhookSettings = new WebhookSetting(this.config)
         this._accounts = new Account(this.config)
     }
 
@@ -125,15 +127,15 @@ class Fincode {
         return this._tenants
     }
 
-    private _webhooks: Webhook
-    get webhooks(): Webhook {
-        return this._webhooks
+    private _webhookSettings: WebhookSetting
+    get webhookSettings(): WebhookSetting {
+        return this._webhookSettings
     }
 }
 export { Fincode, FincodeConfig }
 
-const createFincode = (apiKey: string, isTest: boolean, options: FincodeInitOptions): Fincode => {
-    const fincode = new Fincode(apiKey, isTest, options)
+const createFincode = (apiKey: string, fincodeEnv: FincodeEnvironment, options: FincodeInitOptions): Fincode => {
+    const fincode = new Fincode(apiKey, fincodeEnv, options)
     return fincode
 }
 export { createFincode }

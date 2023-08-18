@@ -42,7 +42,7 @@ class Payment {
      * 
      * @returns {Promise<PaymentObject>}
      */
-    public register(
+    public create(
         body: RegisteringPaymentRequest,
         header?: FincodePartialRequestHeader
     ): Promise<PaymentObject> {
@@ -456,7 +456,7 @@ class Payment {
     /**
      * **Execute a 3D Secure authentication for a payment**
      * 
-     * corresponds to `POST /v1/secur2e/:access_id`
+     * corresponds to `PUT /v1/secure2/:access_id`
      * 
      * if the Promise is rejected, the error is an instance of `FincodeError`
      * 

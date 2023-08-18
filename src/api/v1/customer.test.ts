@@ -24,7 +24,7 @@ describe("Customer API testing", () => {
         proxyAgent: agent,
     }
 
-    const fincode = createFincode(secretKey, true, options)
+    const fincode = createFincode(secretKey, "test", options)
 
     it("Create a customer", async () => {
         const reqBody: CreatingCustomerRequest = {

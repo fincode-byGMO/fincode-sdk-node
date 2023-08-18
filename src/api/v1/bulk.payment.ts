@@ -35,7 +35,7 @@ class PaymentBulk {
      * 
      * @returns {Promise<PaymentBulkObject>}
      */
-    public register(
+    public create(
         payType: "Card",
         processPlanDate: string,
         file: Buffer | string,

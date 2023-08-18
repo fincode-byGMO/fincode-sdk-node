@@ -35,7 +35,7 @@ describe("Subscription API testing", () => {
         proxyAgent: agent,
     }
 
-    const fincode = createFincode(secretKey, true, options)
+    const fincode = createFincode(secretKey, "test", options)
 
     let subscription: SubscriptionObject | undefined
 
@@ -62,7 +62,7 @@ describe("Subscription API testing", () => {
             end_month_flag: "0",
         }
 
-        const res = await fincode.subscriptions.register(req)
+        const res = await fincode.subscriptions.create(req)
 
         expect(res.id).toBeDefined()
         expect(res.pay_type).toBeDefined()

@@ -24,7 +24,7 @@ describe("Plan API testing", () => {
         proxyAgent: agent,
     }
 
-    const fincode = createFincode(secretKey, true, options)
+    const fincode = createFincode(secretKey, "test", options)
 
     let plan: PlanObject | undefined
 

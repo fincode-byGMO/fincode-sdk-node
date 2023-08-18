@@ -29,7 +29,7 @@ class Card {
      * 
      * if the Promise is rejected, the error is an instance of `FincodeError`
      */
-    public register(
+    public create(
         customerId: string,
         body: RegisteringCardRequest,
         header?: FincodePartialRequestHeader

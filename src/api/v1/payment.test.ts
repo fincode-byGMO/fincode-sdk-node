@@ -35,7 +35,7 @@ describe("Payment API testing", () => {
         proxyAgent: agent,
     }
 
-    const fincode = createFincode(secretKey, true, options)
+    const fincode = createFincode(secretKey, "test", options)
 
     let payment: PaymentObject | undefined
 
@@ -47,7 +47,7 @@ describe("Payment API testing", () => {
                 amount: "100",
                 client_field_1: "fincode-node test",
             }
-            const registerRes = await fincode.payments.register(registerReq)
+            const registerRes = await fincode.payments.create(registerReq)
 
             expect(registerRes.id).toBeDefined()
             expect(registerRes.access_id).toBeDefined()
