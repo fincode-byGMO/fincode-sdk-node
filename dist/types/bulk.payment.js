@@ -110,10 +110,6 @@ export class RetrievingPaymentBulkPagination {
  */
 export class RetrievingPaymentBulkDetailPagination {
     /**
-     * Bulk payment ID.
-     */
-    id;
-    /**
      * Payment method types
      */
     pay_type;
@@ -145,8 +141,7 @@ export class RetrievingPaymentBulkDetailPagination {
      * Sort
      */
     sort;
-    constructor(id, pay_type, args) {
-        this.id = id;
+    constructor(pay_type, args) {
         this.pay_type = pay_type;
         if (args) {
             this.order_id = args.order_id;

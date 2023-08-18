@@ -1,11 +1,9 @@
-import { RequestInit } from "node-fetch";
 import { CreatingPlanRequest, DeletingPlanResponse, ListResponse, PlanObject, RetrievingPlanListPagination, UpdatingPlanRequest } from "../../types/index";
 import { FincodeConfig } from "./fincode";
 import { FincodePartialRequestHeader } from "./http";
 declare class Plan {
     private readonly _config;
-    private readonly _agent;
-    constructor(config: FincodeConfig, agent?: RequestInit["agent"]);
+    constructor(config: FincodeConfig);
     /**
      * **Register a plan**
      *
@@ -13,7 +11,7 @@ declare class Plan {
      * w
      * if the Promise is rejected, the error is an instance of `FincodeError`
      *
-     * @param {RegisteringPaymentRequest} body
+     * @param {CreatingPaymentRequest} body
      * @param {FincodePartialRequestHeader} [header]
      *
      * @returns {Promise<PlanObject>}

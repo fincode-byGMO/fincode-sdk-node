@@ -10,47 +10,61 @@ import { CardRegistrationSession } from "./session.cardRegistration";
 import { PaymentSession } from "./session.payment";
 import { Subscription } from "./subscription";
 import { Tenant } from "./tenant";
-import { Webhook } from "./webhook";
-type FincodeConfig = {
-    version: string | undefined;
-    isTest: boolean;
-    apiKey: string;
+import { WebhookSetting } from "./webhookSetting";
+import { Account } from "./account";
+/**
+ * @typedef {Object} FincodeInitOptions
+ */
+export type FincodeInitOptions = {
+    version?: string;
+    proxyAgent?: RequestInit["agent"];
+    timeout?: number;
 };
+/**
+ * @typedef {Object} FincodeConfig
+ * @property {boolean} isTest - Whether to use the fincode test environment
+ * @property {string} apiKey - API key (secret key)
+ * @property {FincodeInitOptions} options - Fincode initialization options
+ */
+type FincodeConfig = {
+    fincodeEnv: FincodeEnvironment;
+    apiKey: string;
+    options: FincodeInitOptions;
+};
+type FincodeEnvironment = "test" | "live";
 declare class Fincode {
     readonly config: FincodeConfig;
-    readonly agent?: RequestInit["agent"];
-    constructor(apiKey: string, isTest?: boolean, version?: string, agent?: RequestInit["agent"]);
-    private _customer?;
-    get customer(): Customer;
-    private _card?;
-    get card(): Card;
-    private _payment?;
-    get payment(): Payment;
-    private _plan?;
-    get plan(): Plan;
-    private _subscription?;
-    get subscription(): Subscription;
-    private _paymentSession?;
-    get paymentSession(): PaymentSession;
-    private _cardRegistrationSession?;
-    get cardRegistrationSession(): CardRegistrationSession;
-    private _paymentBulk?;
-    get paymentBulk(): PaymentBulk;
-    private _platform?;
-    get platform(): Platform;
-    private _platformAccount?;
-    get platformAccount(): PlatformAccount;
-    private _tenant?;
-    get tenant(): Tenant;
-    private _webhook?;
-    get webhook(): Webhook;
+    /**
+     * @param apiKey - API key (secret key)
+     */
+    constructor(apiKey: string, fincodeEnv?: FincodeEnvironment, initOptions?: FincodeInitOptions);
+    private _accounts;
+    get accounts(): Account;
+    private _customers;
+    get customers(): Customer;
+    private _cards;
+    get cards(): Card;
+    private _payments;
+    get payments(): Payment;
+    private _plans;
+    get plans(): Plan;
+    private _subscriptions;
+    get subscriptions(): Subscription;
+    private _paymentSessions;
+    get paymentSessions(): PaymentSession;
+    private _cardRegistrationSessions;
+    get cardRegistrationSessions(): CardRegistrationSession;
+    private _paymentBulks;
+    get paymentBulks(): PaymentBulk;
+    private _platforms;
+    get platforms(): Platform;
+    private _platformAccounts;
+    get platformAccounts(): PlatformAccount;
+    private _tenants;
+    get tenants(): Tenant;
+    private _webhookSettings;
+    get webhookSettings(): WebhookSetting;
 }
 export { Fincode, FincodeConfig };
-type FincodeInitConfig = {
-    isTest?: boolean;
-    version?: string;
-    agent?: RequestInit["agent"];
-};
-export type { FincodeInitConfig };
-declare const createFincode: (apiKey: string, config?: FincodeInitConfig) => Fincode;
+declare const createFincode: (apiKey: string, fincodeEnv: FincodeEnvironment, options: FincodeInitOptions) => Fincode;
 export { createFincode };

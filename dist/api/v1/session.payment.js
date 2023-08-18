@@ -3,10 +3,8 @@ import { createFincodeRequestFetch } from "./http";
 import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_errorMessages";
 class PaymentSession {
     _config;
-    _agent;
-    constructor(config, agent) {
+    constructor(config) {
         this._config = config;
-        this._agent = agent;
     }
     /**
      * **Create a payment session**
@@ -22,7 +20,7 @@ class PaymentSession {
      */
     create(body, header) {
         return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(this._config, "POST", "/v1/sessions", JSON.stringify(body), header, undefined, this._agent);
+            const fetch = createFincodeRequestFetch(this._config, "POST", "/v1/sessions", JSON.stringify(body), header, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {

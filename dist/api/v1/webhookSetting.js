@@ -1,31 +1,31 @@
-import { FincodeAPIError, FincodeSDKError, } from "../../types/index";
+import { FincodeAPIError, FincodeSDKError, } from "../../types";
 import { createFincodeRequestFetch } from "./http";
 import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_errorMessages";
-class Subscription {
+export class WebhookSetting {
     _config;
     constructor(config) {
         this._config = config;
     }
     /**
-     * **Register a subscription**
-     *
-     * corresponds to `POST /v1/subscriptions`
-     *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
-     *
-     * @param {CreatingPaymentRequest} body
-     * @param {FincodePartialRequestHeader} [header]
-     *
-     * @returns {Promise<SubscriptionObject>}
-     */
+    * **Subscribe webhook**
+    *
+    * corresponds to `POST /v1/webhook_settings`
+    *
+    * if the Promise is rejected, the error is an instance of `FincodeError`
+    *
+    * @param {SubscribingWebhookRequest} body Request object for Creating a webhook
+    * @param {FincodePartialRequestHeader} [header]
+    *
+    * @returns {Promise<WebhookObject>} Webhook object
+    */
     create(body, header) {
         return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(this._config, "POST", "/v1/subscriptions", JSON.stringify(body), header, undefined);
+            const fetch = createFincodeRequestFetch(this._config, "POST", `/v1/webhook_settings`, JSON.stringify(body), header, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
-                        const subscription = json;
-                        resolve(subscription);
+                        const res = json;
+                        resolve(res);
                     }
                     else {
                         const errRes = json;
@@ -43,24 +43,25 @@ class Subscription {
         });
     }
     /**
-     * **Retrieve subscription list**
+     * *Retrieve a webhook*
      *
-     * corresponds to `GET /v1/subscriptions`
+     * corresponds to `GET /v1/webhook_settings/:id`
      *
      * if the Promise is rejected, the error is an instance of `FincodeError`
      *
+     * @param {string} id Webhook ID
      * @param {FincodePartialRequestHeader} [header]
      *
-     * @returns {Promise<ListResponse<SubscriptionObject>>}
+     * @returns {Promise<WebhookObject>} Webhook object
      */
-    retrieveList(pagination, header) {
+    retrieve(id, header) {
         return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(this._config, "GET", "/v1/subscriptions", undefined, header, { pagination: pagination });
+            const fetch = createFincodeRequestFetch(this._config, "GET", `/v1/webhook_settings/${id}`, undefined, header, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
-                        const list = json;
-                        resolve(list);
+                        const res = json;
+                        resolve(res);
                     }
                     else {
                         const errRes = json;
@@ -78,30 +79,24 @@ class Subscription {
         });
     }
     /**
-     * **Retrieve a subscription**
+     * *Retrieve webhooks list*
      *
-     * corresponds to `GET /v1/subscriptions/:id`
+     * corresponds to `GET /v1/webhook_settings`
      *
      * if the Promise is rejected, the error is an instance of `FincodeError`
      *
-     * @param {string} id
-     * @param {string} payType
      * @param {FincodePartialRequestHeader} [header]
      *
-     * @returns {Promise<SubscriptionObject>}
+     * @returns {Promise<ListResponse<WebhookObject>>} Webhook list
      */
-    retrieve(id, payType, header) {
+    retrieveList(header) {
         return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(this._config, "GET", `/v1/subscriptions/${id}`, undefined, header, {
-                keyValues: {
-                    pay_type: payType,
-                }
-            });
+            const fetch = createFincodeRequestFetch(this._config, "GET", `/v1/webhook_settings`, undefined, header, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
-                        const subscription = json;
-                        resolve(subscription);
+                        const res = json;
+                        resolve(res);
                     }
                     else {
                         const errRes = json;
@@ -119,26 +114,26 @@ class Subscription {
         });
     }
     /**
-     * **Update a subscription**
+     * *Update a webhook*
      *
-     * corresponds to `PUT /v1/subscriptions/:id`
+     * corresponds to `PUT /v1/webhook_settings/:id`
      *
      * if the Promise is rejected, the error is an instance of `FincodeError`
      *
-     * @param {string} id
-     * @param {UpdatingSubscriptionRequest} body
+     * @param {string} id Webhook ID
+     * @param {UpdatingWebhookRequest} body Request object for Creating a webhook
      * @param {FincodePartialRequestHeader} [header]
      *
-     * @returns {Promise<SubscriptionObject>}
+     * @returns {Promise<WebhookObject>} Webhook object
      */
     update(id, body, header) {
         return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(this._config, "PUT", `/v1/subscriptions/${id}`, JSON.stringify(body), header, undefined);
+            const fetch = createFincodeRequestFetch(this._config, "PUT", `/v1/webhook_settings/${id}`, JSON.stringify(body), header, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
-                        const subscription = json;
-                        resolve(subscription);
+                        const res = json;
+                        resolve(res);
                     }
                     else {
                         const errRes = json;
@@ -156,67 +151,25 @@ class Subscription {
         });
     }
     /**
-     * **Cancel a subscription**
+     * *Delete a webhook*
      *
-     * corresponds to `DELETE /v1/subscriptions/:id`
-     *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
-     *
-     * @param {string} id
-     * @param {string} payType
-     * @param {FincodePartialRequestHeader} [header]
-     *
-     * @returns {Promise<DeletingSubscriptionResponse>}
-     */
-    cancel(id, payType, header) {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(this._config, "DELETE", `/v1/subscriptions/${id}`, undefined, header, {
-                keyValues: {
-                    pay_type: payType,
-                },
-            });
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const subscription = json;
-                        resolve(subscription);
-                    }
-                    else {
-                        const errRes = json;
-                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message);
-                        reject(e);
-                    }
-                }).catch((e) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e);
-                    reject(err);
-                });
-            }).catch((e) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e);
-                reject(err);
-            });
-        });
-    }
-    /**
-     * **Retrieve subscription result list**
-     *
-     * corresponds to `GET /v1/subscriptions/:id/result`
+     * corresponds to `DELETE /v1/webhook_settings/:id`
      *
      * if the Promise is rejected, the error is an instance of `FincodeError`
      *
-     * @param {string} id
-     * @param {RetrievingSubscriptionResultListPagination} [pagination]
+     * @param {string} id Webhook ID
      * @param {FincodePartialRequestHeader} [header]
      *
-     * @returns {Promise<ListResponse<SubscriptionResultObject>>}
+     * @returns {Promise<WebhookObject>} Webhook object
      */
-    retrieveResultList(id, pagination, header) {
+    delete(id, header) {
         return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(this._config, "GET", `/v1/subscriptions/${id}/result`, undefined, header, { pagination: pagination });
+            const fetch = createFincodeRequestFetch(this._config, "DELETE", `/v1/webhook_settings/${id}`, undefined, header, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
-                        const list = json;
-                        resolve(list);
+                        const res = json;
+                        resolve(res);
                     }
                     else {
                         const errRes = json;
@@ -234,4 +187,3 @@ class Subscription {
         });
     }
 }
-export { Subscription };

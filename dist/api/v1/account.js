@@ -1,27 +1,29 @@
 import { FincodeAPIError, FincodeSDKError, } from "../../types/index";
 import { createFincodeRequestFetch } from "./http";
 import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_errorMessages";
-class Platform {
+class Account {
     _config;
     constructor(config) {
         this._config = config;
     }
     /**
-     * **Retrieve platform shop list**
+     * **Retrieve account list **
      *
-     * corresponds to `POST /v1/platforms`
+     * corresponds to `POST /v1/accounts`
      *
      * if the Promise is rejected, the error is an instance of `FincodeError`
      *
+     * @param {RetrievingAccountListPagination} [paginaiton]
+     * @param {AccountSearchParams} [searchParams]
      * @param {FincodePartialRequestHeader} [header]
      *
-     * @returns {Promise<ListResponse<ShopObject>>}
-     */
-    retrieveList(pagination, searchParams, header) {
+     * @returns {Promise<ListResponse<AccountObject>>}
+     *
+    */
+    retrieveList(paginaiton, header) {
         return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(this._config, "GET", "/v1/platforms", undefined, header, {
-                pagination: pagination,
-                searchParams: searchParams,
+            const fetch = createFincodeRequestFetch(this._config, "GET", "/v1/accounts", undefined, header, {
+                pagination: paginaiton,
             });
             fetch().then((res) => {
                 res.json().then((json) => {
@@ -45,25 +47,25 @@ class Platform {
         });
     }
     /**
-     * **Retrieve a platform shop**
+     * **Retrieve a account**
      *
-     * corresponds to `GET /v1/platforms/:id`
+     * corresponds to `GET /v1/accounts/:id`
      *
      * if the Promise is rejected, the error is an instance of `FincodeError`
      *
-     * @param {string} id - Platform shop ID
+     * @param {string} id
      * @param {FincodePartialRequestHeader} [header]
      *
-     * @returns {Promise<ShopObject>}
+     * @returns {Promise<AccountObject>}
      */
     retrieve(id, header) {
         return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(this._config, "GET", `/v1/platforms/${id}`, undefined, header, undefined);
+            const fetch = createFincodeRequestFetch(this._config, "GET", `/v1/accounts/${id}`, undefined, header, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
-                        const shop = json;
-                        resolve(shop);
+                        const platformAccount = json;
+                        resolve(platformAccount);
                     }
                     else {
                         const errRes = json;
@@ -81,24 +83,25 @@ class Platform {
         });
     }
     /**
-     * **Update a platform shop**
+     * **Retrieve a account detail*
      *
-     * corresponds to `PUT /v1/platforms/:id`
+     * corresponds to `GET /v1/accounts/:id/detail`
      *
      * if the Promise is rejected, the error is an instance of `FincodeError`
      *
-     * @param {string} id - Platform shop ID
+     * @param {string} id
+     * @param {FincodePartialRequestHeader} [header]
      *
-     * @returns {Promise<ShopObject>}
+     * @returns {Promise<AccountObject>}
      */
-    update(id, body, header) {
+    retrieveDetailList(id, header) {
         return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(this._config, "PUT", `/v1/platforms/${id}`, JSON.stringify(body), header, undefined);
+            const fetch = createFincodeRequestFetch(this._config, "GET", `/v1/accounts/${id}/detail`, undefined, header, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
-                        const shop = json;
-                        resolve(shop);
+                        const list = json;
+                        resolve(list);
                     }
                     else {
                         const errRes = json;
@@ -116,4 +119,4 @@ class Platform {
         });
     }
 }
-export { Platform };
+export { Account };

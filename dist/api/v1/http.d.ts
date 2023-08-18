@@ -1,4 +1,4 @@
-import { BodyInit, RequestInit } from "node-fetch";
+import { BodyInit } from "node-fetch";
 import { FincodeConfig } from "./fincode";
 import { Pagination } from "../../types/pagination";
 import { SearchParams } from "../../types/searchParams";
@@ -16,6 +16,6 @@ declare const createFincodeRequestFetch: (config: FincodeConfig, method: "POST" 
     pagination?: Pagination;
     searchParams?: SearchParams;
     keyValues?: Record<string, string | number | boolean | null | undefined>;
-}, agent?: RequestInit["agent"]) => () => Promise<import("node-fetch").Response>;
+}) => () => Promise<import("node-fetch").Response>;
 export { createFincodeRequestFetch };
 export type FincodePartialRequestHeader = Parameters<typeof createFincodeRequestFetch>[4];

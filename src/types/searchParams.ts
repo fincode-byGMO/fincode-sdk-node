@@ -1,4 +1,4 @@
-import { DepositStatusCode } from "./platform"
+import { PlatformDepositStatusCode } from "./platform_account"
 import { QueryBuilder } from "./queryBuilder"
 export interface SearchParams extends QueryBuilder {
 }
@@ -27,7 +27,7 @@ export class PlatformAccountSearchParams implements SearchParams {
      * - `3012`: before deposit
      * - `3013`: contract failed 
      */
-    status?: DepositStatusCode | null
+    status?: PlatformDepositStatusCode | null
 
     /**
      * deposit scheduled date
@@ -65,7 +65,7 @@ export class PlatformAccountSearchParams implements SearchParams {
 
     constructor(args?: {
         processed?: string | null
-        status?: DepositStatusCode | null
+        status?: PlatformDepositStatusCode | null
         scheduled?: string | null
         scheduled_from?: string | null
         scheduled_to?: string | null
