@@ -1,4 +1,3 @@
-import { RequestInit } from "node-fetch"
 import {
     CreatingCardRegistrationSessionRequest,
     CardRegistrationSessionObject,
@@ -14,11 +13,9 @@ import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_error
 class CardRegistrationSession {
 
     private readonly _config: FincodeConfig
-    private readonly _agent: RequestInit["agent"]
 
-    constructor(config: FincodeConfig, agent?: RequestInit["agent"]) {
+    constructor(config: FincodeConfig) {
         this._config = config
-        this._agent = agent
     }
 
     /**
@@ -45,7 +42,6 @@ class CardRegistrationSession {
                 JSON.stringify(body),
                 header,
                 undefined,
-                this._agent,
             )
 
             fetch().then((res) => {

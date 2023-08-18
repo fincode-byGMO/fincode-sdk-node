@@ -64,13 +64,12 @@ const createFincodeRequestFetch = (
 
         keyValues?: Record<string, string | number | boolean | null | undefined>
     },
-    agent?: RequestInit["agent"]
 ) => {
 
     const url = createFincodeRequestURL(config, path, query)
 
     const _headers = createFincodeRequestHeader({
-        apiVersion: config.version,
+        apiVersion: config.options.version,
         authorization: `Bearer ${config.apiKey}`,
         idempotentKey: headers?.idempotentKey,
         tenantShopId: headers?.tenantShopId,
@@ -81,7 +80,9 @@ const createFincodeRequestFetch = (
         method: method,
         headers: _headers,
         body: data,
-        agent: agent
+        agent: config.options.proxyAgent,
+        timeout: config.options.timeout,
+
     }
     return () => fetch(url, options)
 }

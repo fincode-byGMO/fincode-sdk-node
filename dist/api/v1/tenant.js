@@ -15,7 +15,7 @@ class Tenant {
      *
      * if the Promise is rejected, the error is an instance of `FincodeError`
      *
-     * @param {CreatingTenantRequest} body
+     * @param {CreatingTenantWithExistingUserRequest} body
      * @param {FincodePartialRequestHeader} [header]
      */
     create(body, header) {
@@ -49,10 +49,10 @@ class Tenant {
      *
      * if the Promise is rejected, the error is an instance of `FincodeError`
      *
-     * @param {CreatingTenantRequest} body
+     * @param {CreatingTenantWithExistingUserRequest} body
      * @param {FincodePartialRequestHeader} [header]
      *
-     * @returns {Promise<CreatingTenantResponse>}
+     * @returns {Promise<CreatingTenantWithExistingUserResponse>}
      */
     register(body, header) {
         return new Promise((resolve, reject) => {

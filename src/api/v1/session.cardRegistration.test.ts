@@ -3,7 +3,7 @@ import {
     CardRegistrationSessionObject,
     CreatingCardRegistrationSessionRequest,
 } from "./../../types"
-import { FincodeInitConfig, createFincode } from "./fincode"
+import { FincodeInitOptions, createFincode } from "./fincode"
 import dotenv from "dotenv"
 import path from "path"
 
@@ -19,8 +19,12 @@ const proxy = env.FINCODE_HTTP_PROXY
 const agent: HttpsProxyAgent<string> | undefined = proxy ? new HttpsProxyAgent(proxy) : undefined
 
 describe("Card-Registration Session API testing", () => {
-    const config: FincodeInitConfig = { isTest: true, agent: agent }
-    const fincode = createFincode(secretKey, config)
+
+    const options: FincodeInitOptions = {
+        proxyAgent: agent,
+    }
+
+    const fincode = createFincode(secretKey, true, options)
 
     let session: CardRegistrationSessionObject | undefined
 
@@ -41,7 +45,7 @@ describe("Card-Registration Session API testing", () => {
             shop_service_name: "fincode Node.js",
         }
 
-        const res = await fincode.cardRegistrationSession.create(reqBody)
+        const res = await fincode.cardRegistrationSessions.create(reqBody)
 
         expect(res.id).toBeDefined()
         expect(res.expire).toBe(`${reqBody.expire}.000`)

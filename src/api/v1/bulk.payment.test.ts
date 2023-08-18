@@ -3,9 +3,10 @@ import {
     PaymentBulkObject,
     RetrievingPaymentBulkDetailPagination
 } from "./../../types"
-import { FincodeInitConfig, createFincode } from "./fincode"
+import { FincodeInitOptions, createFincode } from "./fincode"
 import dotenv from "dotenv"
 import path from "path"
+import { generateRandomString } from "./../../../src/utils/random"
 
 const env = dotenv.config({
     path: path.resolve(__dirname, "./../../../.env.test")
@@ -18,9 +19,14 @@ if (!secretKey) throw new Error("FINCODE_API_SECRET_KEY is not defined")
 const proxy = env.FINCODE_HTTP_PROXY
 const agent: HttpsProxyAgent<string> | undefined = proxy ? new HttpsProxyAgent(proxy) : undefined
 
+const customerId = env.FINCODE_CUSTOMER_ID_TESTING_CARD
+if (!customerId) throw new Error("FINCODE_CUSTOMER_ID_TESTING_CARD is not defined")
+
 describe("Payment Bulk API testing", () => {
-    const config: FincodeInitConfig = { isTest: true, agent: agent }
-    const fincode = createFincode(secretKey, config)
+    const initOptions: FincodeInitOptions = {
+        proxyAgent: agent,
+    }
+    const fincode = createFincode(secretKey, true, initOptions)
 
     let paymentBulk: PaymentBulkObject | undefined
 
@@ -29,34 +35,33 @@ describe("Payment Bulk API testing", () => {
     } = {
         data: [
             {
-                id: `f-node-pb-${Date.now()}-1`,
+                id: `f-node_${generateRandomString(23)}`,
                 amount: "1000",
                 tax: "100",
-                customer_id: "fincode-node-customer",
+                customer_id: customerId,
                 client_field_1: "fincode Node.js Payment Bulk 1",
             },
             {
-                id: `f-node-pb-${Date.now()}-2`,
+                id: `f-node_${generateRandomString(23)}`,
                 amount: "8000",
                 tax: "800",
-                customer_id: "Postman_Customer",
+                customer_id: customerId,
                 client_field_1: "fincode Node.js Payment Bulk 2",
             },
         ]
     }
 
     it("Register payment-bulk", async () => {
-
         // process date format: yyyy/MM/dd
         const today = new Date()
-        const processDay = new Date(today.getTime() + (60 * 60 * 24 * 1000)) // + 1 day
+        const processDay = new Date(today.getTime() + (60 * 60 * 24 * 2 * 1000)) // + 2 day
         const processYear = processDay.getFullYear()
         const processMonth = String(processDay.getMonth() + 1).padStart(2, "0")
         const processDate = String(processDay.getDate()).padStart(2, "0")
         const processStr = `${processYear}/${processMonth}/${processDate}`
 
         const file = JSON.stringify(testJson)
-        const res = await fincode.paymentBulk.register("Card", processStr, file, `test-${Date.now()}.json`)
+        const res = await fincode.paymentBulks.register("Card", processStr, file, `test-${generateRandomString(10)}.json`)
 
         expect(res.id).toBeDefined()
         expect(res.process_plan_date).toBe(processStr)
@@ -70,16 +75,16 @@ describe("Payment Bulk API testing", () => {
             throw new Error("paymentBulk is undefined")
         }
 
-        const pagination = new RetrievingPaymentBulkDetailPagination(paymentBulk.id, "Card")
+        const pagination = new RetrievingPaymentBulkDetailPagination("Card")
 
-        const res = await fincode.paymentBulk.retrieveDetailList(paymentBulk.id, pagination)
+        const res = await fincode.paymentBulks.retrieveDetailList(paymentBulk.id, pagination)
 
         expect(res.list).toBeDefined()
         expect(res.list?.length).toBe(testJson.data.length)
     })
 
     it("Retrieve payment-bulk list", async () => {
-        const res = await fincode.paymentBulk.retrieveList()
+        const res = await fincode.paymentBulks.retrieveList()
 
         expect(res.list).toBeDefined()
         expect(res.list?.length).toBeGreaterThanOrEqual(0)
@@ -90,7 +95,7 @@ describe("Payment Bulk API testing", () => {
             throw new Error("paymentBulk is undefined")
         }
 
-        const res = await fincode.paymentBulk.delete(paymentBulk.id)
+        const res = await fincode.paymentBulks.delete(paymentBulk.id)
 
         expect(res.id).toBe(paymentBulk.id)
         expect(res.delete_flag).toBe("1")

@@ -12,112 +12,128 @@ import { PaymentSession } from "./session.payment"
 import { Subscription } from "./subscription"
 import { Tenant } from "./tenant"
 import { Webhook } from "./webhook"
+import { Account } from "./account"
 
+
+/**
+ * @typedef {Object} FincodeInitOptions
+ */
+export type FincodeInitOptions = {
+    version?: string
+    proxyAgent?: RequestInit["agent"]
+    timeout?: number
+}
+
+/**
+ * @typedef {Object} FincodeConfig
+ * @property {boolean} isTest - Whether to use the fincode test environment
+ * @property {string} apiKey - API key (secret key)
+ * @property {FincodeInitOptions} options - Fincode initialization options
+ */
 type FincodeConfig = {
-    version: string | undefined
     isTest: boolean
     apiKey: string
+    options: FincodeInitOptions
 }
 
 class Fincode {
     public readonly config: FincodeConfig
-    public readonly agent?: RequestInit["agent"]
 
-    constructor(apiKey: string, isTest: boolean = true, version?: string, agent?: RequestInit["agent"]) {
+    /**
+     * @param apiKey - API key (secret key)
+     */
+    constructor(apiKey: string, isTest: boolean = true, initOptions?: FincodeInitOptions) {
         const config = {
-            version,
-            isTest,
-            apiKey,
+            isTest: isTest,
+            apiKey: apiKey,
+            options: initOptions ?? {}
         }
-
         this.config = config
-        this.agent = agent
+
+        this._customers = new Customer(this.config)
+        this._cards = new Card(this.config)
+        this._payments = new Payment(this.config)
+        this._plans = new Plan(this.config)
+        this._subscriptions = new Subscription(this.config)
+        this._paymentSessions = new PaymentSession(this.config)
+        this._cardRegistrationSessions = new CardRegistrationSession(this.config)
+        this._paymentBulks = new PaymentBulk(this.config)
+        this._platforms = new Platform(this.config)
+        this._platformAccounts = new PlatformAccount(this.config)
+        this._tenants = new Tenant(this.config)
+        this._webhooks = new Webhook(this.config)
+        this._accounts = new Account(this.config)
     }
 
-
-    private _customer?: Customer
-    get customer(): Customer {
-        if (!this._customer) { this._customer = new Customer(this.config, this.agent) }
-        return this._customer
+    private _accounts: Account
+    get accounts(): Account {
+        return this._accounts
     }
 
-    private _card?: Card
-    get card(): Card {
-        if (!this._card) { this._card = new Card(this.config, this.agent) }
-        return this._card
+    private _customers: Customer
+    get customers(): Customer {
+        return this._customers
     }
 
-    private _payment?: Payment
-    get payment(): Payment {
-        if (!this._payment) { this._payment = new Payment(this.config, this.agent) }
-        return this._payment
+    private _cards: Card
+    get cards(): Card {
+        return this._cards
     }
 
-    private _plan?: Plan
-    get plan(): Plan {
-        if (!this._plan) { this._plan = new Plan(this.config, this.agent) }
-        return this._plan
+    private _payments: Payment
+    get payments(): Payment {
+        return this._payments
     }
 
-    private _subscription?: Subscription
-    get subscription(): Subscription {
-        if (!this._subscription) { this._subscription = new Subscription(this.config, this.agent) }
-        return this._subscription
+    private _plans: Plan
+    get plans(): Plan {
+        return this._plans
     }
 
-    private _paymentSession?: PaymentSession
-    get paymentSession(): PaymentSession {
-        if (!this._paymentSession) { this._paymentSession = new PaymentSession(this.config, this.agent) }
-        return this._paymentSession
+    private _subscriptions: Subscription
+    get subscriptions(): Subscription {
+        return this._subscriptions
     }
 
-    private _cardRegistrationSession?: CardRegistrationSession
-    get cardRegistrationSession(): CardRegistrationSession {
-        if (!this._cardRegistrationSession) { this._cardRegistrationSession = new CardRegistrationSession(this.config, this.agent) }
-        return this._cardRegistrationSession
+    private _paymentSessions: PaymentSession
+    get paymentSessions(): PaymentSession {
+        return this._paymentSessions
     }
 
-    private _paymentBulk?: PaymentBulk
-    get paymentBulk(): PaymentBulk {
-        if (!this._paymentBulk) { this._paymentBulk = new PaymentBulk(this.config, this.agent) }
-        return this._paymentBulk
+    private _cardRegistrationSessions: CardRegistrationSession
+    get cardRegistrationSessions(): CardRegistrationSession {
+        return this._cardRegistrationSessions
     }
 
-    private _platform?: Platform
-    get platform(): Platform {
-        if (!this._platform) { this._platform = new Platform(this.config, this.agent) }
-        return this._platform
+    private _paymentBulks: PaymentBulk
+    get paymentBulks(): PaymentBulk {
+        return this._paymentBulks
     }
 
-    private _platformAccount?: PlatformAccount
-    get platformAccount(): PlatformAccount {
-        if (!this._platformAccount) { this._platformAccount = new PlatformAccount(this.config, this.agent) }
-        return this._platformAccount
+    private _platforms: Platform
+    get platforms(): Platform {
+        return this._platforms
     }
 
-    private _tenant?: Tenant
-    get tenant(): Tenant {
-        if (!this._tenant) { this._tenant = new Tenant(this.config, this.agent) }
-        return this._tenant
+    private _platformAccounts: PlatformAccount
+    get platformAccounts(): PlatformAccount {
+        return this._platformAccounts
     }
 
-    private _webhook?: Webhook
-    get webhook(): Webhook {
-        if (!this._webhook) { this._webhook = new Webhook(this.config, this.agent) }
-        return this._webhook
+    private _tenants: Tenant
+    get tenants(): Tenant {
+        return this._tenants
+    }
+
+    private _webhooks: Webhook
+    get webhooks(): Webhook {
+        return this._webhooks
     }
 }
 export { Fincode, FincodeConfig }
 
-type FincodeInitConfig = {
-    isTest?: boolean
-    version?: string
-    agent?: RequestInit["agent"]
-}
-export type { FincodeInitConfig }
-
-const createFincode = (apiKey: string, config?: FincodeInitConfig): Fincode => {
-    const fincode = new Fincode(apiKey, config?.isTest, config?.version, config?.agent)
+const createFincode = (apiKey: string, isTest: boolean, options: FincodeInitOptions): Fincode => {
+    const fincode = new Fincode(apiKey, isTest, options)
     return fincode
 }
 export { createFincode }

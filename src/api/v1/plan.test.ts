@@ -3,7 +3,7 @@ import {
     CreatingPlanRequest,
     PlanObject, UpdatingPlanRequest,
 } from "./../../types"
-import { FincodeInitConfig, createFincode } from "./fincode"
+import { FincodeInitOptions, createFincode } from "./fincode"
 import dotenv from "dotenv"
 import path from "path"
 
@@ -19,8 +19,12 @@ const proxy = env.FINCODE_HTTP_PROXY
 const agent: HttpsProxyAgent<string> | undefined = proxy ? new HttpsProxyAgent(proxy) : undefined
 
 describe("Plan API testing", () => {
-    const config: FincodeInitConfig = { isTest: true, agent: agent }
-    const fincode = createFincode(secretKey, config)
+
+    const options: FincodeInitOptions = {
+        proxyAgent: agent,
+    }
+
+    const fincode = createFincode(secretKey, true, options)
 
     let plan: PlanObject | undefined
 
@@ -34,7 +38,7 @@ describe("Plan API testing", () => {
             interval_count: "3",
         }
 
-        const res = await fincode.plan.create(req)
+        const res = await fincode.plans.create(req)
 
         expect(res.id).toBeDefined()
         expect(res.plan_name).toBe(req.plan_name)
@@ -65,7 +69,7 @@ describe("Plan API testing", () => {
             throw new Error("Plan is not created")
         }
 
-        const res = await fincode.plan.update(plan.id, updatingReq)
+        const res = await fincode.plans.update(plan.id, updatingReq)
 
         expect(res.id).toBeDefined()
         expect(res.plan_name).toBe(updatingReq.plan_name)
@@ -85,7 +89,7 @@ describe("Plan API testing", () => {
             throw new Error("Plan is not created")
         }
 
-        const res = await fincode.plan.retrieve(plan.id)
+        const res = await fincode.plans.retrieve(plan.id)
 
         expect(res.id).toBeDefined()
         expect(res.plan_name).toBe(updatingReq.plan_name)
@@ -101,7 +105,7 @@ describe("Plan API testing", () => {
     })
 
     it("Retrieve plan list", async () => {
-        const res = await fincode.plan.retrieveList()
+        const res = await fincode.plans.retrieveList()
 
         expect(res.list?.length).toBeGreaterThanOrEqual(0)
     })
@@ -111,7 +115,7 @@ describe("Plan API testing", () => {
             throw new Error("Plan is not created")
         }
 
-        const res = await fincode.plan.delete(plan.id)
+        const res = await fincode.plans.delete(plan.id)
 
         expect(res.id).toBeDefined()
         expect(res.id).toBe(plan.id)

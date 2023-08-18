@@ -80,7 +80,7 @@ export declare class TenantShopsSearchParams implements SearchParams {
 /**
  * Request object for Creating tenant shop
  */
-export type CreatingTenantRequest = {
+export type CreatingTenantWithExistingUserRequest = {
     /**
      * Email address of first shop owner (must be one of platform administrators)
      */
@@ -97,7 +97,7 @@ export type CreatingTenantRequest = {
 /**
  * Response object for Creating tenant shop
  */
-export type CreatingTenantResponse = {
+export type CreatingTenantWithExistingUserResponse = {
     /**
      * Shop ID
      */
@@ -176,7 +176,7 @@ export type CreatingTenantResponse = {
 /**
  * Request object for Registering tenant shop
  */
-export type RegisteringTenantRequest = {
+export type CreatingTenantWithNewUserRequest = {
     /**
      * Email address of first shop administrator (new user in fincode)
      */
@@ -197,7 +197,7 @@ export type RegisteringTenantRequest = {
 /**
  * Response object for Registering tenant shop
  */
-export type RegisteringTenantResponse = {
+export type CreatingTenantWithNewUserResponse = {
     /**
      * Access token
      */

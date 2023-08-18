@@ -1,6 +1,6 @@
 import { HttpsProxyAgent } from "https-proxy-agent"
 import { ShopObject, UpdatingPlatformRequest } from "./../../types"
-import { FincodeInitConfig, createFincode } from "./fincode"
+import { FincodeInitOptions, createFincode } from "./fincode"
 import dotenv from "dotenv"
 import path from "path"
 
@@ -20,13 +20,17 @@ if (!shopId) throw new Error("FINCODE_SHOP_ID_KEY_OWNER is not defined")
 
 
 describe("Platform API testing", () => {
-    const config: FincodeInitConfig = { isTest: true, agent: agent }
-    const fincode = createFincode(secretKey, config)
+
+    const options: FincodeInitOptions = {
+        proxyAgent: agent,
+    }
+
+    const fincode = createFincode(secretKey, true, options)
 
     let platform: ShopObject | undefined
 
     it("Retrieve a platform", async () => {
-        const res = await fincode.platform.retrieve(shopId)
+        const res = await fincode.platforms.retrieve(shopId)
 
         expect(res.id).toBe(shopId)
         expect(res.shop_type).toBe("platform")
@@ -38,7 +42,7 @@ describe("Platform API testing", () => {
             throw new Error("platform is undefined")
         }
 
-        const res = await fincode.platform.retrieveList()
+        const res = await fincode.platforms.retrieveList()
 
         expect(res.list?.length).toBeGreaterThanOrEqual(0)
     })
@@ -52,7 +56,7 @@ describe("Platform API testing", () => {
             throw new Error("platform is undefined")
         }
 
-        const res = await fincode.platform.update(shopId, updatingReqBody)
+        const res = await fincode.platforms.update(shopId, updatingReqBody)
 
         expect(res.id).toBe(shopId)
         expect(res.shop_type).toBe("platform")

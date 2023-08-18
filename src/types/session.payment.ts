@@ -77,7 +77,7 @@ export type PaymentSessionObject = {
         /**
          * Payment method types used for this session.
          */
-        pay_type: ("Card" | "Konbini")[]
+        pay_type: ("Card" | "Konbini" | "PayPay")[]
 
         /**
          * Order ID.
@@ -165,6 +165,21 @@ export type PaymentSessionObject = {
          */
         konbini_receipt_mail_send_flag?: "0" | "1" | null
     }
+
+    /**
+     * PayPay payment object
+     */
+    paypay: {
+        /**
+         * Job code 
+         */
+        job_code?: "AUTH" | "CAPTURE" | null
+
+        /**
+         * Order description of PayPay payment that will be displayed on PayPay app.
+         */
+        order_description?: string | null
+    }
 }
 
 /**
@@ -229,8 +244,9 @@ export type CreatingPaymentSessionRequest = {
          * 
          * - `Card`: Card payment
          * - `Konbini`: Konbini payment
+         * - `PayPay`: PayPay payment
          */
-        pay_type?: ("Card" | "Konbini")[] | null
+        pay_type?: ("Card" | "Konbini" | "PayPay")[] | null
 
         /**
          * Order ID.
@@ -581,6 +597,24 @@ export type CreatingPaymentSessionRequest = {
          * - `1`: Send.
          */
         konbini_reception_mail_flag?: "0" | "1" | null
+    }
+
+    /**
+     * PayPay payment object
+     */
+    paypay?: {
+        /**
+         * Job code
+         * 
+         * - `AUTH`: Authorization (default)
+         * - `CAPTURE`: Capture
+         */
+        job_code?: "AUTH" | "CAPTURE" | null
+
+        /**
+         * Order description of PayPay payment.
+         */
+        order_description?: string | null
     }
 }
 

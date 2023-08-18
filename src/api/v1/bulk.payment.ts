@@ -14,17 +14,13 @@ import {
 } from "../../types/index"
 import { FincodeConfig } from "./fincode"
 import { createFincodeRequestFetch, FincodePartialRequestHeader } from "./http"
-import { RequestInit } from "node-fetch"
 import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_errorMessages"
 
 class PaymentBulk {
 
     private readonly _config: FincodeConfig
-    private readonly _agent: RequestInit["agent"]
-
-    constructor(config: FincodeConfig, agent?: RequestInit["agent"]) {
+    constructor(config: FincodeConfig,) {
         this._config = config
-        this._agent = agent
     }
 
     /**
@@ -73,7 +69,6 @@ class PaymentBulk {
                     process_plan_date: processPlanDate,
                 }
             },
-            this._agent,
         )
 
         return new Promise((resolve, reject) => {
@@ -122,7 +117,6 @@ class PaymentBulk {
             undefined,
             header,
             { pagination: pagination },
-            this._agent,
         )
 
         return new Promise((resolve, reject) => {
@@ -173,7 +167,6 @@ class PaymentBulk {
             undefined,
             header,
             { pagination: pagination },
-            this._agent,
         )
 
         return new Promise((resolve, reject) => {
@@ -222,7 +215,6 @@ class PaymentBulk {
             undefined,
             header,
             undefined,
-            this._agent
         )
 
         return new Promise((resolve, reject) => {

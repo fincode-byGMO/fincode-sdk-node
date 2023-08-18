@@ -14,10 +14,10 @@ if (!secretKey) throw new Error("FINCODE_API_SECRET_KEY is not defined")
 const proxy = env.FINCODE_HTTP_PROXY
 const agent: HttpsProxyAgent<string> | undefined = proxy ? new HttpsProxyAgent(proxy) : undefined
 
-const accountId = env.FINCODE_PLATFORM_ACCOUNT_ID_TESTING_PLATFORM_ACCOUNT
-if (!accountId) throw new Error("FINCODE_PLATFORM_ACCOUNT_ID_TESTING_PLATFORM_ACCOUNT is not defined")
+const accountId = env.FINCODE_ACCOUNT_ID_TESTING_ACCOUNT
+if (!accountId) throw new Error("FINCODE_ACCOUNT_ID_TESTING_ACCOUNT is not defined")
 
-describe("Platform account API testing", () => {
+describe("Account API testing", () => {
 
     const options: FincodeInitOptions = {
         proxyAgent: agent,
@@ -25,20 +25,19 @@ describe("Platform account API testing", () => {
 
     const fincode = createFincode(secretKey, true, options)
 
-    it("Retrieve a platform account", async () => {
-        const res = await fincode.platformAccounts.retrieve(accountId)
+    it("Retrieve a Account", async () => {
+        const res = await fincode.accounts.retrieve(accountId)
 
         expect(res.id).toBe(accountId)
         expect(res.status_code).toBeDefined()
     })
-    it("Retrieve a platform account list", async () => {
-        const res = await fincode.platformAccounts.retrieveList()
+    it("Retrieve a Account list", async () => {
+        const res = await fincode.accounts.retrieveList()
 
         expect(res.list?.length).toBeGreaterThanOrEqual(0)
     })
-    it("Retrieve a platform account summary list", async () => {
-        const res = await fincode.platformAccounts.retrieveSummaryList(accountId)
-
+    it("Retrieve a Account detail list", async () => {
+        const res = await fincode.accounts.retrieveDetailList(accountId)
         expect(res.list?.length).toBeGreaterThanOrEqual(0)
     })
 })

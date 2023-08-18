@@ -17,11 +17,9 @@ import { getFetchErrorMessage, getResponseJSONParseErrorMessage, } from "./_erro
 class Card {
 
     private readonly _config: FincodeConfig
-    private readonly _agent: RequestInit["agent"]
 
-    constructor(config: FincodeConfig, agent?: RequestInit["agent"]) {
+    constructor(config: FincodeConfig,) {
         this._config = config
-        this._agent = agent
     }
 
     /**
@@ -44,7 +42,6 @@ class Card {
                 JSON.stringify(body),
                 header,
                 undefined,
-                this._agent,
             )
 
             fetch().then((res) => {
@@ -87,7 +84,6 @@ class Card {
                 undefined,
                 header,
                 undefined,
-                this._agent,
             )
 
             fetch().then((res) => {
@@ -131,7 +127,6 @@ class Card {
                 undefined,
                 header,
                 undefined,
-                this._agent,
             )
 
             fetch().then((res) => {
@@ -176,7 +171,6 @@ class Card {
                 JSON.stringify(body),
                 header,
                 undefined,
-                this._agent,
             )
 
             fetch().then((res) => {
@@ -220,7 +214,6 @@ class Card {
                 undefined,
                 header,
                 undefined,
-                this._agent,
             )
 
             fetch().then((res) => {

@@ -5,7 +5,7 @@ import {
     RegisteringPaymentRequest
 } from '../../types'
 import {
-    FincodeInitConfig,
+    FincodeInitOptions,
     createFincode
 } from './fincode'
 import { HttpsProxyAgent } from 'https-proxy-agent'
@@ -30,8 +30,12 @@ const cardId = env.FINCODE_CARD_ID_TESTING_PAYMENT
 if (!cardId) throw new Error("FINCODE_CARD_ID_TESTING_PAYMENT is not defined")
 
 describe("Payment API testing", () => {
-    const config: FincodeInitConfig = { isTest: true, agent: agent }
-    const fincode = createFincode(secretKey, config)
+
+    const options: FincodeInitOptions = {
+        proxyAgent: agent,
+    }
+
+    const fincode = createFincode(secretKey, true, options)
 
     let payment: PaymentObject | undefined
 
@@ -43,7 +47,7 @@ describe("Payment API testing", () => {
                 amount: "100",
                 client_field_1: "fincode-node test",
             }
-            const registerRes = await fincode.payment.register(registerReq)
+            const registerRes = await fincode.payments.register(registerReq)
 
             expect(registerRes.id).toBeDefined()
             expect(registerRes.access_id).toBeDefined()
@@ -66,7 +70,7 @@ describe("Payment API testing", () => {
                 customer_id: customerId,
                 card_id: cardId,
             }
-            const executeRes = await fincode.payment.execute(payment.id, executeReq)
+            const executeRes = await fincode.payments.execute(payment.id, executeReq)
 
             expect(executeRes.id).toBeDefined()
             expect(executeRes.id).toBe(payment.id)
@@ -84,7 +88,7 @@ describe("Payment API testing", () => {
                 access_id: payment.access_id,
                 pay_type: "Card",
             }
-            const captureRes = await fincode.payment.capture(payment.id, captureReq)
+            const captureRes = await fincode.payments.capture(payment.id, captureReq)
 
             expect(captureRes.id).toBeDefined()
             expect(captureRes.id).toBe(payment.id)
