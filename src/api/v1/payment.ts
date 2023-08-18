@@ -1,4 +1,3 @@
-import { RequestInit } from "node-fetch"
 import {
     CancelingPaymentRequest,
     CapturingPaymentRequest,
@@ -26,11 +25,9 @@ import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_error
 class Payment {
 
     private readonly _config: FincodeConfig
-    private readonly _agent: RequestInit["agent"]
 
-    constructor(config: FincodeConfig, agent?: RequestInit["agent"]) {
+    constructor(config: FincodeConfig) {
         this._config = config
-        this._agent = agent
     }
 
     /**
@@ -57,7 +54,6 @@ class Payment {
                 JSON.stringify(body),
                 header,
                 undefined,
-                this._agent,
             )
 
             fetch().then((res) => {
@@ -107,7 +103,6 @@ class Payment {
                 JSON.stringify(body),
                 header,
                 undefined,
-                this._agent,
             )
 
             fetch().then((res) => {
@@ -155,7 +150,6 @@ class Payment {
                 undefined,
                 header,
                 { pagination: pagination },
-                this._agent,
             )
 
             fetch().then((res) => {
@@ -203,7 +197,6 @@ class Payment {
                 undefined,
                 header,
                 undefined,
-                this._agent,
             )
 
             fetch().then((res) => {
@@ -252,7 +245,6 @@ class Payment {
                 JSON.stringify(body),
                 header,
                 undefined,
-                this._agent,
             )
 
             fetch().then((res) => {
@@ -302,7 +294,6 @@ class Payment {
                 JSON.stringify(body),
                 header,
                 undefined,
-                this._agent,
             )
 
             fetch().then((res) => {
@@ -346,7 +337,6 @@ class Payment {
                 JSON.stringify(body),
                 header,
                 undefined,
-                this._agent,
             )
 
             fetch().then((res) => {
@@ -390,7 +380,6 @@ class Payment {
                 JSON.stringify(body),
                 header,
                 undefined,
-                this._agent,
             )
 
             fetch().then((res) => {
@@ -441,7 +430,6 @@ class Payment {
                 JSON.stringify(body),
                 header,
                 undefined,
-                this._agent,
             )
 
             fetch().then((res) => {
@@ -491,7 +479,6 @@ class Payment {
                 JSON.stringify(body),
                 header,
                 undefined,
-                this._agent,
             )
 
             fetch().then((res) => {
@@ -539,7 +526,6 @@ class Payment {
                 undefined,
                 header,
                 undefined,
-                this._agent,
             )
 
             fetch().then((res) => {
@@ -589,7 +575,6 @@ class Payment {
                 JSON.stringify(body),
                 header,
                 undefined,
-                this._agent,
             )
 
             fetch().then((res) => {

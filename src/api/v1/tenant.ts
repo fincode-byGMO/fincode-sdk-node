@@ -1,12 +1,11 @@
-import { RequestInit } from "node-fetch"
 import {
     ContractObject,
-    CreatingTenantRequest,
-    CreatingTenantResponse,
+    CreatingTenantWithExistingUserRequest,
+    CreatingTenantWithExistingUserResponse,
     ExaminationInfo,
     ListResponse,
-    RegisteringTenantRequest,
-    RegisteringTenantResponse,
+    CreatingTenantWithNewUserRequest,
+    CreatingTenantWithNewUserResponse,
     RequestingExaminationRequest,
     RequestingExaminationResponse,
     RetrievingTenantShopListPagination,
@@ -18,35 +17,49 @@ import {
     APIErrorResponse,
     FincodeAPIError,
     FincodeSDKError,
+    ExaminationInfo_V2,
+    UpdatingExaminationInfoRequest_V2,
 } from "../../types/index"
 import { FincodeConfig } from "./fincode"
 import { createFincodeRequestFetch, FincodePartialRequestHeader } from "./http"
 import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_errorMessages"
 
+/**
+ * @typedef {Object} Tenant
+ * @property {Function} createWithExistingUser - Create a tenant with existing platform user
+ * @property {Function} createWithNewUser - Create a tenant with new user
+ * @property {Function} updateExaminationInfo - *deprecated* Use `updateExaminationInfoV2` instead
+ * @property {Function} retrieveExaminationInfo - *deprecated* Use `retrieveExaminationInfoV2` instead
+ * @property {Function} requestExamination - Requesting a contract examination
+ * @property {Function} retrieveContract - Retrieve contract information of a tenant
+ * @property {Function} update - Update a tenant
+ * @property {Function} retrieve - Retrieve a tenant
+ * @property {Function} retrieveList - Retrieve tenant list
+ * @property {Function} retrieveExaminationInfoV2 - Retrieve contract examination information of a tenant
+ */
 class Tenant {
 
     private readonly _config: FincodeConfig
-    private readonly _agent: RequestInit["agent"]
 
-    constructor(config: FincodeConfig, agent?: RequestInit["agent"]) {
+    constructor(config: FincodeConfig) {
         this._config = config
-        this._agent = agent
     }
 
     /**
-     * **Create a tenant**
+     * 
+     * **Create a tenant with existing platform user**
      * 
      * corresponds to `POST /v1/join_tenants`
      * 
      * if the Promise is rejected, the error is an instance of `FincodeError`
      * 
-     * @param {CreatingTenantRequest} body
+     * @param {CreatingTenantWithExistingUserRequest} body
      * @param {FincodePartialRequestHeader} [header]
      */
-    public create(
-        body: CreatingTenantRequest,
+    public createWithExistingUser(
+        body: CreatingTenantWithExistingUserRequest,
         header?: FincodePartialRequestHeader
-    ): Promise<CreatingTenantResponse> {
+    ): Promise<CreatingTenantWithExistingUserResponse> {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
                 this._config,
@@ -55,13 +68,12 @@ class Tenant {
                 JSON.stringify(body),
                 header,
                 undefined,
-                this._agent,
             )
 
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
-                        const tenant = json as CreatingTenantResponse
+                        const tenant = json as CreatingTenantWithExistingUserResponse
                         resolve(tenant)
                     } else {
                         const errRes = json as APIErrorResponse
@@ -80,21 +92,21 @@ class Tenant {
     }
 
     /**
-     * **Register a tenant**
+     * **Create a tenant with new user**
      * 
      * corresponds to `POST /v1/tenant_entries`
      * 
      * if the Promise is rejected, the error is an instance of `FincodeError`
      * 
-     * @param {CreatingTenantRequest} body
+     * @param {CreatingTenantWithExistingUserRequest} body
      * @param {FincodePartialRequestHeader} [header]
      * 
-     * @returns {Promise<CreatingTenantResponse>}
+     * @returns {Promise<CreatingTenantWithExistingUserResponse>}
      */
-    public register(
-        body: RegisteringTenantRequest,
+    public createWithNewUser(
+        body: CreatingTenantWithNewUserRequest,
         header?: FincodePartialRequestHeader
-    ): Promise<RegisteringTenantResponse> {
+    ): Promise<CreatingTenantWithNewUserResponse> {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
                 this._config,
@@ -103,13 +115,12 @@ class Tenant {
                 JSON.stringify(body),
                 header,
                 undefined,
-                this._agent,
             )
 
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
-                        const tenant = json as RegisteringTenantResponse
+                        const tenant = json as CreatingTenantWithNewUserResponse
                         resolve(tenant)
                     } else {
                         const errRes = json as APIErrorResponse
@@ -128,6 +139,8 @@ class Tenant {
     }
 
     /**
+     * @deprecated Use `updateExaminationInfoV2` instead
+     * 
      * **Update contract examination information of a tenant**
      * 
      * corresponds to `PUT /v1/contracts/examinations/tenants/:id`
@@ -156,14 +169,13 @@ class Tenant {
                     tenantShopId: id,
                 },
                 undefined,
-                this._agent,
             )
 
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
-                        const tenant = json as ExaminationInfo
-                        resolve(tenant)
+                        const examInfo = json as ExaminationInfo
+                        resolve(examInfo)
                     } else {
                         const errRes = json as APIErrorResponse
                         const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
@@ -181,6 +193,8 @@ class Tenant {
     }
 
     /**
+     * @deprecated Use `retrieveExaminationInfoV2` instead
+     * 
      * **Retrieve contract examination information of a tenant**
      * 
      * corresponds to `GET /v1/contracts/examinations/tenants/:id`
@@ -207,14 +221,13 @@ class Tenant {
                     tenantShopId: id,
                 },
                 undefined,
-                this._agent,
             )
 
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
-                        const tenant = json as ExaminationInfo
-                        resolve(tenant)
+                        const examInfo = json as ExaminationInfo
+                        resolve(examInfo)
                     } else {
                         const errRes = json as APIErrorResponse
                         const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
@@ -255,7 +268,6 @@ class Tenant {
                 JSON.stringify(body),
                 header,
                 undefined,
-                this._agent,
             )
 
             fetch().then((res) => {
@@ -306,14 +318,13 @@ class Tenant {
                     tenantShopId: id,
                 },
                 undefined,
-                this._agent,
             )
 
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
-                        const tenant = json as ContractObject
-                        resolve(tenant)
+                        const contract = json as ContractObject
+                        resolve(contract)
                     } else {
                         const errRes = json as APIErrorResponse
                         const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
@@ -356,7 +367,6 @@ class Tenant {
                 JSON.stringify(body),
                 header,
                 undefined,
-                this._agent,
             )
 
             fetch().then((res) => {
@@ -404,7 +414,6 @@ class Tenant {
                 undefined,
                 header,
                 undefined,
-                this._agent,
             )
 
             fetch().then((res) => {
@@ -457,7 +466,6 @@ class Tenant {
                     pagination: pagination,
                     searchParams: searchParams,
                 },
-                this._agent,
             )
 
             fetch().then((res) => {
@@ -480,5 +488,94 @@ class Tenant {
             })
         })
     }
+
+    /**
+     * **Retrieve contract examination information of a tenant**
+     * 
+     * corresponds to `GET /v1/contracts/examinations_v2/tenants/:id`
+     * 
+     * if the Promise is rejected, the error is an instance of `FincodeError`
+     */
+    public retrieveExaminationInfoV2(
+        id: string,
+        header?: FincodePartialRequestHeader
+    ): Promise<ExaminationInfo_V2> {
+        return new Promise((resolve, reject) => {
+            const fetch = createFincodeRequestFetch(
+                this._config,
+                "GET",
+                `/v1/contracts/examinations_v2/tenants/${id}`,
+                undefined,
+                {
+                    ...header,
+                    tenantShopId: id,
+                },
+                undefined,
+            )
+
+            fetch().then((res) => {
+                res.json().then((json) => {
+                    if (res.ok) {
+                        const examInfo = json as ExaminationInfo_V2
+                        resolve(examInfo)
+                    } else {
+                        const errRes = json as APIErrorResponse
+                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
+                        reject(e)
+                    }
+                }).catch((e) => {
+                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
+                    reject(err)
+                }).catch((e) => {
+                    const err = new FincodeSDKError(getFetchErrorMessage(), e)
+                    reject(err)
+                })
+            })
+        })
+    }
+
+    /**
+     * **Update contract examination information of a tenant**
+     * 
+     * corresponds to `PUT /v1/contracts/examinations_v2/tenants/:id`
+     * 
+     * if the Promise is rejected, the error is an instance of `FincodeError`
+     */
+    public updateExaminationInfoV2(
+        id: string,
+        body: UpdatingExaminationInfoRequest_V2,
+        header?: FincodePartialRequestHeader
+    ): Promise<ExaminationInfo_V2> {
+        return new Promise((resolve, reject) => {
+            const fetch = createFincodeRequestFetch(
+                this._config,
+                "PUT",
+                `/v1/contracts/examinations_v2/tenants/${id}`,
+                JSON.stringify(body),
+                {
+                    ...header,
+                    tenantShopId: id,
+                },
+                undefined,
+            )
+
+            fetch().then((res) => {
+                res.json().then((json) => {
+                    if (res.ok) {
+                        const examInfo = json as ExaminationInfo_V2
+                        resolve(examInfo)
+                    } else {
+                        const errRes = json as APIErrorResponse
+                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
+                        reject(e)
+                    }
+                })
+            }).catch((e) => {
+                const err = new FincodeSDKError(getFetchErrorMessage(), e)
+                reject(err)
+            })
+        })
+    }
+
 }
 export { Tenant }

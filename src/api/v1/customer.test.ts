@@ -1,8 +1,9 @@
 import { HttpsProxyAgent } from "https-proxy-agent"
 import { CreatingCustomerRequest, FincodeAPIError, UpdatingCustomerRequest } from "./../../types"
-import { FincodeInitConfig, createFincode } from "./fincode"
+import { FincodeInitOptions, createFincode } from "./fincode"
 import dotenv from "dotenv"
 import path from "path"
+import crypto from "crypto"
 
 const env = dotenv.config({
     path: path.resolve(__dirname, "./../../../.env.test")
@@ -17,16 +18,20 @@ const agent: HttpsProxyAgent<string> | undefined = proxy ? new HttpsProxyAgent(p
 
 describe("Customer API testing", () => {
 
-    const customerId = `test-${Date.now().toString()}`
-    const config: FincodeInitConfig = { isTest: true, agent: agent }
+    const customerId = crypto.randomUUID()
 
-    const fincode = createFincode(secretKey, config)
+    const options: FincodeInitOptions = {
+        proxyAgent: agent,
+    }
+
+    const fincode = createFincode(secretKey, true, options)
+
     it("Create a customer", async () => {
         const reqBody: CreatingCustomerRequest = {
             id: customerId,
         }
 
-        const res = await fincode.customer.create(reqBody)
+        const res = await fincode.customers.create(reqBody)
 
         expect(res.id).toBe(customerId)
     })
@@ -46,7 +51,7 @@ describe("Customer API testing", () => {
     }
     it("Update a customer", async () => {
 
-        const res = await fincode.customer.update(customerId, updatingReqBody)
+        const res = await fincode.customers.update(customerId, updatingReqBody)
 
         expect(res.id).toBe(customerId)
         expect(res.name).toBe(updatingReqBody.name)
@@ -63,7 +68,7 @@ describe("Customer API testing", () => {
     })
     it("Retrieve a customer", async () => {
 
-        const res = await fincode.customer.retrieve(customerId)
+        const res = await fincode.customers.retrieve(customerId)
 
         expect(res.id).toBe(customerId)
         expect(res.name).toBe(updatingReqBody.name)
@@ -79,16 +84,16 @@ describe("Customer API testing", () => {
         expect(res.addr_city).toBe(updatingReqBody.addr_city)
     })
     it("Retrieve customer list", async () => {
-        const res = await fincode.customer.retrieveList()
+        const res = await fincode.customers.retrieveList()
 
         expect(res.list?.length).toBeGreaterThanOrEqual(0)
     })
     it("Delete a customer", async () => {
-        const res = await fincode.customer.delete(customerId)
+        const res = await fincode.customers.delete(customerId)
         expect(res.id).toBe(customerId)
         expect(res.delete_flag).toBe("1")
         try {
-            await fincode.customer.retrieve(customerId)
+            await fincode.customers.retrieve(customerId)
         } catch (e) {
             expect(e).toBeInstanceOf(FincodeAPIError)
 

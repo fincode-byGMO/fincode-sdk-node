@@ -1,4 +1,3 @@
-import { RequestInit } from "node-fetch"
 import {
     RegisteringSubscriptionRequest,
     CancelingSubscriptionResponse,
@@ -20,11 +19,9 @@ import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_error
 class Subscription {
 
     private readonly _config: FincodeConfig
-    private readonly _agent: RequestInit["agent"]
 
-    constructor(config: FincodeConfig, agent?: RequestInit["agent"]) {
+    constructor(config: FincodeConfig) {
         this._config = config
-        this._agent = agent
     }
 
     /**
@@ -51,7 +48,6 @@ class Subscription {
                 JSON.stringify(body),
                 header,
                 undefined,
-                this._agent,
             )
 
             fetch().then((res) => {
@@ -98,7 +94,6 @@ class Subscription {
                 undefined,
                 header,
                 { pagination: pagination },
-                this._agent,
             )
 
             fetch().then((res) => {
@@ -152,7 +147,6 @@ class Subscription {
                         pay_type: payType,
                     }
                 },
-                this._agent,
             )
 
             fetch().then((res) => {
@@ -202,7 +196,6 @@ class Subscription {
                 JSON.stringify(body),
                 header,
                 undefined,
-                this._agent,
             )
 
             fetch().then((res) => {
@@ -256,7 +249,6 @@ class Subscription {
                         pay_type: payType,
                     },
                 },
-                this._agent,
             )
 
             fetch().then((res) => {
@@ -306,7 +298,6 @@ class Subscription {
                 undefined,
                 header,
                 { pagination: pagination },
-                this._agent,
             )
 
             fetch().then((res) => {

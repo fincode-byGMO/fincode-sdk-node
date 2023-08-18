@@ -18,11 +18,9 @@ import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_error
 class Customer {
 
     private readonly _config: FincodeConfig
-    private readonly _agent: RequestInit["agent"]
 
-    constructor(config: FincodeConfig, agent?: RequestInit["agent"]) {
+    constructor(config: FincodeConfig) {
         this._config = config
-        this._agent = agent
     }
 
     /**
@@ -49,7 +47,6 @@ class Customer {
                 JSON.stringify(body),
                 header,
                 undefined,
-                this._agent,
             )
 
             fetch().then((res) => {
@@ -92,7 +89,6 @@ class Customer {
                 undefined,
                 header,
                 { pagination },
-                this._agent,
             )
 
             fetch().then((res) => {
@@ -135,7 +131,6 @@ class Customer {
                 undefined,
                 header,
                 undefined,
-                this._agent,
             )
 
             fetch().then((res) => {
@@ -179,7 +174,6 @@ class Customer {
                 JSON.stringify(body),
                 header,
                 undefined,
-                this._agent,
             )
 
             fetch().then((res) => {
@@ -222,7 +216,6 @@ class Customer {
                 undefined,
                 header,
                 undefined,
-                this._agent,
             )
 
             fetch().then((res) => {

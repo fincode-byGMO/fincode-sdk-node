@@ -1,4 +1,3 @@
-import { RequestInit } from "node-fetch"
 import {
     CreatingPlanRequest,
     DeletingPlanResponse,
@@ -18,11 +17,9 @@ import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_error
 class Plan {
 
     private readonly _config: FincodeConfig
-    private readonly _agent: RequestInit["agent"]
 
-    constructor(config: FincodeConfig, agent?: RequestInit["agent"]) {
+    constructor(config: FincodeConfig) {
         this._config = config
-        this._agent = agent
     }
 
     /**
@@ -49,7 +46,6 @@ class Plan {
                 JSON.stringify(body),
                 header,
                 undefined,
-                this._agent,
             )
 
             fetch().then((res) => {
@@ -90,7 +86,6 @@ class Plan {
                 undefined,
                 header,
                 { pagination: pagination },
-                this._agent,
             )
 
             fetch().then((res) => {
@@ -132,7 +127,6 @@ class Plan {
                 undefined,
                 header,
                 undefined,
-                this._agent,
             )
 
             fetch().then((res) => {
@@ -176,7 +170,6 @@ class Plan {
                 JSON.stringify(body),
                 header,
                 undefined,
-                this._agent,
             )
 
             fetch().then((res) => {
@@ -224,7 +217,6 @@ class Plan {
                 undefined,
                 header,
                 undefined,
-                this._agent,
             )
 
             fetch().then((res) => {

@@ -1,9 +1,9 @@
 import { HttpsProxyAgent } from "https-proxy-agent"
 import {
-    RegisteringTenantRequest,
+    CreatingTenantWithNewUserRequest,
     UpdatingExaminationInfoRequest,
 } from "./../../types"
-import { FincodeInitConfig, createFincode } from "./fincode"
+import { FincodeInitOptions, createFincode } from "./fincode"
 import dotenv from "dotenv"
 import path from "path"
 
@@ -22,25 +22,29 @@ const tenantURLId = env.FINCODE_TENANT_INVITATION_URL_ID
 if (!tenantURLId) throw new Error("FINCODE_TENANT_INVITATION_URL_ID is not defined")
 
 describe("Tenant API testing", () => {
-    const config: FincodeInitConfig = { isTest: true, agent: agent }
-    const fincode = createFincode(secretKey, config)
+
+    const options: FincodeInitOptions = {
+        proxyAgent: agent,
+    }
+
+    const fincode = createFincode(secretKey, true, options)
 
     let tenantShopId: string | undefined
 
     it("Retrieve tenant list", async () => {
-        const res = await fincode.tenant.retrieveList()
+        const res = await fincode.tenants.retrieveList()
 
         expect(res.list?.length).toBeGreaterThanOrEqual(0)
     })
     it("Register a tenant", async () => {
-        const req: RegisteringTenantRequest = {
+        const req: CreatingTenantWithNewUserRequest = {
             email: `test-${Date.now()}@example.com`,
             password: "Na12345678",
             name: "Test Initial User",
             tenant_url_id: tenantURLId
         }
 
-        const res = await fincode.tenant.register(req)
+        const res = await fincode.tenants.createWithNewUser(req)
         expect(res.user_data?.default_shop_id).toBeDefined()
 
         tenantShopId = res.user_data?.default_shop_id
@@ -50,7 +54,7 @@ describe("Tenant API testing", () => {
             throw new Error("tenant is undefined")
         }
 
-        const res = await fincode.tenant.retrieve(tenantShopId)
+        const res = await fincode.tenants.retrieve(tenantShopId)
         expect(res.id).toBe(tenantShopId)
         expect(res.shop_type).toBe("tenant")
     })
@@ -77,8 +81,8 @@ describe("Tenant API testing", () => {
             company_postal_code: "000-0000",
 
             established_at: "2020/01/01",
-            yearly_sales: "100000000",
-            capital: "100000000",
+            yearly_sales: 100000000,
+            capital: 100000000,
             business_details: "test",
 
             representative_first_name: "あああ",
@@ -115,7 +119,7 @@ describe("Tenant API testing", () => {
             throw new Error("tenant is undefined")
         }
 
-        const res = await fincode.tenant.updateExaminationInfo(tenantShopId, examReqBody)
+        const res = await fincode.tenants.updateExaminationInfo(tenantShopId, examReqBody)
         expect(res.contract_detail?.corporate).toBeDefined()
         expect(res.contract_detail?.corporate).toBe(examReqBody.contract_detail?.corporate)
         expect(res.contract_detail?.yearly_sales).toBeDefined()
@@ -130,7 +134,7 @@ describe("Tenant API testing", () => {
             throw new Error("tenant is undefined")
         }
 
-        const res = await fincode.tenant.retrieveExaminationInfo(tenantShopId)
+        const res = await fincode.tenants.retrieveExaminationInfo(tenantShopId)
         expect(res.contract_detail?.corporate).toBeDefined()
         expect(res.contract_detail?.corporate).toBe(examReqBody.contract_detail?.corporate)
         expect(res.contract_detail?.yearly_sales).toBeDefined()
@@ -146,7 +150,7 @@ describe("Tenant API testing", () => {
             throw new Error("tenant is undefined")
         }
 
-        const res = await fincode.tenant.retrieveContract(tenantShopId)
+        const res = await fincode.tenants.retrieveContract(tenantShopId)
 
         expect(res.status_code).toBe(107)
     })
