@@ -9,7 +9,7 @@ import {
     ListResponse,
     PaymentObject,
     ReauthorizingPaymentRequest,
-    RegisteringPaymentRequest,
+    CreatingPaymentRequest,
     Retrieving3DSecureAuthResponse,
     GeneratingKonbiniPaymentBarcodeRequest,
     RetrievingPaymentListPagination,
@@ -37,13 +37,13 @@ class Payment {
      * 
      * if the Promise is rejected, the error is an instance of `FincodeError`
      * 
-     * @param {RegisteringPaymentRequest} body
+     * @param {CreatingPaymentRequest} body
      * @param {FincodePartialRequestHeader} [header]
      * 
      * @returns {Promise<PaymentObject>}
      */
     public create(
-        body: RegisteringPaymentRequest,
+        body: CreatingPaymentRequest,
         header?: FincodePartialRequestHeader
     ): Promise<PaymentObject> {
         return new Promise((resolve, reject) => {

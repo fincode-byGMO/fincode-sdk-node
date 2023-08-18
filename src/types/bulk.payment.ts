@@ -232,9 +232,9 @@ export class RetrievingPaymentBulkPagination implements Pagination {
 }
 
 /**
- * Request object for Registering bulk payment
+ * Request object for Creating bulk payment
  */
-export type RegisteringPaymentBulkRequest = {}
+export type CreatingPaymentBulkRequest = {}
 
 /**
  * Pagination object for Retrieving bulk payment details

@@ -56,7 +56,7 @@ export type PaymentObject = {
      * - `AUTH`: fincode authorizes a charge.
      * - `CAPTURE`: fincode captures authorized payment.
      */
-    job_code?: "CHECK" | "AUTH" | "CAPTURE" | null
+    job_code?: Extract<PaymentJobCode, "CHECK" | "AUTH" | "CAPTURE"> | null
 
     /**
      * Code string identifying the product category.
@@ -489,6 +489,16 @@ export type PaymentObject = {
 }
 
 /**
+ * Payment Job Code
+ * - `CHECK`: fincode checks if the card is valid
+ * - `AUTH`: fincode authorizes a charge.
+ * - `CAPTURE`: fincode captures authorized payment.
+ * - `SALES`: this payment is counted as sales.
+ * - `CANCEL`: this payment is canceled.
+ */
+export type PaymentJobCode = "CHECK" | "AUTH" | "CAPTURE" | "SALES" | "CANCEL"
+
+/**
  * The processing result of konbini payment provider.
  * 
  * - `000`: Success.
@@ -722,9 +732,9 @@ export class RetrievingPaymentListPagination implements Pagination {
 }
 
 /**
- * Request object of Registering payment (used for POST /v1/payments)
+ * Request object of Creating payment (used for POST /v1/payments)
  */
-export type RegisteringPaymentRequest = {
+export type CreatingPaymentRequest = {
 
     /**
      * Payment ID. (sometimes called "Order ID")
@@ -748,7 +758,7 @@ export type RegisteringPaymentRequest = {
      * - `AUTH`: fincode authorizes a charge with sum of "amount" and "tax".
      * - `CAPTURE`: fincode captures authorized charge.
      */
-    job_code?: "CHECK" | "AUTH" | "CAPTURE" | null
+    job_code?: Extract<PaymentJobCode, "CHECK" | "AUTH" | "CAPTURE"> | null
 
     //---
     // Card Payment
@@ -1376,7 +1386,7 @@ export type ChangingPaymentAmountRequest = {
      * - `AUTH`: fincode authorizes a charge with sum of "amount" and "tax".
      * - `CAPTURE`: fincode captures authorized charge.
      */
-    job_code: "AUTH" | "CAPTURE"
+    job_code: Extract<PaymentJobCode, "AUTH" | "CAPTURE">
 
     /**
      * Amount payment. this value must be in range of `"0"` to `"9999999"`.
@@ -1502,8 +1512,9 @@ export type PayType = "Card" | "Konbini" | "Paypay" | "Applepay"
  * - `CANCELED`: This payment is canceled by request.
  * - `AUTHENTICATED`: 3D Secure Authentication has already finished. So this payment is awaiting for Payment-After-3DSecure (PUT /v1/payments/{id}/secure)
  * - `AWAITING_CUSTOMER_PAYMENT`: This payment is awaiting for customer's payment.
+ * - `EXPIRED`: This payment is expired.
  */
-export type PaymentStatus = "UNPROCESSED" | "CHECKED" | "AUTHORIZED" | "CAPTURED" | "CANCELED" | "AUTHENTICATED" | "AWAITING_CUSTOMER_PAYMENT"
+export type PaymentStatus = "UNPROCESSED" | "CHECKED" | "AUTHORIZED" | "CAPTURED" | "CANCELED" | "AUTHENTICATED" | "AWAITING_CUSTOMER_PAYMENT" | "EXPIRED"
 
 /**
  * 3D Secure authentication result.
