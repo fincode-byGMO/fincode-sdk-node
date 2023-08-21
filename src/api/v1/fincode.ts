@@ -17,6 +17,9 @@ import { Account } from "./account"
 
 /**
  * @typedef {Object} FincodeInitOptions
+ * @property {string} version - Fincode API version
+ * @property {RequestInit["agent"]} proxyAgent - Proxy agent for Fincode API requests
+ * @property {number} timeout - Timeout for Fincode API requests
  */
 export type FincodeInitOptions = {
     version?: string
@@ -134,6 +137,13 @@ class Fincode {
 }
 export { Fincode, FincodeConfig }
 
+/**
+ * create `Fincode` instance
+ * 
+ * @param apiKey - fincode API key (secret key)
+ * @param fincodeEnv - fincode environment, `"test"` or `"live"`
+ * @param options - fincode options
+ */
 const createFincode = (apiKey: string, fincodeEnv: FincodeEnvironment, options: FincodeInitOptions): Fincode => {
     const fincode = new Fincode(apiKey, fincodeEnv, options)
     return fincode
