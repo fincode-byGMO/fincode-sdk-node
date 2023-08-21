@@ -91,6 +91,13 @@ class Fincode {
     }
 }
 export { Fincode };
+/**
+ * create `Fincode` instance
+ *
+ * @param apiKey - fincode API key (secret key)
+ * @param fincodeEnv - fincode environment, `"test"` or `"live"`
+ * @param options - fincode options
+ */
 const createFincode = (apiKey, fincodeEnv, options) => {
     const fincode = new Fincode(apiKey, fincodeEnv, options);
     return fincode;
