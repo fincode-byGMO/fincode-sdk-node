@@ -7,6 +7,10 @@
   "author": "GMO Epsilon, Inc.",
   "license": "MIT",
   "private": false,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fincode-byGMO/fincode-sdk-node.git"
+  },
   "devDependencies": {
     "@types/jest": "^29.0.0",
     "@types/node-fetch": "^2.6.2",
