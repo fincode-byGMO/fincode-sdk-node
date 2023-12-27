@@ -1,5 +1,5 @@
 {
-  "name": "@fincode/fincode-node-test",
+  "name": "@epsilon-web/fincode-node-test",
   "version": "1.0.0",
   "types": "./dist/main.d.ts",
   "main": "./dist/main.js",
