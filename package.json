@@ -7,6 +7,10 @@
   "author": "GMO Epsilon, Inc.",
   "license": "MIT",
   "private": false,
+  "repository": {
+    "type": "git",
+    "url": "https://github.backstage-gen2.gmo-pg.com/epsilon-web/fincode-sdk-nodejs.git"
+  },
   "devDependencies": {
     "@types/jest": "^29.0.0",
     "@types/node-fetch": "^2.6.2",
