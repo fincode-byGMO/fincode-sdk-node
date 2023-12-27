@@ -32,6 +32,7 @@ jobs:
           node-version: 16
           registry-url: https://npm.github.backstage-gen2.gmo-pg.com/
       - run: npm install  --registry=https://registry.npmjs.org
+      - run: npm run build
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

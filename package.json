@@ -9,7 +9,7 @@
   "private": false,
   "repository": {
     "type": "git",
-    "url": "https://github.backstage-gen2.gmo-pg.com/epsilon-web/fincode-sdk-nodejs.git"
+    "url": "https://github.backstage-gen2.gmo-pg.com/epsilon-web/fincode-sdk-node.git"
   },
   "devDependencies": {
     "@types/jest": "^29.0.0",
