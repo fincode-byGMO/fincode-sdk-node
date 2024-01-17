@@ -1,5 +1,5 @@
 import { HttpsProxyAgent } from "https-proxy-agent"
-import { FincodeInitOptions, createFincode } from "./fincode"
+import { createFincode } from "./fincode"
 import dotenv from "dotenv"
 import path from "path"
 
@@ -18,25 +18,36 @@ const accountId = env.FINCODE_ACCOUNT_ID_TESTING_ACCOUNT
 if (!accountId) throw new Error("FINCODE_ACCOUNT_ID_TESTING_ACCOUNT is not defined")
 
 describe("Account API testing", () => {
-
-    const options: FincodeInitOptions = {
-        proxyAgent: agent,
-    }
-
-    const fincode = createFincode(secretKey, "test", options)
-
     it("Retrieve a Account", async () => {
+        const fincode = createFincode(
+            secretKey,
+            "test",
+            { proxyAgent: agent, }
+        )
+
         const res = await fincode.accounts.retrieve(accountId)
 
         expect(res.id).toBe(accountId)
         expect(res.status_code).toBeDefined()
     })
     it("Retrieve a Account list", async () => {
+        const fincode = createFincode(
+            secretKey,
+            "test",
+            { proxyAgent: agent, }
+        )
+
         const res = await fincode.accounts.retrieveList()
 
         expect(res.list?.length).toBeGreaterThanOrEqual(0)
     })
     it("Retrieve a Account detail list", async () => {
+        const fincode = createFincode(
+            secretKey,
+            "test",
+            { proxyAgent: agent, }
+        )
+
         const res = await fincode.accounts.retrieveDetailList(accountId)
         expect(res.list?.length).toBeGreaterThanOrEqual(0)
     })

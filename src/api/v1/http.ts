@@ -13,7 +13,6 @@ const createFincodeRequestURL = (
     query?: {
         pagination?: Pagination
         searchParams?: SearchParams
-
         keyValues?: Record<string, string | number | boolean | null | undefined>
     }
 ): string => {
@@ -61,7 +60,6 @@ const createFincodeRequestFetch = (
     query?: {
         pagination?: Pagination
         searchParams?: SearchParams
-
         keyValues?: Record<string, string | number | boolean | null | undefined>
     },
 ) => {
