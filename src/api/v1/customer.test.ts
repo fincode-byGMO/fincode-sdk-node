@@ -18,78 +18,121 @@ const agent: HttpsProxyAgent<string> | undefined = proxy ? new HttpsProxyAgent(p
 
 describe("Customer API testing", () => {
 
-    const customerId = crypto.randomUUID()
-
-    const options: FincodeInitOptions = {
-        proxyAgent: agent,
-    }
-
-    const fincode = createFincode(secretKey, "test", options)
-
     it("Create a customer", async () => {
-        const reqBody: CreatingCustomerRequest = {
+        const fincode = createFincode(secretKey, "test", { proxyAgent: agent })
+        const customerId = crypto.randomUUID()
+
+        const req: CreatingCustomerRequest = {
             id: customerId,
         }
-
-        const res = await fincode.customers.create(reqBody)
-
+        const res = await fincode.customers.create(req)
         expect(res.id).toBe(customerId)
+
+        await fincode.customers.delete(res.id)
     })
 
-    const updatingReqBody: UpdatingCustomerRequest = {
-        name: "Hiroki Nakatani",
-        email: "test@email.com",
-        phone_cc: "81",
-        phone_no: "1234567890",
-        addr_country: "392",
-        addr_line_1: "1-1-1",
-        addr_line_2: "Shinjuku",
-        addr_line_3: "Shinjuku-ku",
-        addr_post_code: "1234567",
-        addr_state: "000",
-        addr_city: "Tokyo",
-    }
     it("Update a customer", async () => {
+        const fincode = createFincode(secretKey, "test", { proxyAgent: agent })
+        const customerId = crypto.randomUUID()
 
-        const res = await fincode.customers.update(customerId, updatingReqBody)
+        const creatingReq: CreatingCustomerRequest = {
+            id: customerId,
+        }
+        const creatingRes = await fincode.customers.create(creatingReq)
+
+        const req: UpdatingCustomerRequest = {
+            name: "Hiroki Nakatani",
+            email: "test@email.com",
+            phone_cc: "81",
+            phone_no: "1234567890",
+            addr_country: "392",
+            addr_line_1: "1-1-1",
+            addr_line_2: "Shinjuku",
+            addr_line_3: "Shinjuku-ku",
+            addr_post_code: "1234567",
+            addr_state: "000",
+            addr_city: "Tokyo",
+        }
+
+        const res = await fincode.customers.update(creatingRes.id, req)
 
         expect(res.id).toBe(customerId)
-        expect(res.name).toBe(updatingReqBody.name)
-        expect(res.email).toBe(updatingReqBody.email)
-        expect(res.phone_cc).toBe(updatingReqBody.phone_cc)
-        expect(res.phone_no).toBe(updatingReqBody.phone_no)
-        expect(res.addr_country).toBe(updatingReqBody.addr_country)
-        expect(res.addr_line_1).toBe(updatingReqBody.addr_line_1)
-        expect(res.addr_line_2).toBe(updatingReqBody.addr_line_2)
-        expect(res.addr_line_3).toBe(updatingReqBody.addr_line_3)
-        expect(res.addr_post_code).toBe(updatingReqBody.addr_post_code)
-        expect(res.addr_state).toBe(updatingReqBody.addr_state)
-        expect(res.addr_city).toBe(updatingReqBody.addr_city)
+        expect(res.name).toBe(req.name)
+        expect(res.email).toBe(req.email)
+        expect(res.phone_cc).toBe(req.phone_cc)
+        expect(res.phone_no).toBe(req.phone_no)
+        expect(res.addr_country).toBe(req.addr_country)
+        expect(res.addr_line_1).toBe(req.addr_line_1)
+        expect(res.addr_line_2).toBe(req.addr_line_2)
+        expect(res.addr_line_3).toBe(req.addr_line_3)
+        expect(res.addr_post_code).toBe(req.addr_post_code)
+        expect(res.addr_state).toBe(req.addr_state)
+        expect(res.addr_city).toBe(req.addr_city)
+
+        await fincode.customers.delete(customerId)
     })
     it("Retrieve a customer", async () => {
+        const fincode = createFincode(secretKey, "test", { proxyAgent: agent })
+        const customerId = crypto.randomUUID()
+
+        const creatingReq: CreatingCustomerRequest = {
+            id: customerId,
+            name: "Hiroki Nakatani",
+            email: "test@email.com",
+            phone_cc: "81",
+            phone_no: "1234567890",
+            addr_country: "392",
+            addr_line_1: "1-1-1",
+            addr_line_2: "Shinjuku",
+            addr_line_3: "Shinjuku-ku",
+            addr_post_code: "1234567",
+            addr_state: "000",
+            addr_city: "Tokyo",
+        }
+        const creatingRes = await fincode.customers.create(creatingReq)
 
         const res = await fincode.customers.retrieve(customerId)
 
         expect(res.id).toBe(customerId)
-        expect(res.name).toBe(updatingReqBody.name)
-        expect(res.email).toBe(updatingReqBody.email)
-        expect(res.phone_cc).toBe(updatingReqBody.phone_cc)
-        expect(res.phone_no).toBe(updatingReqBody.phone_no)
-        expect(res.addr_country).toBe(updatingReqBody.addr_country)
-        expect(res.addr_line_1).toBe(updatingReqBody.addr_line_1)
-        expect(res.addr_line_2).toBe(updatingReqBody.addr_line_2)
-        expect(res.addr_line_3).toBe(updatingReqBody.addr_line_3)
-        expect(res.addr_post_code).toBe(updatingReqBody.addr_post_code)
-        expect(res.addr_state).toBe(updatingReqBody.addr_state)
-        expect(res.addr_city).toBe(updatingReqBody.addr_city)
+        expect(res.name).toBe(creatingRes.name)
+        expect(res.email).toBe(creatingRes.email)
+        expect(res.phone_cc).toBe(creatingRes.phone_cc)
+        expect(res.phone_no).toBe(creatingRes.phone_no)
+        expect(res.addr_country).toBe(creatingRes.addr_country)
+        expect(res.addr_line_1).toBe(creatingRes.addr_line_1)
+        expect(res.addr_line_2).toBe(creatingRes.addr_line_2)
+        expect(res.addr_line_3).toBe(creatingRes.addr_line_3)
+        expect(res.addr_post_code).toBe(creatingRes.addr_post_code)
+        expect(res.addr_state).toBe(creatingRes.addr_state)
+        expect(res.addr_city).toBe(creatingRes.addr_city)
+
+        await fincode.customers.delete(customerId)
     })
     it("Retrieve customer list", async () => {
+        const fincode = createFincode(secretKey, "test", { proxyAgent: agent })
+        const customerId = crypto.randomUUID()
+
+        const creatingReq: CreatingCustomerRequest = {
+            id: customerId,
+        }
+        await fincode.customers.create(creatingReq)
+
         const res = await fincode.customers.retrieveList()
 
         expect(res.list?.length).toBeGreaterThanOrEqual(0)
+
+        await fincode.customers.delete(customerId)
     })
     it("Delete a customer", async () => {
-        const res = await fincode.customers.delete(customerId)
+        const fincode = createFincode(secretKey, "test", { proxyAgent: agent })
+        const customerId = crypto.randomUUID()
+
+        const creatingReq: CreatingCustomerRequest = {
+            id: customerId,
+        }
+        const creatingRes = await fincode.customers.create(creatingReq)
+
+        const res = await fincode.customers.delete(creatingRes.id)
         expect(res.id).toBe(customerId)
         expect(res.delete_flag).toBe("1")
         try {
