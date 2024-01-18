@@ -1236,7 +1236,7 @@ export type ExecutingPaymentRequest = {
      * 
      * See also: [Window.devicePixelRatio @ MDN](https://developer.mozilla.org/docs/Web/API/Window/devicePixelRatio)
      */
-    device_pixel_ratio?: string | null
+    pixel_ratio?: string | null
 
     /**
      * Window size type.
@@ -1279,7 +1279,7 @@ export type CapturingPaymentRequest = {
      * 
      * - `Card`: card payment.
      */
-    pay_type: Extract<PayType, "Card">
+    pay_type: Extract<PayType, "Card" | "Paypay">
 
     /**
      * access ID issued for this payment to use in this payment context.
@@ -1569,7 +1569,7 @@ export type GeneratingKonbiniPaymentBarcodeRequest = {
      * 
      * You can use the value of `window.devicePixelRatio` when barcode will be displayed on Browser.
      */
-    device_pixel_ratio: string
+    pixel_ratio: string
 
     /**
      * Window size type.
