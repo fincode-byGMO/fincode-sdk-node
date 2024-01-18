@@ -235,4 +235,122 @@ describe("Payment API testing", () => {
             expect(res.amount).toBe(200)
         })
     })
+    describe("Konbini", () => {
+        it("Creating payment", async () => {
+            const fincode = createFincode(secretKey, "test", { proxyAgent: agent })
+            const req: CreatingPaymentRequest = {
+                id: `f_node-${generateRandomString(23)}`,
+                pay_type: "Konbini",
+                amount: "100",
+                client_field_1: "@fincode/node test: Creating Konbini payment",
+            }
+            const res = await fincode.payments.create(req)
+
+            expect(res.id).toBeDefined()
+            expect(res.access_id).toBeDefined()
+            expect(res.pay_type).toBe("Konbini")
+            expect(res.status).toBe("UNPROCESSED")
+        })
+        it("Executing payment", async () => {
+            const fincode = createFincode(secretKey, "test", { proxyAgent: agent })
+            const creatingReq: CreatingPaymentRequest = {
+                id: `f_node-${generateRandomString(23)}`,
+                pay_type: "Konbini",
+                amount: "100",
+                client_field_1: "@fincode/node test: Executing Konbini payment",
+            }
+            const creatingRes = await fincode.payments.create(creatingReq)
+
+            const req: ExecutingPaymentRequest = {
+                access_id: creatingRes.access_id,
+                pay_type: "Konbini",
+                device_name: "iPhone",
+                win_width: "375",
+                win_height: "812",
+                pixel_ratio: "3",
+                win_size_type: "1",
+            }
+            const res = await fincode.payments.execute(creatingRes.id, req)
+
+            expect(res.id).toBeDefined()
+            expect(res.id).toBe(creatingRes.id)
+            expect(res.access_id).toBe(creatingRes.access_id)
+            expect(res.pay_type).toBe("Konbini")
+            expect(res.status).toBe("AWAITING_CUSTOMER_PAYMENT")
+            expect(res.barcode).toBeDefined()
+        })
+        it("Canceling payment", async () => {
+            const fincode = createFincode(secretKey, "test", { proxyAgent: agent })
+            const creatingReq: CreatingPaymentRequest = {
+                id: `f_node-${generateRandomString(23)}`,
+                pay_type: "Konbini",
+                amount: "100",
+                client_field_1: "@fincode/node test: Canceling Konbini payment",
+            }
+            const creatingRes = await fincode.payments.create(creatingReq)
+
+            const executingReq: ExecutingPaymentRequest = {
+                access_id: creatingRes.access_id,
+                pay_type: "Konbini",
+                device_name: "iPhone",
+                win_width: "375",
+                win_height: "812",
+                pixel_ratio: "3",
+                win_size_type: "1",
+            }
+            const executingRes = await fincode.payments.execute(creatingRes.id, executingReq)
+
+            const req: CancelingPaymentRequest = {
+                access_id: executingRes.access_id,
+                pay_type: "Konbini",
+            }
+            const res = await fincode.payments.cancel(executingRes.id, req)
+
+            expect(res.id).toBeDefined()
+            expect(res.id).toBe(executingRes.id)
+            expect(res.access_id).toBe(executingRes.access_id)
+            expect(res.pay_type).toBe("Konbini")
+            expect(res.status).toBe("CANCELED")
+        })
+        it("Generating barcode image of payment", async () => {
+            const fincode = createFincode(secretKey, "test", { proxyAgent: agent })
+
+            const creatingReq: CreatingPaymentRequest = {
+                id: `f_node-${generateRandomString(23)}`,
+                pay_type: "Konbini",
+                amount: "100",
+                client_field_1: "@fincode/node test: Generating barcode image of Konbini payment",
+            }
+            const creatingRes = await fincode.payments.create(creatingReq)
+
+            const executingReq: ExecutingPaymentRequest = {
+                access_id: creatingRes.access_id,
+                pay_type: "Konbini",
+                device_name: "iPhone",
+                win_width: "375",
+                win_height: "812",
+                pixel_ratio: "3",
+                win_size_type: "1",
+            }
+            const executingRes = await fincode.payments.execute(creatingRes.id, executingReq)
+
+            const req: GeneratingKonbiniPaymentBarcodeRequest = {
+                pay_type: "Konbini",
+                access_id: executingRes.access_id,
+                device_name: "iPhone",
+                win_width: "376",
+                win_height: "812",
+                pixel_ratio: "2.4",
+                win_size_type: "1",
+            }
+            const res = await fincode.payments.generateKonbiniPaymentBarcode(executingRes.id, req)
+
+            expect(res.id).toBeDefined()
+            expect(res.id).toBe(executingRes.id)
+            expect(res.access_id).toBe(executingRes.access_id)
+            expect(res.pay_type).toBe("Konbini")
+            expect(res.status).toBe("AWAITING_CUSTOMER_PAYMENT")
+            expect(res.barcode).toBeDefined()
+        })
+    })
 })
