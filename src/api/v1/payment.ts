@@ -17,6 +17,7 @@ import {
     APIErrorResponse,
     FincodeAPIError,
     FincodeSDKError,
+    PayType,
 } from "../../types/index"
 import { FincodeConfig } from "./fincode"
 import { createFincodeRequestFetch, FincodePartialRequestHeader } from "./http"
@@ -187,6 +188,7 @@ class Payment {
      */
     public retrieve(
         id: string,
+        query: { pay_type: PayType, [key: string]: string },
         header?: FincodePartialRequestHeader
     ): Promise<PaymentObject> {
         return new Promise((resolve, reject) => {
@@ -196,7 +198,7 @@ class Payment {
                 `/v1/payments/${id}`,
                 undefined,
                 header,
-                undefined,
+                { keyValues: query },
             )
 
             fetch().then((res) => {
