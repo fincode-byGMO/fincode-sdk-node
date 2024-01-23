@@ -1,5 +1,5 @@
 import { ListResponse, CreatingWebhookSettingRequest, WebhookSettingObject, UpdatingWebhookSettingRequest, DeletingWebhookSettingResponse } from "../../types";
-import { FincodePartialRequestHeader } from "./http";
+import { FincodeRequestHeaders } from "./http";
 import { FincodeConfig } from "./fincode";
 export declare class WebhookSetting {
     private readonly _config;
@@ -9,64 +9,54 @@ export declare class WebhookSetting {
     *
     * corresponds to `POST /v1/webhook_settings`
     *
-    * if the Promise is rejected, the error is an instance of `FincodeError`
+    * @param {SubscribingWebhookRequest} body - request body
+    * @param {FincodeRequestHeaders} [headers] - request headers
     *
-    * @param {SubscribingWebhookRequest} body Request object for Creating a webhook
-    * @param {FincodePartialRequestHeader} [header]
-    *
-    * @returns {Promise<WebhookObject>} Webhook object
+    * @returns {Promise<WebhookSettingObject>} - Webhook setting object
     */
-    create(body: CreatingWebhookSettingRequest, header?: FincodePartialRequestHeader): Promise<WebhookSettingObject>;
+    create(body: CreatingWebhookSettingRequest, headers?: FincodeRequestHeaders): Promise<WebhookSettingObject>;
     /**
      * *Retrieve a webhook*
      *
      * corresponds to `GET /v1/webhook_settings/:id`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} id - webhook setting ID
+     * @param {FincodeRequestHeaders} [headers] - request headers
      *
-     * @param {string} id Webhook ID
-     * @param {FincodePartialRequestHeader} [header]
-     *
-     * @returns {Promise<WebhookObject>} Webhook object
+     * @returns {Promise<WebhookSettingObject>} - Webhook setting object
      */
-    retrieve(id: string, header?: FincodePartialRequestHeader): Promise<WebhookSettingObject>;
+    retrieve(id: string, headers?: FincodeRequestHeaders): Promise<WebhookSettingObject>;
     /**
      * *Retrieve webhooks list*
      *
      * corresponds to `GET /v1/webhook_settings`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {FincodeRequestHeaders} [headers] - request headers
      *
-     * @param {FincodePartialRequestHeader} [header]
-     *
-     * @returns {Promise<ListResponse<WebhookObject>>} Webhook list
+     * @returns {Promise<ListResponse<WebhookObject>>} Webhook setting object list
      */
-    retrieveList(header?: FincodePartialRequestHeader): Promise<Pick<ListResponse<WebhookSettingObject>, "list">>;
+    retrieveList(headers?: FincodeRequestHeaders): Promise<Pick<ListResponse<WebhookSettingObject>, "list">>;
     /**
      * *Update a webhook*
      *
      * corresponds to `PUT /v1/webhook_settings/:id`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} id - Webhook ID
+     * @param {UpdatingWebhookRequest} body - request body
+     * @param {FincodeRequestHeaders} [headers] - request headers
      *
-     * @param {string} id Webhook ID
-     * @param {UpdatingWebhookRequest} body Request object for Creating a webhook
-     * @param {FincodePartialRequestHeader} [header]
-     *
-     * @returns {Promise<WebhookObject>} Webhook object
+     * @returns {Promise<WebhookSettingObject>} Webhook setting object
      */
-    update(id: string, body: UpdatingWebhookSettingRequest, header?: FincodePartialRequestHeader): Promise<WebhookSettingObject>;
+    update(id: string, body: UpdatingWebhookSettingRequest, headers?: FincodeRequestHeaders): Promise<WebhookSettingObject>;
     /**
      * *Delete a webhook*
      *
      * corresponds to `DELETE /v1/webhook_settings/:id`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} id - Webhook ID
+     * @param {FincodeRequestHeaders} [headers] - request headers
      *
-     * @param {string} id Webhook ID
-     * @param {FincodePartialRequestHeader} [header]
-     *
-     * @returns {Promise<WebhookObject>} Webhook object
+     * @returns {Promise<WebhookObject>} - deleting webhook setting result
      */
-    delete(id: string, header?: FincodePartialRequestHeader): Promise<DeletingWebhookSettingResponse>;
+    delete(id: string, headers?: FincodeRequestHeaders): Promise<DeletingWebhookSettingResponse>;
 }

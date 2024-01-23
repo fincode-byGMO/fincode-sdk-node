@@ -1,3 +1,4 @@
+import { Modify } from "../utils/utilTypes";
 import { Pagination } from "./pagination";
 /**
  * Deposit status code
@@ -111,9 +112,9 @@ export type AccountObject = {
     updated?: string | null;
 };
 /**
- * Pagination object for Retrieving accounts list
+ * Query Params object for Retrieving accounts list
  */
-export type RetrievingAccountListPagination = Omit<Pagination, "sort"> & {
+export type RetrievingAccountListQueryParams = Modify<Omit<Pagination, "sort">, {
     /**
      * Month the deposit was processed
      */
@@ -134,7 +135,7 @@ export type RetrievingAccountListPagination = Omit<Pagination, "sort"> & {
      * Format: `yyyy/MM/dd`
      */
     scheduled_to?: string | null;
-};
+}>;
 /**
  * Account detal object
  */
@@ -159,6 +160,6 @@ export type AccountDetailObject = {
     updated?: string | null;
 };
 /**
- * Pagination object for Retrieving account summary list
+ * Query Params object for Retrieving account summary list
  */
-export type RetrievinggAccountDetailListPagination = Omit<Pagination, "sort"> & {};
+export type RetrievingAccountDetailListQueryParams = Omit<Pagination, "sort">;

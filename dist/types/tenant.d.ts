@@ -1,11 +1,11 @@
+import { Modify } from "../utils/utilTypes";
 import * as Contract from "./contract";
-import { Pagination, Sort } from "./pagination";
-import { SearchParams } from "./searchParams";
+import { Pagination } from "./pagination";
 import * as Shop from "./shop";
 /**
  * Pagination object for Retrieving tenant shops list
  */
-export declare class RetrievingTenantShopListPagination implements Pagination {
+export type RetrievingTenantShopListQueryParams = Modify<Pagination, {
     /**
      * Shop ID
      */
@@ -30,53 +30,7 @@ export declare class RetrievingTenantShopListPagination implements Pagination {
      * Format: `yyyy/MM/dd`
      */
     created_to?: string | null;
-    /**
-     * Maximum number of items to return.
-     */
-    limit?: string | null;
-    /**
-     * Number of this page.
-     */
-    page?: string | null;
-    /**
-     * Flag to retrieve only the total number of items.
-     */
-    count_only?: boolean | null;
-    /**
-     * Sort
-     */
-    sort?: Sort[] | null;
-    constructor(args?: {
-        id?: string | null;
-        shop_name?: string | null;
-        shop_mail_address?: string | null;
-        created_from?: string | null;
-        created_to?: string | null;
-        limit?: string | null;
-        page?: string | null;
-        count_only?: boolean | null;
-        sort?: Sort[] | null;
-    });
-    buildParams(): URLSearchParams;
-}
-/**
- * Search Params object for Retrieving tenant shops list
- */
-export declare class TenantShopsSearchParams implements SearchParams {
-    id?: string | null;
-    shop_name?: string | null;
-    shop_mail_address?: string | null;
-    created_from?: string | null;
-    created_to?: string | null;
-    constructor(args?: {
-        id?: string | null;
-        shop_name?: string | null;
-        shop_mail_address?: string | null;
-        created_from?: string | null;
-        created_to?: string | null;
-    });
-    buildParams(): URLSearchParams;
-}
+}>;
 /**
  * Request object for Creating tenant shop with existing platform user.
  */

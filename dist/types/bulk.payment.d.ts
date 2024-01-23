@@ -1,4 +1,6 @@
-import { Pagination, Sort } from "./pagination";
+/// <reference types="node" />
+import { Modify } from "../utils/utilTypes";
+import { Pagination } from "./pagination";
 import { PayType } from "./payment";
 /**
      * Bulk payment object
@@ -82,25 +84,9 @@ export type PaymentBulkObject = {
     updated?: string | null;
 };
 /**
- * Pagination object for Retrieving bulk payments
+ * Query Params object for Retrieving bulk payments
  */
-export declare class RetrievingPaymentBulkPagination implements Pagination {
-    /**
-     * Maximum number of items to return.
-     */
-    limit?: string | null;
-    /**
-     * Number of this page.
-     */
-    page?: string | null;
-    /**
-     * Flag to retrieve only the total number of items.
-     */
-    count_only?: boolean | null;
-    /**
-     * Sort
-     */
-    sort?: Sort[] | null;
+export type RetrievingPaymentBulkQueryParams = Modify<Pagination, {
     /**
      * Date the process is planned. (from)
      *
@@ -151,30 +137,37 @@ export declare class RetrievingPaymentBulkPagination implements Pagination {
      * Format: `yyyy/MM/dd`
      */
     created_to?: string | null;
-    constructor(args?: {
-        limit?: string | null;
-        page?: string | null;
-        count_only?: boolean | null;
-        sort?: Sort[] | null;
-        process_plan_date_from?: string | null;
-        process_plan_date_to?: string | null;
-        status?: PaymentBulkStatus[] | null;
-        pay_type?: "Card" | null;
-        file_name?: string | null;
-        delete_flag?: "0" | "1" | null;
-        created_from?: string | null;
-        created_to?: string | null;
-    });
-    buildParams(): URLSearchParams;
-}
+}>;
 /**
  * Request object for Creating bulk payment
  */
-export type CreatingPaymentBulkRequest = {};
+export type CreatingPaymentBulkRequest = {
+    /**
+     * JSON file to upload for bulk payment
+     */
+    file: Buffer | string;
+    /**
+     * File name of the `file`.
+     */
+    fileName?: string;
+};
+export type CreatingPaymentBulkQueryParams = {
+    /**
+     * Payment method type.
+     * - `Card`: Card payment.
+     */
+    pay_type: "Card";
+    /**
+     * Date the process is planned.
+     *
+     * Format: `yyyy/MM/dd`
+     */
+    process_plan_date: string;
+};
 /**
  * Pagination object for Retrieving bulk payment details
  */
-export declare class RetrievingPaymentBulkDetailPagination implements Pagination {
+export type RetrievingPaymentBulkDetailQueryParams = Modify<Pagination, {
     /**
      * Payment method types
      */
@@ -190,33 +183,8 @@ export declare class RetrievingPaymentBulkDetailPagination implements Pagination
      * - `SUCCEEDED`: Succeeded.
      * - `FAILED`: Failed.
      */
-    status?: OnesPaymentStatus[] | null;
-    /**
-     * Maximum number of items to return.
-     */
-    limit?: string | null;
-    /**
-     * Number of this page.
-     */
-    page?: string | null;
-    /**
-     * Flag to retrieve only the total number of items.
-     */
-    count_only?: boolean | null;
-    /**
-     * Sort
-     */
-    sort?: Sort[] | null;
-    constructor(pay_type: "Card", args?: {
-        order_id?: string | null;
-        status?: OnesPaymentStatus[] | null;
-        limit?: string | null;
-        page?: string | null;
-        count_only?: boolean | null;
-        sort?: Sort[] | null;
-    });
-    buildParams(): URLSearchParams;
-}
+    status?: PaymentStatusInBulkPayment[] | null;
+}>;
 /**
  * Object of bulk payment detail
  */
@@ -236,7 +204,7 @@ export type PaymentBulkDetailObject = {
     /**
      * Status of a payment
      */
-    status: OnesPaymentStatus;
+    status: PaymentStatusInBulkPayment;
     /**
      * Access ID.
      */
@@ -347,4 +315,4 @@ export type PaymentBulkStatus = 'CHECKING' | 'CHECKED' | 'RUNNING' | 'COMPLETED'
  * - `SUCCEEDED`: Succeeded.
  * - `FAILED`: Failed.
  */
-export type OnesPaymentStatus = 'CHECKED' | 'SUCCEEDED' | 'FAILED';
+export type PaymentStatusInBulkPayment = 'CHECKED' | 'SUCCEEDED' | 'FAILED';
