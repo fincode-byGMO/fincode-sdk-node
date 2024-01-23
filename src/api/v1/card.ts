@@ -1,4 +1,3 @@
-import { RequestInit } from "node-fetch"
 import {
     CardObject,
     DeletingCardResponse,
@@ -11,7 +10,7 @@ import {
     FincodeSDKError,
 } from "../../types/index"
 import { FincodeConfig } from "./fincode"
-import { createFincodeRequestFetch, FincodePartialRequestHeader } from "./http"
+import { createFincodeRequestFetch, FincodeRequestHeaders } from "./http"
 import { getFetchErrorMessage, getResponseJSONParseErrorMessage, } from "./_errorMessages"
 
 class Card {
@@ -27,12 +26,16 @@ class Card {
      * 
      * corresponds to `POST /v1/customers/:customer_id/cards`
      * 
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} customerId - customer id
+     * @param {CreatingCardRequest} body - request body
+     * @param {FincodeRequestHeaders} [headers] - request header
+     * 
+     * @returns {Promise<CardObject>} - created card object
      */
     public create(
         customerId: string,
         body: CreatingCardRequest,
-        header?: FincodePartialRequestHeader
+        headers?: FincodeRequestHeaders
     ): Promise<CardObject> {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
@@ -40,7 +43,7 @@ class Card {
                 "POST",
                 `/v1/customers/${customerId}/cards`,
                 JSON.stringify(body),
-                header,
+                headers,
                 undefined,
             )
 
@@ -70,11 +73,14 @@ class Card {
      * 
      * corresponds to `GET /v1/customers/:customer_id/cards`
      * 
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} customerId - customer id
+     * @param {FincodeRequestHeaders} [headers] - request header
+     * 
+     * @returns {Promise<ListResponse<CardObject>>} - card object list
      */
     public retrieveList(
         customerId: string,
-        header?: FincodePartialRequestHeader
+        headers?: FincodeRequestHeaders
     ): Promise<ListResponse<CardObject>> {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
@@ -82,7 +88,7 @@ class Card {
                 "GET",
                 `/v1/customers/${customerId}/cards`,
                 undefined,
-                header,
+                headers,
                 undefined,
             )
 
@@ -112,12 +118,16 @@ class Card {
      * 
      * corresponds to `GET /v1/customers/:customer_id/cards/:id`
      * 
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} customerId - customer id
+     * @param {string} id - card id
+     * @param {FincodeRequestHeaders} [headers] - request header
+     * 
+     * @returns {Promise<CardObject>} - retrieved card object
      */
     public retrieve(
         customerId: string,
         id: string,
-        header?: FincodePartialRequestHeader
+        headers?: FincodeRequestHeaders
     ): Promise<CardObject> {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
@@ -125,7 +135,7 @@ class Card {
                 "GET",
                 `/v1/customers/${customerId}/cards/${id}`,
                 undefined,
-                header,
+                headers,
                 undefined,
             )
 
@@ -155,13 +165,18 @@ class Card {
      * 
      * corresponds to `PUT /v1/customers/:customer_id/cards/:id`
      * 
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} customerId - customer id
+     * @param {string} id - card id
+     * @param {UpdatingCardRequest} body - request body
+     * @param {FincodeRequestHeaders} [headers] - request header
+     * 
+     * @returns {Promise<CardObject>} - updated card object
      */
     public update(
         customerId: string,
         id: string,
         body: UpdatingCardRequest,
-        header?: FincodePartialRequestHeader
+        headers?: FincodeRequestHeaders
     ): Promise<CardObject> {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
@@ -169,7 +184,7 @@ class Card {
                 "PUT",
                 `/v1/customers/${customerId}/cards/${id}`,
                 JSON.stringify(body),
-                header,
+                headers,
                 undefined,
             )
 
@@ -199,12 +214,16 @@ class Card {
      * 
      * corresponds to `DELETE /v1/customers/:customer_id/cards/:id`
      * 
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} customerId - customer id
+     * @param {string} id - card id
+     * @param {FincodeRequestHeaders} [headers] - request header
+     * 
+     * @returns {Promise<DeletingCardResponse>} - deleting result
      */
     public delete(
         customerId: string,
         id: string,
-        header?: FincodePartialRequestHeader
+        headers?: FincodeRequestHeaders
     ): Promise<DeletingCardResponse> {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
@@ -212,7 +231,7 @@ class Card {
                 "DELETE",
                 `/v1/customers/${customerId}/cards/${id}`,
                 undefined,
-                header,
+                headers,
                 undefined,
             )
 

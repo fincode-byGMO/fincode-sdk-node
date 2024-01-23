@@ -1,9 +1,8 @@
 import { HttpsProxyAgent } from "https-proxy-agent"
 import {
-    CardRegistrationSessionObject,
     CreatingCardRegistrationSessionRequest,
 } from "./../../types"
-import { FincodeInitOptions, createFincode } from "./fincode"
+import { createFincode } from "./fincode"
 import dotenv from "dotenv"
 import path from "path"
 
@@ -19,16 +18,8 @@ const proxy = env.FINCODE_HTTP_PROXY
 const agent: HttpsProxyAgent<string> | undefined = proxy ? new HttpsProxyAgent(proxy) : undefined
 
 describe("Card-Registration Session API testing", () => {
-
-    const options: FincodeInitOptions = {
-        proxyAgent: agent,
-    }
-
-    const fincode = createFincode(secretKey, "test", options)
-
-    let session: CardRegistrationSessionObject | undefined
-
     it("Create card-registration session", async () => {
+        const fincode = createFincode(secretKey, "test", { proxyAgent: agent })
 
         const current = new Date()
         const expire = new Date(current.getTime() + 60 * 60 * 1000) // + 1 hour
@@ -51,7 +42,5 @@ describe("Card-Registration Session API testing", () => {
         expect(res.expire).toBe(`${reqBody.expire}.000`)
         expect(res.shop_service_name).toBe(reqBody.shop_service_name)
         expect(res.link_url).toBeDefined()
-
-        session = res
     })
 })

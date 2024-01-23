@@ -1,5 +1,6 @@
+import { Modify } from "../utils/utilTypes"
 import * as Card from "./card"
-import { Pagination, Sort } from "./pagination"
+import { Pagination } from "./pagination"
 
 /**
  * Payment Object
@@ -554,27 +555,7 @@ export type KonbiniCode =
  * Pagination object of Retrieving a list of payments. (used for GET /v1/payments)
  */
 
-export class RetrievingPaymentListPagination implements Pagination {
-    /**
-     * Maximum number of items to return.
-     */
-    limit?: string | null
-
-    /**
-     * Number of this page.
-     */
-    page?: string | null
-
-    /**
-     * Flag to retrieve only the total number of items.
-     */
-    count_only?: boolean | null
-
-    /**
-     * Sort 
-     */
-    sort?: Sort[] | null
-
+export type RetrievingPaymentListQueryParams = Modify<Pagination, {
     /**
      * Payment method
      * 
@@ -667,69 +648,8 @@ export class RetrievingPaymentListPagination implements Pagination {
      * Subscription ID
      */
     subscription_id?: string | null
+}>
 
-    constructor(
-        pay_type: PayType,
-        args?: {
-            limit?: string | null
-            page?: string | null
-            count_only?: boolean | null
-            sort?: Sort[] | null
-            keyword?: string | null
-            total_amount_min?: string | null
-            total_amount_max?: string | null
-            customer_id?: string | null
-            process_date_from?: string | null
-            process_date_to?: string | null
-            auth_max_date_from?: string | null
-            auth_max_date_to?: string | null
-            update_date_from?: string | null
-            update_date_to?: string | null
-            status?: PaymentStatus[] | null
-            pay_pattern?: ("onetime" | "subscription")[] | null
-            subscription_id?: string | null
-        }
-    ) {
-        this.pay_type = pay_type
-        if (args) {
-            this.limit = args.limit
-            this.page = args.page
-            this.count_only = args.count_only
-            this.sort = args.sort
-            this.keyword = args.keyword
-            this.total_amount_min = args.total_amount_min
-            this.total_amount_max = args.total_amount_max
-            this.customer_id = args.customer_id
-            this.process_date_from = args.process_date_from
-            this.process_date_to = args.process_date_to
-            this.auth_max_date_from = args.auth_max_date_from
-            this.auth_max_date_to = args.auth_max_date_to
-            this.update_date_from = args.update_date_from
-            this.update_date_to = args.update_date_to
-            this.status = args.status
-            this.pay_pattern = args.pay_pattern
-            this.subscription_id = args.subscription_id
-        }
-    }
-
-    buildParams(): URLSearchParams {
-        const params = new URLSearchParams()
-
-        Object.entries(this)
-            .filter(([_, value]) => value !== undefined)
-            .map<[string, string]>(([key, value]) => {
-                if (key === "sort") {
-                    const v = (value as Sort[]).map(s => `${s.key} ${s.order}`).join(",")
-                    return [key, v]
-                } else {
-                    return [key, value as string]
-                }
-            })
-            .forEach(([key, value]) => params.append(key, value))
-
-        return params
-    }
-}
 
 /**
  * Request object of Creating payment (used for POST /v1/payments)
@@ -1236,7 +1156,7 @@ export type ExecutingPaymentRequest = {
      * 
      * See also: [Window.devicePixelRatio @ MDN](https://developer.mozilla.org/docs/Web/API/Window/devicePixelRatio)
      */
-    device_pixel_ratio?: string | null
+    pixel_ratio?: string | null
 
     /**
      * Window size type.
@@ -1279,7 +1199,7 @@ export type CapturingPaymentRequest = {
      * 
      * - `Card`: card payment.
      */
-    pay_type: Extract<PayType, "Card">
+    pay_type: Extract<PayType, "Card" | "Paypay">
 
     /**
      * access ID issued for this payment to use in this payment context.
@@ -1569,7 +1489,7 @@ export type GeneratingKonbiniPaymentBarcodeRequest = {
      * 
      * You can use the value of `window.devicePixelRatio` when barcode will be displayed on Browser.
      */
-    device_pixel_ratio: string
+    pixel_ratio: string
 
     /**
      * Window size type.
