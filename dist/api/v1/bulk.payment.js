@@ -2,6 +2,7 @@ import FormData from "form-data";
 import { FincodeAPIError, FincodeSDKError, } from "../../types/index";
 import { createFincodeRequestFetch } from "./http";
 import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_errorMessages";
+import { generateUUIDv4 } from "./../../utils/random";
 class PaymentBulk {
     _config;
     constructor(config) {
@@ -12,28 +13,25 @@ class PaymentBulk {
      *
      * corresponds to `POST /v1/sessions`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {CreatingPaymentBulkQueryParams} queryParams - request query parameters
+     * @param {CreatingPaymentBulkRequest} body - request body
+     * @param {FincodeRequestHeaders} [headers] - request header
      *
-     * @param {CreatingCardRegistrationSessionRequest} body
-     * @param {FincodePartialRequestHeader} [header]
-     *
-     * @returns {Promise<PaymentBulkObject>}
+     * @returns {Promise<PaymentBulkObject>} - created payment bulk object
      */
-    create(payType, processPlanDate, file, fileName, header) {
+    create(queryParams, body, headers) {
         // multipart-form-data
         const formData = new FormData();
-        formData.append("file", file, {
-            filename: fileName,
+        formData.append("file", body.file, {
+            filename: body.fileName || `${generateUUIDv4()}.json`,
             contentType: "application/json"
         });
         const fetch = createFincodeRequestFetch(this._config, "POST", "/v1/payments/bulk", formData, {
-            ...header,
+            ...headers,
             contentType: `multipart/form-data; boundary=${formData.getBoundary()}`
         }, {
-            keyValues: {
-                pay_type: payType,
-                process_plan_date: processPlanDate,
-            }
+            pay_type: queryParams.pay_type,
+            process_plan_date: queryParams.process_plan_date,
         });
         return new Promise((resolve, reject) => {
             fetch().then((res) => {
@@ -62,15 +60,13 @@ class PaymentBulk {
      *
      * corresponds to `GET /v1/payments/bulk`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {RetrievingPaymentBulkQueryParams} [queryParams] - query parameters
+     * @param {FincodeRequestHeaders} [headers] - request header
      *
-     * @param {RetrievingPaymentBulkPagination} [pagination]
-     * @param {FincodePartialRequestHeader} [header]
-     *
-     * @returns {Promise<ListResponse<PaymentBulkObject>>}
+     * @returns {Promise<ListResponse<PaymentBulkObject>>} - retrieved payment bulk object list
      */
-    retrieveList(pagination, header) {
-        const fetch = createFincodeRequestFetch(this._config, "GET", "/v1/payments/bulk", undefined, header, { pagination: pagination });
+    retrieveList(queryParams, headers) {
+        const fetch = createFincodeRequestFetch(this._config, "GET", "/v1/payments/bulk", undefined, headers, queryParams);
         return new Promise((resolve, reject) => {
             fetch().then((res) => {
                 res.json().then((json) => {
@@ -98,16 +94,14 @@ class PaymentBulk {
      *
      * corresponds to `GET /v1/payments/bulk/:id`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} id - payment bulk id
+     * @param {RetrievingPaymentBulkDetailQueryParams} [queryParams] - query parameters
+     * @param {FincodeRequestHeaders} [headers] - request header
      *
-     * @param {string} id
-     * @param {RetrievingPaymentBulkDetailPagination} [pagination]
-     * @param {FincodePartialRequestHeader} [header]
-     *
-     * @returns {Promise<PaymentBulkDetailObject>}
+     * @returns {Promise<PaymentBulkDetailObject>} - retrieved payment bulk detail object
      */
-    retrieveDetailList(id, pagination, header) {
-        const fetch = createFincodeRequestFetch(this._config, "GET", `/v1/payments/bulk/${id}`, undefined, header, { pagination: pagination });
+    retrieveDetailList(id, queryParams, headers) {
+        const fetch = createFincodeRequestFetch(this._config, "GET", `/v1/payments/bulk/${id}`, undefined, headers, queryParams);
         return new Promise((resolve, reject) => {
             fetch().then((res) => {
                 res.json().then((json) => {
@@ -135,15 +129,13 @@ class PaymentBulk {
      *
      * corresponds to `DELETE /v1/payments/bulk/:id`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} id - payment bulk id
+     * @param {FincodeRequestHeaders} [headers] - request header
      *
-     * @param {string} id
-     * @param {FincodePartialRequestHeader} [header]
-     *
-     * @returns {Promise<DeletingPaymentBulkResponse>}
+     * @returns {Promise<DeletingPaymentBulkResponse>} - deleting result
      */
-    delete(id, header) {
-        const fetch = createFincodeRequestFetch(this._config, "DELETE", `/v1/payments/bulk/${id}`, undefined, header, undefined);
+    delete(id, headers) {
+        const fetch = createFincodeRequestFetch(this._config, "DELETE", `/v1/payments/bulk/${id}`, undefined, headers, undefined);
         return new Promise((resolve, reject) => {
             fetch().then((res) => {
                 res.json().then((json) => {

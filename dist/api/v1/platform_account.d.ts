@@ -1,7 +1,6 @@
-import { PlatformAccountSearchParams } from "./../../types/searchParams";
-import { ListResponse, PlatformAccountObject, PlatformAccountSummaryObject, RetrievingPlatformAccountListPagination } from "../../types/index";
+import { ListResponse, PlatformAccountObject, PlatformAccountSummaryObject, RetrievingPlatformAccountListQueryParams } from "../../types/index";
 import { FincodeConfig } from "./fincode";
-import { FincodePartialRequestHeader } from "./http";
+import { FincodeRequestHeaders } from "./http";
 declare class PlatformAccount {
     private readonly _config;
     constructor(config: FincodeConfig);
@@ -10,41 +9,34 @@ declare class PlatformAccount {
      *
      * corresponds to `POST /v1/platform_accounts`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {RetrievingPlatformAccountListQueryParams} [queryParams] - query parameters
+     * @param {FincodeRequestHeaders} [headers] - request header
      *
-     * @param {RetrievingPlatformAccountListPagination} [paginaiton]
-     * @param {PlatformAccountSearchParams} [searchParams]
-     * @param {FincodePartialRequestHeader} [header]
-     *
-     * @returns {Promise<ListResponse<PlatformAccountObject>>}
+     * @returns {Promise<ListResponse<PlatformAccountObject>>} - platform-account object list
      *
     */
-    retrieveList(paginaiton?: RetrievingPlatformAccountListPagination, searchParams?: PlatformAccountSearchParams, header?: FincodePartialRequestHeader): Promise<ListResponse<PlatformAccountObject>>;
+    retrieveList(queryParams?: RetrievingPlatformAccountListQueryParams, headers?: FincodeRequestHeaders): Promise<ListResponse<PlatformAccountObject>>;
     /**
      * **Retrieve a platform-account**
      *
      * corresponds to `GET /v1/platform_accounts/:id`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} id - platform-account id
+     * @param {FincodeRequestHeaders} [headers] - request header
      *
-     * @param {string} id
-     * @param {FincodePartialRequestHeader} [header]
-     *
-     * @returns {Promise<PlatformAccountObject>}
+     * @returns {Promise<PlatformAccountObject>} - platform-account object
      */
-    retrieve(id: string, header?: FincodePartialRequestHeader): Promise<PlatformAccountObject>;
+    retrieve(id: string, headers?: FincodeRequestHeaders): Promise<PlatformAccountObject>;
     /**
      * **Retrieve a platform-account summary*
      *
      * corresponds to `GET /v1/platform_accounts/:id/summary`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} id - platform-account id
+     * @param {FincodeRequestHeaders} [headers] - request header
      *
-     * @param {string} id
-     * @param {FincodePartialRequestHeader} [header]
-     *
-     * @returns {Promise<PlatformAccountObject>}
+     * @returns {Promise<PlatformAccountObject>} - platform-account object
      */
-    retrieveSummaryList(id: string, header?: FincodePartialRequestHeader): Promise<ListResponse<PlatformAccountSummaryObject>>;
+    retrieveSummaryList(id: string, headers?: FincodeRequestHeaders): Promise<ListResponse<PlatformAccountSummaryObject>>;
 }
 export { PlatformAccount };

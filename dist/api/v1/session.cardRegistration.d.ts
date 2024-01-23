@@ -1,6 +1,6 @@
 import { CreatingCardRegistrationSessionRequest, CardRegistrationSessionObject } from "../../types/index";
 import { FincodeConfig } from "./fincode";
-import { FincodePartialRequestHeader } from "./http";
+import { FincodeRequestHeaders } from "./http";
 declare class CardRegistrationSession {
     private readonly _config;
     constructor(config: FincodeConfig);
@@ -9,13 +9,11 @@ declare class CardRegistrationSession {
      *
      * corresponds to `POST /v1/sessions`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {CreatingCardRegistrationSessionRequest} body - request body
+     * @param {FincodeRequestHeaders} [headers] - request header
      *
-     * @param {CreatingCardRegistrationSessionRequest} body
-     * @param {FincodePartialRequestHeader} [header]
-     *
-     * @returns {Promise<PaymentSessionObject>}
+     * @returns {Promise<PaymentSessionObject>} - created card registration session object
      */
-    create(body: CreatingCardRegistrationSessionRequest, header?: FincodePartialRequestHeader): Promise<CardRegistrationSessionObject>;
+    create(body: CreatingCardRegistrationSessionRequest, headers?: FincodeRequestHeaders): Promise<CardRegistrationSessionObject>;
 }
 export { CardRegistrationSession };

@@ -1,13 +1,20 @@
+node_modules
+
+src
+
+.eslint*
+jest.config.js
+README.md
+yarn-error.log
+yarn.lock
+.env.*
+
 *~
 .fuse_hidden*
 .directory
 .Trash-*
 .nfs*
 .cache
-
-src
-
-node_modules
 
 .vim
 

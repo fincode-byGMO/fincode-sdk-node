@@ -1,7 +1,6 @@
-/// <reference types="node" />
-import { DeletingPaymentBulkResponse, ListResponse, ListWithErrors, PaymentBulkDetailObject, PaymentBulkObject, RetrievingPaymentBulkDetailPagination, RetrievingPaymentBulkPagination } from "../../types/index";
+import { DeletingPaymentBulkResponse, ListResponse, ListWithErrors, PaymentBulkDetailObject, PaymentBulkObject, RetrievingPaymentBulkDetailQueryParams, RetrievingPaymentBulkQueryParams, CreatingPaymentBulkRequest, CreatingPaymentBulkQueryParams } from "../../types/index";
 import { FincodeConfig } from "./fincode";
-import { FincodePartialRequestHeader } from "./http";
+import { FincodeRequestHeaders } from "./http";
 declare class PaymentBulk {
     private readonly _config;
     constructor(config: FincodeConfig);
@@ -10,53 +9,46 @@ declare class PaymentBulk {
      *
      * corresponds to `POST /v1/sessions`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {CreatingPaymentBulkQueryParams} queryParams - request query parameters
+     * @param {CreatingPaymentBulkRequest} body - request body
+     * @param {FincodeRequestHeaders} [headers] - request header
      *
-     * @param {CreatingCardRegistrationSessionRequest} body
-     * @param {FincodePartialRequestHeader} [header]
-     *
-     * @returns {Promise<PaymentBulkObject>}
+     * @returns {Promise<PaymentBulkObject>} - created payment bulk object
      */
-    create(payType: "Card", processPlanDate: string, file: Buffer | string, fileName: string, header?: FincodePartialRequestHeader): Promise<PaymentBulkObject>;
+    create(queryParams: CreatingPaymentBulkQueryParams, body: CreatingPaymentBulkRequest, headers?: FincodeRequestHeaders): Promise<PaymentBulkObject>;
     /**
      * **Retrieve payment bulk list**
      *
      * corresponds to `GET /v1/payments/bulk`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {RetrievingPaymentBulkQueryParams} [queryParams] - query parameters
+     * @param {FincodeRequestHeaders} [headers] - request header
      *
-     * @param {RetrievingPaymentBulkPagination} [pagination]
-     * @param {FincodePartialRequestHeader} [header]
-     *
-     * @returns {Promise<ListResponse<PaymentBulkObject>>}
+     * @returns {Promise<ListResponse<PaymentBulkObject>>} - retrieved payment bulk object list
      */
-    retrieveList(pagination?: RetrievingPaymentBulkPagination, header?: FincodePartialRequestHeader): Promise<ListResponse<PaymentBulkObject>>;
+    retrieveList(queryParams?: RetrievingPaymentBulkQueryParams, headers?: FincodeRequestHeaders): Promise<ListResponse<PaymentBulkObject>>;
     /**
      * **Retrieve details of a payment bulk**
      *
      * corresponds to `GET /v1/payments/bulk/:id`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} id - payment bulk id
+     * @param {RetrievingPaymentBulkDetailQueryParams} [queryParams] - query parameters
+     * @param {FincodeRequestHeaders} [headers] - request header
      *
-     * @param {string} id
-     * @param {RetrievingPaymentBulkDetailPagination} [pagination]
-     * @param {FincodePartialRequestHeader} [header]
-     *
-     * @returns {Promise<PaymentBulkDetailObject>}
+     * @returns {Promise<PaymentBulkDetailObject>} - retrieved payment bulk detail object
      */
-    retrieveDetailList(id: string, pagination: RetrievingPaymentBulkDetailPagination, header?: FincodePartialRequestHeader): Promise<ListWithErrors<PaymentBulkDetailObject>>;
+    retrieveDetailList(id: string, queryParams: RetrievingPaymentBulkDetailQueryParams, headers?: FincodeRequestHeaders): Promise<ListWithErrors<PaymentBulkDetailObject>>;
     /**
      * **Delete a payment bulk**
      *
      * corresponds to `DELETE /v1/payments/bulk/:id`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} id - payment bulk id
+     * @param {FincodeRequestHeaders} [headers] - request header
      *
-     * @param {string} id
-     * @param {FincodePartialRequestHeader} [header]
-     *
-     * @returns {Promise<DeletingPaymentBulkResponse>}
+     * @returns {Promise<DeletingPaymentBulkResponse>} - deleting result
      */
-    delete(id: string, header?: FincodePartialRequestHeader): Promise<DeletingPaymentBulkResponse>;
+    delete(id: string, headers?: FincodeRequestHeaders): Promise<DeletingPaymentBulkResponse>;
 }
 export { PaymentBulk };
