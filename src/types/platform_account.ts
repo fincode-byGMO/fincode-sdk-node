@@ -1,3 +1,4 @@
+import { Modify } from "../utils/utilTypes"
 import { Pagination } from "./pagination"
 
 /**
@@ -138,40 +139,54 @@ export type PlatformAccountObject = {
 }
 
 /**
- * Pagination object for Retrieving platform accounts list
+ * Query Params object for Retrieving platform accounts list
  */
-export type RetrievingPlatformAccountListPagination = Omit<Pagination, "sort"> & {
+export type RetrievingPlatformAccountListQueryParams = Modify<Omit<Pagination, "sort">, {
     /**
-     * Month the deposit was processed
+     * Month the account was fixed at
      */
     processed?: string | null
 
     /**
-     * Status
+     * deposit status
+     * 
+     * - `3001`: before deposit amount is confirmed
+     * - `3002`: after deposit amount is confirmed
+     * - `3003`: already deposited
+     * - `3004`: depositing was stopped
+     * - `3005`: some errors has occurred during deposit
+     * - `3006`: under invoice
+     * - `3007`: some errors has occurred during invoice
+     * - `3008`: invoice was stopped
+     * - `3009`: already invoiced
+     * - `3010`: identity verification document is not uploaded
+     * - `3011`: deposit has already been completed
+     * - `3012`: before deposit
+     * - `3013`: contract failed 
      */
     status?: PlatformDepositStatusCode | null
 
     /**
-     * Deposit scheduled date
+     * deposit scheduled date
      * 
      * Format: `yyyy/MM/dd`
      */
     scheduled?: string | null
 
     /**
-     * Deposit scheduled date (from)
+     * deposit scheduled date (from)
      * 
      * Format: `yyyy/MM/dd`
      */
     scheduled_from?: string | null
 
     /**
-     * Deposit scheduled date (to)
+     * deposit scheduled date (to)
      * 
      * Format: `yyyy/MM/dd`
      */
     scheduled_to?: string | null
-}
+}>
 
 /**
  * Account summary object

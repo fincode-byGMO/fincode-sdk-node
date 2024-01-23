@@ -1,4 +1,5 @@
-import { Pagination, Sort } from "./pagination"
+import { Modify } from "../utils/utilTypes"
+import { Pagination } from "./pagination"
 
 export type PlanObject = {
     /**
@@ -74,9 +75,9 @@ export type PlanObject = {
 }
 
 /**
- * Pagination object of Retrieving a list of plans. (used for `GET /v1/plans`)
+ * Query params object of Retrieving a list of plans. (used for `GET /v1/plans`)
  */
-export class RetrievingPlanListPagination implements Pagination {
+export type RetrievingPlanListQueryParams = Modify<Pagination, {
     /**
      * Plan Name.
      */
@@ -115,45 +116,7 @@ export class RetrievingPlanListPagination implements Pagination {
      * Format: `yyyy/MM/dd`
      */
     update_date_to?: string | null
-
-    /**
-     * Maximum number of items to return.
-     */
-    limit?: string | null
-
-    /**
-     * Number of this page.
-     */
-    page?: string | null
-
-    /**
-     * Flag to retrieve only the total number of items.
-     */
-    count_only?: boolean | null
-
-    /**
-     * Sort 
-     */
-    sort?: Sort[] | null
-
-    buildParams(): URLSearchParams {
-        const params = new URLSearchParams()
-
-        Object.entries(this)
-            .filter(([_, value]) => value !== undefined)
-            .map<[string, string]>(([key, value]) => {
-                if (key === "sort") {
-                    return [key, (value as Sort[]).map((sort) => `${sort.key} ${sort.order}`).join(",")]
-                } else {
-                    return [key, value as string]
-                }
-            })
-            .forEach(([key, value]) => params.append(key, value))
-
-
-        return params
-    }
-}
+}>
 
 /**
  * Request object of Creating a plan. (used for `POST /v1/plans`)

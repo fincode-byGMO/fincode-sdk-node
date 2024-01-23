@@ -3,7 +3,7 @@ import { CreatingCustomerRequest, FincodeAPIError, UpdatingCustomerRequest } fro
 import { createFincode } from "./fincode"
 import dotenv from "dotenv"
 import path from "path"
-import crypto from "crypto"
+import { generateUUIDv4 } from "./../../utils/random"
 
 const env = dotenv.config({
     path: path.resolve(__dirname, "./../../../.env.test")
@@ -20,7 +20,7 @@ describe("Customer API testing", () => {
 
     it("Create a customer", async () => {
         const fincode = createFincode(secretKey, "test", { proxyAgent: agent })
-        const customerId = crypto.randomUUID()
+        const customerId = generateUUIDv4()
 
         const req: CreatingCustomerRequest = {
             id: customerId,
@@ -33,7 +33,7 @@ describe("Customer API testing", () => {
 
     it("Update a customer", async () => {
         const fincode = createFincode(secretKey, "test", { proxyAgent: agent })
-        const customerId = crypto.randomUUID()
+        const customerId = generateUUIDv4()
 
         const creatingReq: CreatingCustomerRequest = {
             id: customerId,
@@ -73,7 +73,7 @@ describe("Customer API testing", () => {
     })
     it("Retrieve a customer", async () => {
         const fincode = createFincode(secretKey, "test", { proxyAgent: agent })
-        const customerId = crypto.randomUUID()
+        const customerId = generateUUIDv4()
 
         const creatingReq: CreatingCustomerRequest = {
             id: customerId,
@@ -110,7 +110,7 @@ describe("Customer API testing", () => {
     })
     it("Retrieve customer list", async () => {
         const fincode = createFincode(secretKey, "test", { proxyAgent: agent })
-        const customerId = crypto.randomUUID()
+        const customerId = generateUUIDv4()
 
         const creatingReq: CreatingCustomerRequest = {
             id: customerId,
@@ -125,7 +125,7 @@ describe("Customer API testing", () => {
     })
     it("Delete a customer", async () => {
         const fincode = createFincode(secretKey, "test", { proxyAgent: agent })
-        const customerId = crypto.randomUUID()
+        const customerId = generateUUIDv4()
 
         const creatingReq: CreatingCustomerRequest = {
             id: customerId,
