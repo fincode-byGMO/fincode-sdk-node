@@ -1,4 +1,5 @@
-import { Pagination, Sort } from "./pagination";
+import { Modify } from "../utils/utilTypes";
+import { Pagination } from "./pagination";
 /**
      * Subscription object
      */
@@ -193,7 +194,7 @@ export type CreatingSubscriptionRequest = {
 /**
  * Pagination object for Retrieving a list of subscriptions. (used for `GET /v1/subscriptions`)
  */
-export declare class RetrievingSubscriptionListPagination implements Pagination {
+export type RetrievingSubscriptionListQueryParams = Modify<Pagination, {
     /**
      * Payment method used for this subscription.
      */
@@ -275,44 +276,16 @@ export declare class RetrievingSubscriptionListPagination implements Pagination 
      * - `INCOMPLETE`: Incomplete to register subscription
      */
     status?: SubscriptionStatus[] | null;
+}>;
+/**
+ * Query parameters for Retrieving a subscriptions. (used for `GET /v1/subscriptions/:id`)
+ */
+export type RetrievingSubscriptionQueryParams = {
     /**
-     * Maximum number of items to return.
+     * Payment method used for this subscription.
      */
-    limit?: string | null;
-    /**
-     * Number of this page.
-     */
-    page?: string | null;
-    /**
-     * Flag to retrieve only the total number of items.
-     */
-    count_only?: boolean | null;
-    /**
-     * Sort
-     */
-    sort?: Sort[] | null;
-    constructor(pay_type: "Card", args?: {
-        id?: string | null;
-        plan_id?: string | null;
-        total_amount_min?: string | null;
-        total_amount_max?: string | null;
-        interval_pattern?: "month" | "year" | null;
-        start_date_from?: string | null;
-        start_date_to?: string | null;
-        stop_date_from?: string | null;
-        stop_date_to?: string | null;
-        next_charge_date_from?: string | null;
-        next_charge_date_to?: string | null;
-        update_date_from?: string | null;
-        update_date_to?: string | null;
-        status?: SubscriptionStatus[] | null;
-        limit?: string | null;
-        page?: string | null;
-        count_only?: boolean | null;
-        sort?: Sort[] | null;
-    });
-    buildParams(): URLSearchParams;
-}
+    pay_type: "Card";
+};
 /**
  * Request object for Updating a subscription (used for `PUT /v1/subscriptions/:id`)
  */
@@ -358,6 +331,15 @@ export type UpdatingSubscriptionRequest = {
      * Initial tax
      */
     initial_tax?: string | null;
+};
+/**
+ * Query parameters for Canceling a subscription (used for `DELETE /v1/subscriptions/:id`)
+ */
+export type CancelingSubscriptionQueryParams = {
+    /**
+     * Payment method used for this subscription.
+     */
+    pay_type: "Card";
 };
 /**
  * Response object for Canceling a subscription (used for `DELETE /v1/subscriptions/:id`)
@@ -489,35 +471,12 @@ export type CancelingSubscriptionResponse = {
 /**
  * Pagination object for Retrieving subscription result list (used for `GET /v1/subscriptions/{id}/result`)
  */
-export declare class RetrievingSubscriptionResultListPagination implements Pagination {
+export type RetrievingSubscriptionResultListQueryParams = Modify<Pagination, {
     /**
      * Payment method used for this subscription.
      */
     pay_type: "Card";
-    /**
-     * Maximum number of items to return.
-     */
-    limit?: string | null;
-    /**
-     * Number of this page.
-     */
-    page?: string | null;
-    /**
-     * Flag to retrieve only the total number of items.
-     */
-    count_only?: boolean | null;
-    /**
-     * Sort
-     */
-    sort?: Sort[] | null;
-    constructor(pay_type: "Card", args?: {
-        limit?: string | null;
-        page?: string | null;
-        count_only?: boolean | null;
-        sort?: Sort[] | null;
-    });
-    buildParams(): URLSearchParams;
-}
+}>;
 /**
  * Subscription result object
  */

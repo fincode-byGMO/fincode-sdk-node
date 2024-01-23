@@ -1,4 +1,5 @@
-import { Pagination, Sort } from "./pagination";
+import { Modify } from "../utils/utilTypes";
+import { Pagination } from "./pagination";
 /**
  * Customer object
  */
@@ -127,7 +128,7 @@ export type CreatingCustomerRequest = {
 /**
  * Pagination object of Retrieving a list of customers. (used for GET /v1/customers)
  */
-export declare class RetrievingCustomerListPagination implements Pagination {
+export type RetrievingCustomerListQueryParams = Modify<Pagination, {
     /**
      * Customer ID
      */
@@ -152,35 +153,7 @@ export declare class RetrievingCustomerListPagination implements Pagination {
      * Format: `yyyy/MM/dd`
      */
     created_to?: string | null;
-    /**
-     * Maximum number of items to return.
-     */
-    limit?: string | null;
-    /**
-     * Number of this page.
-     */
-    page?: string | null;
-    /**
-     * Flag to retrieve only the total number of items.
-     */
-    count_only?: boolean | null;
-    /**
-     * Sort
-     */
-    sort?: Sort[] | null;
-    constructor(arg?: {
-        id?: string | null;
-        name?: string | null;
-        email?: string | null;
-        created_from?: string | null;
-        created_to?: string | null;
-        limit?: string | null;
-        page?: string | null;
-        count_only?: boolean | null;
-        sort?: Sort[] | null;
-    });
-    buildParams(): URLSearchParams;
-}
+}>;
 /**
  * Request object of Updating customer (used for PUT /v1/customers/{id})
  */

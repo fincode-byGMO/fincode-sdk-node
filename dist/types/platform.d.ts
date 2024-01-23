@@ -1,21 +1,10 @@
-import { Pagination, Sort } from "./pagination";
-import { SearchParams } from "./searchParams";
+import { Modify } from "../utils/utilTypes";
+import { Pagination } from "./pagination";
 import * as Shop from "./shop";
-/**
- * Search Params object for Retrieving platform shops list
- */
-export declare class PlatformShopsSearchParams implements SearchParams {
-    id?: string | null;
-    shop_name?: string | null;
-    shop_mail_address?: string | null;
-    created_from?: string | null;
-    created_to?: string | null;
-    buildParams(): URLSearchParams;
-}
 /**
  * Pagination object for Retrieving platform shops list
  */
-export declare class RetrievingPlatformShopListPagination implements Pagination {
+export type RetrievingPlatformShopListQueryParams = Modify<Pagination, {
     /**
      * Shop ID
      */
@@ -40,24 +29,7 @@ export declare class RetrievingPlatformShopListPagination implements Pagination 
      * Format: `yyyy/MM/dd`
      */
     created_to?: string | null;
-    /**
-     * Maximum number of items to return.
-     */
-    limit?: string | null;
-    /**
-     * Number of this page.
-     */
-    page?: string | null;
-    /**
-     * Flag to retrieve only the total number of items.
-     */
-    count_only?: boolean | null;
-    /**
-     * Sort
-     */
-    sort?: Sort[] | null;
-    buildParams(): URLSearchParams;
-}
+}>;
 /**
  * Request object for Updating platform shop
  */

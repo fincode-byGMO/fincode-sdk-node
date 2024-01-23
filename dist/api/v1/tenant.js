@@ -20,19 +20,18 @@ class Tenant {
         this._config = config;
     }
     /**
-     *
      * **Create a tenant with existing platform user**
      *
      * corresponds to `POST /v1/join_tenants`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {CreatingTenantWithExistingUserRequest} body - request body
+     * @param {FincodeRequestHeaders} [headers] - request header
      *
-     * @param {CreatingTenantWithExistingUserRequest} body
-     * @param {FincodePartialRequestHeader} [header]
+     * @returns {Promise<CreatingTenantWithExistingUserResponse>} - created tenant object
      */
-    createWithExistingUser(body, header) {
+    createWithExistingUser(body, headers) {
         return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(this._config, "POST", `/v1/join_tenants`, JSON.stringify(body), header, undefined);
+            const fetch = createFincodeRequestFetch(this._config, "POST", `/v1/join_tenants`, JSON.stringify(body), headers, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -59,16 +58,14 @@ class Tenant {
      *
      * corresponds to `POST /v1/tenant_entries`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {CreatingTenantWithExistingUserRequest} body - request body
+     * @param {FincodeRequestHeaders} [headers] - request header
      *
-     * @param {CreatingTenantWithExistingUserRequest} body
-     * @param {FincodePartialRequestHeader} [header]
-     *
-     * @returns {Promise<CreatingTenantWithExistingUserResponse>}
+     * @returns {Promise<CreatingTenantWithExistingUserResponse>} - created tenant object
      */
-    createWithNewUser(body, header) {
+    createWithNewUser(body, headers) {
         return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(this._config, "POST", `/v1/tenant_entries`, JSON.stringify(body), header, undefined);
+            const fetch = createFincodeRequestFetch(this._config, "POST", `/v1/tenant_entries`, JSON.stringify(body), headers, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -97,18 +94,16 @@ class Tenant {
      *
      * corresponds to `PUT /v1/contracts/examinations/tenants/:id`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
-     *
      * @param {string} id - tenant shop id
-     * @param {UpdatingExaminationInfoRequest} body
-     * @param {FincodePartialRequestHeader} [header]
+     * @param {UpdatingExaminationInfoRequest} body - request body
+     * @param {FincodeRequestHeaders} [headers] - request header
      *
-     * @returns {Promise<ExaminationInfo>}
+     * @returns {Promise<ExaminationInfo>} - updated examination info object
      */
-    updateExaminationInfo(id, body, header) {
+    updateExaminationInfo(id, body, headers) {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(this._config, "PUT", `/v1/contracts/examinations/tenants/${id}`, JSON.stringify(body), {
-                ...header,
+                ...headers,
                 tenantShopId: id,
             }, undefined);
             fetch().then((res) => {
@@ -139,17 +134,15 @@ class Tenant {
      *
      * corresponds to `GET /v1/contracts/examinations/tenants/:id`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
-     *
      * @param {string} id - tenant shop id
-     * @param {FincodePartialRequestHeader} [header]
+     * @param {FincodeRequestHeaders} [headers] - request header
      *
-     * @returns {Promise<ExaminationInfo>}
+     * @returns {Promise<ExaminationInfo>} - examination info object
      */
-    retrieveExaminationInfo(id, header) {
+    retrieveExaminationInfo(id, headers) {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(this._config, "GET", `/v1/contracts/examinations/tenants/${id}`, undefined, {
-                ...header,
+                ...headers,
                 tenantShopId: id,
             }, undefined);
             fetch().then((res) => {
@@ -178,16 +171,14 @@ class Tenant {
      *
      * corresponds to `POST /v1/contracts/examinations`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {RequestingExaminationRequest} body - request body
+     * @param {FincodeRequestHeaders} [headers] - request header
      *
-     * @param {RequestingExaminationRequest} body
-     * @param {FincodePartialRequestHeader} [header]
-     *
-     * @returns {Promise<RequestingExaminationResponse>}
+     * @returns {Promise<RequestingExaminationResponse>} - created examination object
      */
-    requestExamination(body, header) {
+    requestExamination(body, headers) {
         return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(this._config, "POST", `/v1/contracts/examinations`, JSON.stringify(body), header, undefined);
+            const fetch = createFincodeRequestFetch(this._config, "POST", `/v1/contracts/examinations`, JSON.stringify(body), headers, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -214,17 +205,15 @@ class Tenant {
      *
      * corresponds to `GET /v1/contracts/:id`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
-     *
      * @param {string} id - tenant shop id
-     * @param {FincodePartialRequestHeader} [header]
+     * @param {FincodeRequestHeaders} [headers] - request header
      *
-     * @returns {Promise<>}
+     * @returns {Promise<ContractObject>} - contract object
      */
-    retrieveContract(id, header) {
+    retrieveContract(id, headers) {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(this._config, "GET", `/v1/contracts/${id}`, undefined, {
-                ...header,
+                ...headers,
                 tenantShopId: id,
             }, undefined);
             fetch().then((res) => {
@@ -253,17 +242,15 @@ class Tenant {
      *
      * corresponds to `PUT /v1/tenants/:id`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
-     *
      * @param {string} id - tenant shop id
-     * @param {UpdatingTenantRequest} body
-     * @param {FincodePartialRequestHeader} [header]
+     * @param {UpdatingTenantRequest} body - request body
+     * @param {FincodeRequestHeaders} [headers] - request header
      *
-     * @returns {Promise<ShopObject>}
+     * @returns {Promise<ShopObject>} - updated tenant object
      */
-    update(id, body, header) {
+    update(id, body, headers) {
         return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(this._config, "PUT", `/v1/tenants/${id}`, JSON.stringify(body), header, undefined);
+            const fetch = createFincodeRequestFetch(this._config, "PUT", `/v1/tenants/${id}`, JSON.stringify(body), headers, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -290,16 +277,14 @@ class Tenant {
      *
      * corresponds to `GET /v1/tenants/:id`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
-     *
      * @param {string} id - tenant shop id
-     * @param {FincodePartialRequestHeader} [header]
+     * @param {FincodeRequestHeaders} [headers] - request header
      *
-     * @returns {Promise<ShopObject>}
+     * @returns {Promise<ShopObject>} - tenant object
      */
-    retrieve(id, header) {
+    retrieve(id, headers) {
         return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(this._config, "GET", `/v1/tenants/${id}`, undefined, header, undefined);
+            const fetch = createFincodeRequestFetch(this._config, "GET", `/v1/tenants/${id}`, undefined, headers, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -326,20 +311,14 @@ class Tenant {
      *
      * corresponds to `GET /v1/tenants`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {RetrievingTenantShopListQueryParams} [queryParams] - query parameters
+     * @param {FincodeRequestHeaders} [headers] - request header
      *
-     * @param {RetrievingTenantShopListPagination} [pagination]
-     * @param {TenantShopsSearchParams} [searchParams]
-     * @param {FincodePartialRequestHeader} [header]
-     *
-     * @returns {Promise<ListResponse<ShopObject>>}
+     * @returns {Promise<ListResponse<ShopObject>>} - tenant list
      */
-    retrieveList(pagination, searchParams, header) {
+    retrieveList(queryParams, headers) {
         return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(this._config, "GET", "/v1/tenants", undefined, header, {
-                pagination: pagination,
-                searchParams: searchParams,
-            });
+            const fetch = createFincodeRequestFetch(this._config, "GET", "/v1/tenants", undefined, headers, queryParams);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -366,12 +345,15 @@ class Tenant {
      *
      * corresponds to `GET /v1/contracts/examinations_v2/tenants/:id`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} id - tenant shop id
+     * @param {FincodeRequestHeaders} [headers] - request header
+     *
+     * @returns {Promise<ExaminationInfo_V2>} - examination info object
      */
-    retrieveExaminationInfoV2(id, header) {
+    retrieveExaminationInfoV2(id, headers) {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(this._config, "GET", `/v1/contracts/examinations_v2/tenants/${id}`, undefined, {
-                ...header,
+                ...headers,
                 tenantShopId: id,
             }, undefined);
             fetch().then((res) => {
@@ -400,12 +382,16 @@ class Tenant {
      *
      * corresponds to `PUT /v1/contracts/examinations_v2/tenants/:id`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} id - tenant shop id
+     * @param {UpdatingExaminationInfoRequest_V2} body - request body
+     * @param {FincodeRequestHeaders} [headers] - request header
+     *
+     * @returns {Promise<ExaminationInfo_V2>} - updated examination info object
      */
-    updateExaminationInfoV2(id, body, header) {
+    updateExaminationInfoV2(id, body, headers) {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(this._config, "PUT", `/v1/contracts/examinations_v2/tenants/${id}`, JSON.stringify(body), {
-                ...header,
+                ...headers,
                 tenantShopId: id,
             }, undefined);
             fetch().then((res) => {
