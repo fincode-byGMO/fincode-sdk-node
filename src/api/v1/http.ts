@@ -1,47 +1,74 @@
 import fetch, { BodyInit, RequestInit } from "node-fetch"
 import { FincodeConfig } from "./fincode"
 import { createFincodeRequestHeader } from "../../types/http"
-import { Pagination } from "../../types/pagination"
-import { SearchParams } from "../../types/searchParams"
+import { Sort } from "~/src/types"
 
 const BASE_URL = "https://api.fincode.jp"
 const BASE_URL_TEST = "https://api.test.fincode.jp"
 
+export const buildQueryString = (queryParams: any) => {
+    const urlSearchParams = new URLSearchParams()
+    interpretQueryParams(urlSearchParams, null, queryParams)
+
+    return urlSearchParams.toString()
+}
+
+const interpretQueryParams = (urlSearchParams: URLSearchParams, key: string | null, value: any) => {
+    switch (typeof value) {
+        case "object":
+            if (Array.isArray(value)) {
+                value.forEach((v, i) => {
+                    if (key) {
+                        interpretQueryParams(urlSearchParams, key, v)
+                    } else {
+                        throw new Error("key is not defined")
+                    }
+                })
+            } else {
+                if (
+                    value.field &&
+                    value.order
+                ) {
+                    const sort = value as Sort
+                    if (key) {
+                        urlSearchParams.append(key, `${sort.field} ${sort.order}`)
+                    } else {
+                        throw new Error("key is not defined")
+                    }
+                } else {
+                    Object.keys(value).forEach((k) => {
+                        interpretQueryParams(urlSearchParams, k, value[k])
+                    })
+                }
+            }
+            break
+        case "boolean":
+        case "number":
+        case "string":
+            if (key) {
+                urlSearchParams.append(key, value.toString())
+            } else {
+                throw new Error("key is not defined")
+            }
+            break
+        case "undefined":
+            break
+        default:
+            throw new Error(`Unexpected type of query parameter: ${typeof value}`)
+    }
+}
+
 const createFincodeRequestURL = (
     config: FincodeConfig,
     path: string,
-    query?: {
-        pagination?: Pagination
-        searchParams?: SearchParams
-        keyValues?: Record<string, string | number | boolean | null | undefined>
+    queryParams?: {
+        [key: string]: any
     }
 ): string => {
 
     const baseUrl = config.fincodeEnv == "test" ? BASE_URL_TEST : BASE_URL
 
-    let queryStr = ""
-    if (query) {
-        const { pagination, searchParams, keyValues } = query
-        const pgnParams = pagination?.buildParams()
-        const sParams = searchParams?.buildParams()
-        const kvParams = keyValues ? (() => {
-            const params = new URLSearchParams()
-            for (const [key, value] of Object.entries(keyValues)) {
-                if (value === undefined || value === null) {
-                    continue
-                }
-                params.append(key, String(value))
-            }
-            return params
-        })() : undefined
-
-        const params = new URLSearchParams({
-            ...Object.fromEntries(pgnParams?.entries() || []),
-            ...Object.fromEntries(sParams?.entries() || []),
-            ...Object.fromEntries(kvParams?.entries() || []),
-        })
-        queryStr = params.toString() ? `?${params.toString()}` : ""
-    }
+    const queryStr = queryParams ? `?${buildQueryString(queryParams)}` : ""
 
     return `${baseUrl}${path}${queryStr}`
 }
@@ -57,14 +84,12 @@ const createFincodeRequestFetch = (
         tenantShopId?: string
         contentType?: string
     },
-    query?: {
-        pagination?: Pagination
-        searchParams?: SearchParams
-        keyValues?: Record<string, string | number | boolean | null | undefined>
-    },
+    queryParams?: {
+        [key: string]: any
+    }
 ) => {
 
-    const url = createFincodeRequestURL(config, path, query)
+    const url = createFincodeRequestURL(config, path, queryParams)
 
     const _headers = createFincodeRequestHeader({
         apiVersion: config.options.version,
@@ -87,4 +112,4 @@ const createFincodeRequestFetch = (
 
 export { createFincodeRequestFetch }
 
-export type FincodePartialRequestHeader = Parameters<typeof createFincodeRequestFetch>[4]
+export type FincodeRequestHeaders = Parameters<typeof createFincodeRequestFetch>[4]

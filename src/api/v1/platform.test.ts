@@ -1,6 +1,6 @@
 import { HttpsProxyAgent } from "https-proxy-agent"
-import { ShopObject, UpdatingPlatformRequest } from "./../../types"
-import { FincodeInitOptions, createFincode } from "./fincode"
+import { UpdatingPlatformRequest } from "./../../types"
+import { createFincode } from "./fincode"
 import dotenv from "dotenv"
 import path from "path"
 
@@ -21,49 +21,38 @@ if (!shopId) throw new Error("FINCODE_SHOP_ID_KEY_OWNER is not defined")
 
 describe("Platform API testing", () => {
 
-    const options: FincodeInitOptions = {
-        proxyAgent: agent,
-    }
-
-    const fincode = createFincode(secretKey, "test", options)
-
-    let platform: ShopObject | undefined
-
     it("Retrieve a platform", async () => {
+        const fincode = createFincode(secretKey, "test", { proxyAgent: agent })
         const res = await fincode.platforms.retrieve(shopId)
 
         expect(res.id).toBe(shopId)
         expect(res.shop_type).toBe("platform")
-
-        platform = res
     })
     it("Retrieve shop list of platform", async () => {
-        if (!platform) {
-            throw new Error("platform is undefined")
-        }
+        const fincode = createFincode(secretKey, "test", { proxyAgent: agent })
 
         const res = await fincode.platforms.retrieveList()
 
-        expect(res.list?.length).toBeGreaterThanOrEqual(0)
+        expect(res.list).toBeDefined()
     })
-
-    const updatingReqBody: UpdatingPlatformRequest = {
-        examination_master_id: "vm",
-        platform_rate: `${Math.floor(Math.random() * (50 - 4 + 1) + 4)}`
-    }
     it("Update a platform", async () => {
-        if (!platform) {
-            throw new Error("platform is undefined")
+        const fincode = createFincode(secretKey, "test", { proxyAgent: agent })
+
+        const updatingReqBody: UpdatingPlatformRequest = {
+            examination_master_id: "vm",
+            platform_rate: `${Math.floor(Math.random() * (50 - 4 + 1) + 4)}`
         }
 
         const res = await fincode.platforms.update(shopId, updatingReqBody)
 
         expect(res.id).toBe(shopId)
         expect(res.shop_type).toBe("platform")
+        let vmPlatformRate: number | null = null
         res.platform_rate_list?.forEach((item) => {
             if (item.id === "vm") {
-                expect(item.platform_rate).toBe(Number(updatingReqBody.platform_rate))
+                vmPlatformRate = item.platform_rate
             }
         })
+        expect(vmPlatformRate).toBe(Number(updatingReqBody.platform_rate))
     })
 })

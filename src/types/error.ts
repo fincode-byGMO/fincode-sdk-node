@@ -9,6 +9,11 @@ export type APIErrorObject = {
     error_message: string
 }
 
+export interface FincodeError extends Error {
+    readonly name: string
+    readonly message: string
+}
+
 /**
  * This error is thrown when fincode API responded some Error
  * 
@@ -17,7 +22,7 @@ export type APIErrorObject = {
  * @member {string} message - Last error message
  * @member {number} status - HTTP status code
  */
-export class FincodeAPIError implements Error {
+export class FincodeAPIError implements FincodeError {
     public readonly name = "FincodeAPIError"
     public readonly errors?: APIErrorObject[]
     public readonly exceeded?: boolean
@@ -47,7 +52,7 @@ export class FincodeAPIError implements Error {
  * @member {any} child - original thrown object
  */
 
-export class FincodeSDKError implements Error {
+export class FincodeSDKError implements FincodeError {
     public readonly name = "FincodeSDKError"
     public readonly message: string
     public readonly child?: any
