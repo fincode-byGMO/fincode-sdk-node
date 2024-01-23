@@ -37,6 +37,7 @@
   "scripts": {
     "lint": "eslint . --ext .ts,.js",
     "build": "tsc",
+    "test:v1/http": "jest ./src/api/v1/http.test.ts --silent=false --verbose false --no-cache",
     "test:v1/account": "jest ./src/api/v1/account.test.ts --silent=false --verbose false --no-cache",
     "test:v1/bulk.payment": "jest ./src/api/v1/bulk.payment.test.ts --silent=false --verbose false --no-cache",
     "test:v1/card": "jest ./src/api/v1/card.test.ts --silent=false --verbose false --no-cache",
@@ -44,6 +45,7 @@
     "test:v1/payment": "jest ./src/api/v1/payment.test.ts --silent=false --verbose false --no-cache",
     "test:v1/plan": "jest ./src/api/v1/plan.test.ts --silent=false --verbose false --no-cache",
     "test:v1/platform_account": "jest ./src/api/v1/platform_account.test.ts --silent=false --verbose false --no-cache",
+    "test:v1/platform": "jest ./src/api/v1/platform.test.ts --silent=false --verbose false --no-cache",
     "test:v1/session.cardRegistration": "jest ./src/api/v1/session.cardRegistration.test.ts --silent=false --verbose false --no-cache",
     "test:v1/session.payment": "jest ./src/api/v1/session.payment.test.ts --silent=false --verbose false --no-cache",
     "test:v1/subscription": "jest ./src/api/v1/subscription.test.ts --silent=false --verbose false --no-cache",

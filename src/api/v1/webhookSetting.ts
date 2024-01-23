@@ -9,7 +9,7 @@ import {
     UpdatingWebhookSettingRequest,
     DeletingWebhookSettingResponse,
 } from "../../types";
-import { FincodePartialRequestHeader, createFincodeRequestFetch } from "./http";
+import { FincodeRequestHeaders, createFincodeRequestFetch } from "./http";
 import { FincodeConfig } from "./fincode";
 import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_errorMessages";
 
@@ -22,23 +22,20 @@ export class WebhookSetting {
         this._config = config
     }
 
-
     /**
     * **Subscribe webhook**
     * 
     * corresponds to `POST /v1/webhook_settings`
     * 
-    * if the Promise is rejected, the error is an instance of `FincodeError`
+    * @param {SubscribingWebhookRequest} body - request body
+    * @param {FincodeRequestHeaders} [headers] - request headers
     * 
-    * @param {SubscribingWebhookRequest} body Request object for Creating a webhook
-    * @param {FincodePartialRequestHeader} [header]
-    * 
-    * @returns {Promise<WebhookObject>} Webhook object
+    * @returns {Promise<WebhookSettingObject>} - Webhook setting object
     */
 
     public create(
         body: CreatingWebhookSettingRequest,
-        header?: FincodePartialRequestHeader,
+        headers?: FincodeRequestHeaders,
     ): Promise<WebhookSettingObject> {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
@@ -46,7 +43,7 @@ export class WebhookSetting {
                 "POST",
                 `/v1/webhook_settings`,
                 JSON.stringify(body),
-                header,
+                headers,
                 undefined,
             )
 
@@ -77,16 +74,14 @@ export class WebhookSetting {
      * 
      * corresponds to `GET /v1/webhook_settings/:id`
      * 
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} id - webhook setting ID
+     * @param {FincodeRequestHeaders} [headers] - request headers
      * 
-     * @param {string} id Webhook ID
-     * @param {FincodePartialRequestHeader} [header]
-     * 
-     * @returns {Promise<WebhookObject>} Webhook object
+     * @returns {Promise<WebhookSettingObject>} - Webhook setting object
      */
     public retrieve(
         id: string,
-        header?: FincodePartialRequestHeader,
+        headers?: FincodeRequestHeaders,
     ): Promise<WebhookSettingObject> {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
@@ -94,7 +89,7 @@ export class WebhookSetting {
                 "GET",
                 `/v1/webhook_settings/${id}`,
                 undefined,
-                header,
+                headers,
                 undefined,
             )
 
@@ -124,14 +119,12 @@ export class WebhookSetting {
      * 
      * corresponds to `GET /v1/webhook_settings`
      * 
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {FincodeRequestHeaders} [headers] - request headers
      * 
-     * @param {FincodePartialRequestHeader} [header]
-     * 
-     * @returns {Promise<ListResponse<WebhookObject>>} Webhook list
+     * @returns {Promise<ListResponse<WebhookObject>>} Webhook setting object list
      */
     public retrieveList(
-        header?: FincodePartialRequestHeader,
+        headers?: FincodeRequestHeaders,
     ): Promise<Pick<ListResponse<WebhookSettingObject>, "list">> {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
@@ -139,7 +132,7 @@ export class WebhookSetting {
                 "GET",
                 `/v1/webhook_settings`,
                 undefined,
-                header,
+                headers,
                 undefined,
             )
 
@@ -169,19 +162,17 @@ export class WebhookSetting {
      * 
      * corresponds to `PUT /v1/webhook_settings/:id`
      * 
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} id - Webhook ID
+     * @param {UpdatingWebhookRequest} body - request body
+     * @param {FincodeRequestHeaders} [headers] - request headers
      * 
-     * @param {string} id Webhook ID
-     * @param {UpdatingWebhookRequest} body Request object for Creating a webhook
-     * @param {FincodePartialRequestHeader} [header]
-     * 
-     * @returns {Promise<WebhookObject>} Webhook object
+     * @returns {Promise<WebhookSettingObject>} Webhook setting object
      */
 
     public update(
         id: string,
         body: UpdatingWebhookSettingRequest,
-        header?: FincodePartialRequestHeader,
+        headers?: FincodeRequestHeaders,
     ): Promise<WebhookSettingObject> {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
@@ -189,7 +180,7 @@ export class WebhookSetting {
                 "PUT",
                 `/v1/webhook_settings/${id}`,
                 JSON.stringify(body),
-                header,
+                headers,
                 undefined,
             )
 
@@ -219,16 +210,14 @@ export class WebhookSetting {
      * 
      * corresponds to `DELETE /v1/webhook_settings/:id`
      * 
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} id - Webhook ID
+     * @param {FincodeRequestHeaders} [headers] - request headers
      * 
-     * @param {string} id Webhook ID
-     * @param {FincodePartialRequestHeader} [header]
-     * 
-     * @returns {Promise<WebhookObject>} Webhook object
+     * @returns {Promise<WebhookObject>} - deleting webhook setting result
      */
     public delete(
         id: string,
-        header?: FincodePartialRequestHeader,
+        headers?: FincodeRequestHeaders,
     ): Promise<DeletingWebhookSettingResponse> {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
@@ -236,7 +225,7 @@ export class WebhookSetting {
                 "DELETE",
                 `/v1/webhook_settings/${id}`,
                 undefined,
-                header,
+                headers,
                 undefined,
             )
 
