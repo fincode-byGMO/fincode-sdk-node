@@ -2,14 +2,13 @@ import {
     ListResponse,
     AccountObject,
     AccountDetailObject,
-    RetrievingAccountListPagination,
-
+    RetrievingAccountListQueryParams,
     APIErrorResponse,
     FincodeAPIError,
     FincodeSDKError,
 } from "../../types/index"
 import { FincodeConfig } from "./fincode"
-import { createFincodeRequestFetch, FincodePartialRequestHeader } from "./http"
+import { createFincodeRequestFetch, FincodeRequestHeaders } from "./http"
 import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_errorMessages"
 
 class Account {
@@ -25,18 +24,14 @@ class Account {
      * 
      * corresponds to `POST /v1/accounts`
      * 
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {RetrievingAccountListQueryParams} [queryParams] - query parameters
+     * @param {FincodeRequestHeaders} [headers] - request header
      * 
-     * @param {RetrievingAccountListPagination} [paginaiton] 
-     * @param {AccountSearchParams} [searchParams]
-     * @param {FincodePartialRequestHeader} [header]
-     * 
-     * @returns {Promise<ListResponse<AccountObject>>} 
-     * 
+     * @returns {Promise<ListResponse<AccountObject>>} - account object list
     */
     public retrieveList(
-        paginaiton?: RetrievingAccountListPagination,
-        header?: FincodePartialRequestHeader,
+        queryParams?: RetrievingAccountListQueryParams,
+        headers?: FincodeRequestHeaders,
     ): Promise<ListResponse<AccountObject>> {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
@@ -44,10 +39,8 @@ class Account {
                 "GET",
                 "/v1/accounts",
                 undefined,
-                header,
-                {
-                    pagination: paginaiton,
-                },
+                headers,
+                queryParams,
             )
 
             fetch().then((res) => {
@@ -76,16 +69,14 @@ class Account {
      * 
      * corresponds to `GET /v1/accounts/:id`
      * 
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} id - account ID
+     * @param {FincodeRequestHeaders} [headers] - request headers
      * 
-     * @param {string} id
-     * @param {FincodePartialRequestHeader} [header]
-     * 
-     * @returns {Promise<AccountObject>}
+     * @returns {Promise<AccountObject>} - account object
      */
     public retrieve(
         id: string,
-        header?: FincodePartialRequestHeader,
+        headers?: FincodeRequestHeaders,
     ): Promise<AccountObject> {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
@@ -93,7 +84,7 @@ class Account {
                 "GET",
                 `/v1/accounts/${id}`,
                 undefined,
-                header,
+                headers,
                 undefined,
             )
 
@@ -123,17 +114,15 @@ class Account {
      * 
      * corresponds to `GET /v1/accounts/:id/detail`
      * 
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} id - account ID
+     * @param {FincodeRequestHeaders} [headers] - request headers
      * 
-     * @param {string} id
-     * @param {FincodePartialRequestHeader} [header]
-     * 
-     * @returns {Promise<AccountObject>}
+     * @returns {Promise<AccountObject>} - account object
      */
 
     public retrieveDetailList(
         id: string,
-        header?: FincodePartialRequestHeader,
+        headers?: FincodeRequestHeaders,
     ): Promise<ListResponse<AccountDetailObject>> {
 
         return new Promise((resolve, reject) => {
@@ -142,7 +131,7 @@ class Account {
                 "GET",
                 `/v1/accounts/${id}/detail`,
                 undefined,
-                header,
+                headers,
                 undefined,
             )
 

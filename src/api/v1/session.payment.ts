@@ -7,7 +7,7 @@ import {
     FincodeSDKError,
 } from "../../types/index"
 import { FincodeConfig } from "./fincode"
-import { createFincodeRequestFetch, FincodePartialRequestHeader } from "./http"
+import { createFincodeRequestFetch, FincodeRequestHeaders } from "./http"
 import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_errorMessages"
 
 class PaymentSession {
@@ -23,16 +23,14 @@ class PaymentSession {
      * 
      * corresponds to `POST /v1/sessions`
      * 
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {CreatingPaymentSessionRequest} body - request body
+     * @param {FincodeRequestHeaders} [headers] - request header
      * 
-     * @param {CreatingPaymentSessionRequest} body
-     * @param {FincodePartialRequestHeader} [header]
-     * 
-     * @returns {Promise<PaymentSessionObject>}
+     * @returns {Promise<PaymentSessionObject>} - created payment session object
      */
     public create(
         body: CreatingPaymentSessionRequest,
-        header?: FincodePartialRequestHeader
+        headers?: FincodeRequestHeaders
     ): Promise<PaymentSessionObject> {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
@@ -40,7 +38,7 @@ class PaymentSession {
                 "POST",
                 "/v1/sessions",
                 JSON.stringify(body),
-                header,
+                headers,
                 undefined,
             )
 

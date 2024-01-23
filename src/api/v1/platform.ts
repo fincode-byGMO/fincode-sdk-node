@@ -1,17 +1,15 @@
-import { RequestInit } from "node-fetch"
 import {
     ListResponse,
-    PlatformShopsSearchParams,
-    RetrievingPlatformShopListPagination,
     ShopObject,
     UpdatingPlatformRequest,
 
     APIErrorResponse,
     FincodeAPIError,
     FincodeSDKError,
+    RetrievingPlatformShopListQueryParams,
 } from "../../types/index"
 import { FincodeConfig } from "./fincode"
-import { createFincodeRequestFetch, FincodePartialRequestHeader } from "./http"
+import { createFincodeRequestFetch, FincodeRequestHeaders } from "./http"
 import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_errorMessages"
 
 class Platform {
@@ -27,16 +25,14 @@ class Platform {
      * 
      * corresponds to `POST /v1/platforms`
      * 
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {RetrievingPlatformShopListQueryParams} [queryParams] - query parameters
+     * @param {FincodeRequestHeaders} [headers] - request header
      * 
-     * @param {FincodePartialRequestHeader} [header]
-     * 
-     * @returns {Promise<ListResponse<ShopObject>>}
+     * @returns {Promise<ListResponse<ShopObject>>} - platform shop object list
      */
     public retrieveList(
-        pagination?: RetrievingPlatformShopListPagination,
-        searchParams?: PlatformShopsSearchParams,
-        header?: FincodePartialRequestHeader
+        queryParams?: RetrievingPlatformShopListQueryParams,
+        headers?: FincodeRequestHeaders
     ): Promise<ListResponse<ShopObject>> {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
@@ -44,11 +40,8 @@ class Platform {
                 "GET",
                 "/v1/platforms",
                 undefined,
-                header,
-                {
-                    pagination: pagination,
-                    searchParams: searchParams,
-                },
+                headers,
+                queryParams,
             )
 
             fetch().then((res) => {
@@ -77,16 +70,14 @@ class Platform {
      * 
      * corresponds to `GET /v1/platforms/:id`
      * 
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} id - platform shop ID
+     * @param {FincodeRequestHeaders} [headers] - request header
      * 
-     * @param {string} id - Platform shop ID
-     * @param {FincodePartialRequestHeader} [header]
-     * 
-     * @returns {Promise<ShopObject>}
+     * @returns {Promise<ShopObject>} - retrieved platform shop object
      */
     public retrieve(
         id: string,
-        header?: FincodePartialRequestHeader,
+        headers?: FincodeRequestHeaders,
     ): Promise<ShopObject> {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
@@ -94,7 +85,7 @@ class Platform {
                 "GET",
                 `/v1/platforms/${id}`,
                 undefined,
-                header,
+                headers,
                 undefined,
             )
 
@@ -124,16 +115,14 @@ class Platform {
      * 
      * corresponds to `PUT /v1/platforms/:id`
      * 
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} id - platform shop ID
      * 
-     * @param {string} id - Platform shop ID
-     * 
-     * @returns {Promise<ShopObject>}
+     * @returns {Promise<ShopObject>} - updated platform shop object
      */
     public update(
         id: string,
         body: UpdatingPlatformRequest,
-        header?: FincodePartialRequestHeader,
+        headers?: FincodeRequestHeaders,
     ): Promise<ShopObject> {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
@@ -141,7 +130,7 @@ class Platform {
                 "PUT",
                 `/v1/platforms/${id}`,
                 JSON.stringify(body),
-                header,
+                headers,
                 undefined,
             )
 
