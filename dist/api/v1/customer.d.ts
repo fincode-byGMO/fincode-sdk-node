@@ -1,6 +1,6 @@
-import { CreatingCustomerRequest, CustomerObject, DeletingCustomerResponse, ListResponse, RetrievingCustomerListPagination, UpdatingCustomerRequest } from "../../types/index";
+import { CreatingCustomerRequest, CustomerObject, DeletingCustomerResponse, ListResponse, UpdatingCustomerRequest, RetrievingCustomerListQueryParams } from "../../types/index";
 import { FincodeConfig } from "./fincode";
-import { FincodePartialRequestHeader } from "./http";
+import { FincodeRequestHeaders } from "./http";
 declare class Customer {
     private readonly _config;
     constructor(config: FincodeConfig);
@@ -9,45 +9,56 @@ declare class Customer {
      *
      * corresponds to `POST /v1/customers`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
-     *
      * @param {CreatingCustomerRequest} body - request body
-     * @param {FincodePartialRequestHeader} [header] - request header
+     * @param {FincodeRequestHeaders} [headers] - request header
      *
-     * @returns {Promise<CustomerObject>} - created customer
+     * @returns {Promise<CustomerObject>} - created customer object
      */
-    create(body: CreatingCustomerRequest, header?: FincodePartialRequestHeader): Promise<CustomerObject>;
+    create(body: CreatingCustomerRequest, headers?: FincodeRequestHeaders): Promise<CustomerObject>;
     /**
      * **Retrieve customer list**
      *
      * corresponds to `GET /v1/customers`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {RetrievingCustomerListQueryParams} [queryParams] - query parameters
+     * @param {FincodeRequestHeaders} [headers] - request header
+     *
+     * @returns {Promise<ListResponse<CustomerObject>>} - retrieved customer object list
      */
-    retrieveList(pagination?: RetrievingCustomerListPagination, header?: FincodePartialRequestHeader): Promise<ListResponse<CustomerObject>>;
+    retrieveList(queryParams?: RetrievingCustomerListQueryParams, headers?: FincodeRequestHeaders): Promise<ListResponse<CustomerObject>>;
     /**
      * **Retrieve a customer**
      *
      * corresponds to `GET /v1/customers/:id`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} id
+     * @param {FincodeRequestHeaders} [headers] - request header
+     *
+     * @returns {Promise<CustomerObject>} - retrieved customer object
      */
-    retrieve(id: string, header?: FincodePartialRequestHeader): Promise<CustomerObject>;
+    retrieve(id: string, headers?: FincodeRequestHeaders): Promise<CustomerObject>;
     /**
      * **Update a customer**
      *
      * corresponds to `PUT /v1/customers/:id`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
-     */
-    update(id: string, body: UpdatingCustomerRequest, header?: FincodePartialRequestHeader): Promise<CustomerObject>;
+     * @param {string} id
+     * @param {UpdatingCustomerRequest} body - request body
+     * @param {FincodeRequestHeaders} [headers] - request header
+     *
+     * @returns {Promise<CustomerObject>} - updated customer object
+    */
+    update(id: string, body: UpdatingCustomerRequest, headers?: FincodeRequestHeaders): Promise<CustomerObject>;
     /**
      * **Delete a customer**
      *
      * corresponds to `DELETE /v1/customers/:id`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} id
+     * @param {FincodeRequestHeaders} [headers] - request header
+     *
+     * @returns {Promise<DeletingCustomerResponse>} - deleting result
      */
-    delete(id: string, header?: FincodePartialRequestHeader): Promise<DeletingCustomerResponse>;
+    delete(id: string, headers?: FincodeRequestHeaders): Promise<DeletingCustomerResponse>;
 }
 export { Customer };

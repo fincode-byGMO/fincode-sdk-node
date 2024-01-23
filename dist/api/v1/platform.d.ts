@@ -1,6 +1,6 @@
-import { ListResponse, PlatformShopsSearchParams, RetrievingPlatformShopListPagination, ShopObject, UpdatingPlatformRequest } from "../../types/index";
+import { ListResponse, ShopObject, UpdatingPlatformRequest, RetrievingPlatformShopListQueryParams } from "../../types/index";
 import { FincodeConfig } from "./fincode";
-import { FincodePartialRequestHeader } from "./http";
+import { FincodeRequestHeaders } from "./http";
 declare class Platform {
     private readonly _config;
     constructor(config: FincodeConfig);
@@ -9,37 +9,32 @@ declare class Platform {
      *
      * corresponds to `POST /v1/platforms`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {RetrievingPlatformShopListQueryParams} [queryParams] - query parameters
+     * @param {FincodeRequestHeaders} [headers] - request header
      *
-     * @param {FincodePartialRequestHeader} [header]
-     *
-     * @returns {Promise<ListResponse<ShopObject>>}
+     * @returns {Promise<ListResponse<ShopObject>>} - platform shop object list
      */
-    retrieveList(pagination?: RetrievingPlatformShopListPagination, searchParams?: PlatformShopsSearchParams, header?: FincodePartialRequestHeader): Promise<ListResponse<ShopObject>>;
+    retrieveList(queryParams?: RetrievingPlatformShopListQueryParams, headers?: FincodeRequestHeaders): Promise<ListResponse<ShopObject>>;
     /**
      * **Retrieve a platform shop**
      *
      * corresponds to `GET /v1/platforms/:id`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} id - platform shop ID
+     * @param {FincodeRequestHeaders} [headers] - request header
      *
-     * @param {string} id - Platform shop ID
-     * @param {FincodePartialRequestHeader} [header]
-     *
-     * @returns {Promise<ShopObject>}
+     * @returns {Promise<ShopObject>} - retrieved platform shop object
      */
-    retrieve(id: string, header?: FincodePartialRequestHeader): Promise<ShopObject>;
+    retrieve(id: string, headers?: FincodeRequestHeaders): Promise<ShopObject>;
     /**
      * **Update a platform shop**
      *
      * corresponds to `PUT /v1/platforms/:id`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} id - platform shop ID
      *
-     * @param {string} id - Platform shop ID
-     *
-     * @returns {Promise<ShopObject>}
+     * @returns {Promise<ShopObject>} - updated platform shop object
      */
-    update(id: string, body: UpdatingPlatformRequest, header?: FincodePartialRequestHeader): Promise<ShopObject>;
+    update(id: string, body: UpdatingPlatformRequest, headers?: FincodeRequestHeaders): Promise<ShopObject>;
 }
 export { Platform };

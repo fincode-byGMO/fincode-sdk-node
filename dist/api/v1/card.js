@@ -11,11 +11,15 @@ class Card {
      *
      * corresponds to `POST /v1/customers/:customer_id/cards`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} customerId - customer id
+     * @param {CreatingCardRequest} body - request body
+     * @param {FincodeRequestHeaders} [headers] - request header
+     *
+     * @returns {Promise<CardObject>} - created card object
      */
-    create(customerId, body, header) {
+    create(customerId, body, headers) {
         return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(this._config, "POST", `/v1/customers/${customerId}/cards`, JSON.stringify(body), header, undefined);
+            const fetch = createFincodeRequestFetch(this._config, "POST", `/v1/customers/${customerId}/cards`, JSON.stringify(body), headers, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -42,11 +46,14 @@ class Card {
      *
      * corresponds to `GET /v1/customers/:customer_id/cards`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} customerId - customer id
+     * @param {FincodeRequestHeaders} [headers] - request header
+     *
+     * @returns {Promise<ListResponse<CardObject>>} - card object list
      */
-    retrieveList(customerId, header) {
+    retrieveList(customerId, headers) {
         return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(this._config, "GET", `/v1/customers/${customerId}/cards`, undefined, header, undefined);
+            const fetch = createFincodeRequestFetch(this._config, "GET", `/v1/customers/${customerId}/cards`, undefined, headers, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -73,11 +80,15 @@ class Card {
      *
      * corresponds to `GET /v1/customers/:customer_id/cards/:id`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} customerId - customer id
+     * @param {string} id - card id
+     * @param {FincodeRequestHeaders} [headers] - request header
+     *
+     * @returns {Promise<CardObject>} - retrieved card object
      */
-    retrieve(customerId, id, header) {
+    retrieve(customerId, id, headers) {
         return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(this._config, "GET", `/v1/customers/${customerId}/cards/${id}`, undefined, header, undefined);
+            const fetch = createFincodeRequestFetch(this._config, "GET", `/v1/customers/${customerId}/cards/${id}`, undefined, headers, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -104,11 +115,16 @@ class Card {
      *
      * corresponds to `PUT /v1/customers/:customer_id/cards/:id`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} customerId - customer id
+     * @param {string} id - card id
+     * @param {UpdatingCardRequest} body - request body
+     * @param {FincodeRequestHeaders} [headers] - request header
+     *
+     * @returns {Promise<CardObject>} - updated card object
      */
-    update(customerId, id, body, header) {
+    update(customerId, id, body, headers) {
         return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(this._config, "PUT", `/v1/customers/${customerId}/cards/${id}`, JSON.stringify(body), header, undefined);
+            const fetch = createFincodeRequestFetch(this._config, "PUT", `/v1/customers/${customerId}/cards/${id}`, JSON.stringify(body), headers, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -135,11 +151,15 @@ class Card {
      *
      * corresponds to `DELETE /v1/customers/:customer_id/cards/:id`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} customerId - customer id
+     * @param {string} id - card id
+     * @param {FincodeRequestHeaders} [headers] - request header
+     *
+     * @returns {Promise<DeletingCardResponse>} - deleting result
      */
-    delete(customerId, id, header) {
+    delete(customerId, id, headers) {
         return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(this._config, "DELETE", `/v1/customers/${customerId}/cards/${id}`, undefined, header, undefined);
+            const fetch = createFincodeRequestFetch(this._config, "DELETE", `/v1/customers/${customerId}/cards/${id}`, undefined, headers, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {

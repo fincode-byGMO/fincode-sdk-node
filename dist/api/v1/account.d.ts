@@ -1,6 +1,6 @@
-import { ListResponse, AccountObject, AccountDetailObject, RetrievingAccountListPagination } from "../../types/index";
+import { ListResponse, AccountObject, AccountDetailObject, RetrievingAccountListQueryParams } from "../../types/index";
 import { FincodeConfig } from "./fincode";
-import { FincodePartialRequestHeader } from "./http";
+import { FincodeRequestHeaders } from "./http";
 declare class Account {
     private readonly _config;
     constructor(config: FincodeConfig);
@@ -9,41 +9,33 @@ declare class Account {
      *
      * corresponds to `POST /v1/accounts`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {RetrievingAccountListQueryParams} [queryParams] - query parameters
+     * @param {FincodeRequestHeaders} [headers] - request header
      *
-     * @param {RetrievingAccountListPagination} [paginaiton]
-     * @param {AccountSearchParams} [searchParams]
-     * @param {FincodePartialRequestHeader} [header]
-     *
-     * @returns {Promise<ListResponse<AccountObject>>}
-     *
+     * @returns {Promise<ListResponse<AccountObject>>} - account object list
     */
-    retrieveList(paginaiton?: RetrievingAccountListPagination, header?: FincodePartialRequestHeader): Promise<ListResponse<AccountObject>>;
+    retrieveList(queryParams?: RetrievingAccountListQueryParams, headers?: FincodeRequestHeaders): Promise<ListResponse<AccountObject>>;
     /**
      * **Retrieve a account**
      *
      * corresponds to `GET /v1/accounts/:id`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} id - account ID
+     * @param {FincodeRequestHeaders} [headers] - request headers
      *
-     * @param {string} id
-     * @param {FincodePartialRequestHeader} [header]
-     *
-     * @returns {Promise<AccountObject>}
+     * @returns {Promise<AccountObject>} - account object
      */
-    retrieve(id: string, header?: FincodePartialRequestHeader): Promise<AccountObject>;
+    retrieve(id: string, headers?: FincodeRequestHeaders): Promise<AccountObject>;
     /**
      * **Retrieve a account detail*
      *
      * corresponds to `GET /v1/accounts/:id/detail`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} id - account ID
+     * @param {FincodeRequestHeaders} [headers] - request headers
      *
-     * @param {string} id
-     * @param {FincodePartialRequestHeader} [header]
-     *
-     * @returns {Promise<AccountObject>}
+     * @returns {Promise<AccountObject>} - account object
      */
-    retrieveDetailList(id: string, header?: FincodePartialRequestHeader): Promise<ListResponse<AccountDetailObject>>;
+    retrieveDetailList(id: string, headers?: FincodeRequestHeaders): Promise<ListResponse<AccountDetailObject>>;
 }
 export { Account };

@@ -1,13 +1,12 @@
-import { QueryBuilder } from "./queryBuilder";
-export interface Pagination extends QueryBuilder {
+export type Pagination = {
     /**
      * Maximum number of items to return.
      */
-    limit?: string | null;
+    limit?: string | number | null;
     /**
      * Number of this page.
      */
-    page?: string | null;
+    page?: string | number | null;
     /**
      * Flag to retrieve only the total number of items.
      */
@@ -16,12 +15,12 @@ export interface Pagination extends QueryBuilder {
      * Sort
      */
     sort?: Sort[] | null;
-}
+};
 export type Sort = {
     /**
-     * Sort key.
+     * Sort field.
      */
-    key?: string | null;
+    field?: string | null;
     /**
      * Sort order.
      */
