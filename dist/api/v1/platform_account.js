@@ -11,21 +11,15 @@ class PlatformAccount {
      *
      * corresponds to `POST /v1/platform_accounts`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {RetrievingPlatformAccountListQueryParams} [queryParams] - query parameters
+     * @param {FincodeRequestHeaders} [headers] - request header
      *
-     * @param {RetrievingPlatformAccountListPagination} [paginaiton]
-     * @param {PlatformAccountSearchParams} [searchParams]
-     * @param {FincodePartialRequestHeader} [header]
-     *
-     * @returns {Promise<ListResponse<PlatformAccountObject>>}
+     * @returns {Promise<ListResponse<PlatformAccountObject>>} - platform-account object list
      *
     */
-    retrieveList(paginaiton, searchParams, header) {
+    retrieveList(queryParams, headers) {
         return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(this._config, "GET", "/v1/platform_accounts", undefined, header, {
-                pagination: paginaiton,
-                searchParams: searchParams,
-            });
+            const fetch = createFincodeRequestFetch(this._config, "GET", "/v1/platform_accounts", undefined, headers, queryParams);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -52,16 +46,14 @@ class PlatformAccount {
      *
      * corresponds to `GET /v1/platform_accounts/:id`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} id - platform-account id
+     * @param {FincodeRequestHeaders} [headers] - request header
      *
-     * @param {string} id
-     * @param {FincodePartialRequestHeader} [header]
-     *
-     * @returns {Promise<PlatformAccountObject>}
+     * @returns {Promise<PlatformAccountObject>} - platform-account object
      */
-    retrieve(id, header) {
+    retrieve(id, headers) {
         return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(this._config, "GET", `/v1/platform_accounts/${id}`, undefined, header, undefined);
+            const fetch = createFincodeRequestFetch(this._config, "GET", `/v1/platform_accounts/${id}`, undefined, headers, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -88,16 +80,14 @@ class PlatformAccount {
      *
      * corresponds to `GET /v1/platform_accounts/:id/summary`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} id - platform-account id
+     * @param {FincodeRequestHeaders} [headers] - request header
      *
-     * @param {string} id
-     * @param {FincodePartialRequestHeader} [header]
-     *
-     * @returns {Promise<PlatformAccountObject>}
+     * @returns {Promise<PlatformAccountObject>} - platform-account object
      */
-    retrieveSummaryList(id, header) {
+    retrieveSummaryList(id, headers) {
         return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(this._config, "GET", `/v1/platform_accounts/${id}/summary`, undefined, header, undefined);
+            const fetch = createFincodeRequestFetch(this._config, "GET", `/v1/platform_accounts/${id}/summary`, undefined, headers, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {

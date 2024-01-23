@@ -11,16 +11,14 @@ class Customer {
      *
      * corresponds to `POST /v1/customers`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
-     *
      * @param {CreatingCustomerRequest} body - request body
-     * @param {FincodePartialRequestHeader} [header] - request header
+     * @param {FincodeRequestHeaders} [headers] - request header
      *
-     * @returns {Promise<CustomerObject>} - created customer
+     * @returns {Promise<CustomerObject>} - created customer object
      */
-    create(body, header) {
+    create(body, headers) {
         return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(this._config, "POST", "/v1/customers", JSON.stringify(body), header, undefined);
+            const fetch = createFincodeRequestFetch(this._config, "POST", "/v1/customers", JSON.stringify(body), headers, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -47,11 +45,14 @@ class Customer {
      *
      * corresponds to `GET /v1/customers`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {RetrievingCustomerListQueryParams} [queryParams] - query parameters
+     * @param {FincodeRequestHeaders} [headers] - request header
+     *
+     * @returns {Promise<ListResponse<CustomerObject>>} - retrieved customer object list
      */
-    retrieveList(pagination, header) {
+    retrieveList(queryParams, headers) {
         return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(this._config, "GET", "/v1/customers", undefined, header, { pagination });
+            const fetch = createFincodeRequestFetch(this._config, "GET", "/v1/customers", undefined, headers, queryParams);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -78,11 +79,14 @@ class Customer {
      *
      * corresponds to `GET /v1/customers/:id`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} id
+     * @param {FincodeRequestHeaders} [headers] - request header
+     *
+     * @returns {Promise<CustomerObject>} - retrieved customer object
      */
-    retrieve(id, header) {
+    retrieve(id, headers) {
         return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(this._config, "GET", `/v1/customers/${id}`, undefined, header, undefined);
+            const fetch = createFincodeRequestFetch(this._config, "GET", `/v1/customers/${id}`, undefined, headers, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -109,11 +113,15 @@ class Customer {
      *
      * corresponds to `PUT /v1/customers/:id`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
-     */
-    update(id, body, header) {
+     * @param {string} id
+     * @param {UpdatingCustomerRequest} body - request body
+     * @param {FincodeRequestHeaders} [headers] - request header
+     *
+     * @returns {Promise<CustomerObject>} - updated customer object
+    */
+    update(id, body, headers) {
         return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(this._config, "PUT", `/v1/customers/${id}`, JSON.stringify(body), header, undefined);
+            const fetch = createFincodeRequestFetch(this._config, "PUT", `/v1/customers/${id}`, JSON.stringify(body), headers, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -140,11 +148,14 @@ class Customer {
      *
      * corresponds to `DELETE /v1/customers/:id`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} id
+     * @param {FincodeRequestHeaders} [headers] - request header
+     *
+     * @returns {Promise<DeletingCustomerResponse>} - deleting result
      */
-    delete(id, header) {
+    delete(id, headers) {
         return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(this._config, "DELETE", `/v1/customers/${id}`, undefined, header, undefined);
+            const fetch = createFincodeRequestFetch(this._config, "DELETE", `/v1/customers/${id}`, undefined, headers, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
