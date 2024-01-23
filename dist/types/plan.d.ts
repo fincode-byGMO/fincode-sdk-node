@@ -1,4 +1,5 @@
-import { Pagination, Sort } from "./pagination";
+import { Modify } from "../utils/utilTypes";
+import { Pagination } from "./pagination";
 export type PlanObject = {
     /**
      * Plan ID.
@@ -61,9 +62,9 @@ export type PlanObject = {
     updated?: string | null;
 };
 /**
- * Pagination object of Retrieving a list of plans. (used for `GET /v1/plans`)
+ * Query params object of Retrieving a list of plans. (used for `GET /v1/plans`)
  */
-export declare class RetrievingPlanListPagination implements Pagination {
+export type RetrievingPlanListQueryParams = Modify<Pagination, {
     /**
      * Plan Name.
      */
@@ -96,24 +97,7 @@ export declare class RetrievingPlanListPagination implements Pagination {
      * Format: `yyyy/MM/dd`
      */
     update_date_to?: string | null;
-    /**
-     * Maximum number of items to return.
-     */
-    limit?: string | null;
-    /**
-     * Number of this page.
-     */
-    page?: string | null;
-    /**
-     * Flag to retrieve only the total number of items.
-     */
-    count_only?: boolean | null;
-    /**
-     * Sort
-     */
-    sort?: Sort[] | null;
-    buildParams(): URLSearchParams;
-}
+}>;
 /**
  * Request object of Creating a plan. (used for `POST /v1/plans`)
  */

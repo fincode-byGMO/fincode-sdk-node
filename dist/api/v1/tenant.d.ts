@@ -1,6 +1,6 @@
-import { ContractObject, CreatingTenantWithExistingUserRequest, CreatingTenantWithExistingUserResponse, ExaminationInfo, ListResponse, CreatingTenantWithNewUserRequest, CreatingTenantWithNewUserResponse, RequestingExaminationRequest, RequestingExaminationResponse, RetrievingTenantShopListPagination, ShopObject, TenantShopsSearchParams, UpdatingExaminationInfoRequest, UpdatingTenantRequest, ExaminationInfo_V2, UpdatingExaminationInfoRequest_V2 } from "../../types/index";
+import { ContractObject, CreatingTenantWithExistingUserRequest, CreatingTenantWithExistingUserResponse, ExaminationInfo, ListResponse, CreatingTenantWithNewUserRequest, CreatingTenantWithNewUserResponse, RequestingExaminationRequest, RequestingExaminationResponse, ShopObject, UpdatingExaminationInfoRequest, UpdatingTenantRequest, ExaminationInfo_V2, UpdatingExaminationInfoRequest_V2, RetrievingTenantShopListQueryParams } from "../../types/index";
 import { FincodeConfig } from "./fincode";
-import { FincodePartialRequestHeader } from "./http";
+import { FincodeRequestHeaders } from "./http";
 /**
  * @typedef {Object} Tenant
  * @property {Function} createWithExistingUser - Create a tenant with existing platform user
@@ -18,30 +18,27 @@ declare class Tenant {
     private readonly _config;
     constructor(config: FincodeConfig);
     /**
-     *
      * **Create a tenant with existing platform user**
      *
      * corresponds to `POST /v1/join_tenants`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {CreatingTenantWithExistingUserRequest} body - request body
+     * @param {FincodeRequestHeaders} [headers] - request header
      *
-     * @param {CreatingTenantWithExistingUserRequest} body
-     * @param {FincodePartialRequestHeader} [header]
+     * @returns {Promise<CreatingTenantWithExistingUserResponse>} - created tenant object
      */
-    createWithExistingUser(body: CreatingTenantWithExistingUserRequest, header?: FincodePartialRequestHeader): Promise<CreatingTenantWithExistingUserResponse>;
+    createWithExistingUser(body: CreatingTenantWithExistingUserRequest, headers?: FincodeRequestHeaders): Promise<CreatingTenantWithExistingUserResponse>;
     /**
      * **Create a tenant with new user**
      *
      * corresponds to `POST /v1/tenant_entries`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {CreatingTenantWithExistingUserRequest} body - request body
+     * @param {FincodeRequestHeaders} [headers] - request header
      *
-     * @param {CreatingTenantWithExistingUserRequest} body
-     * @param {FincodePartialRequestHeader} [header]
-     *
-     * @returns {Promise<CreatingTenantWithExistingUserResponse>}
+     * @returns {Promise<CreatingTenantWithExistingUserResponse>} - created tenant object
      */
-    createWithNewUser(body: CreatingTenantWithNewUserRequest, header?: FincodePartialRequestHeader): Promise<CreatingTenantWithNewUserResponse>;
+    createWithNewUser(body: CreatingTenantWithNewUserRequest, headers?: FincodeRequestHeaders): Promise<CreatingTenantWithNewUserResponse>;
     /**
      * @deprecated Use `updateExaminationInfoV2` instead
      *
@@ -49,15 +46,13 @@ declare class Tenant {
      *
      * corresponds to `PUT /v1/contracts/examinations/tenants/:id`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
-     *
      * @param {string} id - tenant shop id
-     * @param {UpdatingExaminationInfoRequest} body
-     * @param {FincodePartialRequestHeader} [header]
+     * @param {UpdatingExaminationInfoRequest} body - request body
+     * @param {FincodeRequestHeaders} [headers] - request header
      *
-     * @returns {Promise<ExaminationInfo>}
+     * @returns {Promise<ExaminationInfo>} - updated examination info object
      */
-    updateExaminationInfo(id: string, body: UpdatingExaminationInfoRequest, header?: FincodePartialRequestHeader): Promise<ExaminationInfo>;
+    updateExaminationInfo(id: string, body: UpdatingExaminationInfoRequest, headers?: Omit<FincodeRequestHeaders, "tenantShopId">): Promise<ExaminationInfo>;
     /**
      * @deprecated Use `retrieveExaminationInfoV2` instead
      *
@@ -65,96 +60,90 @@ declare class Tenant {
      *
      * corresponds to `GET /v1/contracts/examinations/tenants/:id`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
-     *
      * @param {string} id - tenant shop id
-     * @param {FincodePartialRequestHeader} [header]
+     * @param {FincodeRequestHeaders} [headers] - request header
      *
-     * @returns {Promise<ExaminationInfo>}
+     * @returns {Promise<ExaminationInfo>} - examination info object
      */
-    retrieveExaminationInfo(id: string, header?: FincodePartialRequestHeader): Promise<ExaminationInfo>;
+    retrieveExaminationInfo(id: string, headers?: Omit<FincodeRequestHeaders, "tenantShopId">): Promise<ExaminationInfo>;
     /**
      * **Requesting a contract examination**
      *
      * corresponds to `POST /v1/contracts/examinations`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {RequestingExaminationRequest} body - request body
+     * @param {FincodeRequestHeaders} [headers] - request header
      *
-     * @param {RequestingExaminationRequest} body
-     * @param {FincodePartialRequestHeader} [header]
-     *
-     * @returns {Promise<RequestingExaminationResponse>}
+     * @returns {Promise<RequestingExaminationResponse>} - created examination object
      */
-    requestExamination(body: RequestingExaminationRequest, header?: FincodePartialRequestHeader): Promise<RequestingExaminationResponse>;
+    requestExamination(body: RequestingExaminationRequest, headers?: FincodeRequestHeaders): Promise<RequestingExaminationResponse>;
     /**
      * **Retrieve contract information of a tenant**
      *
      * corresponds to `GET /v1/contracts/:id`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
-     *
      * @param {string} id - tenant shop id
-     * @param {FincodePartialRequestHeader} [header]
+     * @param {FincodeRequestHeaders} [headers] - request header
      *
-     * @returns {Promise<>}
+     * @returns {Promise<ContractObject>} - contract object
      */
-    retrieveContract(id: string, header?: FincodePartialRequestHeader): Promise<ContractObject>;
+    retrieveContract(id: string, headers?: Omit<FincodeRequestHeaders, "tenantShopId">): Promise<ContractObject>;
     /**
      * **Update a tenant**
      *
      * corresponds to `PUT /v1/tenants/:id`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
-     *
      * @param {string} id - tenant shop id
-     * @param {UpdatingTenantRequest} body
-     * @param {FincodePartialRequestHeader} [header]
+     * @param {UpdatingTenantRequest} body - request body
+     * @param {FincodeRequestHeaders} [headers] - request header
      *
-     * @returns {Promise<ShopObject>}
+     * @returns {Promise<ShopObject>} - updated tenant object
      */
-    update(id: string, body: UpdatingTenantRequest, header?: FincodePartialRequestHeader): Promise<ShopObject>;
+    update(id: string, body: UpdatingTenantRequest, headers?: FincodeRequestHeaders): Promise<ShopObject>;
     /**
      * **Retrieve a tenant**
      *
      * corresponds to `GET /v1/tenants/:id`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
-     *
      * @param {string} id - tenant shop id
-     * @param {FincodePartialRequestHeader} [header]
+     * @param {FincodeRequestHeaders} [headers] - request header
      *
-     * @returns {Promise<ShopObject>}
+     * @returns {Promise<ShopObject>} - tenant object
      */
-    retrieve(id: string, header?: FincodePartialRequestHeader): Promise<ShopObject>;
+    retrieve(id: string, headers?: FincodeRequestHeaders): Promise<ShopObject>;
     /**
      * **Retrieve tenant list**
      *
      * corresponds to `GET /v1/tenants`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {RetrievingTenantShopListQueryParams} [queryParams] - query parameters
+     * @param {FincodeRequestHeaders} [headers] - request header
      *
-     * @param {RetrievingTenantShopListPagination} [pagination]
-     * @param {TenantShopsSearchParams} [searchParams]
-     * @param {FincodePartialRequestHeader} [header]
-     *
-     * @returns {Promise<ListResponse<ShopObject>>}
+     * @returns {Promise<ListResponse<ShopObject>>} - tenant list
      */
-    retrieveList(pagination?: RetrievingTenantShopListPagination, searchParams?: TenantShopsSearchParams, header?: FincodePartialRequestHeader): Promise<ListResponse<ShopObject>>;
+    retrieveList(queryParams?: RetrievingTenantShopListQueryParams, headers?: FincodeRequestHeaders): Promise<ListResponse<ShopObject>>;
     /**
      * **Retrieve contract examination information of a tenant**
      *
      * corresponds to `GET /v1/contracts/examinations_v2/tenants/:id`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} id - tenant shop id
+     * @param {FincodeRequestHeaders} [headers] - request header
+     *
+     * @returns {Promise<ExaminationInfo_V2>} - examination info object
      */
-    retrieveExaminationInfoV2(id: string, header?: FincodePartialRequestHeader): Promise<ExaminationInfo_V2>;
+    retrieveExaminationInfoV2(id: string, headers?: Omit<FincodeRequestHeaders, "tenantShopId">): Promise<ExaminationInfo_V2>;
     /**
      * **Update contract examination information of a tenant**
      *
      * corresponds to `PUT /v1/contracts/examinations_v2/tenants/:id`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} id - tenant shop id
+     * @param {UpdatingExaminationInfoRequest_V2} body - request body
+     * @param {FincodeRequestHeaders} [headers] - request header
+     *
+     * @returns {Promise<ExaminationInfo_V2>} - updated examination info object
      */
-    updateExaminationInfoV2(id: string, body: UpdatingExaminationInfoRequest_V2, header?: FincodePartialRequestHeader): Promise<ExaminationInfo_V2>;
+    updateExaminationInfoV2(id: string, body: UpdatingExaminationInfoRequest_V2, headers?: Omit<FincodeRequestHeaders, "tenantShopId">): Promise<ExaminationInfo_V2>;
 }
 export { Tenant };

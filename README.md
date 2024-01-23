@@ -11,7 +11,7 @@ fincode for Node.jsはJavaScript/TypeScriptプロジェクトにおけるfincode
 ```bash
 $ npm i @fincode/node
 
-# yarnによるインストールも可能です。
+# yarnやpnpmなど、npmと互換のあるパッケージ管理システムによるインストールも可能です。
 $ yarn add @fincode/node
 ```
 
@@ -22,7 +22,7 @@ $ yarn add @fincode/node
 
 APIキーは**シークレットキー**である必要があります。
 
-### 2. npm/Yarnからインストール
+### 2. パッケージマネージャーからインストール
 Getting Startedの手順に従い `@fincode/node` をプロジェクトにインストールします。
 
 ### 3. fincodeインスタンスの作成
@@ -37,31 +37,46 @@ const fincode = createFincode(
     "test", // fincode Environment
     
     // Optional,
-    {
+    {   
+        // API Version
         version: "20211101",
+        // Timeout
         timeout: 10000,
+        // Proxy
         proxy: "http://url.to.proxy:8080"
     }
 )
 
-// Call Payment API
 (async () => {
-        
-    const payment = await fincode.payments.create({
+    
+    // Register a payment with idempotent key
+    const createdPayment = await fincode.payments.create({
         pay_type: "Paypay",
         job_code: "CAPTURE",
         amount: "3000"
+    }, {
+        idempotentKey: "{{idempotent key}}"
     })
-
+    // Execute a payment
     const executedPayment = await fincode.payment.execute(
         payment.id,
         {
-            pay_type: payment.pay_type,
-            access_id: payment.access_id,
+            pay_type: createdPayment.pay_type,
+            access_id: createdPayment.access_id,
             redirect_url: "{{URL to redirect from PayPay payment page}}"
         }
     )
+    // Retrieve a payment
+    const payment = await fincode.payments.retrieve(executedPayment.id, { pay_type : "Paypay" })
 
+    // Retrieve a list of payments
+    const payments = await fincode.payments.retrieveList({
+        pay_type: "Paypay",
+        limit: 10,
+        page: 1,
+        total_amount_min: 1000,
+        total_amount_max: 10000,
+    })
 })()
 
 ```
@@ -70,6 +85,34 @@ const fincode = createFincode(
 
 fincodeインスタンスを作成することでfincode APIを呼び出すことができます。
 fincodeインスタンスが持つメソッドは下記のように各APIと対応しています。
+
+### クエリパラメーターとヘッダー
+ヘッダーはすべてのAPI呼び出しのオプショナル引数として渡すことができます。
+ヘッダー情報は下記のようなオブジェクトに格納します。
+
+```typescript
+{
+    // idempotent_key に対応。冪等キー。
+    idempotentKey?: string | undefined;
+    // Tenant-Shops-Id に対応。テナントショップID。
+    tenantShopId?: string | undefined;
+    // Content-Type に対応。コンテンツタイプ。
+    contentType?: string | undefined;
+}
+```
+
+また、一覧取得APIなど一部のAPI呼び出しではオプショナル引数としてクエリパラメーターを渡すことができます。
+クエリパラメーターは下記のようなオブジェクトに格納します。
+
+```typescript
+{
+    limit?: string | number | null
+    page?: string | number | null
+    count_only?: boolean | null
+    // その他APIによって異なるクエリパラメーター
+}
+```
+
 
 ### Payment API （決済API）
 

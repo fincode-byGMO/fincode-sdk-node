@@ -11,18 +11,14 @@ class Platform {
      *
      * corresponds to `POST /v1/platforms`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {RetrievingPlatformShopListQueryParams} [queryParams] - query parameters
+     * @param {FincodeRequestHeaders} [headers] - request header
      *
-     * @param {FincodePartialRequestHeader} [header]
-     *
-     * @returns {Promise<ListResponse<ShopObject>>}
+     * @returns {Promise<ListResponse<ShopObject>>} - platform shop object list
      */
-    retrieveList(pagination, searchParams, header) {
+    retrieveList(queryParams, headers) {
         return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(this._config, "GET", "/v1/platforms", undefined, header, {
-                pagination: pagination,
-                searchParams: searchParams,
-            });
+            const fetch = createFincodeRequestFetch(this._config, "GET", "/v1/platforms", undefined, headers, queryParams);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -49,16 +45,14 @@ class Platform {
      *
      * corresponds to `GET /v1/platforms/:id`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} id - platform shop ID
+     * @param {FincodeRequestHeaders} [headers] - request header
      *
-     * @param {string} id - Platform shop ID
-     * @param {FincodePartialRequestHeader} [header]
-     *
-     * @returns {Promise<ShopObject>}
+     * @returns {Promise<ShopObject>} - retrieved platform shop object
      */
-    retrieve(id, header) {
+    retrieve(id, headers) {
         return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(this._config, "GET", `/v1/platforms/${id}`, undefined, header, undefined);
+            const fetch = createFincodeRequestFetch(this._config, "GET", `/v1/platforms/${id}`, undefined, headers, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -85,15 +79,13 @@ class Platform {
      *
      * corresponds to `PUT /v1/platforms/:id`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} id - platform shop ID
      *
-     * @param {string} id - Platform shop ID
-     *
-     * @returns {Promise<ShopObject>}
+     * @returns {Promise<ShopObject>} - updated platform shop object
      */
-    update(id, body, header) {
+    update(id, body, headers) {
         return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(this._config, "PUT", `/v1/platforms/${id}`, JSON.stringify(body), header, undefined);
+            const fetch = createFincodeRequestFetch(this._config, "PUT", `/v1/platforms/${id}`, JSON.stringify(body), headers, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
