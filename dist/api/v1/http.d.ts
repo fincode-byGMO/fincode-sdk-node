@@ -5,7 +5,6 @@ import { SearchParams } from "../../types/searchParams";
 declare const createFincodeRequestURL: (config: FincodeConfig, path: string, query?: {
     pagination?: Pagination;
     searchParams?: SearchParams;
-    keyValues?: Record<string, string | number | boolean | null | undefined>;
 }) => string;
 export { createFincodeRequestURL };
 declare const createFincodeRequestFetch: (config: FincodeConfig, method: "POST" | "GET" | "PUT" | "DELETE", path: string, data?: BodyInit, headers?: {

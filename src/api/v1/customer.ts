@@ -1,18 +1,16 @@
-import { RequestInit } from "node-fetch"
 import {
     CreatingCustomerRequest,
     CustomerObject,
     DeletingCustomerResponse,
     ListResponse,
-    RetrievingCustomerListPagination,
     UpdatingCustomerRequest,
-
     APIErrorResponse,
     FincodeAPIError,
     FincodeSDKError,
+    RetrievingCustomerListQueryParams,
 } from "../../types/index"
 import { FincodeConfig } from "./fincode"
-import { createFincodeRequestFetch, FincodePartialRequestHeader } from "./http"
+import { createFincodeRequestFetch, FincodeRequestHeaders } from "./http"
 import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_errorMessages"
 
 class Customer {
@@ -28,16 +26,14 @@ class Customer {
      * 
      * corresponds to `POST /v1/customers`
      * 
-     * if the Promise is rejected, the error is an instance of `FincodeError`
-     * 
      * @param {CreatingCustomerRequest} body - request body
-     * @param {FincodePartialRequestHeader} [header] - request header
+     * @param {FincodeRequestHeaders} [headers] - request header
      * 
-     * @returns {Promise<CustomerObject>} - created customer
+     * @returns {Promise<CustomerObject>} - created customer object
      */
     public create(
         body: CreatingCustomerRequest,
-        header?: FincodePartialRequestHeader
+        headers?: FincodeRequestHeaders
     ): Promise<CustomerObject> {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
@@ -45,7 +41,7 @@ class Customer {
                 "POST",
                 "/v1/customers",
                 JSON.stringify(body),
-                header,
+                headers,
                 undefined,
             )
 
@@ -75,11 +71,14 @@ class Customer {
      * 
      * corresponds to `GET /v1/customers`
      * 
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {RetrievingCustomerListQueryParams} [queryParams] - query parameters
+     * @param {FincodeRequestHeaders} [headers] - request header
+     * 
+     * @returns {Promise<ListResponse<CustomerObject>>} - retrieved customer object list
      */
     public retrieveList(
-        pagination?: RetrievingCustomerListPagination,
-        header?: FincodePartialRequestHeader
+        queryParams?: RetrievingCustomerListQueryParams,
+        headers?: FincodeRequestHeaders
     ): Promise<ListResponse<CustomerObject>> {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
@@ -87,8 +86,8 @@ class Customer {
                 "GET",
                 "/v1/customers",
                 undefined,
-                header,
-                { pagination },
+                headers,
+                queryParams,
             )
 
             fetch().then((res) => {
@@ -117,11 +116,14 @@ class Customer {
      * 
      * corresponds to `GET /v1/customers/:id`
      * 
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} id
+     * @param {FincodeRequestHeaders} [headers] - request header
+     * 
+     * @returns {Promise<CustomerObject>} - retrieved customer object
      */
     public retrieve(
         id: string,
-        header?: FincodePartialRequestHeader
+        headers?: FincodeRequestHeaders
     ): Promise<CustomerObject> {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
@@ -129,7 +131,7 @@ class Customer {
                 "GET",
                 `/v1/customers/${id}`,
                 undefined,
-                header,
+                headers,
                 undefined,
             )
 
@@ -159,12 +161,16 @@ class Customer {
      * 
      * corresponds to `PUT /v1/customers/:id`
      * 
-     * if the Promise is rejected, the error is an instance of `FincodeError`
-     */
+     * @param {string} id
+     * @param {UpdatingCustomerRequest} body - request body
+     * @param {FincodeRequestHeaders} [headers] - request header
+     * 
+     * @returns {Promise<CustomerObject>} - updated customer object
+    */
     public update(
         id: string,
         body: UpdatingCustomerRequest,
-        header?: FincodePartialRequestHeader
+        headers?: FincodeRequestHeaders
     ): Promise<CustomerObject> {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
@@ -172,7 +178,7 @@ class Customer {
                 "PUT",
                 `/v1/customers/${id}`,
                 JSON.stringify(body),
-                header,
+                headers,
                 undefined,
             )
 
@@ -202,11 +208,14 @@ class Customer {
      * 
      * corresponds to `DELETE /v1/customers/:id`
      * 
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} id
+     * @param {FincodeRequestHeaders} [headers] - request header
+     * 
+     * @returns {Promise<DeletingCustomerResponse>} - deleting result
      */
     public delete(
         id: string,
-        header?: FincodePartialRequestHeader
+        headers?: FincodeRequestHeaders
     ): Promise<DeletingCustomerResponse> {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
@@ -214,7 +223,7 @@ class Customer {
                 "DELETE",
                 `/v1/customers/${id}`,
                 undefined,
-                header,
+                headers,
                 undefined,
             )
 

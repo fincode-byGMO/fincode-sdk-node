@@ -1,9 +1,9 @@
 import { HttpsProxyAgent } from "https-proxy-agent"
 import {
     CreatingPlanRequest,
-    PlanObject, UpdatingPlanRequest,
+    UpdatingPlanRequest,
 } from "./../../types"
-import { FincodeInitOptions, createFincode } from "./fincode"
+import { createFincode } from "./fincode"
 import dotenv from "dotenv"
 import path from "path"
 
@@ -19,16 +19,9 @@ const proxy = env.FINCODE_HTTP_PROXY
 const agent: HttpsProxyAgent<string> | undefined = proxy ? new HttpsProxyAgent(proxy) : undefined
 
 describe("Plan API testing", () => {
-
-    const options: FincodeInitOptions = {
-        proxyAgent: agent,
-    }
-
-    const fincode = createFincode(secretKey, "test", options)
-
-    let plan: PlanObject | undefined
-
     it("Create plan", async () => {
+        const fincode = createFincode(secretKey, "test", { proxyAgent: agent })
+
         const req: CreatingPlanRequest = {
             plan_name: "Test plan",
             amount: "9999",
@@ -52,24 +45,31 @@ describe("Plan API testing", () => {
         expect(res.interval_count).toBeDefined()
         expect(res.interval_count).toBe(Number(req.interval_count))
 
-        plan = res
+        await fincode.plans.delete(res.id)
     })
 
-    const updatingReq: UpdatingPlanRequest = {
-        plan_name: "Test plan updated",
-        amount: "9900",
-        tax: "100",
-        description: "fincode-node test plan updated",
-        interval_pattern: "year",
-        interval_count: "1",
-    }
-
     it("Update plan", async () => {
-        if (!plan) {
-            throw new Error("Plan is not created")
+        const fincode = createFincode(secretKey, "test", { proxyAgent: agent })
+
+        const creatingRes = await fincode.plans.create({
+            plan_name: "Test plan",
+            amount: "9999",
+            tax: "1",
+            description: "fincode-node test plan",
+            interval_pattern: "month",
+            interval_count: "3",
+        })
+
+        const updatingReq: UpdatingPlanRequest = {
+            plan_name: "Test plan updated",
+            amount: "10000",
+            tax: "100",
+            description: "fincode-node test plan updated",
+            interval_pattern: "year",
+            interval_count: "1",
         }
 
-        const res = await fincode.plans.update(plan.id, updatingReq)
+        const res = await fincode.plans.update(creatingRes.id, updatingReq)
 
         expect(res.id).toBeDefined()
         expect(res.plan_name).toBe(updatingReq.plan_name)
@@ -82,43 +82,76 @@ describe("Plan API testing", () => {
         expect(res.interval_pattern).toBe(updatingReq.interval_pattern)
         expect(res.interval_count).toBeDefined()
         expect(res.interval_count).toBe(Number(updatingReq.interval_count))
+
+        await fincode.plans.delete(res.id)
     })
 
     it("Retrieve plan", async () => {
-        if (!plan) {
-            throw new Error("Plan is not created")
-        }
+        const fincode = createFincode(secretKey, "test", { proxyAgent: agent })
 
-        const res = await fincode.plans.retrieve(plan.id)
+        const creatingRes = await fincode.plans.create({
+            plan_name: "Test plan",
+            amount: "9999",
+            tax: "1",
+            description: "fincode-node test plan",
+            interval_pattern: "month",
+            interval_count: "3",
+        })
+
+        const res = await fincode.plans.retrieve(creatingRes.id)
 
         expect(res.id).toBeDefined()
-        expect(res.plan_name).toBe(updatingReq.plan_name)
-        expect(res.amount).toBe(Number(updatingReq.amount))
+        expect(res.plan_name).toBe(creatingRes.plan_name)
+        expect(res.amount).toBe(Number(creatingRes.amount))
         expect(res.tax).toBeDefined()
-        expect(res.tax).toBe(Number(updatingReq.tax))
+        expect(res.tax).toBe(Number(creatingRes.tax))
         expect(res.description).toBeDefined()
-        expect(res.description).toBe(updatingReq.description)
+        expect(res.description).toBe(creatingRes.description)
         expect(res.interval_pattern).toBeDefined()
-        expect(res.interval_pattern).toBe(updatingReq.interval_pattern)
+        expect(res.interval_pattern).toBe(creatingRes.interval_pattern)
         expect(res.interval_count).toBeDefined()
-        expect(res.interval_count).toBe(Number(updatingReq.interval_count))
+        expect(res.interval_count).toBe(Number(creatingRes.interval_count))
+
+        await fincode.plans.delete(res.id)
     })
 
     it("Retrieve plan list", async () => {
-        const res = await fincode.plans.retrieveList()
+        const fincode = createFincode(secretKey, "test", { proxyAgent: agent })
+
+        const creatingRes = await fincode.plans.create({
+            plan_name: "Test plan",
+            amount: "9999",
+            tax: "1",
+            description: "fincode-node test plan",
+            interval_pattern: "month",
+            interval_count: "3",
+        })
+
+        const res = await fincode.plans.retrieveList({
+            sort: [{ field: "updated", order: "desc" }]
+        })
 
         expect(res.list?.length).toBeGreaterThanOrEqual(0)
+        expect(res.list?.find((plan) => plan.id === creatingRes.id)).toBeDefined()
+
+        await fincode.plans.delete(creatingRes.id)
     })
 
     it("Delete plan", async () => {
-        if (!plan) {
-            throw new Error("Plan is not created")
-        }
+        const fincode = createFincode(secretKey, "test", { proxyAgent: agent })
 
-        const res = await fincode.plans.delete(plan.id)
+        const creatingRes = await fincode.plans.create({
+            plan_name: "Test plan",
+            amount: "9999",
+            tax: "1",
+            description: "fincode-node test plan",
+            interval_pattern: "month",
+            interval_count: "3",
+        })
 
-        expect(res.id).toBeDefined()
-        expect(res.id).toBe(plan.id)
+        const res = await fincode.plans.delete(creatingRes.id)
+
+        expect(res.id).toBe(creatingRes.id)
         expect(res.delete_flag).toBe("1")
     })
 })
