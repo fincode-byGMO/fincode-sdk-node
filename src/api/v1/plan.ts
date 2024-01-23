@@ -3,7 +3,7 @@ import {
     DeletingPlanResponse,
     ListResponse,
     PlanObject,
-    RetrievingPlanListPagination,
+    RetrievingPlanListQueryParams,
     UpdatingPlanRequest,
 
     APIErrorResponse,
@@ -11,7 +11,7 @@ import {
     FincodeSDKError,
 } from "../../types/index"
 import { FincodeConfig } from "./fincode"
-import { createFincodeRequestFetch, FincodePartialRequestHeader } from "./http"
+import { createFincodeRequestFetch, FincodeRequestHeaders } from "./http"
 import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_errorMessages"
 
 class Plan {
@@ -26,17 +26,15 @@ class Plan {
      * **Register a plan**
      * 
      * corresponds to `POST /v1/plans`
-     * w
-     * if the Promise is rejected, the error is an instance of `FincodeError`
      * 
-     * @param {CreatingPaymentRequest} body
-     * @param {FincodePartialRequestHeader} [header]
+     * @param {CreatingPaymentRequest} body - request body
+     * @param {FincodeRequestHeaders} [headers] - request header
      * 
-     * @returns {Promise<PlanObject>}
+     * @returns {Promise<PlanObject>} - created plan object
      */
     public create(
         body: CreatingPlanRequest,
-        header?: FincodePartialRequestHeader
+        headers?: FincodeRequestHeaders
     ): Promise<PlanObject> {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
@@ -44,7 +42,7 @@ class Plan {
                 "POST",
                 "/v1/plans",
                 JSON.stringify(body),
-                header,
+                headers,
                 undefined,
             )
 
@@ -68,15 +66,14 @@ class Plan {
      * 
      * corresponds to `GET /v1/plans`
      * 
-     * if the Promise is rejected, the error is an instance of `FincodeError`
-     * 
-     * @param {FincodePartialRequestHeader} [header]
+     * @param {RetrievingPlanListQueryParams} [queryParams] - query parameters
+     * @param {FincodeRequestHeaders} [headers] - request header
      * 
      * @returns {Promise<ListResponse<PlanObject>>}
      */
     public retrieveList(
-        pagination?: RetrievingPlanListPagination,
-        header?: FincodePartialRequestHeader,
+        queryParams?: RetrievingPlanListQueryParams,
+        headers?: FincodeRequestHeaders,
     ): Promise<ListResponse<PlanObject>> {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
@@ -84,8 +81,8 @@ class Plan {
                 "GET",
                 "/v1/plans",
                 undefined,
-                header,
-                { pagination: pagination },
+                headers,
+                queryParams
             )
 
             fetch().then((res) => {
@@ -108,16 +105,14 @@ class Plan {
      * 
      * corresponds to `GET /v1/plans/:id`
      * 
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} id - plan id
+     * @param {FincodeRequestHeaders} [headers] - request header
      * 
-     * @param {string} id
-     * @param {FincodePartialRequestHeader} [header]
-     * 
-     * @returns {Promise<PlanObject>}
+     * @returns {Promise<PlanObject>} - retrieved plan object
      */
     public retrieve(
         id: string,
-        header?: FincodePartialRequestHeader,
+        headers?: FincodeRequestHeaders,
     ): Promise<PlanObject> {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
@@ -125,7 +120,7 @@ class Plan {
                 "GET",
                 `/v1/plans/${id}`,
                 undefined,
-                header,
+                headers,
                 undefined,
             )
 
@@ -149,18 +144,16 @@ class Plan {
      * 
      * corresponds to `PUT /v1/plans/:id`
      * 
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} id - plan id
+     * @param {UpdatingPlanRequest} body - request body
+     * @param {FincodeRequestHeaders} [headers] - request header
      * 
-     * @param {string} id
-     * @param {UpdatingPlanRequest} body
-     * @param {FincodePartialRequestHeader} [header]
-     * 
-     * @returns {Promise<PlanObject>}
+     * @returns {Promise<PlanObject>} - updated plan object
      */
     public update(
         id: string,
         body: UpdatingPlanRequest,
-        header?: FincodePartialRequestHeader,
+        headers?: FincodeRequestHeaders,
     ): Promise<PlanObject> {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
@@ -168,7 +161,7 @@ class Plan {
                 "PUT",
                 `/v1/plans/${id}`,
                 JSON.stringify(body),
-                header,
+                headers,
                 undefined,
             )
 
@@ -198,16 +191,14 @@ class Plan {
      * 
      * corresponds to `DELETE /v1/plans/:id`
      * 
-     * if the Promise is rejected, the error is an instance of `FincodeError`
-     * 
-     * @param {string} id
-     * @param {FincodePartialRequestHeader} [header]
-     * 
-     * @returns {Promise<DeletingPlanResponse>}
+     * @param {string} id - plan id
+     * @param {FincodeRequestHeaders} [headers] - request header
+     *  
+     * @returns {Promise<DeletingPlanResponse>} - deleting result
      */
     public delete(
         id: string,
-        header?: FincodePartialRequestHeader,
+        headers?: FincodeRequestHeaders,
     ): Promise<DeletingPlanResponse> {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
@@ -215,7 +206,7 @@ class Plan {
                 "DELETE",
                 `/v1/plans/${id}`,
                 undefined,
-                header,
+                headers,
                 undefined,
             )
 

@@ -1,12 +1,12 @@
+import { Modify } from "../utils/utilTypes"
 import * as Contract from "./contract"
-import { Pagination, Sort } from "./pagination"
-import { SearchParams } from "./searchParams"
+import { Pagination } from "./pagination"
 import * as Shop from "./shop"
 
 /**
  * Pagination object for Retrieving tenant shops list
  */
-export class RetrievingTenantShopListPagination implements Pagination {
+export type RetrievingTenantShopListQueryParams = Modify<Pagination, {
     /**
      * Shop ID
      */
@@ -35,112 +35,8 @@ export class RetrievingTenantShopListPagination implements Pagination {
      * Format: `yyyy/MM/dd`
      */
     created_to?: string | null
+}>
 
-    /**
-     * Maximum number of items to return.
-     */
-    limit?: string | null
-
-    /**
-     * Number of this page.
-     */
-    page?: string | null
-
-    /**
-     * Flag to retrieve only the total number of items.
-     */
-    count_only?: boolean | null
-
-    /**
-     * Sort 
-     */
-    sort?: Sort[] | null
-
-    constructor(
-        args?: {
-            id?: string | null
-            shop_name?: string | null
-            shop_mail_address?: string | null
-            created_from?: string | null
-            created_to?: string | null
-            limit?: string | null
-            page?: string | null
-            count_only?: boolean | null
-            sort?: Sort[] | null
-        }
-    ) {
-        if (args) {
-            this.id = args.id
-            this.shop_name = args.shop_name
-            this.shop_mail_address = args.shop_mail_address
-            this.created_from = args.created_from
-            this.created_to = args.created_to
-            this.limit = args.limit
-            this.page = args.page
-            this.count_only = args.count_only
-            this.sort = args.sort
-        }
-    }
-
-    buildParams(): URLSearchParams {
-        const params = new URLSearchParams()
-
-        Object.entries(this)
-            .filter(([_, value]) => value !== undefined)
-            .map<[string, string]>(([key, value]) => {
-                if (key === "sort") {
-                    return [key, (value as Sort[]).map((sort) => `${sort.key} ${sort.order}`).join(",")]
-                } else {
-                    return [key, value as string]
-                }
-            })
-            .forEach(([key, value]) => params.append(key, value))
-
-        return params
-    }
-}
-
-/**
- * Search Params object for Retrieving tenant shops list
- */
-export class TenantShopsSearchParams implements SearchParams {
-    id?: string | null
-    shop_name?: string | null
-    shop_mail_address?: string | null
-    created_from?: string | null
-    created_to?: string | null
-
-    constructor(args?: {
-        id?: string | null
-        shop_name?: string | null
-        shop_mail_address?: string | null
-        created_from?: string | null
-        created_to?: string | null
-    }) {
-        if (args) {
-            this.id = args.id
-            this.shop_name = args.shop_name
-            this.shop_mail_address = args.shop_mail_address
-            this.created_from = args.created_from
-            this.created_to = args.created_to
-        }
-    }
-
-    buildParams(): URLSearchParams {
-        const param = new URLSearchParams()
-
-        Object.entries(this)
-            .filter(([_, value]) => value !== null)
-            .map<[string, string]>(([key, value]) => {
-                return [key, value as string]
-            })
-            .forEach(([key, value]) => {
-                param.append(key, value)
-            })
-
-        return param
-    }
-}
 
 /**
  * Request object for Creating tenant shop with existing platform user.

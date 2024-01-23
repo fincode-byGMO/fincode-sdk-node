@@ -1,9 +1,8 @@
 import { HttpsProxyAgent } from "https-proxy-agent"
 import {
     CreatingPaymentSessionRequest,
-    PaymentSessionObject,
 } from "./../../types"
-import { FincodeInitOptions, createFincode } from "./fincode"
+import { createFincode } from "./fincode"
 import dotenv from "dotenv"
 import path from "path"
 
@@ -20,15 +19,8 @@ const agent: HttpsProxyAgent<string> | undefined = proxy ? new HttpsProxyAgent(p
 
 describe("Payment Session API testing", () => {
 
-    const options: FincodeInitOptions = {
-        proxyAgent: agent,
-    }
-
-    const fincode = createFincode(secretKey, "test", options)
-
-    let session: PaymentSessionObject | undefined
-
     it("Create payment session", async () => {
+        const fincode = createFincode(secretKey, "test", { proxyAgent: agent })
 
         const current = new Date()
         const expire = new Date(current.getTime() + 60 * 60 * 1000) // + 1 hour
@@ -68,7 +60,5 @@ describe("Payment Session API testing", () => {
         expect(res.card.job_code).toBe(reqBody.card?.job_code)
         expect(res.status).toBe("CREATE")
         expect(res.link_url).toBeDefined()
-
-        session = res
     })
 })
