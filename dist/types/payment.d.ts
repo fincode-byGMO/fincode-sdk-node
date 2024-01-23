@@ -1,5 +1,6 @@
+import { Modify } from "../utils/utilTypes";
 import * as Card from "./card";
-import { Pagination, Sort } from "./pagination";
+import { Pagination } from "./pagination";
 /**
  * Payment Object
  */
@@ -437,23 +438,7 @@ export type KonbiniCode = "00010" | "00020" | "00050" | "00080" | "00760";
 /**
  * Pagination object of Retrieving a list of payments. (used for GET /v1/payments)
  */
-export declare class RetrievingPaymentListPagination implements Pagination {
-    /**
-     * Maximum number of items to return.
-     */
-    limit?: string | null;
-    /**
-     * Number of this page.
-     */
-    page?: string | null;
-    /**
-     * Flag to retrieve only the total number of items.
-     */
-    count_only?: boolean | null;
-    /**
-     * Sort
-     */
-    sort?: Sort[] | null;
+export type RetrievingPaymentListQueryParams = Modify<Pagination, {
     /**
      * Payment method
      *
@@ -533,27 +518,7 @@ export declare class RetrievingPaymentListPagination implements Pagination {
      * Subscription ID
      */
     subscription_id?: string | null;
-    constructor(pay_type: PayType, args?: {
-        limit?: string | null;
-        page?: string | null;
-        count_only?: boolean | null;
-        sort?: Sort[] | null;
-        keyword?: string | null;
-        total_amount_min?: string | null;
-        total_amount_max?: string | null;
-        customer_id?: string | null;
-        process_date_from?: string | null;
-        process_date_to?: string | null;
-        auth_max_date_from?: string | null;
-        auth_max_date_to?: string | null;
-        update_date_from?: string | null;
-        update_date_to?: string | null;
-        status?: PaymentStatus[] | null;
-        pay_pattern?: ("onetime" | "subscription")[] | null;
-        subscription_id?: string | null;
-    });
-    buildParams(): URLSearchParams;
-}
+}>;
 /**
  * Request object of Creating payment (used for POST /v1/payments)
  */
@@ -957,7 +922,7 @@ export type ExecutingPaymentRequest = {
      *
      * See also: [Window.devicePixelRatio @ MDN](https://developer.mozilla.org/docs/Web/API/Window/devicePixelRatio)
      */
-    device_pixel_ratio?: string | null;
+    pixel_ratio?: string | null;
     /**
      * Window size type.
      *
@@ -990,7 +955,7 @@ export type CapturingPaymentRequest = {
      *
      * - `Card`: card payment.
      */
-    pay_type: Extract<PayType, "Card">;
+    pay_type: Extract<PayType, "Card" | "Paypay">;
     /**
      * access ID issued for this payment to use in this payment context.
      */
@@ -1237,7 +1202,7 @@ export type GeneratingKonbiniPaymentBarcodeRequest = {
      *
      * You can use the value of `window.devicePixelRatio` when barcode will be displayed on Browser.
      */
-    device_pixel_ratio: string;
+    pixel_ratio: string;
     /**
      * Window size type.
      *

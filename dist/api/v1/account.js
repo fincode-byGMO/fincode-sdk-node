@@ -11,20 +11,14 @@ class Account {
      *
      * corresponds to `POST /v1/accounts`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {RetrievingAccountListQueryParams} [queryParams] - query parameters
+     * @param {FincodeRequestHeaders} [headers] - request header
      *
-     * @param {RetrievingAccountListPagination} [paginaiton]
-     * @param {AccountSearchParams} [searchParams]
-     * @param {FincodePartialRequestHeader} [header]
-     *
-     * @returns {Promise<ListResponse<AccountObject>>}
-     *
+     * @returns {Promise<ListResponse<AccountObject>>} - account object list
     */
-    retrieveList(paginaiton, header) {
+    retrieveList(queryParams, headers) {
         return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(this._config, "GET", "/v1/accounts", undefined, header, {
-                pagination: paginaiton,
-            });
+            const fetch = createFincodeRequestFetch(this._config, "GET", "/v1/accounts", undefined, headers, queryParams);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -51,16 +45,14 @@ class Account {
      *
      * corresponds to `GET /v1/accounts/:id`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} id - account ID
+     * @param {FincodeRequestHeaders} [headers] - request headers
      *
-     * @param {string} id
-     * @param {FincodePartialRequestHeader} [header]
-     *
-     * @returns {Promise<AccountObject>}
+     * @returns {Promise<AccountObject>} - account object
      */
-    retrieve(id, header) {
+    retrieve(id, headers) {
         return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(this._config, "GET", `/v1/accounts/${id}`, undefined, header, undefined);
+            const fetch = createFincodeRequestFetch(this._config, "GET", `/v1/accounts/${id}`, undefined, headers, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -87,16 +79,14 @@ class Account {
      *
      * corresponds to `GET /v1/accounts/:id/detail`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} id - account ID
+     * @param {FincodeRequestHeaders} [headers] - request headers
      *
-     * @param {string} id
-     * @param {FincodePartialRequestHeader} [header]
-     *
-     * @returns {Promise<AccountObject>}
+     * @returns {Promise<AccountObject>} - account object
      */
-    retrieveDetailList(id, header) {
+    retrieveDetailList(id, headers) {
         return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(this._config, "GET", `/v1/accounts/${id}/detail`, undefined, header, undefined);
+            const fetch = createFincodeRequestFetch(this._config, "GET", `/v1/accounts/${id}/detail`, undefined, headers, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {

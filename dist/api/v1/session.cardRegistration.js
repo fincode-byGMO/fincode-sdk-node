@@ -11,16 +11,14 @@ class CardRegistrationSession {
      *
      * corresponds to `POST /v1/sessions`
      *
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {CreatingCardRegistrationSessionRequest} body - request body
+     * @param {FincodeRequestHeaders} [headers] - request header
      *
-     * @param {CreatingCardRegistrationSessionRequest} body
-     * @param {FincodePartialRequestHeader} [header]
-     *
-     * @returns {Promise<PaymentSessionObject>}
+     * @returns {Promise<PaymentSessionObject>} - created card registration session object
      */
-    create(body, header) {
+    create(body, headers) {
         return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(this._config, "POST", "/v1/card_sessions", JSON.stringify(body), header, undefined);
+            const fetch = createFincodeRequestFetch(this._config, "POST", "/v1/card_sessions", JSON.stringify(body), headers, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
