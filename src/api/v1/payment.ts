@@ -12,15 +12,14 @@ import {
     CreatingPaymentRequest,
     Retrieving3DSecureAuthResponse,
     GeneratingKonbiniPaymentBarcodeRequest,
-    RetrievingPaymentListPagination,
-
+    RetrievingPaymentListQueryParams,
     APIErrorResponse,
     FincodeAPIError,
     FincodeSDKError,
     PayType,
 } from "../../types/index"
 import { FincodeConfig } from "./fincode"
-import { createFincodeRequestFetch, FincodePartialRequestHeader } from "./http"
+import { createFincodeRequestFetch, FincodeRequestHeaders } from "./http"
 import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_errorMessages"
 
 class Payment {
@@ -36,16 +35,14 @@ class Payment {
      * 
      * corresponds to `POST /v1/payments`
      * 
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {CreatingPaymentRequest} body - request body
+     * @param {FincodeRequestHeaders} [headers] - request header
      * 
-     * @param {CreatingPaymentRequest} body
-     * @param {FincodePartialRequestHeader} [header]
-     * 
-     * @returns {Promise<PaymentObject>}
+     * @returns {Promise<PaymentObject>} - created payment object
      */
     public create(
         body: CreatingPaymentRequest,
-        header?: FincodePartialRequestHeader
+        headers?: FincodeRequestHeaders
     ): Promise<PaymentObject> {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
@@ -53,7 +50,7 @@ class Payment {
                 "POST",
                 "/v1/payments",
                 JSON.stringify(body),
-                header,
+                headers,
                 undefined,
             )
 
@@ -83,18 +80,16 @@ class Payment {
      * 
      * corresponds to `PUT /v1/payments/:id`
      * 
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} id - payment id
+     * @param {ExecutingPaymentRequest} body - request body
+     * @param {FincodeRequestHeaders} [headers] - request header
      * 
-     * @param {string} id
-     * @param {ExecutingPaymentRequest} body
-     * @param {FincodePartialRequestHeader} [header]
-     * 
-     * @returns {Promise<PaymentObject>}
+     * @returns {Promise<PaymentObject>} - executed payment object
      */
     public execute(
         id: string,
         body: ExecutingPaymentRequest,
-        header?: FincodePartialRequestHeader
+        headers?: FincodeRequestHeaders
     ): Promise<PaymentObject> {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
@@ -102,7 +97,7 @@ class Payment {
                 "PUT",
                 `/v1/payments/${id}`,
                 JSON.stringify(body),
-                header,
+                headers,
                 undefined,
             )
 
@@ -132,16 +127,14 @@ class Payment {
      * 
      * corresponds to `GET /v1/payments`
      * 
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {RetrievingPaymentListQueryParams} [queryParams] - query parameters
+     * @param {FincodeRequestHeaders} [headers] - request header
      * 
-     * @param {RetrievingPaymentListPagination} [pagination]
-     * @param {FincodePartialRequestHeader} [header]
-     * 
-     * @returns {Promise<ListResponse<PaymentObject>>}
+     * @returns {Promise<ListResponse<PaymentObject>>} - retrieved payment object list
      */
     public retrieveList(
-        pagination?: RetrievingPaymentListPagination,
-        header?: FincodePartialRequestHeader
+        queryParams?: RetrievingPaymentListQueryParams,
+        headers?: FincodeRequestHeaders
     ): Promise<ListResponse<PaymentObject>> {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
@@ -149,8 +142,8 @@ class Payment {
                 "GET",
                 "/v1/payments",
                 undefined,
-                header,
-                { pagination: pagination },
+                headers,
+                queryParams
             )
 
             fetch().then((res) => {
@@ -179,17 +172,15 @@ class Payment {
      * 
      * corresponds to `GET /v1/payments/:id`
      * 
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} id - payment id
+     * @param {FincodeRequestHeaders} [headers] - request header
      * 
-     * @param {string} id
-     * @param {FincodePartialRequestHeader} [header]
-     * 
-     * @returns {Promise<PaymentObject>}
+     * @returns {Promise<PaymentObject>} - retrieved payment object
      */
     public retrieve(
         id: string,
-        query: { pay_type: PayType, [key: string]: string },
-        header?: FincodePartialRequestHeader
+        queryParams: { pay_type: PayType },
+        headers?: FincodeRequestHeaders
     ): Promise<PaymentObject> {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
@@ -197,8 +188,8 @@ class Payment {
                 "GET",
                 `/v1/payments/${id}`,
                 undefined,
-                header,
-                { keyValues: query },
+                headers,
+                queryParams,
             )
 
             fetch().then((res) => {
@@ -227,17 +218,15 @@ class Payment {
      * 
      * corresponds to `PUT /v1/payments/:id/capture`
      * 
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} id - payment id
+     * @param {CapturingPaymentRequest} body - request body
      * 
-     * @param {string} id
-     * @param {CapturingPaymentRequest} body
-     * 
-     * @returns {Promise<PaymentObject>}
+     * @returns {Promise<PaymentObject>} - captured payment object
      */
     public capture(
         id: string,
         body: CapturingPaymentRequest,
-        header?: FincodePartialRequestHeader
+        headers?: FincodeRequestHeaders
     ): Promise<PaymentObject> {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
@@ -245,7 +234,7 @@ class Payment {
                 "PUT",
                 `/v1/payments/${id}/capture`,
                 JSON.stringify(body),
-                header,
+                headers,
                 undefined,
             )
 
@@ -275,18 +264,16 @@ class Payment {
      * 
      * corresponds to `PUT /v1/payments/:id/cancel`
      * 
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} id - payment id
+     * @param {CancelingPaymentRequest} body - request body
+     * @param {FincodeRequestHeaders} [headers] - request header
      * 
-     * @param {string} id
-     * @param {CancelingPaymentRequest} body
-     * @param {FincodePartialRequestHeader} [header]
-     * 
-     * @returns {Promise<PaymentObject>}
+     * @returns {Promise<PaymentObject>} - canceled payment object
      */
     public cancel(
         id: string,
         body: CancelingPaymentRequest,
-        header?: FincodePartialRequestHeader
+        headers?: FincodeRequestHeaders
     ): Promise<PaymentObject> {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
@@ -294,7 +281,7 @@ class Payment {
                 "PUT",
                 `/v1/payments/${id}/cancel`,
                 JSON.stringify(body),
-                header,
+                headers,
                 undefined,
             )
 
@@ -324,12 +311,16 @@ class Payment {
      * 
      * corresponds to `PUT /v1/payments/:id/auth`
      * 
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} id - payment id
+     * @param {ReauthorizingPaymentRequest} body - request body
+     * @param {FincodeRequestHeaders} [headers] - request header
+     * 
+     * @returns {Promise<PaymentObject>} - re-authorized payment object
      */
     public reauthorize(
         id: string,
         body: ReauthorizingPaymentRequest,
-        header?: FincodePartialRequestHeader
+        headers?: FincodeRequestHeaders
     ): Promise<PaymentObject> {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
@@ -337,7 +328,7 @@ class Payment {
                 "PUT",
                 `/v1/payments/${id}/auth`,
                 JSON.stringify(body),
-                header,
+                headers,
                 undefined,
             )
 
@@ -367,12 +358,16 @@ class Payment {
      * 
      * corresponds to `PUT /v1/payments/:id/change`
      * 
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} id - payment id
+     * @param {ChangingPaymentAmountRequest} body - request body
+     * @param {FincodeRequestHeaders} [headers] - request header
+     * 
+     * @returns {Promise<PaymentObject>} - changed payment object
      */
     public changeAmount(
         id: string,
         body: ChangingPaymentAmountRequest,
-        header?: FincodePartialRequestHeader,
+        headers?: FincodeRequestHeaders,
     ): Promise<PaymentObject> {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
@@ -380,7 +375,7 @@ class Payment {
                 "PUT",
                 `/v1/payments/${id}/change`,
                 JSON.stringify(body),
-                header,
+                headers,
                 undefined,
             )
 
@@ -410,19 +405,17 @@ class Payment {
      * 
      * corresponds to `PUT /v1/payments/:id/secure`
      * 
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} id - payment id
+     * @param {ExecutingPaymentAfter3DSecureRequest} body - request body
+     * @param {FincodeRequestHeaders} [headers] - request header
      * 
-     * @param {string} id
-     * @param {ExecutingPaymentAfter3DSecureRequest} body
-     * @param {FincodePartialRequestHeader} [header]
-     * 
-     * @returns {Promise<PaymentObject>}
+     * @returns {Promise<PaymentObject>} - executed payment object
      */
 
     public executeAfter3DSecureAuth(
         id: string,
         body: ExecutingPaymentAfter3DSecureRequest,
-        header?: FincodePartialRequestHeader,
+        headers?: FincodeRequestHeaders,
     ): Promise<PaymentObject> {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
@@ -430,7 +423,7 @@ class Payment {
                 "PUT",
                 `/v1/payments/${id}/secure`,
                 JSON.stringify(body),
-                header,
+                headers,
                 undefined,
             )
 
@@ -460,18 +453,16 @@ class Payment {
      * 
      * corresponds to `PUT /v1/secure2/:access_id`
      * 
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} accessId - access id
+     * @param {Executing3DSecureAuthRequest} body - request body
+     * @param {FincodeRequestHeaders} [headers] - request header
      * 
-     * @param {string} accessId
-     * @param {Executing3DSecureAuthRequest} body
-     * @param {FincodePartialRequestHeader} [header]
-     * 
-     * @returns {Executing3DSecureAuthResponse}
+     * @returns {Executing3DSecureAuthResponse} - executed 3D Secure authentication result
      */
     public execute3DSecureAuth(
         accessId: string,
         body: Executing3DSecureAuthRequest,
-        header?: FincodePartialRequestHeader,
+        headers?: FincodeRequestHeaders,
     ): Promise<Executing3DSecureAuthResponse> {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
@@ -479,7 +470,7 @@ class Payment {
                 "POST",
                 `/v1/secure/${accessId}`,
                 JSON.stringify(body),
-                header,
+                headers,
                 undefined,
             )
 
@@ -509,16 +500,14 @@ class Payment {
      * 
      * corresponds to `GET /v1/secure2/:access_id`
      * 
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} accessId - access id
+     * @param {FincodeRequestHeaders} [headers] - request header
      * 
-     * @param {string} accessId
-     * @param {FincodePartialRequestHeader} [header]
-     * 
-     * @returns {Promise<Retrieving3DSecureAuthResultResponse>}
+     * @returns {Promise<Retrieving3DSecureAuthResultResponse>} - retrieved 3D Secure authentication result
      */
     public retrieve3DSecureAuthResult(
         accessId: string,
-        header?: FincodePartialRequestHeader,
+        headers?: FincodeRequestHeaders,
     ): Promise<Retrieving3DSecureAuthResponse> {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
@@ -526,7 +515,7 @@ class Payment {
                 "GET",
                 `/v1/secure/${accessId}`,
                 undefined,
-                header,
+                headers,
                 undefined,
             )
 
@@ -556,18 +545,16 @@ class Payment {
      * 
      * corresponds to `PUT /v1/payments/:id/barcode`
      * 
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} id - payment id
+     * @param {GeneratingKonbiniPaymentBarcodeRequest} body - request body
+     * @param {FincodeRequestHeaders} [headers] - request header
      * 
-     * @param {string} id
-     * @param {GeneratingKonbiniPaymentBarcodeRequest} body
-     * @param {FincodePartialRequestHeader} [header]
-     * 
-     * @returns {Promise<PaymentObject>}
+     * @returns {Promise<PaymentObject>} - barcode-generated payment object
      */
     public generateKonbiniPaymentBarcode(
         id: string,
         body: GeneratingKonbiniPaymentBarcodeRequest,
-        header?: FincodePartialRequestHeader,
+        headers?: FincodeRequestHeaders,
     ): Promise<PaymentObject> {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
@@ -575,7 +562,7 @@ class Payment {
                 "PUT",
                 `/v1/payments/${id}/barcode`,
                 JSON.stringify(body),
-                header,
+                headers,
                 undefined,
             )
 

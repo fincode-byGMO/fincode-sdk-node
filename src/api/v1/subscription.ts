@@ -3,17 +3,19 @@ import {
     CancelingSubscriptionResponse,
     ListResponse,
     SubscriptionObject,
-    RetrievingSubscriptionListPagination,
     UpdatingSubscriptionRequest,
     SubscriptionResultObject,
-    RetrievingSubscriptionResultListPagination,
 
     APIErrorResponse,
     FincodeAPIError,
     FincodeSDKError,
+    RetrievingSubscriptionListQueryParams,
+    RetrievingSubscriptionQueryParams,
+    CancelingSubscriptionQueryParams,
+    RetrievingSubscriptionResultListQueryParams,
 } from "../../types/index"
 import { FincodeConfig } from "./fincode"
-import { createFincodeRequestFetch, FincodePartialRequestHeader } from "./http"
+import { createFincodeRequestFetch, FincodeRequestHeaders } from "./http"
 import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_errorMessages"
 
 class Subscription {
@@ -29,16 +31,14 @@ class Subscription {
      * 
      * corresponds to `POST /v1/subscriptions`
      * 
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {CreatingPaymentRequest} body - request body
+     * @param {FincodeRequestHeaders} [headers] - request header
      * 
-     * @param {CreatingPaymentRequest} body
-     * @param {FincodePartialRequestHeader} [header]
-     * 
-     * @returns {Promise<SubscriptionObject>}
+     * @returns {Promise<SubscriptionObject>} - created subscription object
      */
     public create(
         body: CreatingSubscriptionRequest,
-        header?: FincodePartialRequestHeader
+        headers?: FincodeRequestHeaders
     ): Promise<SubscriptionObject> {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
@@ -46,7 +46,7 @@ class Subscription {
                 "POST",
                 "/v1/subscriptions",
                 JSON.stringify(body),
-                header,
+                headers,
                 undefined,
             )
 
@@ -76,15 +76,14 @@ class Subscription {
      * 
      * corresponds to `GET /v1/subscriptions`
      * 
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {RetrievingSubscriptionListQueryParams} [queryParams] - query parameters
+     * @param {FincodeRequestHeaders} [headers] - request header
      * 
-     * @param {FincodePartialRequestHeader} [header]
-     * 
-     * @returns {Promise<ListResponse<SubscriptionObject>>}
+     * @returns {Promise<ListResponse<SubscriptionObject>>} - subscription object list
      */
     public retrieveList(
-        pagination: RetrievingSubscriptionListPagination,
-        header?: FincodePartialRequestHeader,
+        queryParams: RetrievingSubscriptionListQueryParams,
+        headers?: FincodeRequestHeaders,
     ): Promise<ListResponse<SubscriptionObject>> {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
@@ -92,8 +91,8 @@ class Subscription {
                 "GET",
                 "/v1/subscriptions",
                 undefined,
-                header,
-                { pagination: pagination },
+                headers,
+                queryParams,
             )
 
             fetch().then((res) => {
@@ -122,18 +121,16 @@ class Subscription {
      * 
      * corresponds to `GET /v1/subscriptions/:id`
      * 
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} id - subscription id
+     * @param {RetrievingSubscriptionQueryParams} [queryParams] - query parameters
+     * @param {FincodeRequestHeaders} [headers] - request header
      * 
-     * @param {string} id
-     * @param {string} payType
-     * @param {FincodePartialRequestHeader} [header]
-     * 
-     * @returns {Promise<SubscriptionObject>}
+     * @returns {Promise<SubscriptionObject>} - subscription object
      */
     public retrieve(
         id: string,
-        payType: "Card",
-        header?: FincodePartialRequestHeader,
+        queryParams: RetrievingSubscriptionQueryParams,
+        headers?: FincodeRequestHeaders,
     ): Promise<SubscriptionObject> {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
@@ -141,12 +138,8 @@ class Subscription {
                 "GET",
                 `/v1/subscriptions/${id}`,
                 undefined,
-                header,
-                {
-                    keyValues: {
-                        pay_type: payType,
-                    }
-                },
+                headers,
+                queryParams,
             )
 
             fetch().then((res) => {
@@ -175,18 +168,16 @@ class Subscription {
      * 
      * corresponds to `PUT /v1/subscriptions/:id`
      * 
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} id - subscription id
+     * @param {UpdatingSubscriptionRequest} body - request body
+     * @param {FincodeRequestHeaders} [headers] - request header
      * 
-     * @param {string} id
-     * @param {UpdatingSubscriptionRequest} body
-     * @param {FincodePartialRequestHeader} [header]
-     * 
-     * @returns {Promise<SubscriptionObject>}
+     * @returns {Promise<SubscriptionObject>} - updated subscription object
      */
     public update(
         id: string,
         body: UpdatingSubscriptionRequest,
-        header?: FincodePartialRequestHeader,
+        headers?: FincodeRequestHeaders,
     ): Promise<SubscriptionObject> {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
@@ -194,7 +185,7 @@ class Subscription {
                 "PUT",
                 `/v1/subscriptions/${id}`,
                 JSON.stringify(body),
-                header,
+                headers,
                 undefined,
             )
 
@@ -224,18 +215,16 @@ class Subscription {
      * 
      * corresponds to `DELETE /v1/subscriptions/:id`
      * 
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} id - subscription id
+     * @param {CancelingSubscriptionQueryParams} [queryParams] - query parameters
+     * @param {FincodeRequestHeaders} [headers] - request header
      * 
-     * @param {string} id
-     * @param {string} payType
-     * @param {FincodePartialRequestHeader} [header]
-     * 
-     * @returns {Promise<DeletingSubscriptionResponse>}
+     * @returns {Promise<CancelingSubscriptionResponse>} - canceled subscription object
      */
     public cancel(
         id: string,
-        payType: "Card",
-        header?: FincodePartialRequestHeader,
+        queryParams: CancelingSubscriptionQueryParams,
+        headers?: FincodeRequestHeaders,
     ): Promise<CancelingSubscriptionResponse> {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
@@ -243,12 +232,8 @@ class Subscription {
                 "DELETE",
                 `/v1/subscriptions/${id}`,
                 undefined,
-                header,
-                {
-                    keyValues: {
-                        pay_type: payType,
-                    },
-                },
+                headers,
+                queryParams,
             )
 
             fetch().then((res) => {
@@ -277,18 +262,16 @@ class Subscription {
      * 
      * corresponds to `GET /v1/subscriptions/:id/result`
      * 
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} id - subscription id
+     * @param {RetrievingSubscriptionResultListQueryParams} [queryParams] - query parameters
+     * @param {FincodeRequestHeaders} [headers] - request header
      * 
-     * @param {string} id
-     * @param {RetrievingSubscriptionResultListPagination} [pagination]
-     * @param {FincodePartialRequestHeader} [header]
-     * 
-     * @returns {Promise<ListResponse<SubscriptionResultObject>>}
+     * @returns {Promise<ListResponse<SubscriptionResultObject>>} - subscription result object list
      */
     public retrieveResultList(
         id: string,
-        pagination?: RetrievingSubscriptionResultListPagination,
-        header?: FincodePartialRequestHeader,
+        queryParams?: RetrievingSubscriptionResultListQueryParams,
+        headers?: FincodeRequestHeaders,
     ): Promise<ListResponse<SubscriptionResultObject>> {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
@@ -296,8 +279,8 @@ class Subscription {
                 "GET",
                 `/v1/subscriptions/${id}/result`,
                 undefined,
-                header,
-                { pagination: pagination },
+                headers,
+                queryParams,
             )
 
             fetch().then((res) => {

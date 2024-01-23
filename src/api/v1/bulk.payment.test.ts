@@ -1,7 +1,4 @@
 import { HttpsProxyAgent } from "https-proxy-agent"
-import {
-    RetrievingPaymentBulkDetailPagination
-} from "./../../types"
 import { createFincode } from "./fincode"
 import dotenv from "dotenv"
 import path from "path"
@@ -66,10 +63,14 @@ describe("Payment Bulk API testing", () => {
         const processStr = createProcessDate(60 * 60 * 24 * 2 * 1000) // + 2 day
 
         const paymentBulk = await fincode.paymentBulks.create(
-            "Card",
-            processStr,
-            file,
-            `test-${generateRandomString(10)}.json`
+            {
+                pay_type: "Card",
+                process_plan_date: processStr,
+            },
+            {
+                file: file,
+                fileName: `test-${generateRandomString(10)}.json`,
+            },
         )
 
         expect(paymentBulk.id).toBeDefined()
@@ -89,13 +90,18 @@ describe("Payment Bulk API testing", () => {
 
         const file = JSON.stringify(paymentBulkData)
 
-        console.log(file)
+        const creatingRes = await fincode.paymentBulks.create(
+            {
+                pay_type: "Card",
+                process_plan_date: processStr,
+            },
+            {
+                file: file,
+                fileName: `test-${generateRandomString(10)}.json`,
+            },
+        )
 
-        const paymentBulk = await fincode.paymentBulks.create("Card", processStr, file, `test-${generateRandomString(10)}.json`)
-
-        const pagination = new RetrievingPaymentBulkDetailPagination("Card")
-
-        const res = await fincode.paymentBulks.retrieveDetailList(paymentBulk.id, pagination)
+        const res = await fincode.paymentBulks.retrieveDetailList(creatingRes.id, { pay_type: "Card" })
 
         expect(res.list).toBeDefined()
         expect(res.list?.length).toBe(paymentBulkData.data.length)
@@ -125,11 +131,16 @@ describe("Payment Bulk API testing", () => {
         const processStr = createProcessDate(60 * 60 * 24 * 2 * 1000) // + 2 day
 
         const file = JSON.stringify(paymentBulkData)
-        const paymentBulk = await fincode.paymentBulks.create("Card", processStr, file, `test-${generateRandomString(10)}.json`)
+        const creatingRes = await fincode.paymentBulks.create({
+            pay_type: "Card",
+            process_plan_date: processStr,
+        }, {
+            file: file,
+        })
 
-        const res = await fincode.paymentBulks.delete(paymentBulk.id)
+        const res = await fincode.paymentBulks.delete(creatingRes.id)
 
-        expect(res.id).toBe(paymentBulk.id)
+        expect(res.id).toBe(creatingRes.id)
         expect(res.delete_flag).toBe("1")
     })
 })

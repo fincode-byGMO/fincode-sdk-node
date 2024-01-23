@@ -1,5 +1,5 @@
 import { HttpsProxyAgent } from "https-proxy-agent"
-import { FincodeInitOptions, createFincode } from "./fincode"
+import { createFincode } from "./fincode"
 import dotenv from "dotenv"
 import path from "path"
 
@@ -19,26 +19,23 @@ if (!accountId) throw new Error("FINCODE_PLATFORM_ACCOUNT_ID_TESTING_PLATFORM_AC
 
 describe("Platform account API testing", () => {
 
-    const options: FincodeInitOptions = {
-        proxyAgent: agent,
-    }
-
-    const fincode = createFincode(secretKey, "test", options)
-
     it("Retrieve a platform account", async () => {
+        const fincode = createFincode(secretKey, "test", { proxyAgent: agent })
         const res = await fincode.platformAccounts.retrieve(accountId)
 
         expect(res.id).toBe(accountId)
         expect(res.status_code).toBeDefined()
     })
     it("Retrieve a platform account list", async () => {
+        const fincode = createFincode(secretKey, "test", { proxyAgent: agent })
         const res = await fincode.platformAccounts.retrieveList()
 
         expect(res.list?.length).toBeGreaterThanOrEqual(0)
     })
     it("Retrieve a platform account summary list", async () => {
+        const fincode = createFincode(secretKey, "test", { proxyAgent: agent })
         const res = await fincode.platformAccounts.retrieveSummaryList(accountId)
 
-        expect(res.list?.length).toBeGreaterThanOrEqual(0)
+        expect(res.list).toBeDefined()
     })
 })

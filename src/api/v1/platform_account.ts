@@ -1,16 +1,15 @@
-import { PlatformAccountSearchParams } from "./../../types/searchParams"
 import {
     ListResponse,
     PlatformAccountObject,
     PlatformAccountSummaryObject,
-    RetrievingPlatformAccountListPagination,
 
     APIErrorResponse,
     FincodeAPIError,
     FincodeSDKError,
+    RetrievingPlatformAccountListQueryParams,
 } from "../../types/index"
 import { FincodeConfig } from "./fincode"
-import { createFincodeRequestFetch, FincodePartialRequestHeader } from "./http"
+import { createFincodeRequestFetch, FincodeRequestHeaders } from "./http"
 import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_errorMessages"
 
 class PlatformAccount {
@@ -26,19 +25,15 @@ class PlatformAccount {
      * 
      * corresponds to `POST /v1/platform_accounts`
      * 
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {RetrievingPlatformAccountListQueryParams} [queryParams] - query parameters
+     * @param {FincodeRequestHeaders} [headers] - request header
      * 
-     * @param {RetrievingPlatformAccountListPagination} [paginaiton] 
-     * @param {PlatformAccountSearchParams} [searchParams]
-     * @param {FincodePartialRequestHeader} [header]
-     * 
-     * @returns {Promise<ListResponse<PlatformAccountObject>>} 
+     * @returns {Promise<ListResponse<PlatformAccountObject>>} - platform-account object list
      * 
     */
     public retrieveList(
-        paginaiton?: RetrievingPlatformAccountListPagination,
-        searchParams?: PlatformAccountSearchParams,
-        header?: FincodePartialRequestHeader,
+        queryParams?: RetrievingPlatformAccountListQueryParams,
+        headers?: FincodeRequestHeaders,
     ): Promise<ListResponse<PlatformAccountObject>> {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
@@ -46,11 +41,8 @@ class PlatformAccount {
                 "GET",
                 "/v1/platform_accounts",
                 undefined,
-                header,
-                {
-                    pagination: paginaiton,
-                    searchParams: searchParams,
-                },
+                headers,
+                queryParams,
             )
 
             fetch().then((res) => {
@@ -79,16 +71,14 @@ class PlatformAccount {
      * 
      * corresponds to `GET /v1/platform_accounts/:id`
      * 
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} id - platform-account id
+     * @param {FincodeRequestHeaders} [headers] - request header
      * 
-     * @param {string} id
-     * @param {FincodePartialRequestHeader} [header]
-     * 
-     * @returns {Promise<PlatformAccountObject>}
+     * @returns {Promise<PlatformAccountObject>} - platform-account object
      */
     public retrieve(
         id: string,
-        header?: FincodePartialRequestHeader,
+        headers?: FincodeRequestHeaders,
     ): Promise<PlatformAccountObject> {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
@@ -96,7 +86,7 @@ class PlatformAccount {
                 "GET",
                 `/v1/platform_accounts/${id}`,
                 undefined,
-                header,
+                headers,
                 undefined,
             )
 
@@ -126,17 +116,15 @@ class PlatformAccount {
      * 
      * corresponds to `GET /v1/platform_accounts/:id/summary`
      * 
-     * if the Promise is rejected, the error is an instance of `FincodeError`
+     * @param {string} id - platform-account id
+     * @param {FincodeRequestHeaders} [headers] - request header
      * 
-     * @param {string} id
-     * @param {FincodePartialRequestHeader} [header]
-     * 
-     * @returns {Promise<PlatformAccountObject>}
+     * @returns {Promise<PlatformAccountObject>} - platform-account object
      */
 
     public retrieveSummaryList(
         id: string,
-        header?: FincodePartialRequestHeader,
+        headers?: FincodeRequestHeaders,
     ): Promise<ListResponse<PlatformAccountSummaryObject>> {
 
         return new Promise((resolve, reject) => {
@@ -145,7 +133,7 @@ class PlatformAccount {
                 "GET",
                 `/v1/platform_accounts/${id}/summary`,
                 undefined,
-                header,
+                headers,
                 undefined,
             )
 

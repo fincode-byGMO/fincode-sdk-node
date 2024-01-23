@@ -1,38 +1,11 @@
-import { Pagination, Sort } from "./pagination"
-import { SearchParams } from "./searchParams"
+import { Modify } from "../utils/utilTypes"
+import { Pagination } from "./pagination"
 import * as Shop from "./shop"
-
-/**
- * Search Params object for Retrieving platform shops list
- */
-
-export class PlatformShopsSearchParams implements SearchParams {
-    id?: string | null
-    shop_name?: string | null
-    shop_mail_address?: string | null
-    created_from?: string | null
-    created_to?: string | null
-
-    buildParams(): URLSearchParams {
-        const param = new URLSearchParams()
-
-        Object.entries(this)
-            .filter(([_, value]) => value !== null)
-            .map<[string, string]>(([key, value]) => {
-                return [key, value as string]
-            })
-            .forEach(([key, value]) => {
-                param.append(key, value)
-            })
-
-        return param
-    }
-}
 
 /**
  * Pagination object for Retrieving platform shops list
  */
-export class RetrievingPlatformShopListPagination implements Pagination {
+export type RetrievingPlatformShopListQueryParams = Modify<Pagination, {
     /**
      * Shop ID
      */
@@ -61,45 +34,7 @@ export class RetrievingPlatformShopListPagination implements Pagination {
      * Format: `yyyy/MM/dd`
      */
     created_to?: string | null
-
-    /**
-     * Maximum number of items to return.
-     */
-    limit?: string | null
-
-    /**
-     * Number of this page.
-     */
-    page?: string | null
-
-    /**
-     * Flag to retrieve only the total number of items.
-     */
-    count_only?: boolean | null
-
-    /**
-     * Sort 
-     */
-    sort?: Sort[] | null
-
-    buildParams(): URLSearchParams {
-        const param = new URLSearchParams()
-
-        Object.entries(this)
-            .filter(([_, value]) => value !== null)
-            .map<[string, string]>(([key, value]) => {
-                if (key === "sort") {
-                    const v = (value as Sort[]).map(s => `${s.key} ${s.order}`).join(",")
-                    return [key, v]
-                } else {
-                    return [key, value as string]
-                }
-            })
-            .forEach(([key, value]) => param.append(key, value))
-
-        return param
-    }
-}
+}>
 
 /**
  * Request object for Updating platform shop
