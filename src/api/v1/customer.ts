@@ -55,11 +55,11 @@ class Customer {
                         const err = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
                         reject(err)
                     }
-                }).catch((e) => {
+                }).catch((e: unknown) => {
                     const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
                     reject(err)
                 })
-            }).catch((e) => {
+            }).catch((e: unknown) => {
                 const err = new FincodeSDKError(getFetchErrorMessage(), e)
                 reject(err)
             })
@@ -100,11 +100,11 @@ class Customer {
                         const err = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
                         reject(err)
                     }
-                }).catch((e) => {
+                }).catch((e: unknown) => {
                     const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
                     reject(err)
                 })
-            }).catch((e) => {
+            }).catch((e: unknown) => {
                 const err = new FincodeSDKError(getFetchErrorMessage(), e)
                 reject(err)
             })
@@ -145,11 +145,11 @@ class Customer {
                         const err = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
                         reject(err)
                     }
-                }).catch((e) => {
+                }).catch((e: unknown) => {
                     const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
                     reject(err)
                 })
-            }).catch((e) => {
+            }).catch((e: unknown) => {
                 const err = new FincodeSDKError(getFetchErrorMessage(), e)
                 reject(err)
             })
@@ -192,11 +192,11 @@ class Customer {
                         const err = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
                         reject(err)
                     }
-                }).catch((e) => {
+                }).catch((e: unknown) => {
                     const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
                     reject(err)
                 })
-            }).catch((e) => {
+            }).catch((e: unknown) => {
                 const err = new FincodeSDKError(getFetchErrorMessage(), e)
                 reject(err)
             })
@@ -237,11 +237,11 @@ class Customer {
                         const err = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
                         reject(err)
                     }
-                }).catch((e) => {
+                }).catch((e: unknown) => {
                     const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
                     reject(err)
                 })
-            }).catch((e) => {
+            }).catch((e: unknown) => {
                 const err = new FincodeSDKError(getFetchErrorMessage(), e)
                 reject(err)
             })

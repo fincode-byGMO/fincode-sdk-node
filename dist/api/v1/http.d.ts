@@ -1,4 +1,4 @@
-import { BodyInit } from "node-fetch";
+import fetch, { BodyInit } from "node-fetch";
 import { FincodeConfig } from "./fincode";
 export declare const buildQueryString: (queryParams: any) => string;
 declare const createFincodeRequestURL: (config: FincodeConfig, path: string, queryParams?: {
@@ -11,6 +11,6 @@ declare const createFincodeRequestFetch: (config: FincodeConfig, method: "POST" 
     contentType?: string;
 }, queryParams?: {
     [key: string]: any;
-} | undefined) => () => Promise<import("node-fetch").Response>;
+} | undefined) => () => Promise<fetch.Response>;
 export { createFincodeRequestFetch };
 export type FincodeRequestHeaders = Parameters<typeof createFincodeRequestFetch>[4];
