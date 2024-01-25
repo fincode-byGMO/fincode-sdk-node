@@ -1,31 +1,22 @@
 {
     "compilerOptions": {
-        "target": "ESNext",
-        "moduleResolution": "node",
-        "module": "ESNext",
-        "strict": true,
-        "alwaysStrict": true,
-        "outDir": "./dist",
-        "declaration": true,
-        // "declarationMap": true,
-        "allowJs": true,
-        // "noEmit": true ,   
-        "removeComments": false,
-        "forceConsistentCasingInFileNames": true,
-        "esModuleInterop": true,
-        "lib": [
-            "DOM",
-        ],
-        "paths": {
-            "~/*": ["./*"]
-        }
+      "target": "ESNext",
+      "moduleResolution": "node",
+      "module": "ESNext",
+      "strict": true,
+      "alwaysStrict": true,
+      "outDir": "./dist",
+      "declaration": true,
+      "allowJs": true,
+      "removeComments": false,
+      "forceConsistentCasingInFileNames": true,
+      "esModuleInterop": true,
+      "lib": ["ES2021"],
+      "paths": {
+        "~/*": ["./*"]
+      }
     },
-    "include": [
-        "src/**/*",
-    ],
-    "exclude": [
-        "node_modules",
-        "dist",
-        "src/**/*.test.ts",
-    ]
-}
+    "include": ["src/**/*"],
+    "exclude": ["node_modules", "dist", "src/**/*.test.ts"]
+  }
+  

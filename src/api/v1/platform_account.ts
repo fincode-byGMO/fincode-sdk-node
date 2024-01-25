@@ -55,11 +55,11 @@ class PlatformAccount {
                         const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
                         reject(e)
                     }
-                }).catch((e) => {
+                }).catch((e: unknown) => {
                     const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
                     reject(err)
                 })
-            }).catch((e) => {
+            }).catch((e: unknown) => {
                 const err = new FincodeSDKError(getFetchErrorMessage(), e)
                 reject(err)
             })
@@ -100,11 +100,11 @@ class PlatformAccount {
                         const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
                         reject(e)
                     }
-                }).catch((e) => {
+                }).catch((e: unknown) => {
                     const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
                     reject(err)
                 })
-            }).catch((e) => {
+            }).catch((e: unknown) => {
                 const err = new FincodeSDKError(getFetchErrorMessage(), e)
                 reject(err)
             })
@@ -147,11 +147,11 @@ class PlatformAccount {
                         const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
                         reject(e)
                     }
-                }).catch((e) => {
+                }).catch((e: unknown) => {
                     const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
                     reject(err)
                 })
-            }).catch((e) => {
+            }).catch((e: unknown) => {
                 const err = new FincodeSDKError(getFetchErrorMessage(), e)
                 reject(err)
             })
