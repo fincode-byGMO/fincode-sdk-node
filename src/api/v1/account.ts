@@ -44,20 +44,19 @@ class Account {
             )
 
             fetch().then((res) => {
-                res.json().then((json) => {
+                res.json().then((json: ListResponse<AccountObject>) => {
                     if (res.ok) {
-                        const list = json as ListResponse<AccountObject>
-                        resolve(list)
+                        resolve(json)
                     } else {
                         const errRes = json as APIErrorResponse
                         const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
                         reject(e)
                     }
-                }).catch((e) => {
+                }).catch((e: unknown) => {
                     const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
                     reject(err)
                 })
-            }).catch((e) => {
+            }).catch((e: unknown) => {
                 const err = new FincodeSDKError(getFetchErrorMessage(), e)
                 reject(err)
             })
@@ -98,11 +97,11 @@ class Account {
                         const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
                         reject(e)
                     }
-                }).catch((e) => {
+                }).catch((e: unknown) => {
                     const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
                     reject(err)
                 })
-            }).catch((e) => {
+            }).catch((e: unknown) => {
                 const err = new FincodeSDKError(getFetchErrorMessage(), e)
                 reject(err)
             })
@@ -145,11 +144,11 @@ class Account {
                         const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
                         reject(e)
                     }
-                }).catch((e) => {
+                }).catch((e: unknown) => {
                     const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
                     reject(err)
                 })
-            }).catch((e) => {
+            }).catch((e: unknown) => {
                 const err = new FincodeSDKError(getFetchErrorMessage(), e)
                 reject(err)
             })
