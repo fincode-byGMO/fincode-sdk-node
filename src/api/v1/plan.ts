@@ -56,8 +56,8 @@ class Plan {
                         const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
                         reject(e)
                     }
-                }).catch((e) => { reject(e) })
-            }).catch((e) => { reject(e) })
+                }).catch((e: unknown) => { reject(e) })
+            }).catch((e: unknown) => { reject(e) })
         })
     }
 
@@ -95,8 +95,8 @@ class Plan {
                         const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
                         reject(e)
                     }
-                }).catch((e) => { reject(e) })
-            }).catch((e) => { reject(e) })
+                }).catch((e: unknown) => { reject(e) })
+            }).catch((e: unknown) => { reject(e) })
         })
     }
 
@@ -134,8 +134,8 @@ class Plan {
                         const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
                         reject(e)
                     }
-                }).catch((e) => { reject(e) })
-            }).catch((e) => { reject(e) })
+                }).catch((e: unknown) => { reject(e) })
+            }).catch((e: unknown) => { reject(e) })
         })
     }
 
@@ -175,11 +175,11 @@ class Plan {
                         const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
                         reject(e)
                     }
-                }).catch((e) => {
+                }).catch((e: unknown) => {
                     const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
                     reject(err)
                 })
-            }).catch((e) => {
+            }).catch((e: unknown) => {
                 const err = new FincodeSDKError(getFetchErrorMessage(), e)
                 reject(err)
             })
@@ -220,11 +220,11 @@ class Plan {
                         const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
                         reject(e)
                     }
-                }).catch((e) => {
+                }).catch((e: unknown) => {
                     const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
                     reject(err)
                 })
-            }).catch((e) => {
+            }).catch((e: unknown) => {
                 const err = new FincodeSDKError(getFetchErrorMessage(), e)
                 reject(err)
             })
