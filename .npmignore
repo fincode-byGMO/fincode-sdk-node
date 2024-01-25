@@ -7,6 +7,7 @@ jest.config.js
 README.md
 yarn-error.log
 yarn.lock
+pnpm-lock.yaml
 .env.*
 
 *~
