@@ -11,6 +11,9 @@
     "type": "git",
     "url": "https://github.backstage-gen2.gmo-pg.com/epsilon-web/fincode-node-sdk.git"
   },
+  "engines": {
+    "node": ">=12.0.0"
+  },
   "dependencies": {
     "form-data": "^4.0.0",
     "https-proxy-agent": "^7.0.0",
