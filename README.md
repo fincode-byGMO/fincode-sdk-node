@@ -236,3 +236,11 @@ fincodeインスタンスが持つメソッドは下記のように各APIと対�
 |             | 取得     | `GET /v1/webhook_settings/{id}`    | `fincode.webhookSettings.retrieve(id)`            |
 |             | 更新     | `PUT /v1/webhook_settings/{id}`    | `fincode.webhookSettings.update(id, requestBody)` |
 |             | 削除     | `DELETE /v1/webhook_settings/{id}` | `fincode.webhookSettings.delete(id)`              |
+
+## Requirements
+
+このSDKは下記の環境で動作します。
+
+| 環境    | バージョン |
+| :------ | :--------- |
+| Node.js | >=12.0.0   |
