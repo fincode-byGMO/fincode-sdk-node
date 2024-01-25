@@ -22,8 +22,7 @@ class Account {
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
-                        const list = json;
-                        resolve(list);
+                        resolve(json);
                     }
                     else {
                         const errRes = json;
