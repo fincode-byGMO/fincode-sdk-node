@@ -1,5 +1,3 @@
-import { RequestInit } from "node-fetch"
-
 import { PaymentBulk } from "./bulk.payment"
 import { Card } from "./card"
 import { Customer } from "./customer"
@@ -18,12 +16,12 @@ import { Account } from "./account"
 /**
  * @typedef {Object} FincodeInitOptions
  * @property {string} version - Fincode API version
- * @property {RequestInit["agent"]} proxyAgent - Proxy agent for Fincode API requests
+ * @property {string | URL} proxyAgent - Proxy agent for Fincode API requests.
  * @property {number} timeout - Timeout for Fincode API requests
  */
 export type FincodeInitOptions = {
     version?: string
-    proxyAgent?: RequestInit["agent"]
+    proxyAgent?: string | URL
     timeout?: number
 }
 

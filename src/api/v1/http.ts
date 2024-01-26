@@ -2,6 +2,7 @@ import fetch, { BodyInit, RequestInit } from "node-fetch"
 import { FincodeConfig } from "./fincode.js"
 import { createFincodeRequestHeader } from "../../types/http"
 import { Sort } from "~/src/types"
+import { HttpsProxyAgent } from "https-proxy-agent"
 
 const BASE_URL = "https://api.fincode.jp"
 const BASE_URL_TEST = "https://api.test.fincode.jp"
@@ -103,7 +104,7 @@ const createFincodeRequestFetch = (
         method: method,
         headers: _headers,
         body: data,
-        agent: config.options.proxyAgent,
+        agent: config.options.proxyAgent ? new HttpsProxyAgent(config.options.proxyAgent) : undefined,
         timeout: config.options.timeout,
 
     }
