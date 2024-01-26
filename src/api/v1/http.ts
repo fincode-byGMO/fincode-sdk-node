@@ -1,7 +1,7 @@
 import fetch, { BodyInit, RequestInit } from "node-fetch"
 import { FincodeConfig } from "./fincode.js"
-import { createFincodeRequestHeader } from "../../types/http"
-import { Sort } from "~/src/types"
+import { createFincodeRequestHeader } from "../../types/http.js"
+import { Sort } from "./../../types/index.js"
 import { HttpsProxyAgent } from "https-proxy-agent"
 
 const BASE_URL = "https://api.fincode.jp"
