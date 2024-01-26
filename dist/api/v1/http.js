@@ -1,5 +1,5 @@
 import fetch from "node-fetch";
-import { createFincodeRequestHeader } from "../../types/http";
+import { createFincodeRequestHeader } from "../../types/http.js";
 import { HttpsProxyAgent } from "https-proxy-agent";
 const BASE_URL = "https://api.fincode.jp";
 const BASE_URL_TEST = "https://api.test.fincode.jp";
