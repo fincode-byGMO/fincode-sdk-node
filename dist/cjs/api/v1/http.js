@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.createFincodeRequestFetch = exports.createFincodeRequestURL = exports.buildQueryString = void 0;
 const node_fetch_1 = __importDefault(require("node-fetch"));
 const http_1 = require("../../types/http");
+const https_proxy_agent_1 = require("https-proxy-agent");
 const BASE_URL = "https://api.fincode.jp";
 const BASE_URL_TEST = "https://api.test.fincode.jp";
 const buildQueryString = (queryParams) => {
@@ -80,7 +81,7 @@ const createFincodeRequestFetch = (config, method, path, data, headers, queryPar
         method: method,
         headers: _headers,
         body: data,
-        agent: config.options.proxyAgent,
+        agent: config.options.proxyAgent ? new https_proxy_agent_1.HttpsProxyAgent(config.options.proxyAgent) : undefined,
         timeout: config.options.timeout,
     };
     return () => (0, node_fetch_1.default)(url, options);

@@ -43,7 +43,7 @@ const fincode = createFincode(
         // Timeout
         timeout: 10000,
         // Proxy
-        proxy: new HttpsProxyAgent("http://url.to.proxy:8080")
+        proxy: "http://url.to.proxy:8080"
     }
 )
 
