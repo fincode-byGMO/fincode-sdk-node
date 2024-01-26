@@ -3,7 +3,7 @@ import {
     CreatingPlanRequest,
     UpdatingPlanRequest,
 } from "./../../types"
-import { createFincode } from "./fincode"
+import { createFincode } from "./fincode.js"
 import dotenv from "dotenv"
 import path from "path"
 

@@ -1,6 +1,6 @@
-import { CancelingPaymentRequest, CapturingPaymentRequest, ChangingPaymentAmountRequest, Executing3DSecureAuthRequest, Executing3DSecureAuthResponse, ExecutingPaymentAfter3DSecureRequest, ExecutingPaymentRequest, ListResponse, PaymentObject, ReauthorizingPaymentRequest, CreatingPaymentRequest, Retrieving3DSecureAuthResponse, GeneratingKonbiniPaymentBarcodeRequest, RetrievingPaymentListQueryParams, PayType } from "../../types/index";
-import { FincodeConfig } from "./fincode";
-import { FincodeRequestHeaders } from "./http";
+import { CancelingPaymentRequest, CapturingPaymentRequest, ChangingPaymentAmountRequest, Executing3DSecureAuthRequest, Executing3DSecureAuthResponse, ExecutingPaymentAfter3DSecureRequest, ExecutingPaymentRequest, ListResponse, PaymentObject, ReauthorizingPaymentRequest, CreatingPaymentRequest, Retrieving3DSecureAuthResponse, GeneratingKonbiniPaymentBarcodeRequest, RetrievingPaymentListQueryParams, PayType } from "../../types/index.js";
+import { FincodeConfig } from "./fincode.js";
+import { FincodeRequestHeaders } from "./http.js";
 declare class Payment {
     private readonly _config;
     constructor(config: FincodeConfig);

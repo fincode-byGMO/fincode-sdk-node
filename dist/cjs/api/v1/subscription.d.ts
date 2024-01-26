@@ -1,6 +1,6 @@
-import { CreatingSubscriptionRequest, CancelingSubscriptionResponse, ListResponse, SubscriptionObject, UpdatingSubscriptionRequest, SubscriptionResultObject, RetrievingSubscriptionListQueryParams, RetrievingSubscriptionQueryParams, CancelingSubscriptionQueryParams, RetrievingSubscriptionResultListQueryParams } from "../../types/index";
-import { FincodeConfig } from "./fincode";
-import { FincodeRequestHeaders } from "./http";
+import { CreatingSubscriptionRequest, CancelingSubscriptionResponse, ListResponse, SubscriptionObject, UpdatingSubscriptionRequest, SubscriptionResultObject, RetrievingSubscriptionListQueryParams, RetrievingSubscriptionQueryParams, CancelingSubscriptionQueryParams, RetrievingSubscriptionResultListQueryParams } from "../../types/index.js";
+import { FincodeConfig } from "./fincode.js";
+import { FincodeRequestHeaders } from "./http.js";
 declare class Subscription {
     private readonly _config;
     constructor(config: FincodeConfig);

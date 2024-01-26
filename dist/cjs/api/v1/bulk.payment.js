@@ -5,10 +5,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PaymentBulk = void 0;
 const form_data_1 = __importDefault(require("form-data"));
-const index_1 = require("../../types/index");
-const http_1 = require("./http");
-const _errorMessages_1 = require("./_errorMessages");
-const random_1 = require("./../../utils/random");
+const index_js_1 = require("../../types/index.js");
+const http_js_1 = require("./http.js");
+const _errorMessages_js_1 = require("./_errorMessages.js");
+const random_js_1 = require("./../../utils/random.js");
 class PaymentBulk {
     _config;
     constructor(config) {
@@ -29,10 +29,10 @@ class PaymentBulk {
         // multipart-form-data
         const formData = new form_data_1.default();
         formData.append("file", body.file, {
-            filename: body.fileName || `${(0, random_1.generateUUIDv4)()}.json`,
+            filename: body.fileName || `${(0, random_js_1.generateUUIDv4)()}.json`,
             contentType: "application/json"
         });
-        const fetch = (0, http_1.createFincodeRequestFetch)(this._config, "POST", "/v1/payments/bulk", formData, {
+        const fetch = (0, http_js_1.createFincodeRequestFetch)(this._config, "POST", "/v1/payments/bulk", formData, {
             ...headers,
             contentType: `multipart/form-data; boundary=${formData.getBoundary()}`
         }, {
@@ -48,15 +48,15 @@ class PaymentBulk {
                     }
                     else {
                         const errRes = json;
-                        const err = new index_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
+                        const err = new index_js_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
                         reject(err);
                     }
                 }).catch((e) => {
-                    const err = new index_1.FincodeSDKError((0, _errorMessages_1.getResponseJSONParseErrorMessage)(), e);
+                    const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getResponseJSONParseErrorMessage)(), e);
                     reject(err);
                 });
             }).catch((e) => {
-                const err = new index_1.FincodeSDKError((0, _errorMessages_1.getFetchErrorMessage)(), e);
+                const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getFetchErrorMessage)(), e);
                 reject(err);
             });
         });
@@ -72,7 +72,7 @@ class PaymentBulk {
      * @returns {Promise<ListResponse<PaymentBulkObject>>} - retrieved payment bulk object list
      */
     retrieveList(queryParams, headers) {
-        const fetch = (0, http_1.createFincodeRequestFetch)(this._config, "GET", "/v1/payments/bulk", undefined, headers, queryParams);
+        const fetch = (0, http_js_1.createFincodeRequestFetch)(this._config, "GET", "/v1/payments/bulk", undefined, headers, queryParams);
         return new Promise((resolve, reject) => {
             fetch().then((res) => {
                 res.json().then((json) => {
@@ -82,15 +82,15 @@ class PaymentBulk {
                     }
                     else {
                         const errRes = json;
-                        const err = new index_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
+                        const err = new index_js_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
                         reject(err);
                     }
                 }).catch((e) => {
-                    const err = new index_1.FincodeSDKError((0, _errorMessages_1.getResponseJSONParseErrorMessage)(), e);
+                    const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getResponseJSONParseErrorMessage)(), e);
                     reject(err);
                 });
             }).catch((e) => {
-                const err = new index_1.FincodeSDKError((0, _errorMessages_1.getFetchErrorMessage)(), e);
+                const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getFetchErrorMessage)(), e);
                 reject(err);
             });
         });
@@ -107,7 +107,7 @@ class PaymentBulk {
      * @returns {Promise<PaymentBulkDetailObject>} - retrieved payment bulk detail object
      */
     retrieveDetailList(id, queryParams, headers) {
-        const fetch = (0, http_1.createFincodeRequestFetch)(this._config, "GET", `/v1/payments/bulk/${id}`, undefined, headers, queryParams);
+        const fetch = (0, http_js_1.createFincodeRequestFetch)(this._config, "GET", `/v1/payments/bulk/${id}`, undefined, headers, queryParams);
         return new Promise((resolve, reject) => {
             fetch().then((res) => {
                 res.json().then((json) => {
@@ -117,15 +117,15 @@ class PaymentBulk {
                     }
                     else {
                         const errRes = json;
-                        const err = new index_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
+                        const err = new index_js_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
                         reject(err);
                     }
                 }).catch((e) => {
-                    const err = new index_1.FincodeSDKError((0, _errorMessages_1.getResponseJSONParseErrorMessage)(), e);
+                    const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getResponseJSONParseErrorMessage)(), e);
                     reject(err);
                 });
             }).catch((e) => {
-                const err = new index_1.FincodeSDKError((0, _errorMessages_1.getFetchErrorMessage)(), e);
+                const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getFetchErrorMessage)(), e);
                 reject(err);
             });
         });
@@ -141,7 +141,7 @@ class PaymentBulk {
      * @returns {Promise<DeletingPaymentBulkResponse>} - deleting result
      */
     delete(id, headers) {
-        const fetch = (0, http_1.createFincodeRequestFetch)(this._config, "DELETE", `/v1/payments/bulk/${id}`, undefined, headers, undefined);
+        const fetch = (0, http_js_1.createFincodeRequestFetch)(this._config, "DELETE", `/v1/payments/bulk/${id}`, undefined, headers, undefined);
         return new Promise((resolve, reject) => {
             fetch().then((res) => {
                 res.json().then((json) => {
@@ -151,15 +151,15 @@ class PaymentBulk {
                     }
                     else {
                         const errRes = json;
-                        const err = new index_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
+                        const err = new index_js_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
                         reject(err);
                     }
                 }).catch((e) => {
-                    const err = new index_1.FincodeSDKError((0, _errorMessages_1.getResponseJSONParseErrorMessage)(), e);
+                    const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getResponseJSONParseErrorMessage)(), e);
                     reject(err);
                 });
             }).catch((e) => {
-                const err = new index_1.FincodeSDKError((0, _errorMessages_1.getFetchErrorMessage)(), e);
+                const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getFetchErrorMessage)(), e);
                 reject(err);
             });
         });

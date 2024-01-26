@@ -1,6 +1,6 @@
-import { ListResponse, PlatformAccountObject, PlatformAccountSummaryObject, RetrievingPlatformAccountListQueryParams } from "../../types/index";
-import { FincodeConfig } from "./fincode";
-import { FincodeRequestHeaders } from "./http";
+import { ListResponse, PlatformAccountObject, PlatformAccountSummaryObject, RetrievingPlatformAccountListQueryParams } from "../../types/index.js";
+import { FincodeConfig } from "./fincode.js";
+import { FincodeRequestHeaders } from "./http.js";
 declare class PlatformAccount {
     private readonly _config;
     constructor(config: FincodeConfig);

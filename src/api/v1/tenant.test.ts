@@ -4,7 +4,7 @@ import {
     CreatingTenantWithNewUserRequest,
     UpdatingExaminationInfoRequest_V2,
 } from "./../../types"
-import { createFincode } from "./fincode"
+import { createFincode } from "./fincode.js"
 import dotenv from "dotenv"
 import path from "path"
 import { generateUUIDv4 } from "../../utils/random"

@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Subscription = void 0;
-const index_1 = require("../../types/index");
-const http_1 = require("./http");
-const _errorMessages_1 = require("./_errorMessages");
+const index_js_1 = require("../../types/index.js");
+const http_js_1 = require("./http.js");
+const _errorMessages_js_1 = require("./_errorMessages.js");
 class Subscription {
     _config;
     constructor(config) {
@@ -21,7 +21,7 @@ class Subscription {
      */
     create(body, headers) {
         return new Promise((resolve, reject) => {
-            const fetch = (0, http_1.createFincodeRequestFetch)(this._config, "POST", "/v1/subscriptions", JSON.stringify(body), headers, undefined);
+            const fetch = (0, http_js_1.createFincodeRequestFetch)(this._config, "POST", "/v1/subscriptions", JSON.stringify(body), headers, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -30,15 +30,15 @@ class Subscription {
                     }
                     else {
                         const errRes = json;
-                        const e = new index_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
+                        const e = new index_js_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
                         reject(e);
                     }
                 }).catch((e) => {
-                    const err = new index_1.FincodeSDKError((0, _errorMessages_1.getResponseJSONParseErrorMessage)(), e);
+                    const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getResponseJSONParseErrorMessage)(), e);
                     reject(err);
                 });
             }).catch((e) => {
-                const err = new index_1.FincodeSDKError((0, _errorMessages_1.getFetchErrorMessage)(), e);
+                const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getFetchErrorMessage)(), e);
                 reject(err);
             });
         });
@@ -55,7 +55,7 @@ class Subscription {
      */
     retrieveList(queryParams, headers) {
         return new Promise((resolve, reject) => {
-            const fetch = (0, http_1.createFincodeRequestFetch)(this._config, "GET", "/v1/subscriptions", undefined, headers, queryParams);
+            const fetch = (0, http_js_1.createFincodeRequestFetch)(this._config, "GET", "/v1/subscriptions", undefined, headers, queryParams);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -64,15 +64,15 @@ class Subscription {
                     }
                     else {
                         const errRes = json;
-                        const e = new index_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
+                        const e = new index_js_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
                         reject(e);
                     }
                 }).catch((e) => {
-                    const err = new index_1.FincodeSDKError((0, _errorMessages_1.getResponseJSONParseErrorMessage)(), e);
+                    const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getResponseJSONParseErrorMessage)(), e);
                     reject(err);
                 });
             }).catch((e) => {
-                const err = new index_1.FincodeSDKError((0, _errorMessages_1.getFetchErrorMessage)(), e);
+                const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getFetchErrorMessage)(), e);
                 reject(err);
             });
         });
@@ -90,7 +90,7 @@ class Subscription {
      */
     retrieve(id, queryParams, headers) {
         return new Promise((resolve, reject) => {
-            const fetch = (0, http_1.createFincodeRequestFetch)(this._config, "GET", `/v1/subscriptions/${id}`, undefined, headers, queryParams);
+            const fetch = (0, http_js_1.createFincodeRequestFetch)(this._config, "GET", `/v1/subscriptions/${id}`, undefined, headers, queryParams);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -99,15 +99,15 @@ class Subscription {
                     }
                     else {
                         const errRes = json;
-                        const e = new index_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
+                        const e = new index_js_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
                         reject(e);
                     }
                 }).catch((e) => {
-                    const err = new index_1.FincodeSDKError((0, _errorMessages_1.getResponseJSONParseErrorMessage)(), e);
+                    const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getResponseJSONParseErrorMessage)(), e);
                     reject(err);
                 });
             }).catch((e) => {
-                const err = new index_1.FincodeSDKError((0, _errorMessages_1.getFetchErrorMessage)(), e);
+                const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getFetchErrorMessage)(), e);
                 reject(err);
             });
         });
@@ -125,7 +125,7 @@ class Subscription {
      */
     update(id, body, headers) {
         return new Promise((resolve, reject) => {
-            const fetch = (0, http_1.createFincodeRequestFetch)(this._config, "PUT", `/v1/subscriptions/${id}`, JSON.stringify(body), headers, undefined);
+            const fetch = (0, http_js_1.createFincodeRequestFetch)(this._config, "PUT", `/v1/subscriptions/${id}`, JSON.stringify(body), headers, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -134,15 +134,15 @@ class Subscription {
                     }
                     else {
                         const errRes = json;
-                        const e = new index_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
+                        const e = new index_js_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
                         reject(e);
                     }
                 }).catch((e) => {
-                    const err = new index_1.FincodeSDKError((0, _errorMessages_1.getResponseJSONParseErrorMessage)(), e);
+                    const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getResponseJSONParseErrorMessage)(), e);
                     reject(err);
                 });
             }).catch((e) => {
-                const err = new index_1.FincodeSDKError((0, _errorMessages_1.getFetchErrorMessage)(), e);
+                const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getFetchErrorMessage)(), e);
                 reject(err);
             });
         });
@@ -160,7 +160,7 @@ class Subscription {
      */
     cancel(id, queryParams, headers) {
         return new Promise((resolve, reject) => {
-            const fetch = (0, http_1.createFincodeRequestFetch)(this._config, "DELETE", `/v1/subscriptions/${id}`, undefined, headers, queryParams);
+            const fetch = (0, http_js_1.createFincodeRequestFetch)(this._config, "DELETE", `/v1/subscriptions/${id}`, undefined, headers, queryParams);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -169,15 +169,15 @@ class Subscription {
                     }
                     else {
                         const errRes = json;
-                        const e = new index_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
+                        const e = new index_js_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
                         reject(e);
                     }
                 }).catch((e) => {
-                    const err = new index_1.FincodeSDKError((0, _errorMessages_1.getResponseJSONParseErrorMessage)(), e);
+                    const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getResponseJSONParseErrorMessage)(), e);
                     reject(err);
                 });
             }).catch((e) => {
-                const err = new index_1.FincodeSDKError((0, _errorMessages_1.getFetchErrorMessage)(), e);
+                const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getFetchErrorMessage)(), e);
                 reject(err);
             });
         });
@@ -195,7 +195,7 @@ class Subscription {
      */
     retrieveResultList(id, queryParams, headers) {
         return new Promise((resolve, reject) => {
-            const fetch = (0, http_1.createFincodeRequestFetch)(this._config, "GET", `/v1/subscriptions/${id}/result`, undefined, headers, queryParams);
+            const fetch = (0, http_js_1.createFincodeRequestFetch)(this._config, "GET", `/v1/subscriptions/${id}/result`, undefined, headers, queryParams);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -204,15 +204,15 @@ class Subscription {
                     }
                     else {
                         const errRes = json;
-                        const e = new index_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
+                        const e = new index_js_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
                         reject(e);
                     }
                 }).catch((e) => {
-                    const err = new index_1.FincodeSDKError((0, _errorMessages_1.getResponseJSONParseErrorMessage)(), e);
+                    const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getResponseJSONParseErrorMessage)(), e);
                     reject(err);
                 });
             }).catch((e) => {
-                const err = new index_1.FincodeSDKError((0, _errorMessages_1.getFetchErrorMessage)(), e);
+                const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getFetchErrorMessage)(), e);
                 reject(err);
             });
         });

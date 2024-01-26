@@ -1,6 +1,6 @@
 import { ListResponse, CreatingWebhookSettingRequest, WebhookSettingObject, UpdatingWebhookSettingRequest, DeletingWebhookSettingResponse } from "../../types";
-import { FincodeRequestHeaders } from "./http";
-import { FincodeConfig } from "./fincode";
+import { FincodeRequestHeaders } from "./http.js";
+import { FincodeConfig } from "./fincode.js";
 export declare class WebhookSetting {
     private readonly _config;
     constructor(config: FincodeConfig);

@@ -1,7 +1,7 @@
 import dotenv from "dotenv"
 import { HttpsProxyAgent } from "https-proxy-agent"
 import path from "path"
-import { FincodeInitOptions, createFincode } from "./fincode"
+import { FincodeInitOptions, createFincode } from "./fincode.js"
 import { CreatingWebhookSettingRequest, WebhookEvent, UpdatingWebhookSettingRequest } from "../../types"
 import { generateUUIDv4 } from "../../utils/random"
 

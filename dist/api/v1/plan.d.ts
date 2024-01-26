@@ -1,6 +1,6 @@
-import { CreatingPlanRequest, DeletingPlanResponse, ListResponse, PlanObject, RetrievingPlanListQueryParams, UpdatingPlanRequest } from "../../types/index";
-import { FincodeConfig } from "./fincode";
-import { FincodeRequestHeaders } from "./http";
+import { CreatingPlanRequest, DeletingPlanResponse, ListResponse, PlanObject, RetrievingPlanListQueryParams, UpdatingPlanRequest } from "../../types/index.js";
+import { FincodeConfig } from "./fincode.js";
+import { FincodeRequestHeaders } from "./http.js";
 declare class Plan {
     private readonly _config;
     constructor(config: FincodeConfig);
