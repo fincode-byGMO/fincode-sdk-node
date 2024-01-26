@@ -1,4 +1,3 @@
-import { HttpsProxyAgent } from "https-proxy-agent"
 import {
     CreatingCardRegistrationSessionRequest,
 } from "./../../types"
@@ -15,11 +14,10 @@ const secretKey = env.FINCODE_API_SECRET_KEY
 if (!secretKey) throw new Error("FINCODE_API_SECRET_KEY is not defined")
 
 const proxy = env.FINCODE_HTTP_PROXY
-const agent: HttpsProxyAgent<string> | undefined = proxy ? new HttpsProxyAgent(proxy) : undefined
 
 describe("Card-Registration Session API testing", () => {
     it("Create card-registration session", async () => {
-        const fincode = createFincode(secretKey, "test", { proxyAgent: agent })
+        const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
 
         const current = new Date()
         const expire = new Date(current.getTime() + 60 * 60 * 1000) // + 1 hour

@@ -1,4 +1,3 @@
-import { HttpsProxyAgent } from "https-proxy-agent"
 import { FincodeAPIError, CreatingCardRequest, UpdatingCardRequest } from "./../../types"
 import { createFincode } from "./fincode.js"
 import dotenv from "dotenv"
@@ -13,7 +12,6 @@ const secretKey = env.FINCODE_API_SECRET_KEY
 if (!secretKey) throw new Error("FINCODE_API_SECRET_KEY is not defined")
 
 const proxy = env.FINCODE_HTTP_PROXY
-const agent: HttpsProxyAgent<string> | undefined = proxy ? new HttpsProxyAgent(proxy) : undefined
 
 const customerId = env.FINCODE_CUSTOMER_ID_TESTING_CARD
 if (!customerId) throw new Error("FINCODE_CUSTOMER_ID_TESTING_CARD is not defined")
@@ -24,7 +22,7 @@ describe("Card API testing", () => {
         const cardToken = env.FINCODE_CARD_TOKEN_TESTING_CREATING_CARD
         if (!cardToken) throw new Error("FINCODE_CARD_TOKEN_TESTING_CREATE_CARD is not defined")
 
-        const fincode = createFincode(secretKey, "test", { proxyAgent: agent })
+        const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
         const req: CreatingCardRequest = {
             default_flag: "1",
             token: cardToken,
@@ -42,7 +40,7 @@ describe("Card API testing", () => {
         const cardToken = env.FINCODE_CARD_TOKEN_TESTING_UPDATING_CARD
         if (!cardToken) throw new Error("FINCODE_CARD_TOKEN_TESTING_UPDATING_CARD is not defined")
 
-        const fincode = createFincode(secretKey, "test", { proxyAgent: agent })
+        const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
         const creatingReq: CreatingCardRequest = {
             default_flag: "1",
             token: cardToken,
@@ -72,7 +70,7 @@ describe("Card API testing", () => {
         const cardToken = env.FINCODE_CARD_TOKEN_TESTING_RETRIEVING_CARD
         if (!cardToken) throw new Error("FINCODE_CARD_TOKEN_TESTING_RETRIEVING_CARD is not defined")
 
-        const fincode = createFincode(secretKey, "test", { proxyAgent: agent })
+        const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
         const creatingReq: CreatingCardRequest = {
             default_flag: "1",
             token: cardToken,
@@ -92,7 +90,7 @@ describe("Card API testing", () => {
     })
 
     it("Retrieve card list", async () => {
-        const fincode = createFincode(secretKey, "test", { proxyAgent: agent })
+        const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
 
         const res = await fincode.cards.retrieveList(customerId)
 
@@ -104,7 +102,7 @@ describe("Card API testing", () => {
         const cardToken = env.FINCODE_CARD_TOKEN_TESTING_DELETING_CARD
         if (!cardToken) throw new Error("FINCODE_CARD_TOKEN_TESTING_DELETING_CARD is not defined")
 
-        const fincode = createFincode(secretKey, "test", { proxyAgent: agent })
+        const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
         const creatingReq: CreatingCardRequest = {
             default_flag: "1",
             token: cardToken,
