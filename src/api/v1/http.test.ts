@@ -1,5 +1,5 @@
 import { RetrievingPaymentListQueryParams } from "../../types"
-import { buildQueryString } from "./http"
+import { buildQueryString } from "./http.js"
 
 describe("Building query string", () => {
     it("Result must be empty string", () => {

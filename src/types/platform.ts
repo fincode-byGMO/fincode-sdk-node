@@ -1,6 +1,6 @@
-import { Modify } from "../utils/utilTypes"
-import { Pagination } from "./pagination"
-import * as Shop from "./shop"
+import { Modify } from "../utils/utilTypes.js"
+import { Pagination } from "./pagination.js"
+import * as Shop from "./shop.js"
 
 /**
  * Pagination object for Retrieving platform shops list

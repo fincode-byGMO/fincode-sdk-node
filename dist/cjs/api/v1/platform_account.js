@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PlatformAccount = void 0;
-const index_1 = require("../../types/index");
-const http_1 = require("./http");
-const _errorMessages_1 = require("./_errorMessages");
+const index_js_1 = require("../../types/index.js");
+const http_js_1 = require("./http.js");
+const _errorMessages_js_1 = require("./_errorMessages.js");
 class PlatformAccount {
     _config;
     constructor(config) {
@@ -22,7 +22,7 @@ class PlatformAccount {
     */
     retrieveList(queryParams, headers) {
         return new Promise((resolve, reject) => {
-            const fetch = (0, http_1.createFincodeRequestFetch)(this._config, "GET", "/v1/platform_accounts", undefined, headers, queryParams);
+            const fetch = (0, http_js_1.createFincodeRequestFetch)(this._config, "GET", "/v1/platform_accounts", undefined, headers, queryParams);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -31,15 +31,15 @@ class PlatformAccount {
                     }
                     else {
                         const errRes = json;
-                        const e = new index_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
+                        const e = new index_js_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
                         reject(e);
                     }
                 }).catch((e) => {
-                    const err = new index_1.FincodeSDKError((0, _errorMessages_1.getResponseJSONParseErrorMessage)(), e);
+                    const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getResponseJSONParseErrorMessage)(), e);
                     reject(err);
                 });
             }).catch((e) => {
-                const err = new index_1.FincodeSDKError((0, _errorMessages_1.getFetchErrorMessage)(), e);
+                const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getFetchErrorMessage)(), e);
                 reject(err);
             });
         });
@@ -56,7 +56,7 @@ class PlatformAccount {
      */
     retrieve(id, headers) {
         return new Promise((resolve, reject) => {
-            const fetch = (0, http_1.createFincodeRequestFetch)(this._config, "GET", `/v1/platform_accounts/${id}`, undefined, headers, undefined);
+            const fetch = (0, http_js_1.createFincodeRequestFetch)(this._config, "GET", `/v1/platform_accounts/${id}`, undefined, headers, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -65,15 +65,15 @@ class PlatformAccount {
                     }
                     else {
                         const errRes = json;
-                        const e = new index_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
+                        const e = new index_js_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
                         reject(e);
                     }
                 }).catch((e) => {
-                    const err = new index_1.FincodeSDKError((0, _errorMessages_1.getResponseJSONParseErrorMessage)(), e);
+                    const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getResponseJSONParseErrorMessage)(), e);
                     reject(err);
                 });
             }).catch((e) => {
-                const err = new index_1.FincodeSDKError((0, _errorMessages_1.getFetchErrorMessage)(), e);
+                const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getFetchErrorMessage)(), e);
                 reject(err);
             });
         });
@@ -90,7 +90,7 @@ class PlatformAccount {
      */
     retrieveSummaryList(id, headers) {
         return new Promise((resolve, reject) => {
-            const fetch = (0, http_1.createFincodeRequestFetch)(this._config, "GET", `/v1/platform_accounts/${id}/summary`, undefined, headers, undefined);
+            const fetch = (0, http_js_1.createFincodeRequestFetch)(this._config, "GET", `/v1/platform_accounts/${id}/summary`, undefined, headers, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -99,15 +99,15 @@ class PlatformAccount {
                     }
                     else {
                         const errRes = json;
-                        const e = new index_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
+                        const e = new index_js_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
                         reject(e);
                     }
                 }).catch((e) => {
-                    const err = new index_1.FincodeSDKError((0, _errorMessages_1.getResponseJSONParseErrorMessage)(), e);
+                    const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getResponseJSONParseErrorMessage)(), e);
                     reject(err);
                 });
             }).catch((e) => {
-                const err = new index_1.FincodeSDKError((0, _errorMessages_1.getFetchErrorMessage)(), e);
+                const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getFetchErrorMessage)(), e);
                 reject(err);
             });
         });

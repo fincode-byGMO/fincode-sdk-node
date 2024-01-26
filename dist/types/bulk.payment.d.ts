@@ -1,6 +1,6 @@
 /// <reference types="node" />
-import { Modify } from "../utils/utilTypes";
-import { Pagination } from "./pagination";
+import { Modify } from "../utils/utilTypes.js";
+import { Pagination } from "./pagination.js";
 import { PayType } from "./payment";
 /**
      * Bulk payment object

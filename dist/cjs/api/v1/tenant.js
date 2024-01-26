@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Tenant = void 0;
-const index_1 = require("../../types/index");
-const http_1 = require("./http");
-const _errorMessages_1 = require("./_errorMessages");
+const index_js_1 = require("../../types/index.js");
+const http_js_1 = require("./http.js");
+const _errorMessages_js_1 = require("./_errorMessages.js");
 /**
  * @typedef {Object} Tenant
  * @property {Function} createWithExistingUser - Create a tenant with existing platform user
@@ -34,7 +34,7 @@ class Tenant {
      */
     createWithExistingUser(body, headers) {
         return new Promise((resolve, reject) => {
-            const fetch = (0, http_1.createFincodeRequestFetch)(this._config, "POST", `/v1/join_tenants`, JSON.stringify(body), headers, undefined);
+            const fetch = (0, http_js_1.createFincodeRequestFetch)(this._config, "POST", `/v1/join_tenants`, JSON.stringify(body), headers, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -43,15 +43,15 @@ class Tenant {
                     }
                     else {
                         const errRes = json;
-                        const e = new index_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
+                        const e = new index_js_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
                         reject(e);
                     }
                 }).catch((e) => {
-                    const err = new index_1.FincodeSDKError((0, _errorMessages_1.getResponseJSONParseErrorMessage)(), e);
+                    const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getResponseJSONParseErrorMessage)(), e);
                     reject(err);
                 });
             }).catch((e) => {
-                const err = new index_1.FincodeSDKError((0, _errorMessages_1.getFetchErrorMessage)(), e);
+                const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getFetchErrorMessage)(), e);
                 reject(err);
             });
         });
@@ -68,7 +68,7 @@ class Tenant {
      */
     createWithNewUser(body, headers) {
         return new Promise((resolve, reject) => {
-            const fetch = (0, http_1.createFincodeRequestFetch)(this._config, "POST", `/v1/tenant_entries`, JSON.stringify(body), headers, undefined);
+            const fetch = (0, http_js_1.createFincodeRequestFetch)(this._config, "POST", `/v1/tenant_entries`, JSON.stringify(body), headers, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -77,15 +77,15 @@ class Tenant {
                     }
                     else {
                         const errRes = json;
-                        const e = new index_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
+                        const e = new index_js_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
                         reject(e);
                     }
                 }).catch((e) => {
-                    const err = new index_1.FincodeSDKError((0, _errorMessages_1.getResponseJSONParseErrorMessage)(), e);
+                    const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getResponseJSONParseErrorMessage)(), e);
                     reject(err);
                 });
             }).catch((e) => {
-                const err = new index_1.FincodeSDKError((0, _errorMessages_1.getFetchErrorMessage)(), e);
+                const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getFetchErrorMessage)(), e);
                 reject(err);
             });
         });
@@ -105,7 +105,7 @@ class Tenant {
      */
     updateExaminationInfo(id, body, headers) {
         return new Promise((resolve, reject) => {
-            const fetch = (0, http_1.createFincodeRequestFetch)(this._config, "PUT", `/v1/contracts/examinations/tenants/${id}`, JSON.stringify(body), {
+            const fetch = (0, http_js_1.createFincodeRequestFetch)(this._config, "PUT", `/v1/contracts/examinations/tenants/${id}`, JSON.stringify(body), {
                 ...headers,
                 tenantShopId: id,
             }, undefined);
@@ -117,15 +117,15 @@ class Tenant {
                     }
                     else {
                         const errRes = json;
-                        const e = new index_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
+                        const e = new index_js_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
                         reject(e);
                     }
                 }).catch((e) => {
-                    const err = new index_1.FincodeSDKError((0, _errorMessages_1.getResponseJSONParseErrorMessage)(), e);
+                    const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getResponseJSONParseErrorMessage)(), e);
                     reject(err);
                 });
             }).catch((e) => {
-                const err = new index_1.FincodeSDKError((0, _errorMessages_1.getFetchErrorMessage)(), e);
+                const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getFetchErrorMessage)(), e);
                 reject(err);
             });
         });
@@ -144,7 +144,7 @@ class Tenant {
      */
     retrieveExaminationInfo(id, headers) {
         return new Promise((resolve, reject) => {
-            const fetch = (0, http_1.createFincodeRequestFetch)(this._config, "GET", `/v1/contracts/examinations/tenants/${id}`, undefined, {
+            const fetch = (0, http_js_1.createFincodeRequestFetch)(this._config, "GET", `/v1/contracts/examinations/tenants/${id}`, undefined, {
                 ...headers,
                 tenantShopId: id,
             }, undefined);
@@ -156,15 +156,15 @@ class Tenant {
                     }
                     else {
                         const errRes = json;
-                        const e = new index_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
+                        const e = new index_js_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
                         reject(e);
                     }
                 }).catch((e) => {
-                    const err = new index_1.FincodeSDKError((0, _errorMessages_1.getResponseJSONParseErrorMessage)(), e);
+                    const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getResponseJSONParseErrorMessage)(), e);
                     reject(err);
                 });
             }).catch((e) => {
-                const err = new index_1.FincodeSDKError((0, _errorMessages_1.getFetchErrorMessage)(), e);
+                const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getFetchErrorMessage)(), e);
                 reject(err);
             });
         });
@@ -181,7 +181,7 @@ class Tenant {
      */
     requestExamination(body, headers) {
         return new Promise((resolve, reject) => {
-            const fetch = (0, http_1.createFincodeRequestFetch)(this._config, "POST", `/v1/contracts/examinations`, JSON.stringify(body), headers, undefined);
+            const fetch = (0, http_js_1.createFincodeRequestFetch)(this._config, "POST", `/v1/contracts/examinations`, JSON.stringify(body), headers, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -190,15 +190,15 @@ class Tenant {
                     }
                     else {
                         const errRes = json;
-                        const e = new index_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
+                        const e = new index_js_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
                         reject(e);
                     }
                 }).catch((e) => {
-                    const err = new index_1.FincodeSDKError((0, _errorMessages_1.getResponseJSONParseErrorMessage)(), e);
+                    const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getResponseJSONParseErrorMessage)(), e);
                     reject(err);
                 });
             }).catch((e) => {
-                const err = new index_1.FincodeSDKError((0, _errorMessages_1.getFetchErrorMessage)(), e);
+                const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getFetchErrorMessage)(), e);
                 reject(err);
             });
         });
@@ -215,7 +215,7 @@ class Tenant {
      */
     retrieveContract(id, headers) {
         return new Promise((resolve, reject) => {
-            const fetch = (0, http_1.createFincodeRequestFetch)(this._config, "GET", `/v1/contracts/${id}`, undefined, {
+            const fetch = (0, http_js_1.createFincodeRequestFetch)(this._config, "GET", `/v1/contracts/${id}`, undefined, {
                 ...headers,
                 tenantShopId: id,
             }, undefined);
@@ -227,15 +227,15 @@ class Tenant {
                     }
                     else {
                         const errRes = json;
-                        const e = new index_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
+                        const e = new index_js_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
                         reject(e);
                     }
                 }).catch((e) => {
-                    const err = new index_1.FincodeSDKError((0, _errorMessages_1.getResponseJSONParseErrorMessage)(), e);
+                    const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getResponseJSONParseErrorMessage)(), e);
                     reject(err);
                 });
             }).catch((e) => {
-                const err = new index_1.FincodeSDKError((0, _errorMessages_1.getFetchErrorMessage)(), e);
+                const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getFetchErrorMessage)(), e);
                 reject(err);
             });
         });
@@ -253,7 +253,7 @@ class Tenant {
      */
     update(id, body, headers) {
         return new Promise((resolve, reject) => {
-            const fetch = (0, http_1.createFincodeRequestFetch)(this._config, "PUT", `/v1/tenants/${id}`, JSON.stringify(body), headers, undefined);
+            const fetch = (0, http_js_1.createFincodeRequestFetch)(this._config, "PUT", `/v1/tenants/${id}`, JSON.stringify(body), headers, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -262,15 +262,15 @@ class Tenant {
                     }
                     else {
                         const errRes = json;
-                        const e = new index_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
+                        const e = new index_js_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
                         reject(e);
                     }
                 }).catch((e) => {
-                    const err = new index_1.FincodeSDKError((0, _errorMessages_1.getResponseJSONParseErrorMessage)(), e);
+                    const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getResponseJSONParseErrorMessage)(), e);
                     reject(err);
                 });
             }).catch((e) => {
-                const err = new index_1.FincodeSDKError((0, _errorMessages_1.getFetchErrorMessage)(), e);
+                const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getFetchErrorMessage)(), e);
                 reject(err);
             });
         });
@@ -287,7 +287,7 @@ class Tenant {
      */
     retrieve(id, headers) {
         return new Promise((resolve, reject) => {
-            const fetch = (0, http_1.createFincodeRequestFetch)(this._config, "GET", `/v1/tenants/${id}`, undefined, headers, undefined);
+            const fetch = (0, http_js_1.createFincodeRequestFetch)(this._config, "GET", `/v1/tenants/${id}`, undefined, headers, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -296,15 +296,15 @@ class Tenant {
                     }
                     else {
                         const errRes = json;
-                        const e = new index_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
+                        const e = new index_js_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
                         reject(e);
                     }
                 }).catch((e) => {
-                    const err = new index_1.FincodeSDKError((0, _errorMessages_1.getResponseJSONParseErrorMessage)(), e);
+                    const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getResponseJSONParseErrorMessage)(), e);
                     reject(err);
                 });
             }).catch((e) => {
-                const err = new index_1.FincodeSDKError((0, _errorMessages_1.getFetchErrorMessage)(), e);
+                const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getFetchErrorMessage)(), e);
                 reject(err);
             });
         });
@@ -321,7 +321,7 @@ class Tenant {
      */
     retrieveList(queryParams, headers) {
         return new Promise((resolve, reject) => {
-            const fetch = (0, http_1.createFincodeRequestFetch)(this._config, "GET", "/v1/tenants", undefined, headers, queryParams);
+            const fetch = (0, http_js_1.createFincodeRequestFetch)(this._config, "GET", "/v1/tenants", undefined, headers, queryParams);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -330,15 +330,15 @@ class Tenant {
                     }
                     else {
                         const errRes = json;
-                        const e = new index_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
+                        const e = new index_js_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
                         reject(e);
                     }
                 }).catch((e) => {
-                    const err = new index_1.FincodeSDKError((0, _errorMessages_1.getResponseJSONParseErrorMessage)(), e);
+                    const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getResponseJSONParseErrorMessage)(), e);
                     reject(err);
                 });
             }).catch((e) => {
-                const err = new index_1.FincodeSDKError((0, _errorMessages_1.getFetchErrorMessage)(), e);
+                const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getFetchErrorMessage)(), e);
                 reject(err);
             });
         });
@@ -355,7 +355,7 @@ class Tenant {
      */
     retrieveExaminationInfoV2(id, headers) {
         return new Promise((resolve, reject) => {
-            const fetch = (0, http_1.createFincodeRequestFetch)(this._config, "GET", `/v1/contracts/examinations_v2/tenants/${id}`, undefined, {
+            const fetch = (0, http_js_1.createFincodeRequestFetch)(this._config, "GET", `/v1/contracts/examinations_v2/tenants/${id}`, undefined, {
                 ...headers,
                 tenantShopId: id,
             }, undefined);
@@ -367,14 +367,14 @@ class Tenant {
                     }
                     else {
                         const errRes = json;
-                        const e = new index_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
+                        const e = new index_js_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
                         reject(e);
                     }
                 }).catch((e) => {
-                    const err = new index_1.FincodeSDKError((0, _errorMessages_1.getResponseJSONParseErrorMessage)(), e);
+                    const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getResponseJSONParseErrorMessage)(), e);
                     reject(err);
                 }).catch((e) => {
-                    const err = new index_1.FincodeSDKError((0, _errorMessages_1.getFetchErrorMessage)(), e);
+                    const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getFetchErrorMessage)(), e);
                     reject(err);
                 });
             });
@@ -393,7 +393,7 @@ class Tenant {
      */
     updateExaminationInfoV2(id, body, headers) {
         return new Promise((resolve, reject) => {
-            const fetch = (0, http_1.createFincodeRequestFetch)(this._config, "PUT", `/v1/contracts/examinations_v2/tenants/${id}`, JSON.stringify(body), {
+            const fetch = (0, http_js_1.createFincodeRequestFetch)(this._config, "PUT", `/v1/contracts/examinations_v2/tenants/${id}`, JSON.stringify(body), {
                 ...headers,
                 tenantShopId: id,
             }, undefined);
@@ -405,12 +405,12 @@ class Tenant {
                     }
                     else {
                         const errRes = json;
-                        const e = new index_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
+                        const e = new index_js_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
                         reject(e);
                     }
                 });
             }).catch((e) => {
-                const err = new index_1.FincodeSDKError((0, _errorMessages_1.getFetchErrorMessage)(), e);
+                const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getFetchErrorMessage)(), e);
                 reject(err);
             });
         });

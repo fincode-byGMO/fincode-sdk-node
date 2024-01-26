@@ -1,6 +1,6 @@
-import { Modify } from "../utils/utilTypes";
-import * as Card from "./card";
-import { Pagination } from "./pagination";
+import { Modify } from "../utils/utilTypes.js";
+import * as Card from "./card.js";
+import { Pagination } from "./pagination.js";
 /**
  * Payment Object
  */
