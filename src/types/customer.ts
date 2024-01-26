@@ -1,5 +1,5 @@
-import { Modify } from "../utils/utilTypes"
-import { Pagination } from "./pagination"
+import { Modify } from "../utils/utilTypes.js"
+import { Pagination } from "./pagination.js"
 
 /**
  * Customer object

@@ -1,7 +1,7 @@
-import { Modify } from "../utils/utilTypes";
-import * as Contract from "./contract";
-import { Pagination } from "./pagination";
-import * as Shop from "./shop";
+import { Modify } from "../utils/utilTypes.js";
+import * as Contract from "./contract.js";
+import { Pagination } from "./pagination.js";
+import * as Shop from "./shop.js";
 /**
  * Pagination object for Retrieving tenant shops list
  */
