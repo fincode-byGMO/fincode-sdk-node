@@ -5,4 +5,5 @@
         "module": "commonjs",
         "types": [ "node" ],
       },
+      "include": ["./src/**/*"],
 }
