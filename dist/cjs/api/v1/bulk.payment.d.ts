@@ -1,6 +1,6 @@
-import { DeletingPaymentBulkResponse, ListResponse, ListWithErrors, PaymentBulkDetailObject, PaymentBulkObject, RetrievingPaymentBulkDetailQueryParams, RetrievingPaymentBulkQueryParams, CreatingPaymentBulkRequest, CreatingPaymentBulkQueryParams } from "../../types/index";
-import { FincodeConfig } from "./fincode";
-import { FincodeRequestHeaders } from "./http";
+import { DeletingPaymentBulkResponse, ListResponse, ListWithErrors, PaymentBulkDetailObject, PaymentBulkObject, RetrievingPaymentBulkDetailQueryParams, RetrievingPaymentBulkQueryParams, CreatingPaymentBulkRequest, CreatingPaymentBulkQueryParams } from "../../types/index.js";
+import { FincodeConfig } from "./fincode.js";
+import { FincodeRequestHeaders } from "./http.js";
 declare class PaymentBulk {
     private readonly _config;
     constructor(config: FincodeConfig);
