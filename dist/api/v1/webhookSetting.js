@@ -1,6 +1,6 @@
 import { FincodeAPIError, FincodeSDKError, } from "../../types";
-import { createFincodeRequestFetch } from "./http";
-import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_errorMessages";
+import { createFincodeRequestFetch } from "./http.js";
+import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_errorMessages.js";
 export class WebhookSetting {
     _config;
     constructor(config) {

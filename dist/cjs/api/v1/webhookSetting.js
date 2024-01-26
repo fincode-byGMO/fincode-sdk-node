@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.WebhookSetting = void 0;
 const types_1 = require("../../types");
-const http_1 = require("./http");
-const _errorMessages_1 = require("./_errorMessages");
+const http_js_1 = require("./http.js");
+const _errorMessages_js_1 = require("./_errorMessages.js");
 class WebhookSetting {
     _config;
     constructor(config) {
@@ -21,7 +21,7 @@ class WebhookSetting {
     */
     create(body, headers) {
         return new Promise((resolve, reject) => {
-            const fetch = (0, http_1.createFincodeRequestFetch)(this._config, "POST", `/v1/webhook_settings`, JSON.stringify(body), headers, undefined);
+            const fetch = (0, http_js_1.createFincodeRequestFetch)(this._config, "POST", `/v1/webhook_settings`, JSON.stringify(body), headers, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -34,11 +34,11 @@ class WebhookSetting {
                         reject(e);
                     }
                 }).catch((e) => {
-                    const err = new types_1.FincodeSDKError((0, _errorMessages_1.getResponseJSONParseErrorMessage)(), e);
+                    const err = new types_1.FincodeSDKError((0, _errorMessages_js_1.getResponseJSONParseErrorMessage)(), e);
                     reject(err);
                 });
             }).catch((e) => {
-                const err = new types_1.FincodeSDKError((0, _errorMessages_1.getFetchErrorMessage)(), e);
+                const err = new types_1.FincodeSDKError((0, _errorMessages_js_1.getFetchErrorMessage)(), e);
                 reject(err);
             });
         });
@@ -55,7 +55,7 @@ class WebhookSetting {
      */
     retrieve(id, headers) {
         return new Promise((resolve, reject) => {
-            const fetch = (0, http_1.createFincodeRequestFetch)(this._config, "GET", `/v1/webhook_settings/${id}`, undefined, headers, undefined);
+            const fetch = (0, http_js_1.createFincodeRequestFetch)(this._config, "GET", `/v1/webhook_settings/${id}`, undefined, headers, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -68,11 +68,11 @@ class WebhookSetting {
                         reject(e);
                     }
                 }).catch((e) => {
-                    const err = new types_1.FincodeSDKError((0, _errorMessages_1.getResponseJSONParseErrorMessage)(), e);
+                    const err = new types_1.FincodeSDKError((0, _errorMessages_js_1.getResponseJSONParseErrorMessage)(), e);
                     reject(err);
                 });
             }).catch((e) => {
-                const err = new types_1.FincodeSDKError((0, _errorMessages_1.getFetchErrorMessage)(), e);
+                const err = new types_1.FincodeSDKError((0, _errorMessages_js_1.getFetchErrorMessage)(), e);
                 reject(err);
             });
         });
@@ -88,7 +88,7 @@ class WebhookSetting {
      */
     retrieveList(headers) {
         return new Promise((resolve, reject) => {
-            const fetch = (0, http_1.createFincodeRequestFetch)(this._config, "GET", `/v1/webhook_settings`, undefined, headers, undefined);
+            const fetch = (0, http_js_1.createFincodeRequestFetch)(this._config, "GET", `/v1/webhook_settings`, undefined, headers, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -101,11 +101,11 @@ class WebhookSetting {
                         reject(e);
                     }
                 }).catch((e) => {
-                    const err = new types_1.FincodeSDKError((0, _errorMessages_1.getResponseJSONParseErrorMessage)(), e);
+                    const err = new types_1.FincodeSDKError((0, _errorMessages_js_1.getResponseJSONParseErrorMessage)(), e);
                     reject(err);
                 });
             }).catch((e) => {
-                const err = new types_1.FincodeSDKError((0, _errorMessages_1.getFetchErrorMessage)(), e);
+                const err = new types_1.FincodeSDKError((0, _errorMessages_js_1.getFetchErrorMessage)(), e);
                 reject(err);
             });
         });
@@ -123,7 +123,7 @@ class WebhookSetting {
      */
     update(id, body, headers) {
         return new Promise((resolve, reject) => {
-            const fetch = (0, http_1.createFincodeRequestFetch)(this._config, "PUT", `/v1/webhook_settings/${id}`, JSON.stringify(body), headers, undefined);
+            const fetch = (0, http_js_1.createFincodeRequestFetch)(this._config, "PUT", `/v1/webhook_settings/${id}`, JSON.stringify(body), headers, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -136,11 +136,11 @@ class WebhookSetting {
                         reject(e);
                     }
                 }).catch((e) => {
-                    const err = new types_1.FincodeSDKError((0, _errorMessages_1.getResponseJSONParseErrorMessage)(), e);
+                    const err = new types_1.FincodeSDKError((0, _errorMessages_js_1.getResponseJSONParseErrorMessage)(), e);
                     reject(err);
                 });
             }).catch((e) => {
-                const err = new types_1.FincodeSDKError((0, _errorMessages_1.getFetchErrorMessage)(), e);
+                const err = new types_1.FincodeSDKError((0, _errorMessages_js_1.getFetchErrorMessage)(), e);
                 reject(err);
             });
         });
@@ -157,7 +157,7 @@ class WebhookSetting {
      */
     delete(id, headers) {
         return new Promise((resolve, reject) => {
-            const fetch = (0, http_1.createFincodeRequestFetch)(this._config, "DELETE", `/v1/webhook_settings/${id}`, undefined, headers, undefined);
+            const fetch = (0, http_js_1.createFincodeRequestFetch)(this._config, "DELETE", `/v1/webhook_settings/${id}`, undefined, headers, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -170,11 +170,11 @@ class WebhookSetting {
                         reject(e);
                     }
                 }).catch((e) => {
-                    const err = new types_1.FincodeSDKError((0, _errorMessages_1.getResponseJSONParseErrorMessage)(), e);
+                    const err = new types_1.FincodeSDKError((0, _errorMessages_js_1.getResponseJSONParseErrorMessage)(), e);
                     reject(err);
                 });
             }).catch((e) => {
-                const err = new types_1.FincodeSDKError((0, _errorMessages_1.getFetchErrorMessage)(), e);
+                const err = new types_1.FincodeSDKError((0, _errorMessages_js_1.getFetchErrorMessage)(), e);
                 reject(err);
             });
         });

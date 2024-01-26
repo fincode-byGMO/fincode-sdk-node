@@ -1,6 +1,6 @@
-import { CardObject, DeletingCardResponse, ListResponse, CreatingCardRequest, UpdatingCardRequest } from "../../types/index";
-import { FincodeConfig } from "./fincode";
-import { FincodeRequestHeaders } from "./http";
+import { CardObject, DeletingCardResponse, ListResponse, CreatingCardRequest, UpdatingCardRequest } from "../../types/index.js";
+import { FincodeConfig } from "./fincode.js";
+import { FincodeRequestHeaders } from "./http.js";
 declare class Card {
     private readonly _config;
     constructor(config: FincodeConfig);

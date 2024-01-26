@@ -1,5 +1,5 @@
 import fetch, { BodyInit } from "node-fetch";
-import { FincodeConfig } from "./fincode";
+import { FincodeConfig } from "./fincode.js";
 export declare const buildQueryString: (queryParams: any) => string;
 declare const createFincodeRequestURL: (config: FincodeConfig, path: string, queryParams?: {
     [key: string]: any;

@@ -1,8 +1,8 @@
 import FormData from "form-data";
-import { FincodeAPIError, FincodeSDKError, } from "../../types/index";
-import { createFincodeRequestFetch } from "./http";
-import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_errorMessages";
-import { generateUUIDv4 } from "./../../utils/random";
+import { FincodeAPIError, FincodeSDKError, } from "../../types/index.js";
+import { createFincodeRequestFetch } from "./http.js";
+import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_errorMessages.js";
+import { generateUUIDv4 } from "./../../utils/random.js";
 class PaymentBulk {
     _config;
     constructor(config) {
