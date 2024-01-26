@@ -1,6 +1,6 @@
-import { CreatingCustomerRequest, CustomerObject, DeletingCustomerResponse, ListResponse, UpdatingCustomerRequest, RetrievingCustomerListQueryParams } from "../../types/index";
-import { FincodeConfig } from "./fincode";
-import { FincodeRequestHeaders } from "./http";
+import { CreatingCustomerRequest, CustomerObject, DeletingCustomerResponse, ListResponse, UpdatingCustomerRequest, RetrievingCustomerListQueryParams } from "../../types/index.js";
+import { FincodeConfig } from "./fincode.js";
+import { FincodeRequestHeaders } from "./http.js";
 declare class Customer {
     private readonly _config;
     constructor(config: FincodeConfig);

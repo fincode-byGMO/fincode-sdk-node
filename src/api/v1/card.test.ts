@@ -1,6 +1,6 @@
 import { HttpsProxyAgent } from "https-proxy-agent"
 import { FincodeAPIError, CreatingCardRequest, UpdatingCardRequest } from "./../../types"
-import { createFincode } from "./fincode"
+import { createFincode } from "./fincode.js"
 import dotenv from "dotenv"
 import path from "path"
 

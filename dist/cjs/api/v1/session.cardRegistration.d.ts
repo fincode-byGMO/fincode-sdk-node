@@ -1,6 +1,6 @@
-import { CreatingCardRegistrationSessionRequest, CardRegistrationSessionObject } from "../../types/index";
-import { FincodeConfig } from "./fincode";
-import { FincodeRequestHeaders } from "./http";
+import { CreatingCardRegistrationSessionRequest, CardRegistrationSessionObject } from "../../types/index.js";
+import { FincodeConfig } from "./fincode.js";
+import { FincodeRequestHeaders } from "./http.js";
 declare class CardRegistrationSession {
     private readonly _config;
     constructor(config: FincodeConfig);

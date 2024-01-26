@@ -8,10 +8,10 @@ import {
     FincodeAPIError,
     FincodeSDKError,
     RetrievingCustomerListQueryParams,
-} from "../../types/index"
-import { FincodeConfig } from "./fincode"
-import { createFincodeRequestFetch, FincodeRequestHeaders } from "./http"
-import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_errorMessages"
+} from "../../types/index.js"
+import { FincodeConfig } from "./fincode.js"
+import { createFincodeRequestFetch, FincodeRequestHeaders } from "./http.js"
+import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_errorMessages.js"
 
 class Customer {
 
