@@ -5,19 +5,19 @@
   "exports": {
     ".": {
       "import": {
-        "types": "./dist/main.d.ts",
-        "default": "./dist/main.js"
+        "types": "./dist/esm/index.d.ts",
+        "default": "./dist/esm/index.js"
       },
       "require": {
-        "types": "./dist/cjs/main.d.ts",
-        "default": "./dist/cjs/main.js"
+        "types": "./dist/cjs/index.d.ts",
+        "default": "./dist/cjs/index.js"
       },
-      "default": "./dist/cjs/main.js"
+      "default": "./dist/cjs/index.js"
     }
   },
-  "types": "./dist/main.d.ts",
-  "main": "./dist/cjs/main.js",
-  "module": "./dist/main.js",
+  "types": "./dist/index.d.ts",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/index.js",
   "author": "GMO Epsilon, Inc.",
   "license": "MIT",
   "private": false,
@@ -42,8 +42,7 @@
     "eslint-plugin-jest": "^27.2.1",
     "jest": "^29.0.0",
     "ts-jest": "^29.0.0",
-    "ts-node": "^10.9.1",
-    "tsconfig-to-dual-package": "^1.2.0"
+    "ts-node": "^10.9.1"
   },
   "peerDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.48.1",
@@ -56,7 +55,9 @@
   },
   "scripts": {
     "lint": "eslint . --ext .ts,.js",
-    "build": "tsc -p . && tsc -p tsconfig.cjs.json && tsconfig-to-dual-package",
+    "build": "pnpm build:esm && pnpm build:cjs",
+    "build:esm": "tsc -p tsconfig.esm.json && echo '{\"type\":\"module\"}' > dist/esm/package.json",
+    "build:cjs": "tsc -p tsconfig.cjs.json && echo '{\"type\":\"commonjs\"}' > dist/cjs/package.json",
     "test:v1/http": "jest ./src/api/v1/http.test.ts --silent=false --verbose false --no-cache",
     "test:v1/account": "jest ./src/api/v1/account.test.ts --silent=false --verbose false --no-cache",
     "test:v1/bulk.payment": "jest ./src/api/v1/bulk.payment.test.ts --silent=false --verbose false --no-cache",
@@ -71,6 +72,6 @@
     "test:v1/subscription": "jest ./src/api/v1/subscription.test.ts --silent=false --verbose false --no-cache",
     "test:v1/tenant": "jest ./src/api/v1/tenant.test.ts --silent=false --verbose false --no-cache",
     "test:v1/webhook_setting": "jest ./src/api/v1/webhookSetting.test.ts --silent=false --verbose false --no-cache",
-    "test:v1": "yarn test:v1/account & yarn test:v1/bulk.payment & yarn test:v1/card & yarn test:v1/customer & yarn test:v1/payment & yarn test:v1/plan & yarn test:v1/platform_account & yarn test:v1/session.cardRegistration & yarn test:v1/session.payment & yarn test:v1/subscription & yarn test:v1/tenant & yarn test:v1/webhook_setting"
+    "test:v1": "pnpm test:v1/account & pnpm test:v1/bulk.payment & pnpm test:v1/card & pnpm test:v1/customer & pnpm test:v1/payment & pnpm test:v1/plan & pnpm test:v1/platform_account & pnpm test:v1/session.cardRegistration & pnpm test:v1/session.payment & pnpm test:v1/subscription & pnpm test:v1/tenant & pnpm test:v1/webhook_setting"
   }
 }
