@@ -1,4 +1,3 @@
-import { HttpsProxyAgent } from "https-proxy-agent"
 import { createFincode } from "./fincode.js"
 import dotenv from "dotenv"
 import path from "path"
@@ -13,7 +12,6 @@ const secretKey = env.FINCODE_API_SECRET_KEY
 if (!secretKey) throw new Error("FINCODE_API_SECRET_KEY is not defined")
 
 const proxy = env.FINCODE_HTTP_PROXY
-const agent: HttpsProxyAgent<string> | undefined = proxy ? new HttpsProxyAgent(proxy) : undefined
 
 const customerId = env.FINCODE_CUSTOMER_ID_TESTING_CARD
 if (!customerId) throw new Error("FINCODE_CUSTOMER_ID_TESTING_CARD is not defined")
@@ -55,7 +53,7 @@ describe("Payment Bulk API testing", () => {
         const fincode = createFincode(
             secretKey,
             "test",
-            { proxyAgent: agent, }
+            { proxyAgent: proxy }
         )
 
         const paymentBulkData = createPaymentBulkData()
@@ -82,7 +80,7 @@ describe("Payment Bulk API testing", () => {
         const fincode = createFincode(
             secretKey,
             "test",
-            { proxyAgent: agent, }
+            { proxyAgent: proxy }
         )
 
         const paymentBulkData = createPaymentBulkData()
@@ -112,7 +110,7 @@ describe("Payment Bulk API testing", () => {
         const fincode = createFincode(
             secretKey,
             "test",
-            { proxyAgent: agent, }
+            { proxyAgent: proxy }
         )
         const res = await fincode.paymentBulks.retrieveList()
 
@@ -124,7 +122,7 @@ describe("Payment Bulk API testing", () => {
         const fincode = createFincode(
             secretKey,
             "test",
-            { proxyAgent: agent, }
+            { proxyAgent: proxy }
         )
 
         const paymentBulkData = createPaymentBulkData()
