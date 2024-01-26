@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.WebhookSetting = void 0;
-const types_1 = require("../../types");
+const index_js_1 = require("../../types/index.js");
 const http_js_1 = require("./http.js");
 const _errorMessages_js_1 = require("./_errorMessages.js");
 class WebhookSetting {
@@ -30,15 +30,15 @@ class WebhookSetting {
                     }
                     else {
                         const errRes = json;
-                        const e = new types_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
+                        const e = new index_js_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
                         reject(e);
                     }
                 }).catch((e) => {
-                    const err = new types_1.FincodeSDKError((0, _errorMessages_js_1.getResponseJSONParseErrorMessage)(), e);
+                    const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getResponseJSONParseErrorMessage)(), e);
                     reject(err);
                 });
             }).catch((e) => {
-                const err = new types_1.FincodeSDKError((0, _errorMessages_js_1.getFetchErrorMessage)(), e);
+                const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getFetchErrorMessage)(), e);
                 reject(err);
             });
         });
@@ -64,15 +64,15 @@ class WebhookSetting {
                     }
                     else {
                         const errRes = json;
-                        const e = new types_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
+                        const e = new index_js_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
                         reject(e);
                     }
                 }).catch((e) => {
-                    const err = new types_1.FincodeSDKError((0, _errorMessages_js_1.getResponseJSONParseErrorMessage)(), e);
+                    const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getResponseJSONParseErrorMessage)(), e);
                     reject(err);
                 });
             }).catch((e) => {
-                const err = new types_1.FincodeSDKError((0, _errorMessages_js_1.getFetchErrorMessage)(), e);
+                const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getFetchErrorMessage)(), e);
                 reject(err);
             });
         });
@@ -97,15 +97,15 @@ class WebhookSetting {
                     }
                     else {
                         const errRes = json;
-                        const e = new types_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
+                        const e = new index_js_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
                         reject(e);
                     }
                 }).catch((e) => {
-                    const err = new types_1.FincodeSDKError((0, _errorMessages_js_1.getResponseJSONParseErrorMessage)(), e);
+                    const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getResponseJSONParseErrorMessage)(), e);
                     reject(err);
                 });
             }).catch((e) => {
-                const err = new types_1.FincodeSDKError((0, _errorMessages_js_1.getFetchErrorMessage)(), e);
+                const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getFetchErrorMessage)(), e);
                 reject(err);
             });
         });
@@ -132,15 +132,15 @@ class WebhookSetting {
                     }
                     else {
                         const errRes = json;
-                        const e = new types_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
+                        const e = new index_js_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
                         reject(e);
                     }
                 }).catch((e) => {
-                    const err = new types_1.FincodeSDKError((0, _errorMessages_js_1.getResponseJSONParseErrorMessage)(), e);
+                    const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getResponseJSONParseErrorMessage)(), e);
                     reject(err);
                 });
             }).catch((e) => {
-                const err = new types_1.FincodeSDKError((0, _errorMessages_js_1.getFetchErrorMessage)(), e);
+                const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getFetchErrorMessage)(), e);
                 reject(err);
             });
         });
@@ -166,15 +166,15 @@ class WebhookSetting {
                     }
                     else {
                         const errRes = json;
-                        const e = new types_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
+                        const e = new index_js_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
                         reject(e);
                     }
                 }).catch((e) => {
-                    const err = new types_1.FincodeSDKError((0, _errorMessages_js_1.getResponseJSONParseErrorMessage)(), e);
+                    const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getResponseJSONParseErrorMessage)(), e);
                     reject(err);
                 });
             }).catch((e) => {
-                const err = new types_1.FincodeSDKError((0, _errorMessages_js_1.getFetchErrorMessage)(), e);
+                const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getFetchErrorMessage)(), e);
                 reject(err);
             });
         });
