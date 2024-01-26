@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PaymentSession = void 0;
-const index_1 = require("../../types/index");
-const http_1 = require("./http");
-const _errorMessages_1 = require("./_errorMessages");
+const index_js_1 = require("../../types/index.js");
+const http_js_1 = require("./http.js");
+const _errorMessages_js_1 = require("./_errorMessages.js");
 class PaymentSession {
     _config;
     constructor(config) {
@@ -21,7 +21,7 @@ class PaymentSession {
      */
     create(body, headers) {
         return new Promise((resolve, reject) => {
-            const fetch = (0, http_1.createFincodeRequestFetch)(this._config, "POST", "/v1/sessions", JSON.stringify(body), headers, undefined);
+            const fetch = (0, http_js_1.createFincodeRequestFetch)(this._config, "POST", "/v1/sessions", JSON.stringify(body), headers, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -30,15 +30,15 @@ class PaymentSession {
                     }
                     else {
                         const errRes = json;
-                        const e = new index_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
+                        const e = new index_js_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
                         reject(e);
                     }
                 }).catch((e) => {
-                    const err = new index_1.FincodeSDKError((0, _errorMessages_1.getResponseJSONParseErrorMessage)(), e);
+                    const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getResponseJSONParseErrorMessage)(), e);
                     reject(err);
                 });
             }).catch((e) => {
-                const err = new index_1.FincodeSDKError((0, _errorMessages_1.getFetchErrorMessage)(), e);
+                const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getFetchErrorMessage)(), e);
                 reject(err);
             });
         });

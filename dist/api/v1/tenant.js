@@ -1,6 +1,6 @@
-import { FincodeAPIError, FincodeSDKError, } from "../../types/index";
-import { createFincodeRequestFetch } from "./http";
-import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_errorMessages";
+import { FincodeAPIError, FincodeSDKError, } from "../../types/index.js";
+import { createFincodeRequestFetch } from "./http.js";
+import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_errorMessages.js";
 /**
  * @typedef {Object} Tenant
  * @property {Function} createWithExistingUser - Create a tenant with existing platform user

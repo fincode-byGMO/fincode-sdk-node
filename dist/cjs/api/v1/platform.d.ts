@@ -1,6 +1,6 @@
-import { ListResponse, ShopObject, UpdatingPlatformRequest, RetrievingPlatformShopListQueryParams } from "../../types/index";
-import { FincodeConfig } from "./fincode";
-import { FincodeRequestHeaders } from "./http";
+import { ListResponse, ShopObject, UpdatingPlatformRequest, RetrievingPlatformShopListQueryParams } from "../../types/index.js";
+import { FincodeConfig } from "./fincode.js";
+import { FincodeRequestHeaders } from "./http.js";
 declare class Platform {
     private readonly _config;
     constructor(config: FincodeConfig);

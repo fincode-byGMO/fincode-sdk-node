@@ -1,5 +1,5 @@
 import fetch, { BodyInit, RequestInit } from "node-fetch"
-import { FincodeConfig } from "./fincode"
+import { FincodeConfig } from "./fincode.js"
 import { createFincodeRequestHeader } from "../../types/http"
 import { Sort } from "~/src/types"
 
