@@ -1,4 +1,3 @@
-import { HttpsProxyAgent } from "https-proxy-agent"
 import {
     CreatingPlanRequest,
     UpdatingPlanRequest,
@@ -16,11 +15,10 @@ const secretKey = env.FINCODE_API_SECRET_KEY
 if (!secretKey) throw new Error("FINCODE_API_SECRET_KEY is not defined")
 
 const proxy = env.FINCODE_HTTP_PROXY
-const agent: HttpsProxyAgent<string> | undefined = proxy ? new HttpsProxyAgent(proxy) : undefined
 
 describe("Plan API testing", () => {
     it("Create plan", async () => {
-        const fincode = createFincode(secretKey, "test", { proxyAgent: agent })
+        const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
 
         const req: CreatingPlanRequest = {
             plan_name: "Test plan",
@@ -49,7 +47,7 @@ describe("Plan API testing", () => {
     })
 
     it("Update plan", async () => {
-        const fincode = createFincode(secretKey, "test", { proxyAgent: agent })
+        const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
 
         const creatingRes = await fincode.plans.create({
             plan_name: "Test plan",
@@ -87,7 +85,7 @@ describe("Plan API testing", () => {
     })
 
     it("Retrieve plan", async () => {
-        const fincode = createFincode(secretKey, "test", { proxyAgent: agent })
+        const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
 
         const creatingRes = await fincode.plans.create({
             plan_name: "Test plan",
@@ -116,7 +114,7 @@ describe("Plan API testing", () => {
     })
 
     it("Retrieve plan list", async () => {
-        const fincode = createFincode(secretKey, "test", { proxyAgent: agent })
+        const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
 
         const creatingRes = await fincode.plans.create({
             plan_name: "Test plan",
@@ -138,7 +136,7 @@ describe("Plan API testing", () => {
     })
 
     it("Delete plan", async () => {
-        const fincode = createFincode(secretKey, "test", { proxyAgent: agent })
+        const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
 
         const creatingRes = await fincode.plans.create({
             plan_name: "Test plan",
