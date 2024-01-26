@@ -10,7 +10,6 @@ import {
 import {
     createFincode
 } from './fincode'
-import { HttpsProxyAgent } from 'https-proxy-agent'
 import dotenv from "dotenv"
 import path from 'path'
 import { generateRandomString } from '../../utils/random'
@@ -24,8 +23,6 @@ const secretKey = env.FINCODE_API_SECRET_KEY
 if (!secretKey) throw new Error("FINCODE_API_SECRET_KEY is not defined")
 
 const proxy = env.FINCODE_HTTP_PROXY
-const agent: HttpsProxyAgent<string> | undefined = proxy ? new HttpsProxyAgent(proxy) : undefined
-
 const customerId = env.FINCODE_CUSTOMER_ID_TESTING_PAYMENT
 if (!customerId) throw new Error("FINCODE_CUSTOMER_ID_TESTING_PAYMENT is not defined")
 
@@ -36,7 +33,7 @@ describe("Payment API testing", () => {
     describe("Card (without 3D secure)", () => {
         it("Creating payment", async () => {
 
-            const fincode = createFincode(secretKey, "test", { proxyAgent: agent })
+            const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
             const req: CreatingPaymentRequest = {
                 id: `f_node-${generateRandomString(23)}`,
                 pay_type: "Card",
@@ -54,7 +51,7 @@ describe("Payment API testing", () => {
 
         })
         it("Retrieving payment", async () => {
-            const fincode = createFincode(secretKey, "test", { proxyAgent: agent })
+            const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
 
             const orderId = env.FINCODE_ORDER_ID_TESTING_RETRIEVING_CARD_PAYMENT
             if (!orderId) throw new Error("FINCODE_ORDER_ID_TESTING_RETRIEVING_CARD_PAYMENT is not defined")
@@ -69,14 +66,14 @@ describe("Payment API testing", () => {
             expect(res.amount).toBe(100)
         })
         it("Retrieving payment list", async () => {
-            const fincode = createFincode(secretKey, "test", { proxyAgent: agent })
+            const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
 
             const res = await fincode.payments.retrieveList({ pay_type: "Card" })
 
             expect(res.list).toBeDefined()
         })
         it("Executing payment", async () => {
-            const fincode = createFincode(secretKey, "test", { proxyAgent: agent })
+            const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
             const creatingReq: CreatingPaymentRequest = {
                 id: `f_node-${generateRandomString(23)}`,
                 pay_type: "Card",
@@ -103,7 +100,7 @@ describe("Payment API testing", () => {
             expect(res.amount).toBe(100)
         })
         it("Capturing payment", async () => {
-            const fincode = createFincode(secretKey, "test", { proxyAgent: agent })
+            const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
             const creatingReq: CreatingPaymentRequest = {
                 id: `f_node-${generateRandomString(23)}`,
                 pay_type: "Card",
@@ -136,7 +133,7 @@ describe("Payment API testing", () => {
             expect(res.amount).toBe(100)
         })
         it("Canceling payment", async () => {
-            const fincode = createFincode(secretKey, "test", { proxyAgent: agent })
+            const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
             const creatingReq: CreatingPaymentRequest = {
                 id: `f_node-${generateRandomString(23)}`,
                 pay_type: "Card",
@@ -168,7 +165,7 @@ describe("Payment API testing", () => {
             expect(res.status).toBe("CANCELED")
         })
         it("Reautorizing payment", async () => {
-            const fincode = createFincode(secretKey, "test", { proxyAgent: agent })
+            const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
             const creatingReq: CreatingPaymentRequest = {
                 id: `f_node-${generateRandomString(23)}`,
                 pay_type: "Card",
@@ -207,7 +204,7 @@ describe("Payment API testing", () => {
             expect(res.status).toBe("AUTHORIZED")
         })
         it("Changing payment amount", async () => {
-            const fincode = createFincode(secretKey, "test", { proxyAgent: agent })
+            const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
             const creatingReq: CreatingPaymentRequest = {
                 id: `f_node-${generateRandomString(23)}`,
                 pay_type: "Card",
@@ -245,7 +242,7 @@ describe("Payment API testing", () => {
 
     describe("Konbini", () => {
         it("Creating payment", async () => {
-            const fincode = createFincode(secretKey, "test", { proxyAgent: agent })
+            const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
             const req: CreatingPaymentRequest = {
                 id: `f_node-${generateRandomString(23)}`,
                 pay_type: "Konbini",
@@ -260,7 +257,7 @@ describe("Payment API testing", () => {
             expect(res.status).toBe("UNPROCESSED")
         })
         it("Executing payment", async () => {
-            const fincode = createFincode(secretKey, "test", { proxyAgent: agent })
+            const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
             const creatingReq: CreatingPaymentRequest = {
                 id: `f_node-${generateRandomString(23)}`,
                 pay_type: "Konbini",
@@ -288,7 +285,7 @@ describe("Payment API testing", () => {
             expect(res.barcode).toBeDefined()
         })
         it("Canceling payment", async () => {
-            const fincode = createFincode(secretKey, "test", { proxyAgent: agent })
+            const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
             const creatingReq: CreatingPaymentRequest = {
                 id: `f_node-${generateRandomString(23)}`,
                 pay_type: "Konbini",
@@ -321,7 +318,7 @@ describe("Payment API testing", () => {
             expect(res.status).toBe("CANCELED")
         })
         it("Generating barcode image of payment", async () => {
-            const fincode = createFincode(secretKey, "test", { proxyAgent: agent })
+            const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
 
             const creatingReq: CreatingPaymentRequest = {
                 id: `f_node-${generateRandomString(23)}`,
@@ -364,7 +361,7 @@ describe("Payment API testing", () => {
 
     describe("PayPay", () => {
         // it("Creating payment", async () => {
-        //     const fincode = createFincode(secretKey, "test", { proxyAgent: agent })
+        //     const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
         //     const req: CreatingPaymentRequest = {
         //         pay_type: "Paypay",
         //         job_code: "CAPTURE",
@@ -380,7 +377,7 @@ describe("Payment API testing", () => {
         //     expect(res.status).toBe("UNPROCESSED")
         // })
         // it("Executing payment", async () => {
-        //     const fincode = createFincode(secretKey, "test", { proxyAgent: agent })
+        //     const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
         //     const creatingReq: CreatingPaymentRequest = {
         //         pay_type: "Paypay",
         //         job_code: "AUTH",
@@ -408,7 +405,7 @@ describe("Payment API testing", () => {
         //     expect(res.redirect_url).toBe(req.redirect_url)
         // })
         // it("Capturing payment", async () => {
-        //     const fincode = createFincode(secretKey, "test", { proxyAgent: agent })
+        //     const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
 
         //     const orderId = env.FINCODE_ORDER_ID_TESTING_CAPTURING_PAYPAY_PAYMENT
         //     if (!orderId) throw new Error("FINCODE_ORDER_ID_TESTING_CAPTURING_PAYPAY_PAYMENT is not defined")
@@ -430,7 +427,7 @@ describe("Payment API testing", () => {
         //     expect(res.status).toBe("CAPTURED")
         // })
         // it("Canceling payment", async () => {
-        //     const fincode = createFincode(secretKey, "test", { proxyAgent: agent })
+        //     const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
 
         //     const orderId = env.FINCODE_ORDER_ID_TESTING_CANCELING_PAYPAY_PAYMENT
         //     if (!orderId) throw new Error("FINCODE_ORDER_ID_TESTING_CANCELING_PAYPAY_PAYMENT is not defined")
@@ -452,7 +449,7 @@ describe("Payment API testing", () => {
         //     expect(res.status).toBe("CANCELED")
         // })
         // it("Changing payment amount", async () => {
-        //     const fincode = createFincode(secretKey, "test", { proxyAgent: agent })
+        //     const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
 
         //     const orderId = env.FINCODE_ORDER_ID_TESTING_CHANGING_PAYPAY_PAYMENT_AMOUNT
         //     if (!orderId) throw new Error("FINCODE_ORDER_ID_TESTING_CHANGING_PAYPAY_PAYMENT_AMOUNT is not defined")

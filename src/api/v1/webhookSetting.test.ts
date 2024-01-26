@@ -1,7 +1,6 @@
 import dotenv from "dotenv"
-import { HttpsProxyAgent } from "https-proxy-agent"
 import path from "path"
-import { FincodeInitOptions, createFincode } from "./fincode.js"
+import { createFincode } from "./fincode.js"
 import { CreatingWebhookSettingRequest, WebhookEvent, UpdatingWebhookSettingRequest } from "../../types"
 import { generateUUIDv4 } from "../../utils/random"
 
@@ -14,11 +13,7 @@ const secretKey = env.FINCODE_API_SECRET_KEY
 if (!secretKey) throw new Error("FINCODE_API_SECRET_KEY is not defined")
 
 const proxy = env.FINCODE_HTTP_PROXY
-const agent: HttpsProxyAgent<string> | undefined = proxy ? new HttpsProxyAgent(proxy) : undefined
 
-const options: FincodeInitOptions = {
-    proxyAgent: agent,
-}
 
 const webhookReceiverURL = env.FINCODE_WEBHOOK_RECEIVER_URL_TESTING_WEBHOOK_SETTING
 if (!webhookReceiverURL) throw new Error("FINCODE_WEBHOOK_RECEIVER_URL_TESTING_WEBHOOK_SETTING is not defined")
@@ -28,7 +23,7 @@ describe("Webhook Setting API testing", () => {
 
 
     it("Create a webhook setting", async () => {
-        const fincode = createFincode(secretKey, "test", options)
+        const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
 
         const event: WebhookEvent = "payments.card.exec"
         const url = new URL(webhookReceiverURL)
@@ -48,7 +43,7 @@ describe("Webhook Setting API testing", () => {
         await fincode.webhookSettings.delete(res.id)
     })
     it("Retrieve a webhook setting", async () => {
-        const fincode = createFincode(secretKey, "test", options)
+        const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
         const creatingReq: CreatingWebhookSettingRequest = {
             url: (new URL(webhookReceiverURL)).href,
             event: "payments.card.exec",
@@ -66,14 +61,14 @@ describe("Webhook Setting API testing", () => {
     })
 
     it("Retrieve webhook setting list", async () => {
-        const fincode = createFincode(secretKey, "test", options)
+        const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
         const res = await fincode.webhookSettings.retrieveList()
 
         expect(res.list).toBeDefined()
     })
 
     it("Update a webhook setting", async () => {
-        const fincode = createFincode(secretKey, "test", options)
+        const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
         const creatingReq: CreatingWebhookSettingRequest = {
             url: (new URL(webhookReceiverURL)).href,
             event: "payments.card.exec",
@@ -99,7 +94,7 @@ describe("Webhook Setting API testing", () => {
     })
 
     it("Delete a webhook setting", async () => {
-        const fincode = createFincode(secretKey, "test", options)
+        const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
         const creatingReq: CreatingWebhookSettingRequest = {
             url: (new URL(webhookReceiverURL)).href,
             event: "payments.card.exec",
