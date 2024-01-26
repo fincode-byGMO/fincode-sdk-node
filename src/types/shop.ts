@@ -1,5 +1,3 @@
-import { ContractBankAccount } from "./contract"
-
 /**
      * Platform shop object
      */

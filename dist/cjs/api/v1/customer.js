@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Customer = void 0;
-const index_1 = require("../../types/index");
-const http_1 = require("./http");
-const _errorMessages_1 = require("./_errorMessages");
+const index_js_1 = require("../../types/index.js");
+const http_js_1 = require("./http.js");
+const _errorMessages_js_1 = require("./_errorMessages.js");
 class Customer {
     _config;
     constructor(config) {
@@ -21,7 +21,7 @@ class Customer {
      */
     create(body, headers) {
         return new Promise((resolve, reject) => {
-            const fetch = (0, http_1.createFincodeRequestFetch)(this._config, "POST", "/v1/customers", JSON.stringify(body), headers, undefined);
+            const fetch = (0, http_js_1.createFincodeRequestFetch)(this._config, "POST", "/v1/customers", JSON.stringify(body), headers, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -30,15 +30,15 @@ class Customer {
                     }
                     else {
                         const errRes = json;
-                        const err = new index_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
+                        const err = new index_js_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
                         reject(err);
                     }
                 }).catch((e) => {
-                    const err = new index_1.FincodeSDKError((0, _errorMessages_1.getResponseJSONParseErrorMessage)(), e);
+                    const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getResponseJSONParseErrorMessage)(), e);
                     reject(err);
                 });
             }).catch((e) => {
-                const err = new index_1.FincodeSDKError((0, _errorMessages_1.getFetchErrorMessage)(), e);
+                const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getFetchErrorMessage)(), e);
                 reject(err);
             });
         });
@@ -55,7 +55,7 @@ class Customer {
      */
     retrieveList(queryParams, headers) {
         return new Promise((resolve, reject) => {
-            const fetch = (0, http_1.createFincodeRequestFetch)(this._config, "GET", "/v1/customers", undefined, headers, queryParams);
+            const fetch = (0, http_js_1.createFincodeRequestFetch)(this._config, "GET", "/v1/customers", undefined, headers, queryParams);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -64,15 +64,15 @@ class Customer {
                     }
                     else {
                         const errRes = json;
-                        const err = new index_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
+                        const err = new index_js_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
                         reject(err);
                     }
                 }).catch((e) => {
-                    const err = new index_1.FincodeSDKError((0, _errorMessages_1.getResponseJSONParseErrorMessage)(), e);
+                    const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getResponseJSONParseErrorMessage)(), e);
                     reject(err);
                 });
             }).catch((e) => {
-                const err = new index_1.FincodeSDKError((0, _errorMessages_1.getFetchErrorMessage)(), e);
+                const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getFetchErrorMessage)(), e);
                 reject(err);
             });
         });
@@ -89,7 +89,7 @@ class Customer {
      */
     retrieve(id, headers) {
         return new Promise((resolve, reject) => {
-            const fetch = (0, http_1.createFincodeRequestFetch)(this._config, "GET", `/v1/customers/${id}`, undefined, headers, undefined);
+            const fetch = (0, http_js_1.createFincodeRequestFetch)(this._config, "GET", `/v1/customers/${id}`, undefined, headers, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -98,15 +98,15 @@ class Customer {
                     }
                     else {
                         const errRes = json;
-                        const err = new index_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
+                        const err = new index_js_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
                         reject(err);
                     }
                 }).catch((e) => {
-                    const err = new index_1.FincodeSDKError((0, _errorMessages_1.getResponseJSONParseErrorMessage)(), e);
+                    const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getResponseJSONParseErrorMessage)(), e);
                     reject(err);
                 });
             }).catch((e) => {
-                const err = new index_1.FincodeSDKError((0, _errorMessages_1.getFetchErrorMessage)(), e);
+                const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getFetchErrorMessage)(), e);
                 reject(err);
             });
         });
@@ -124,7 +124,7 @@ class Customer {
     */
     update(id, body, headers) {
         return new Promise((resolve, reject) => {
-            const fetch = (0, http_1.createFincodeRequestFetch)(this._config, "PUT", `/v1/customers/${id}`, JSON.stringify(body), headers, undefined);
+            const fetch = (0, http_js_1.createFincodeRequestFetch)(this._config, "PUT", `/v1/customers/${id}`, JSON.stringify(body), headers, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -133,15 +133,15 @@ class Customer {
                     }
                     else {
                         const errRes = json;
-                        const err = new index_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
+                        const err = new index_js_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
                         reject(err);
                     }
                 }).catch((e) => {
-                    const err = new index_1.FincodeSDKError((0, _errorMessages_1.getResponseJSONParseErrorMessage)(), e);
+                    const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getResponseJSONParseErrorMessage)(), e);
                     reject(err);
                 });
             }).catch((e) => {
-                const err = new index_1.FincodeSDKError((0, _errorMessages_1.getFetchErrorMessage)(), e);
+                const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getFetchErrorMessage)(), e);
                 reject(err);
             });
         });
@@ -158,7 +158,7 @@ class Customer {
      */
     delete(id, headers) {
         return new Promise((resolve, reject) => {
-            const fetch = (0, http_1.createFincodeRequestFetch)(this._config, "DELETE", `/v1/customers/${id}`, undefined, headers, undefined);
+            const fetch = (0, http_js_1.createFincodeRequestFetch)(this._config, "DELETE", `/v1/customers/${id}`, undefined, headers, undefined);
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
@@ -167,15 +167,15 @@ class Customer {
                     }
                     else {
                         const errRes = json;
-                        const err = new index_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
+                        const err = new index_js_1.FincodeAPIError(errRes.errors, res.status, !!errRes.message);
                         reject(err);
                     }
                 }).catch((e) => {
-                    const err = new index_1.FincodeSDKError((0, _errorMessages_1.getResponseJSONParseErrorMessage)(), e);
+                    const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getResponseJSONParseErrorMessage)(), e);
                     reject(err);
                 });
             }).catch((e) => {
-                const err = new index_1.FincodeSDKError((0, _errorMessages_1.getFetchErrorMessage)(), e);
+                const err = new index_js_1.FincodeSDKError((0, _errorMessages_js_1.getFetchErrorMessage)(), e);
                 reject(err);
             });
         });

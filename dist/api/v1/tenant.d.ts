@@ -1,6 +1,6 @@
-import { ContractObject, CreatingTenantWithExistingUserRequest, CreatingTenantWithExistingUserResponse, ExaminationInfo, ListResponse, CreatingTenantWithNewUserRequest, CreatingTenantWithNewUserResponse, RequestingExaminationRequest, RequestingExaminationResponse, ShopObject, UpdatingExaminationInfoRequest, UpdatingTenantRequest, ExaminationInfo_V2, UpdatingExaminationInfoRequest_V2, RetrievingTenantShopListQueryParams } from "../../types/index";
-import { FincodeConfig } from "./fincode";
-import { FincodeRequestHeaders } from "./http";
+import { ContractObject, CreatingTenantWithExistingUserRequest, CreatingTenantWithExistingUserResponse, ExaminationInfo, ListResponse, CreatingTenantWithNewUserRequest, CreatingTenantWithNewUserResponse, RequestingExaminationRequest, RequestingExaminationResponse, ShopObject, UpdatingExaminationInfoRequest, UpdatingTenantRequest, ExaminationInfo_V2, UpdatingExaminationInfoRequest_V2, RetrievingTenantShopListQueryParams } from "../../types/index.js";
+import { FincodeConfig } from "./fincode.js";
+import { FincodeRequestHeaders } from "./http.js";
 /**
  * @typedef {Object} Tenant
  * @property {Function} createWithExistingUser - Create a tenant with existing platform user
