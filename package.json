@@ -55,7 +55,7 @@
   },
   "scripts": {
     "lint": "eslint . --ext .ts,.js",
-    "build": "pnpm build:esm && pnpm build:cjs",
+    "build": "npm build:esm && npm build:cjs",
     "build:esm": "tsc -p tsconfig.esm.json && echo '{\"type\":\"module\"}' > dist/esm/package.json",
     "build:cjs": "tsc -p tsconfig.cjs.json && echo '{\"type\":\"commonjs\"}' > dist/cjs/package.json",
     "test:v1/http": "jest ./src/api/v1/http.test.ts --silent=false --verbose false --no-cache",
@@ -72,6 +72,6 @@
     "test:v1/subscription": "jest ./src/api/v1/subscription.test.ts --silent=false --verbose false --no-cache",
     "test:v1/tenant": "jest ./src/api/v1/tenant.test.ts --silent=false --verbose false --no-cache",
     "test:v1/webhook_setting": "jest ./src/api/v1/webhookSetting.test.ts --silent=false --verbose false --no-cache",
-    "test:v1": "pnpm test:v1/account & pnpm test:v1/bulk.payment & pnpm test:v1/card & pnpm test:v1/customer & pnpm test:v1/payment & pnpm test:v1/plan & pnpm test:v1/platform_account & pnpm test:v1/session.cardRegistration & pnpm test:v1/session.payment & pnpm test:v1/subscription & pnpm test:v1/tenant & pnpm test:v1/webhook_setting"
+    "test:v1": "npm test:v1/account & npm test:v1/bulk.payment & npm test:v1/card & npm test:v1/customer & npm test:v1/payment & npm test:v1/plan & npm test:v1/platform_account & npm test:v1/session.cardRegistration & npm test:v1/session.payment & npm test:v1/subscription & npm test:v1/tenant & npm test:v1/webhook_setting"
   }
 }
