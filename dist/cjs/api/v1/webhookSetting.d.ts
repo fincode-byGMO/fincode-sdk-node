@@ -1,4 +1,4 @@
-import { ListResponse, CreatingWebhookSettingRequest, WebhookSettingObject, UpdatingWebhookSettingRequest, DeletingWebhookSettingResponse } from "../../types";
+import { ListResponse, CreatingWebhookSettingRequest, WebhookSettingObject, UpdatingWebhookSettingRequest, DeletingWebhookSettingResponse } from "../../types/index.js";
 import { FincodeRequestHeaders } from "./http.js";
 import { FincodeConfig } from "./fincode.js";
 export declare class WebhookSetting {

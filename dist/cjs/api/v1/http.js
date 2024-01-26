@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createFincodeRequestFetch = exports.createFincodeRequestURL = exports.buildQueryString = void 0;
 const node_fetch_1 = __importDefault(require("node-fetch"));
-const http_1 = require("../../types/http");
+const http_js_1 = require("../../types/http.js");
 const https_proxy_agent_1 = require("https-proxy-agent");
 const BASE_URL = "https://api.fincode.jp";
 const BASE_URL_TEST = "https://api.test.fincode.jp";
@@ -70,7 +70,7 @@ const createFincodeRequestURL = (config, path, queryParams) => {
 exports.createFincodeRequestURL = createFincodeRequestURL;
 const createFincodeRequestFetch = (config, method, path, data, headers, queryParams) => {
     const url = createFincodeRequestURL(config, path, queryParams);
-    const _headers = (0, http_1.createFincodeRequestHeader)({
+    const _headers = (0, http_js_1.createFincodeRequestHeader)({
         apiVersion: config.options.version,
         authorization: `Bearer ${config.apiKey}`,
         idempotentKey: headers?.idempotentKey,

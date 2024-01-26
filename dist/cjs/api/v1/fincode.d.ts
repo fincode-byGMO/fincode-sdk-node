@@ -1,17 +1,16 @@
-/// <reference types="node" />
-import { PaymentBulk } from "./bulk.payment";
-import { Card } from "./card";
-import { Customer } from "./customer";
-import { Payment } from "./payment";
-import { Plan } from "./plan";
-import { Platform } from "./platform";
-import { PlatformAccount } from "./platform_account";
-import { CardRegistrationSession } from "./session.cardRegistration";
-import { PaymentSession } from "./session.payment";
-import { Subscription } from "./subscription";
-import { Tenant } from "./tenant";
-import { WebhookSetting } from "./webhookSetting";
-import { Account } from "./account";
+import { PaymentBulk } from "./bulk.payment.js";
+import { Card } from "./card.js";
+import { Customer } from "./customer.js";
+import { Payment } from "./payment.js";
+import { Plan } from "./plan.js";
+import { Platform } from "./platform.js";
+import { PlatformAccount } from "./platform_account.js";
+import { CardRegistrationSession } from "./session.cardRegistration.js";
+import { PaymentSession } from "./session.payment.js";
+import { Subscription } from "./subscription.js";
+import { Tenant } from "./tenant.js";
+import { WebhookSetting } from "./webhookSetting.js";
+import { Account } from "./account.js";
 /**
  * @typedef {Object} FincodeInitOptions
  * @property {string} version - Fincode API version
