@@ -151,7 +151,7 @@ export { Fincode, FincodeConfig };
  * create `Fincode` instance
  *
  * @param apiKey - fincode API key (secret key)
- * @param fincodeEnv - fincode environment, `"test"` or `"live"`
+ * @param productionMode - whether to use the fincode production environment. If `false`, the test environment will be used.
  * @param options - fincode options
  */
 const createFincode = (
