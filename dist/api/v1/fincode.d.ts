@@ -29,17 +29,20 @@ export type FincodeInitOptions = {
  * @property {FincodeInitOptions} options - Fincode initialization options
  */
 type FincodeConfig = {
-    fincodeEnv: FincodeEnvironment;
+    productionMode: boolean;
     apiKey: string;
     options: FincodeInitOptions;
 };
-type FincodeEnvironment = "test" | "live";
 declare class Fincode {
     readonly config: FincodeConfig;
     /**
      * @param apiKey - API key (secret key)
      */
-    constructor(apiKey: string, fincodeEnv?: FincodeEnvironment, initOptions?: FincodeInitOptions);
+    constructor(initArgs: {
+        apiKey: string;
+        productionMode: boolean;
+        options?: FincodeInitOptions;
+    });
     private _accounts;
     get accounts(): Account;
     private _customers;
@@ -75,5 +78,9 @@ export { Fincode, FincodeConfig };
  * @param fincodeEnv - fincode environment, `"test"` or `"live"`
  * @param options - fincode options
  */
-declare const createFincode: (apiKey: string, fincodeEnv: FincodeEnvironment, options: FincodeInitOptions) => Fincode;
+declare const createFincode: (initArgs: {
+    apiKey: string;
+    productionMode: boolean;
+    options?: FincodeInitOptions;
+}) => Fincode;
 export { createFincode };
