@@ -20,11 +20,11 @@ class Fincode {
         if (!initArgs.apiKey) {
             throw new Error("API key is required");
         }
-        if (typeof initArgs.productionMode !== "boolean") {
-            throw new Error("productionMode should be a boolean value");
+        if (typeof initArgs.isLiveMode !== "boolean") {
+            throw new Error("isLiveMode should be a boolean value");
         }
         const config = {
-            productionMode: initArgs.productionMode,
+            isLiveMode: initArgs.isLiveMode,
             apiKey: initArgs.apiKey,
             options: initArgs.options ?? {},
         };
@@ -101,7 +101,7 @@ export { Fincode };
  * create `Fincode` instance
  *
  * @param apiKey - fincode API key (secret key)
- * @param fincodeEnv - fincode environment, `"test"` or `"live"`
+ * @param isLiveMode - whether to use the fincode production environment. If `false`, the test environment will be used.
  * @param options - fincode options
  */
 const createFincode = (initArgs) => {
