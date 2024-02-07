@@ -31,7 +31,7 @@ export type FincodeInitOptions = {
  * @property {FincodeInitOptions} options - Fincode initialization options
  */
 type FincodeConfig = {
-    productionMode: boolean;
+    isLiveMode: boolean;
     apiKey: string;
     options: FincodeInitOptions;
 };
@@ -45,19 +45,19 @@ class Fincode {
      */
     constructor(initArgs: {
         apiKey: string;
-        productionMode: boolean;
+        isLiveMode: boolean;
         options?: FincodeInitOptions;
     }) {
 
         if (!initArgs.apiKey) {
             throw new Error("API key is required");
         }
-        if (typeof initArgs.productionMode !== "boolean") {
-            throw new Error("productionMode should be a boolean value");
+        if (typeof initArgs.isLiveMode !== "boolean") {
+            throw new Error("isLiveMode should be a boolean value");
         }
 
         const config = {
-            productionMode: initArgs.productionMode,
+            isLiveMode: initArgs.isLiveMode,
             apiKey: initArgs.apiKey,
             options: initArgs.options ?? {},
         };
@@ -151,13 +151,13 @@ export { Fincode, FincodeConfig };
  * create `Fincode` instance
  *
  * @param apiKey - fincode API key (secret key)
- * @param productionMode - whether to use the fincode production environment. If `false`, the test environment will be used.
+ * @param isLiveMode - whether to use the fincode production environment. If `false`, the test environment will be used.
  * @param options - fincode options
  */
 const createFincode = (
     initArgs: {
         apiKey: string;
-        productionMode: boolean;
+        isLiveMode: boolean;
         options?: FincodeInitOptions;
     }
 ): Fincode => {
