@@ -63,7 +63,7 @@ const interpretQueryParams = (urlSearchParams, key, value) => {
     }
 };
 const createFincodeRequestURL = (config, path, queryParams) => {
-    const baseUrl = config.fincodeEnv == "test" ? BASE_URL_TEST : BASE_URL;
+    const baseUrl = config.productionMode ? BASE_URL : BASE_URL_TEST;
     const queryStr = queryParams ? `?${(0, exports.buildQueryString)(queryParams)}` : "";
     return `${baseUrl}${path}${queryStr}`;
 };
