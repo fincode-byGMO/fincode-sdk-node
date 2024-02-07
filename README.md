@@ -34,7 +34,7 @@ import { createFincode } from "@fincode/node"
 
 const fincode = createFincode({
     apiKey: "m_****_**********", // Secret key
-    productionMode: true,  // fincode Environment. true: Production, false: Test
+    isLiveMode: true,  // fincode Environment. true, false: Test
     
     // Optional,
     options: {   
