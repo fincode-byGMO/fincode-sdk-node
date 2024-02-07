@@ -56,7 +56,7 @@ const interpretQueryParams = (urlSearchParams, key, value) => {
     }
 };
 const createFincodeRequestURL = (config, path, queryParams) => {
-    const baseUrl = config.productionMode ? BASE_URL : BASE_URL_TEST;
+    const baseUrl = config.isLiveMode ? BASE_URL : BASE_URL_TEST;
     const queryStr = queryParams ? `?${buildQueryString(queryParams)}` : "";
     return `${baseUrl}${path}${queryStr}`;
 };
