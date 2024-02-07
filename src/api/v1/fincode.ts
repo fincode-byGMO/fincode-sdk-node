@@ -46,7 +46,7 @@ class Fincode {
     constructor(initArgs: {
         apiKey: string;
         productionMode: boolean;
-        initOptions?: FincodeInitOptions;
+        options?: FincodeInitOptions;
     }) {
 
         if (!initArgs.apiKey) {
@@ -59,7 +59,7 @@ class Fincode {
         const config = {
             productionMode: initArgs.productionMode,
             apiKey: initArgs.apiKey,
-            options: initArgs.initOptions ?? {},
+            options: initArgs.options ?? {},
         };
         this.config = config;
 
@@ -158,7 +158,7 @@ const createFincode = (
     initArgs: {
         apiKey: string;
         productionMode: boolean;
-        initOptions?: FincodeInitOptions;
+        options?: FincodeInitOptions;
     }
 ): Fincode => {
     const fincode = new Fincode(initArgs);
