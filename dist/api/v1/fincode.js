@@ -16,11 +16,17 @@ class Fincode {
     /**
      * @param apiKey - API key (secret key)
      */
-    constructor(apiKey, fincodeEnv = "test", initOptions) {
+    constructor(initArgs) {
+        if (!initArgs.apiKey) {
+            throw new Error("API key is required");
+        }
+        if (typeof initArgs.productionMode !== "boolean") {
+            throw new Error("productionMode should be a boolean value");
+        }
         const config = {
-            fincodeEnv: fincodeEnv,
-            apiKey: apiKey,
-            options: initOptions ?? {}
+            productionMode: initArgs.productionMode,
+            apiKey: initArgs.apiKey,
+            options: initArgs.options ?? {},
         };
         this.config = config;
         this._customers = new Customer(this.config);
@@ -98,8 +104,8 @@ export { Fincode };
  * @param fincodeEnv - fincode environment, `"test"` or `"live"`
  * @param options - fincode options
  */
-const createFincode = (apiKey, fincodeEnv, options) => {
-    const fincode = new Fincode(apiKey, fincodeEnv, options);
+const createFincode = (initArgs) => {
+    const fincode = new Fincode(initArgs);
     return fincode;
 };
 export { createFincode };

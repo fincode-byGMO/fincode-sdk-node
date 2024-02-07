@@ -32,12 +32,12 @@ Getting Startedの手順に従い `@fincode/node` をプロジェクトにイン
 ```typescript
 import { createFincode } from "@fincode/node"
 
-const fincode = createFincode(
-    "m_****_**********", // Secret key
-    "test", // fincode Environment
+const fincode = createFincode({
+    apiKey: "m_****_**********", // Secret key
+    productionMode: true  // fincode Environment. true: Production, false: Test
     
     // Optional,
-    {   
+    options: {   
         // API Version
         version: "20211101",
         // Timeout
@@ -45,7 +45,7 @@ const fincode = createFincode(
         // Proxy
         proxy: "http://url.to.proxy:8080"
     }
-)
+})
 
 (async () => {
     
