@@ -67,7 +67,7 @@ const createFincodeRequestURL = (
     }
 ): string => {
 
-    const baseUrl = config.fincodeEnv == "test" ? BASE_URL_TEST : BASE_URL
+    const baseUrl = config.productionMode ? BASE_URL : BASE_URL_TEST
 
     const queryStr = queryParams ? `?${buildQueryString(queryParams)}` : ""
 
