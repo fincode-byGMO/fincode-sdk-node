@@ -12,7 +12,7 @@ import { Tenant } from "./tenant.js";
 import { WebhookSetting } from "./webhookSetting.js";
 import { Account } from "./account.js";
 /**
- * @typedef {Object} FincodeInitOptions
+ * @typedef {object} FincodeInitOptions
  * @property {string} version - Fincode API version
  * @property {string | URL} proxyAgent - Proxy agent for Fincode API requests.
  * @property {number} timeout - Timeout for Fincode API requests
@@ -23,7 +23,7 @@ export type FincodeInitOptions = {
     timeout?: number;
 };
 /**
- * @typedef {Object} FincodeConfig
+ * @typedef {object} FincodeConfig
  * @property {boolean} isTest - Whether to use the fincode test environment
  * @property {string} apiKey - API key (secret key)
  * @property {FincodeInitOptions} options - Fincode initialization options
@@ -74,13 +74,14 @@ export { Fincode, FincodeConfig };
 /**
  * create `Fincode` instance
  *
- * @param apiKey - fincode API key (secret key)
- * @param isLiveMode - whether to use the fincode production environment. If `false`, the test environment will be used.
- * @param options - fincode options
+ * @param {object} initArgs - initialization arguments
+ * @param {string} initArgs.apiKey - fincode API key (secret key)
+ * @param {boolean} initArgs.isLiveMode - whether to use the fincode production environment. If `false`, the test environment will be used.
+ * @param {object} initArgs.options - fincode options
  */
 declare const createFincode: (initArgs: {
     apiKey: string;
-    isLiveMode: boolean;
+    isLiveMode?: boolean;
     options?: FincodeInitOptions;
 }) => Fincode;
 export { createFincode };
