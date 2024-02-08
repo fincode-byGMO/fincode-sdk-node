@@ -5,7 +5,7 @@ const index_js_1 = require("../../types/index.js");
 const http_js_1 = require("./http.js");
 const _errorMessages_js_1 = require("./_errorMessages.js");
 /**
- * @typedef {Object} Tenant
+ * @typedef {object} Tenant
  * @property {Function} createWithExistingUser - Create a tenant with existing platform user
  * @property {Function} createWithNewUser - Create a tenant with new user
  * @property {Function} updateExaminationInfo - *deprecated* Use `updateExaminationInfoV2` instead
