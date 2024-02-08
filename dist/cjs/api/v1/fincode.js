@@ -103,12 +103,17 @@ exports.Fincode = Fincode;
 /**
  * create `Fincode` instance
  *
- * @param apiKey - fincode API key (secret key)
- * @param isLiveMode - whether to use the fincode production environment. If `false`, the test environment will be used.
- * @param options - fincode options
+ * @param {object} initArgs - initialization arguments
+ * @param {string} initArgs.apiKey - fincode API key (secret key)
+ * @param {boolean} initArgs.isLiveMode - whether to use the fincode production environment. If `false`, the test environment will be used.
+ * @param {object} initArgs.options - fincode options
  */
 const createFincode = (initArgs) => {
-    const fincode = new Fincode(initArgs);
+    const isLiveMode = initArgs.isLiveMode ?? false;
+    const fincode = new Fincode({
+        ...initArgs,
+        isLiveMode: isLiveMode,
+    });
     return fincode;
 };
 exports.createFincode = createFincode;
