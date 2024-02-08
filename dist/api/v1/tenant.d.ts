@@ -2,7 +2,7 @@ import { ContractObject, CreatingTenantWithExistingUserRequest, CreatingTenantWi
 import { FincodeConfig } from "./fincode.js";
 import { FincodeRequestHeaders } from "./http.js";
 /**
- * @typedef {Object} Tenant
+ * @typedef {object} Tenant
  * @property {Function} createWithExistingUser - Create a tenant with existing platform user
  * @property {Function} createWithNewUser - Create a tenant with new user
  * @property {Function} updateExaminationInfo - *deprecated* Use `updateExaminationInfoV2` instead
