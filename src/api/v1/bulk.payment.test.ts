@@ -50,11 +50,11 @@ const createPaymentBulkData = (): { data: unknown[] } => {
 
 describe("Payment Bulk API testing", () => {
     it("Register payment-bulk", async () => {
-        const fincode = createFincode(
-            secretKey,
-            "test",
-            { proxyAgent: proxy }
-        )
+        const fincode = createFincode({
+            apiKey: secretKey,
+            isLiveMode: false,
+            options: { proxyAgent: proxy }
+        })
 
         const paymentBulkData = createPaymentBulkData()
         const file = JSON.stringify(paymentBulkData)
@@ -77,11 +77,11 @@ describe("Payment Bulk API testing", () => {
     }, 100000)
 
     it("Retrieve payment-bulk detail list", async () => {
-        const fincode = createFincode(
-            secretKey,
-            "test",
-            { proxyAgent: proxy }
-        )
+        const fincode = createFincode({
+            apiKey: secretKey,
+            isLiveMode: false,
+            options: { proxyAgent: proxy }
+        })
 
         const paymentBulkData = createPaymentBulkData()
         const processStr = createProcessDate(60 * 60 * 24 * 2 * 1000) // + 2 day
@@ -107,11 +107,11 @@ describe("Payment Bulk API testing", () => {
 
     it("Retrieve payment-bulk list", async () => {
 
-        const fincode = createFincode(
-            secretKey,
-            "test",
-            { proxyAgent: proxy }
-        )
+        const fincode = createFincode({
+            apiKey: secretKey,
+            isLiveMode: false,
+            options: { proxyAgent: proxy }
+        })
         const res = await fincode.paymentBulks.retrieveList()
 
         expect(res.list).toBeDefined()
@@ -119,11 +119,11 @@ describe("Payment Bulk API testing", () => {
     })
 
     it("Delete payment-bulk", async () => {
-        const fincode = createFincode(
-            secretKey,
-            "test",
-            { proxyAgent: proxy }
-        )
+        const fincode = createFincode({
+            apiKey: secretKey,
+            isLiveMode: false,
+            options: { proxyAgent: proxy }
+        })
 
         const paymentBulkData = createPaymentBulkData()
         const processStr = createProcessDate(60 * 60 * 24 * 2 * 1000) // + 2 day
