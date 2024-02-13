@@ -18,20 +18,32 @@ if (!accountId) throw new Error("FINCODE_PLATFORM_ACCOUNT_ID_TESTING_PLATFORM_AC
 describe("Platform account API testing", () => {
 
     it("Retrieve a platform account", async () => {
-        const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
+        const fincode = createFincode({
+            apiKey: secretKey,
+            isLiveMode: false,
+            options: { proxyAgent: proxy }
+        })
         const res = await fincode.platformAccounts.retrieve(accountId)
 
         expect(res.id).toBe(accountId)
         expect(res.status_code).toBeDefined()
     })
     it("Retrieve a platform account list", async () => {
-        const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
+        const fincode = createFincode({
+            apiKey: secretKey,
+            isLiveMode: false,
+            options: { proxyAgent: proxy }
+        })
         const res = await fincode.platformAccounts.retrieveList()
 
         expect(res.list?.length).toBeGreaterThanOrEqual(0)
     })
     it("Retrieve a platform account summary list", async () => {
-        const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
+        const fincode = createFincode({
+            apiKey: secretKey,
+            isLiveMode: false,
+            options: { proxyAgent: proxy }
+        })
         const res = await fincode.platformAccounts.retrieveSummaryList(accountId)
 
         expect(res.list).toBeDefined()
