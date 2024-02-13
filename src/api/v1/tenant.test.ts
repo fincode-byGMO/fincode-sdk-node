@@ -81,7 +81,11 @@ const getExamReqBody = (): UpdatingExaminationInfoRequest_V2 => {
 
 describe("Tenant API testing", () => {
     it("Create a tenant (with new user)", async () => {
-        const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
+        const fincode = createFincode({
+            apiKey: secretKey,
+            isLiveMode: false,
+            options: { proxyAgent: proxy }
+        })
         const req: CreatingTenantWithNewUserRequest = {
             email: `${generateUUIDv4()}@example.com`,
             password: "0000NakataniHiroki0000",
@@ -93,7 +97,11 @@ describe("Tenant API testing", () => {
         expect(res.user_data?.default_shop_id).toBeDefined()
     })
     it("Create a tenant (with existing user)", async () => {
-        const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
+        const fincode = createFincode({
+            apiKey: secretKey,
+            isLiveMode: false,
+            options: { proxyAgent: proxy }
+        })
         const req: CreatingTenantWithExistingUserRequest = {
             email: env.FINCODE_TENANT_EXISTING_USER_EMAIL,
             password: env.FINCODE_TENANT_EXISTING_USER_PASSWORD,
@@ -105,7 +113,11 @@ describe("Tenant API testing", () => {
 
     })
     it("Retrieve a tenant", async () => {
-        const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
+        const fincode = createFincode({
+            apiKey: secretKey,
+            isLiveMode: false,
+            options: { proxyAgent: proxy }
+        })
         const creatingReq: CreatingTenantWithExistingUserRequest = {
             email: env.FINCODE_TENANT_EXISTING_USER_EMAIL,
             password: env.FINCODE_TENANT_EXISTING_USER_PASSWORD,
@@ -119,13 +131,21 @@ describe("Tenant API testing", () => {
         expect(res.shop_type).toBe("tenant")
     })
     it("Retrieve tenant list", async () => {
-        const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
+        const fincode = createFincode({
+            apiKey: secretKey,
+            isLiveMode: false,
+            options: { proxyAgent: proxy }
+        })
         const res = await fincode.tenants.retrieveList()
 
         expect(res.list).toBeDefined()
     })
     it("Update an examination info", async () => {
-        const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
+        const fincode = createFincode({
+            apiKey: secretKey,
+            isLiveMode: false,
+            options: { proxyAgent: proxy }
+        })
         const creatingReq: CreatingTenantWithExistingUserRequest = {
             email: env.FINCODE_TENANT_EXISTING_USER_EMAIL,
             password: env.FINCODE_TENANT_EXISTING_USER_PASSWORD,
@@ -146,7 +166,11 @@ describe("Tenant API testing", () => {
         expect(res.contract_info?.staff1_last_name).toBe(req.contract_info?.staff1_last_name)
     })
     it("Retrieve an examination info", async () => {
-        const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
+        const fincode = createFincode({
+            apiKey: secretKey,
+            isLiveMode: false,
+            options: { proxyAgent: proxy }
+        })
         const creatingReq: CreatingTenantWithExistingUserRequest = {
             email: env.FINCODE_TENANT_EXISTING_USER_EMAIL,
             password: env.FINCODE_TENANT_EXISTING_USER_PASSWORD,
@@ -171,7 +195,11 @@ describe("Tenant API testing", () => {
     })
 
     it("Retrieve a contract", async () => {
-        const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
+        const fincode = createFincode({
+            apiKey: secretKey,
+            isLiveMode: false,
+            options: { proxyAgent: proxy }
+        })
         const creatingReq: CreatingTenantWithExistingUserRequest = {
             email: env.FINCODE_TENANT_EXISTING_USER_EMAIL,
             password: env.FINCODE_TENANT_EXISTING_USER_PASSWORD,
