@@ -53,7 +53,11 @@ const createCreatingSubscriptionRequest = (): CreatingSubscriptionRequest => {
 describe("Subscription API testing", () => {
 
     it("Create subscription", async () => {
-        const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
+        const fincode = createFincode({
+            apiKey: secretKey,
+            isLiveMode: false,
+            options: { proxyAgent: proxy }
+        })
 
         const req = createCreatingSubscriptionRequest()
         const res = await fincode.subscriptions.create(req)
@@ -87,7 +91,11 @@ describe("Subscription API testing", () => {
     })
 
     it("Update subscription", async () => {
-        const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
+        const fincode = createFincode({
+            apiKey: secretKey,
+            isLiveMode: false,
+            options: { proxyAgent: proxy }
+        })
 
         const creatingReq = createCreatingSubscriptionRequest()
         const creatingRes = await fincode.subscriptions.create(creatingReq)
@@ -120,7 +128,11 @@ describe("Subscription API testing", () => {
     })
 
     it("Retrieve subscription", async () => {
-        const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
+        const fincode = createFincode({
+            apiKey: secretKey,
+            isLiveMode: false,
+            options: { proxyAgent: proxy }
+        })
 
         const creatingReq = createCreatingSubscriptionRequest()
         const creatingRes = await fincode.subscriptions.create(creatingReq)
@@ -148,7 +160,11 @@ describe("Subscription API testing", () => {
     })
 
     it("Retrieve subscription list", async () => {
-        const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
+        const fincode = createFincode({
+            apiKey: secretKey,
+            isLiveMode: false,
+            options: { proxyAgent: proxy }
+        })
 
         const creatingReq = createCreatingSubscriptionRequest()
         const creatingRes = await fincode.subscriptions.create(creatingReq)
@@ -186,7 +202,11 @@ describe("Subscription API testing", () => {
     })
 
     it("Delete subscription", async () => {
-        const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
+        const fincode = createFincode({
+            apiKey: secretKey,
+            isLiveMode: false,
+            options: { proxyAgent: proxy }
+        })
 
         const creatingReq = createCreatingSubscriptionRequest()
         const creatingRes = await fincode.subscriptions.create(creatingReq)
