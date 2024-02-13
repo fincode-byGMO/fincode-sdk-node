@@ -17,11 +17,11 @@ if (!accountId) throw new Error("FINCODE_ACCOUNT_ID_TESTING_ACCOUNT is not defin
 
 describe("Account API testing", () => {
     it("Retrieve a Account", async () => {
-        const fincode = createFincode(
-            secretKey,
-            "test",
-            { proxyAgent: proxy }
-        )
+        const fincode = createFincode({
+            apiKey: secretKey,
+            isLiveMode: false,
+            options: { proxyAgent: proxy }
+        })
 
         const res = await fincode.accounts.retrieve(accountId)
 
@@ -29,22 +29,22 @@ describe("Account API testing", () => {
         expect(res.status_code).toBeDefined()
     })
     it("Retrieve a Account list", async () => {
-        const fincode = createFincode(
-            secretKey,
-            "test",
-            { proxyAgent: proxy }
-        )
+        const fincode = createFincode({
+            apiKey: secretKey,
+            isLiveMode: false,
+            options: { proxyAgent: proxy }
+        })
 
         const res = await fincode.accounts.retrieveList()
 
         expect(res.list?.length).toBeGreaterThanOrEqual(0)
     })
     it("Retrieve a Account detail list", async () => {
-        const fincode = createFincode(
-            secretKey,
-            "test",
-            { proxyAgent: proxy }
-        )
+        const fincode = createFincode({
+            apiKey: secretKey,
+            isLiveMode: false,
+            options: { proxyAgent: proxy }
+        })
 
         const res = await fincode.accounts.retrieveDetailList(accountId)
         expect(res.list?.length).toBeGreaterThanOrEqual(0)

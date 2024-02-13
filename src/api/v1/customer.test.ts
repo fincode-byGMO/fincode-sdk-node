@@ -17,7 +17,11 @@ const proxy = env.FINCODE_HTTP_PROXY
 describe("Customer API testing", () => {
 
     it("Create a customer", async () => {
-        const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
+        const fincode = createFincode({
+            apiKey: secretKey,
+            isLiveMode: false,
+            options: { proxyAgent: proxy }
+        })
         const customerId = generateUUIDv4()
 
         const req: CreatingCustomerRequest = {
@@ -30,7 +34,11 @@ describe("Customer API testing", () => {
     })
 
     it("Update a customer", async () => {
-        const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
+        const fincode = createFincode({
+            apiKey: secretKey,
+            isLiveMode: false,
+            options: { proxyAgent: proxy }
+        })
         const customerId = generateUUIDv4()
 
         const creatingReq: CreatingCustomerRequest = {
@@ -70,7 +78,11 @@ describe("Customer API testing", () => {
         await fincode.customers.delete(customerId)
     })
     it("Retrieve a customer", async () => {
-        const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
+        const fincode = createFincode({
+            apiKey: secretKey,
+            isLiveMode: false,
+            options: { proxyAgent: proxy }
+        })
         const customerId = generateUUIDv4()
 
         const creatingReq: CreatingCustomerRequest = {
@@ -107,7 +119,11 @@ describe("Customer API testing", () => {
         await fincode.customers.delete(customerId)
     })
     it("Retrieve customer list", async () => {
-        const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
+        const fincode = createFincode({
+            apiKey: secretKey,
+            isLiveMode: false,
+            options: { proxyAgent: proxy }
+        })
         const customerId = generateUUIDv4()
 
         const creatingReq: CreatingCustomerRequest = {
@@ -122,7 +138,11 @@ describe("Customer API testing", () => {
         await fincode.customers.delete(customerId)
     })
     it("Delete a customer", async () => {
-        const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
+        const fincode = createFincode({
+            apiKey: secretKey,
+            isLiveMode: false,
+            options: { proxyAgent: proxy }
+        })
         const customerId = generateUUIDv4()
 
         const creatingReq: CreatingCustomerRequest = {
