@@ -18,7 +18,11 @@ const proxy = env.FINCODE_HTTP_PROXY
 describe("Payment Session API testing", () => {
 
     it("Create payment session", async () => {
-        const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
+        const fincode = createFincode({
+            apiKey: secretKey,
+            isLiveMode: false,
+            options: { proxyAgent: proxy }
+        })
 
         const current = new Date()
         const expire = new Date(current.getTime() + 60 * 60 * 1000) // + 1 hour

@@ -18,7 +18,11 @@ const proxy = env.FINCODE_HTTP_PROXY
 
 describe("Plan API testing", () => {
     it("Create plan", async () => {
-        const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
+        const fincode = createFincode({
+            apiKey: secretKey,
+            isLiveMode: false,
+            options: { proxyAgent: proxy }
+        })
 
         const req: CreatingPlanRequest = {
             plan_name: "Test plan",
@@ -47,7 +51,11 @@ describe("Plan API testing", () => {
     })
 
     it("Update plan", async () => {
-        const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
+        const fincode = createFincode({
+            apiKey: secretKey,
+            isLiveMode: false,
+            options: { proxyAgent: proxy }
+        })
 
         const creatingRes = await fincode.plans.create({
             plan_name: "Test plan",
@@ -85,7 +93,11 @@ describe("Plan API testing", () => {
     })
 
     it("Retrieve plan", async () => {
-        const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
+        const fincode = createFincode({
+            apiKey: secretKey,
+            isLiveMode: false,
+            options: { proxyAgent: proxy }
+        })
 
         const creatingRes = await fincode.plans.create({
             plan_name: "Test plan",
@@ -114,7 +126,11 @@ describe("Plan API testing", () => {
     })
 
     it("Retrieve plan list", async () => {
-        const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
+        const fincode = createFincode({
+            apiKey: secretKey,
+            isLiveMode: false,
+            options: { proxyAgent: proxy }
+        })
 
         const creatingRes = await fincode.plans.create({
             plan_name: "Test plan",
@@ -136,7 +152,11 @@ describe("Plan API testing", () => {
     })
 
     it("Delete plan", async () => {
-        const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
+        const fincode = createFincode({
+            apiKey: secretKey,
+            isLiveMode: false,
+            options: { proxyAgent: proxy }
+        })
 
         const creatingRes = await fincode.plans.create({
             plan_name: "Test plan",

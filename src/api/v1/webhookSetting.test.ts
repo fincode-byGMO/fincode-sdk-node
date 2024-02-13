@@ -23,7 +23,11 @@ describe("Webhook Setting API testing", () => {
 
 
     it("Create a webhook setting", async () => {
-        const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
+        const fincode = createFincode({
+            apiKey: secretKey,
+            isLiveMode: false,
+            options: { proxyAgent: proxy }
+        })
 
         const event: WebhookEvent = "payments.card.exec"
         const url = new URL(webhookReceiverURL)
@@ -43,7 +47,11 @@ describe("Webhook Setting API testing", () => {
         await fincode.webhookSettings.delete(res.id)
     })
     it("Retrieve a webhook setting", async () => {
-        const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
+        const fincode = createFincode({
+            apiKey: secretKey,
+            isLiveMode: false,
+            options: { proxyAgent: proxy }
+        })
         const creatingReq: CreatingWebhookSettingRequest = {
             url: (new URL(webhookReceiverURL)).href,
             event: "payments.card.exec",
@@ -61,14 +69,22 @@ describe("Webhook Setting API testing", () => {
     })
 
     it("Retrieve webhook setting list", async () => {
-        const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
+        const fincode = createFincode({
+            apiKey: secretKey,
+            isLiveMode: false,
+            options: { proxyAgent: proxy }
+        })
         const res = await fincode.webhookSettings.retrieveList()
 
         expect(res.list).toBeDefined()
     })
 
     it("Update a webhook setting", async () => {
-        const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
+        const fincode = createFincode({
+            apiKey: secretKey,
+            isLiveMode: false,
+            options: { proxyAgent: proxy }
+        })
         const creatingReq: CreatingWebhookSettingRequest = {
             url: (new URL(webhookReceiverURL)).href,
             event: "payments.card.exec",
@@ -94,7 +110,11 @@ describe("Webhook Setting API testing", () => {
     })
 
     it("Delete a webhook setting", async () => {
-        const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
+        const fincode = createFincode({
+            apiKey: secretKey,
+            isLiveMode: false,
+            options: { proxyAgent: proxy }
+        })
         const creatingReq: CreatingWebhookSettingRequest = {
             url: (new URL(webhookReceiverURL)).href,
             event: "payments.card.exec",
