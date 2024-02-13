@@ -20,21 +20,33 @@ if (!shopId) throw new Error("FINCODE_SHOP_ID_KEY_OWNER is not defined")
 describe("Platform API testing", () => {
 
     it("Retrieve a platform", async () => {
-        const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
+        const fincode = createFincode({
+            apiKey: secretKey,
+            isLiveMode: false,
+            options: { proxyAgent: proxy }
+        })
         const res = await fincode.platforms.retrieve(shopId)
 
         expect(res.id).toBe(shopId)
         expect(res.shop_type).toBe("platform")
     })
     it("Retrieve shop list of platform", async () => {
-        const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
+        const fincode = createFincode({
+            apiKey: secretKey,
+            isLiveMode: false,
+            options: { proxyAgent: proxy }
+        })
 
         const res = await fincode.platforms.retrieveList()
 
         expect(res.list).toBeDefined()
     })
     it("Update a platform", async () => {
-        const fincode = createFincode(secretKey, "test", { proxyAgent: proxy })
+        const fincode = createFincode({
+            apiKey: secretKey,
+            isLiveMode: false,
+            options: { proxyAgent: proxy }
+        })
 
         const updatingReqBody: UpdatingPlatformRequest = {
             examination_master_id: "vm",
