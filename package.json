@@ -1,12 +1,12 @@
 {
   "name": "@epsilon-web/fincode-node-test",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "type": "module",
   "exports": {
     ".": {
       "import": {
-        "types": "./dist/main.d.ts",
-        "default": "./dist/main.js"
+        "types": "./dist/esm/main.d.ts",
+        "default": "./dist/esm/main.js"
       },
       "require": {
         "types": "./dist/cjs/main.d.ts",
@@ -15,9 +15,9 @@
       "default": "./dist/cjs/main.js"
     }
   },
-  "types": "./dist/main.d.ts",
+  "types": "./dist/esm/main.d.ts",
   "main": "./dist/cjs/main.js",
-  "module": "./dist/main.js",
+  "module": "./dist/esm/main.js",
   "author": "GMO Epsilon, Inc.",
   "license": "MIT",
   "private": false,
