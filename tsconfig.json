@@ -5,7 +5,7 @@
       "module": "ESNext",
       "strict": true,
       "alwaysStrict": true,
-      "outDir": "./dist",
+      "outDir": "./dist/esm",
       "declaration": true,
       "allowJs": true,
       "removeComments": false,
