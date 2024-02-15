@@ -16,7 +16,7 @@
       },
       "default": "./dist/cjs/main.js"
     },
-    "./package.json": "./package.json",
+    "./package.json": "./package.json"
   },
   "types": "./dist/cjs/main.d.ts",
   "main": "./dist/cjs/main.js",
