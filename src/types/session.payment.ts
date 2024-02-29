@@ -77,7 +77,7 @@ export type PaymentSessionObject = {
         /**
          * Payment method types used for this session.
          */
-        pay_type: ("Card" | "Konbini" | "PayPay")[]
+        pay_type: ("Card" | "Konbini" | "Paypay")[]
 
         /**
          * Order ID.
@@ -244,9 +244,9 @@ export type CreatingPaymentSessionRequest = {
          * 
          * - `Card`: Card payment
          * - `Konbini`: Konbini payment
-         * - `PayPay`: PayPay payment
+         * - `Paypay`: PayPay payment
          */
-        pay_type?: ("Card" | "Konbini" | "PayPay")[] | null
+        pay_type?: ("Card" | "Konbini" | "Paypay")[] | null
 
         /**
          * Order ID.
