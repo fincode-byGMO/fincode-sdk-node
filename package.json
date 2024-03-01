@@ -1,6 +1,6 @@
 {
-  "name": "@epsilon-web/fincode-node-test",
-  "version": "1.0.18",
+  "name": "@fincode/node",
+  "version": "1.0.0",
   "author": "GMO Epsilon, Inc.",
   "license": "MIT",
   "type": "module",
@@ -24,7 +24,11 @@
   "private": false,
   "repository": {
     "type": "git",
-    "url": "https://github.backstage-gen2.gmo-pg.com/epsilon-web/fincode-node-sdk.git"
+    "url": "https://github.com/fincode-byGMO/fincode-sdk-node.git"
+  },
+  "homepage": "https://www.fincode.jp/",
+  "bugs": {
+    "url": "https://github.com/fincode-byGMO/fincode-sdk-node/issues"
   },
   "engines": {
     "node": ">=12.0.0"
@@ -55,10 +59,6 @@
     "@typescript-eslint/eslint-plugin": "^5.48.1",
     "@typescript-eslint/parser": "^5.48.1",
     "typescript": "^4.9.4"
-  },
-  "publishConfig": {
-    "access": "public",
-    "registry": "https://npm.github.backstage-gen2.gmo-pg.com/"
   },
   "scripts": {
     "lint": "eslint . --ext .ts,.js",
