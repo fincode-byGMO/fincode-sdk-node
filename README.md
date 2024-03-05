@@ -2,7 +2,7 @@
 
 fincode for Node.jsはJavaScript/TypeScriptプロジェクトにおけるfincode APIの呼び出しを支援するAPIラッパーライブラリです。APIの呼び出しを支援するヘルパー関数とTypeScriptの型定義を提供し、型安全性を保ちつつ可読性の高いfincodeの組み込みを可能にします。
 
-このライブラリはサーバーサイドNode.jsプロジェクトでの利用を想定しています。ブラウザ上で動作するアプリケーションにおいてfincodeを使用したい場合は[fincode for ES Module]()を利用できます。
+このライブラリはサーバーサイドNode.jsプロジェクトでの利用を想定しています。ブラウザ上で動作するアプリケーションにおいてfincodeを使用したい場合は[fincode for ES Module](https://github.com/fincode-byGMO/fincode-sdk-js.git)を利用できます。
 
 ## Getting Started
 
@@ -43,7 +43,7 @@ const fincode = createFincode({
         // Timeout
         timeout: 10000,
         // Proxy
-        proxy: "http://url.to.proxy:8080"
+        proxyAgent: "http://url.to.proxy:8080"
     }
 })
 
@@ -144,13 +144,13 @@ fincodeインスタンスが持つメソッドは下記のように各APIと対�
 
 ### Card API （カードAPI）
 
-| API    |          | URL                     | 呼び出し方                              |
-| :----- | :------- | :---------------------- | :-------------------------------------- |
-| カード | 登録     | `POST /v1/cards`        | `fincode.cards.create(requestBody)`     |
-|        | 更新     | `PUT /v1/cards/{id}`    | `fincode.cards.update(id, requestBody)` |
-|        | 一覧取得 | `GET /v1/cards`         | `fincode.cards.retrieveList()`          |
-|        | 取得     | `GET /v1/cards/{id}`    | `fincode.cards.retrieve(id)`            |
-|        | 削除     | `DELETE /v1/cards/{id}` | `fincode.cards.delete(id)`              |
+| API    |          | URL                                            | 呼び出し方                                           |
+| :----- | :------- | :--------------------------------------------- | :-------------------------------------------------- |
+| カード | 登録     | `POST /v1/customers/{customer_id}/cards`        | `fincode.cards.create(customerId, requestBody)`     |
+|        | 更新     | `PUT /v1/customers/{customer_id}/cards/{id}`    | `fincode.cards.update(customerId, id, requestBody)` |
+|        | 一覧取得 | `GET /v1/customers/{customer_id}/cards`         | `fincode.cards.retrieveList(customerId)`            |
+|        | 取得     | `GET /v1/customers/{customer_id}/cards/{id}`    | `fincode.cards.retrieve(customerId, id)`            |
+|        | 削除     | `DELETE /v1/customers/{customer_id}/cards/{id}` | `fincode.cards.delete(customerId, id)`              |
 
 ### Plan API (プランAPI)
 
