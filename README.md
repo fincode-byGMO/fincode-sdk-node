@@ -127,8 +127,8 @@ fincodeインスタンスが持つメソッドは下記のように各APIと対�
 |      | キャンセル                                | `PUT /v1/payments/{id}/cancel`  | `fincode.payments.cancel(id, requestBody)`                        |
 |      | 再オーソリ                                | `PUT /v1/payments/{id}/auth`    | `fincode.payments.reauthorize(id, requestBody)`                   |
 |      | 金額変更                                  | `PUT /v1/payments/{id}/change`  | `fincode.payments.changeAmount(id, requestBody)`                  |
-|      | 3Dセキュア2.0認証実行(カード決済)         | `PUT /v1/secure/{access_id}`    | `fincode.payments.execute3DSecureAuth(access_id, requestBody)`    |
-|      | 3Dセキュア2.0認証実行結果取得(カード決済) | `GET /v1/secure/{access_id}`    | `fincode.payments.retrieve3DSecureAuthResult(access_id)`          |
+|      | 3Dセキュア2.0認証実行(カード決済)         | `PUT /v1/secure2/{access_id}`    | `fincode.payments.execute3DSecureAuth(access_id, requestBody)`    |
+|      | 3Dセキュア2.0認証実行結果取得(カード決済) | `GET /v1/secure2/{access_id}`    | `fincode.payments.retrieve3DSecureAuthResult(access_id)`          |
 |      | 認証後決済実行(カード決済)                | `PUT /v1/payments/{id}/secure`  | `fincode.payments.executeAfter3DSecureAuth(id, requestBody)`      |
 |      | バーコード取得(コンビニ決済)              | `PUT /v1/payments/{id}/barcode` | `fincode.payments.generateKonbiniPaymentBarcode(id, requestBody)` |
 
