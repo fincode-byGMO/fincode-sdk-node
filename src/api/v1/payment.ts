@@ -467,8 +467,8 @@ class Payment {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
                 this._config,
-                "POST",
-                `/v1/secure/${accessId}`,
+                "PUT",
+                `/v1/secure2/${accessId}`,
                 JSON.stringify(body),
                 headers,
                 undefined,
@@ -513,7 +513,7 @@ class Payment {
             const fetch = createFincodeRequestFetch(
                 this._config,
                 "GET",
-                `/v1/secure/${accessId}`,
+                `/v1/secure2/${accessId}`,
                 undefined,
                 headers,
                 undefined,
