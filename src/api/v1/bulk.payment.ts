@@ -13,11 +13,11 @@ import {
     FincodeSDKError,
     CreatingPaymentBulkRequest,
     CreatingPaymentBulkQueryParams,
-} from "../../types/index.js"
-import { FincodeConfig } from "./fincode.js"
-import { createFincodeRequestFetch, FincodeRequestHeaders } from "./http.js"
-import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_errorMessages.js"
-import { generateUUIDv4 } from "./../../utils/random.js"
+} from "../../types/index"
+import { FincodeConfig } from "./fincode"
+import { createFincodeRequestFetch, FincodeRequestHeaders } from "./http"
+import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_errorMessages"
+import { generateUUIDv4 } from "./../../utils/random"
 
 class PaymentBulk {
 

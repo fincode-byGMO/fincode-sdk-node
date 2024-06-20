@@ -17,10 +17,10 @@ import {
     FincodeAPIError,
     FincodeSDKError,
     PayType,
-} from "../../types/index.js"
-import { FincodeConfig } from "./fincode.js"
-import { createFincodeRequestFetch, FincodeRequestHeaders } from "./http.js"
-import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_errorMessages.js"
+} from "../../types/index"
+import { FincodeConfig } from "./fincode"
+import { createFincodeRequestFetch, FincodeRequestHeaders } from "./http"
+import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_errorMessages"
 
 class Payment {
 
