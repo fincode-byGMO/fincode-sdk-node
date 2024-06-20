@@ -1,7 +1,7 @@
 import {
     CreatingCardRegistrationSessionRequest,
 } from "./../../types"
-import { createFincode } from "./fincode.js"
+import { createFincode } from "./fincode"
 import dotenv from "dotenv"
 import path from "path"
 
@@ -35,7 +35,7 @@ describe("Card-Registration Session API testing", () => {
 
         const reqBody: CreatingCardRegistrationSessionRequest = {
             expire: expireStr,
-            shop_service_name: "fincode Node.js",
+            shop_service_name: "fincode Node",
         }
 
         const res = await fincode.cardRegistrationSessions.create(reqBody)

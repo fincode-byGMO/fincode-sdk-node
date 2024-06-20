@@ -1,5 +1,5 @@
 import { CreatingCustomerRequest, FincodeAPIError, UpdatingCustomerRequest } from "./../../types"
-import { createFincode } from "./fincode.js"
+import { createFincode } from "./fincode"
 import dotenv from "dotenv"
 import path from "path"
 import { generateUUIDv4 } from "./../../utils/random"
