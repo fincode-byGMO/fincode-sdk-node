@@ -7,7 +7,7 @@
   "module": "dist/main.mjs",
   "exports": {
     ".": {
-      "require": "./dist/main.cjs",
+      "require": "./dist/main.js",
       "import": "./dist/main.mjs"
     }
   },
@@ -53,7 +53,7 @@
   },
   "scripts": {
     "lint": "eslint . --ext .ts,.js",
-    "build": "tsup src/main.ts --format cjs,esm --dts --clean",
+    "build": "tsup src/main.ts",
     "test:v1/http": "jest ./src/api/v1/http.test.ts --silent=false --verbose false --no-cache",
     "test:v1/account": "jest ./src/api/v1/account.test.ts --silent=false --verbose false --no-cache",
     "test:v1/bulk.payment": "jest ./src/api/v1/bulk.payment.test.ts --silent=false --verbose false --no-cache",
