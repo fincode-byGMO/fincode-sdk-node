@@ -829,7 +829,26 @@ export type CreatingPaymentMethodRequest = {
 /**
  * Request Query Parameters of Retrieving Payment Method List (used for GET /v1/customers/{customer_id}/payment_methods)
  */
-export type RetrievingPaymentMethodListQueryParams = {}
+export type RetrievingPaymentMethodListQueryParams = {
+    /**
+     * Payment method type
+     * 
+     * - `Directdebit`: Direct Debit
+     */
+    pay_type: Extract<PayType, "Directdebit">
+}
+
+/**
+ * Request Query Parameters of Retrieving a Payment Method (used for GET /v1/customers/{customer_id}/payment_methods/{id})
+ */
+export type RetrievingPaymentMethodQueryParams = {
+    /**
+     * Payment method type
+     * 
+     * - `Directdebit`: Direct Debit
+     */
+    pay_type: Extract<PayType, "Directdebit">
+}
 
 /**
  * Response object of Deleting Payment method (used for DELETE /v1/customers/{customer_id}/payment_methods/{id})

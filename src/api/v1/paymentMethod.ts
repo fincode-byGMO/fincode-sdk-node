@@ -8,6 +8,7 @@ import {
     FincodeSDKError,
     ListResponse,
     DeletingPaymentMethodResponse,
+    RetrievingPaymentMethodQueryParams,
 } from "../../types"
 import { FincodeConfig } from "./fincode"
 import { createFincodeRequestFetch, FincodeRequestHeaders } from "./http"
@@ -75,7 +76,7 @@ class PaymentMethod {
      */
     public retrieveList(
         customerId: string,
-        queryParams?: RetrievingPaymentMethodListQueryParams,
+        queryParams: RetrievingPaymentMethodListQueryParams,
         headers?: FincodeRequestHeaders,
     ): Promise<ListResponse<PaymentMethodObject>> {
         return new Promise((resolve, reject) => {
@@ -110,6 +111,7 @@ class PaymentMethod {
      *
      * @param {string} customerId - customer id
      * @param {string} id - payment method id 
+     * @param {RetrievingPaymentMethodQueryParams} queryParams - query parameters
      * @param {FincodeRequestHeaders} [headers] - request header
      * 
      * @returns {Promise<PaymentMethodObject>} - retrieved payment method object
@@ -117,6 +119,7 @@ class PaymentMethod {
     public retrieve(
         customerId: string,
         id: string,
+        queryParams: RetrievingPaymentMethodQueryParams,
         headers?: FincodeRequestHeaders,
     ): Promise<PaymentMethodObject> {
         return new Promise((resolve, reject) => {
@@ -126,7 +129,7 @@ class PaymentMethod {
                 `/v1/customers/${customerId}/payment_methods/${id}`,
                 undefined,
                 headers,
-                undefined,
+                queryParams
             )
 
             fetch().then((res) => {
