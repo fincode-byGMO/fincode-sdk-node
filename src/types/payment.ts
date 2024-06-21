@@ -24,6 +24,7 @@ export type PaymentObject = {
      * - `Paypay`: this payment accepts PayPay.
      * - `Applepay`: this payment accepts Apple Pay.
      * - `Directdebit`: this payment accepts Direct Debit.
+     * - `Virtualaccount`: this payment accepts Virtual Account.
      */
     pay_type: PayType
 
@@ -61,6 +62,16 @@ export type PaymentObject = {
     job_code?: Extract<PaymentJobCode, "CHECK" | "AUTH" | "CAPTURE"> | null
 
     /**
+     * The term payment is available in Konbini or Virtual Account.
+     */
+    payment_term_day?: string | null
+
+    /**
+     * The deadline of payment in Konbini or Virtual Account.
+     */
+    payment_term?: string | null
+
+    /**
      * Code string identifying the product category.
      */
     item_code?: string | null
@@ -90,6 +101,27 @@ export type PaymentObject = {
      * If some customer is used in this payment, this field will be filled it's id (Customer ID).
      */
     customer_id?: string | null
+
+    /**
+     * Overpayment flag.
+     * 
+     * if customer overpaid, this flag will be set to `1`.
+     */
+    overpayment_flag?: "0" | "1" | null
+
+    /**
+     * Cancel overpayment flag.
+     * 
+     * if customer paid after canceling, this flag will be set to `1`.
+     */
+    cancel_overpayment_flag?: "0" | "1" | null
+
+    /**
+     * Expire overpayment flag.
+     * 
+     * if customer paid after expiration, this flag will be set to `1`.
+     */
+    expire_overpayment_flag?: "0" | "1" | null
 
     /**
      * Date this payment was created.
@@ -278,16 +310,6 @@ export type PaymentObject = {
     // ---
 
     /**
-     * The term payment is available in Konbini.
-     */
-    payment_term_day?: string | null
-
-    /**
-     * The deadline of payment in Konbini. 
-     */
-    payment_term?: string | null
-
-    /**
      * Device name that displays barcode image.
      * 
      * You can use the value of 
@@ -373,20 +395,6 @@ export type PaymentObject = {
      * Konbini store code.
      */
     konbini_store_code?: string | null
-
-    /**
-     * Overpayment flag.
-     * 
-     * if customer overpaid, this flag will be set to `1`.
-     */
-    overpayment_flag?: "0" | "1" | null
-
-    /**
-     * Cancel overpayment flag.
-     * 
-     * if customer paid after canceling, this flag will be set to `1`.
-     */
-    cancel_overpayment_flag?: "0" | "1" | null
 
     // ---
     // PayPay Payment
@@ -546,6 +554,86 @@ export type PaymentObject = {
      * Result code of direct debit payment (returned by the direct debit payment provider.)
      */
     result_code?: DirectDebitResultCode | null
+
+    // ---
+    // Virtual Account Payment
+    // ---
+
+    /**
+     * Billing amount of Virtual Account payment.
+     */
+    billing_amount?: number | null
+
+    /**
+     * Billing tax of Virtual Account payment.
+     */
+    billing_tax?: number | null
+
+    /**
+     * Billing total amount of Virtual Account payment.
+     */
+    billing_total_amount?: number | null
+
+    /**
+     * Branch code of the virtual account used in this payment.
+     */
+    va_branch_code?: string | null
+
+    /**
+     * Branch name of the virtual account used in this payment.
+     */
+    va_branch_name?: string | null
+
+    /**
+     * Account number of the virtual account used in this payment.
+     */
+    va_account_number?: string | null
+
+    /**
+     * Account holder name of the virtual account used in this payment.
+     */
+    va_account_name?: string | null
+
+    /**
+     * The date this virtual account was assigned.
+     * 
+     * Format: `yyyy/MM/dd HH:mm:ss.SSS`
+     */
+    account_assignment_date?: string | null
+
+    /**
+     * Virtual account identifier.
+     */
+    virtual_account_id?: string | null
+
+    /**
+     * The date this virtual account was paid.
+     * 
+     * Format: `yyyy/MM/dd`
+     */
+    transaction_date?: string | null
+
+    /**
+     * The business day of the virtual account payment was processed by the bank.
+     * 
+     * Format: `yyyy/MM/dd`
+     */
+    value_date?: string | null
+
+    /**
+     * Remitter account holder name of the virtual account payment.
+     */
+    remitter_account_name?: string | null
+
+    /**
+     * Remitter bank name of the virtual account payment.
+     */
+    remitter_bank_name?: string | null
+
+    /**
+     * Remitter branch name of the virtual account payment.
+     */
+    remitter_branch_name?: string | null
 }
 
 /**
@@ -623,6 +711,7 @@ export type RetrievingPaymentListQueryParams = Modify<Pagination, {
      * - `Paypay`: PayPay payment
      * - `Applepay`: Apple Pay payment
      * - `Directdebit`: Direct Debit payment
+     * - `Virtualaccount`: Virtual Account payment
      */
     pay_type: PayType
 
@@ -729,6 +818,7 @@ export type CreatingPaymentRequest = {
      * - `Paypay`: this Payment accepts payment by PayPay.
      * - `Applepay`: this Payment accepts payment by Apple Pay.
      * - `Directdebit`: this Payment accepts payment by Direct Debit.
+     * - `Virtualaccount`: this Payment accepts payment by Virtual Account.
      */
     pay_type: PayType
 
@@ -740,10 +830,6 @@ export type CreatingPaymentRequest = {
      * - `CAPTURE`: fincode captures authorized charge.
      */
     job_code?: Extract<PaymentJobCode, "CHECK" | "AUTH" | "CAPTURE"> | null
-
-    //---
-    // Card Payment
-    //---
 
     /**
      * Amount payment. this value must be in range of `"0"` to `"9999999"`.
@@ -767,6 +853,10 @@ export type CreatingPaymentRequest = {
      * (Warning!) This field is no longer used.
      */
     send_url?: string | null
+
+    //---
+    // Card Payment
+    //---
 
     /**
      * Defines the behavior of 3D Secure 2
@@ -826,6 +916,22 @@ export type CreatingPaymentRequest = {
      * Usage details that will be displayed on the customer's bank statement.
      */
     remarks?: string | null
+
+    // ---
+    // Virtual Account Payment
+    // ---
+
+    /**
+     * Billing amount of Virtual Account payment.
+     * 
+     * required when "pay_type" is "Virtualaccount".
+     */
+    billing_amount?: string | null
+
+    /**
+     * Billing tax of Virtual Account payment.
+     */
+    billing_tax?: string | null
 }
 
 /**
@@ -840,6 +946,7 @@ export type ExecutingPaymentRequest = {
      * - `Paypay`: PayPay payment.
      * - `Applepay`: Apple Pay payment.
      * - `Directdebit`: Direct Debit payment.
+     * - `Virtualaccount`: Virtual Account payment.
      */
     pay_type: PayType
 
@@ -873,17 +980,35 @@ export type ExecutingPaymentRequest = {
      */
     customer_id?: string | null
 
+    
+
+    /**
+     * The term payment is available.
+     * 
+     * (You can use this field when `pay_type` is `Konbini` or `Virtualaccount`)
+     * 
+     * - min: `"0"`
+     * - max: `"14"`
+     */
+    payment_term_day?: string | null
+
+    /**
+     * Customer's payment method ID that will be used in this payment. 
+     * 
+     * (You can use this field when `pay_type` is `Card` or `Directdebit`)
+     */
+    payment_method_id?: string | null
+
+    // ---
+    // card payment
+    // ---
+
     /**
      * Customer's card ID that will be used in this payment.
      * 
      * You must fill both this and "customer_id" fields or "token" field.
      */
     card_id?: string | null
-
-    /**
-     * Customer's payment method ID that will be used in this payment. 
-     */
-    payment_method_id?: string | null
 
     /**
      * Charging method of card payment.
@@ -1201,14 +1326,6 @@ export type ExecutingPaymentRequest = {
     // ---
 
     /**
-     * The term payment is available in Konbini.
-     * 
-     * - min: `"0"`
-     * - max: `"14"`
-     */
-    payment_term_day?: string | null
-
-    /**
      * Device name.
      * 
      * You can use the value of 
@@ -1282,6 +1399,21 @@ export type ExecutingPaymentRequest = {
      * Format: `yyyy/MM/dd`
      */
     target_date?: string | null
+
+    //---
+    // Virtual Account Payment
+    //---
+
+    /**
+     * If you want to use same Virtual Account for multiple payments, you can set the reference ID of Virtual Account payment.
+     */
+    reference_order_id?: string | null
+
+    /**
+     * Account Name of Virtual Account.
+     * (Use the statement notation registered in the fincode shop info.)
+     */
+    account_shop_name?: string | null
 }
 
 
@@ -1329,6 +1461,7 @@ export type CancelingPaymentRequest = {
      * - `Paypay`: PayPay payment.
      * - `Applepay`: Apple Pay payment.
      * - `Directdebit`: Direct Debit payment.
+     * - `Virtualaccount`: Virtual Account payment.
      */
     pay_type: PayType
 
@@ -1516,8 +1649,9 @@ export type Retrieving3DSecureAuthResponse = {
  * - `Paypay`: PayPay payment
  * - `Applepay`: Apple Pay payment
  * - `Directdebit`: Direct Debit payment
+ * - `Virtualaccount`: Virtual Account payment
  */
-export type PayType = "Card" | "Konbini" | "Paypay" | "Applepay" | "Directdebit"
+export type PayType = "Card" | "Konbini" | "Paypay" | "Applepay" | "Directdebit" | "Virtualaccount"
 
 /**
  * Status of a payment.
