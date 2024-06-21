@@ -622,6 +622,7 @@ export type RetrievingPaymentListQueryParams = Modify<Pagination, {
      * - `Konbini`: Konbini payment
      * - `Paypay`: PayPay payment
      * - `Applepay`: Apple Pay payment
+     * - `Directdebit`: Direct Debit payment
      */
     pay_type: PayType
 
@@ -727,6 +728,7 @@ export type CreatingPaymentRequest = {
      * - `Konbini`: this Payment accepts payment by Konbini.
      * - `Paypay`: this Payment accepts payment by PayPay.
      * - `Applepay`: this Payment accepts payment by Apple Pay.
+     * - `Directdebit`: this Payment accepts payment by Direct Debit.
      */
     pay_type: PayType
 
@@ -837,6 +839,7 @@ export type ExecutingPaymentRequest = {
      * - `Konbini`: konbini payment.
      * - `Paypay`: PayPay payment.
      * - `Applepay`: Apple Pay payment.
+     * - `Directdebit`: Direct Debit payment.
      */
     pay_type: PayType
 
@@ -844,6 +847,10 @@ export type ExecutingPaymentRequest = {
      * access ID issued for this payment to use in this payment context.
      */
     access_id: string
+
+    // ---
+    // Card Payment
+    // ---
 
     /**
      * One-time token that used to identify card that will be used in this payment.
@@ -1321,6 +1328,7 @@ export type CancelingPaymentRequest = {
      * - `Konbini`: konbini payment.
      * - `Paypay`: PayPay payment.
      * - `Applepay`: Apple Pay payment.
+     * - `Directdebit`: Direct Debit payment.
      */
     pay_type: PayType
 
