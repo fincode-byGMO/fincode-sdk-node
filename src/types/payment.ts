@@ -230,6 +230,12 @@ export type PaymentObject = {
     auth_max_date?: string | null
 
     /**
+     * - [PayPay]: Customer will be redirected after finishing payment on PayPay app/website.
+     * - [Card]: Payment with 3-D Secure 2 authentication will be started by accessing this URL by customer.
+     */
+    redirect_url?: string | null
+
+    /**
      * Fields where merchants can freely set values
      */
     client_field_1?: string | null
@@ -263,6 +269,18 @@ export type PaymentObject = {
      * - `param`: this value will be used in 3D Secure 2 authentication after redirecting this url and return as "application/x-www-form-urlencoded".
      */
     tds2_ret_url?: string | null
+
+    /**
+     * Returning URL of your website when 3D Secure 2 authentication is completed and the payment is successful. (自動リダイレクト型3Dセキュア認証; Automatic Redirect Type 3D Secure Authentication)
+     * The redirect to this URL will be executed with POST method.
+     */
+    return_url?: string | null
+
+    /**
+     * Returning URL of your website when 3D Secure 2 authentication or payment is failed. (自動リダイレクト型3Dセキュア認証; Automatic Redirect Type 3D Secure Authentication)
+     * The redirect to this URL will be executed with POST method.
+     */
+    return_url_on_failure?: string | null
 
     /**
      * The processing status of 3D Secure 2 authentication.
@@ -427,12 +445,6 @@ export type PaymentObject = {
      * Canceling order description that customer can read on PayPay app.
      */
     cancel_description?: string | null
-
-    /**
-     * - [PayPay]: Customer will be redirected after finishing payment on PayPay app/website.
-     * - [Card]: Payment with 3-D Secure 2 authentication will be started by accessing this URL by customer.
-     */
-    redirect_url?: string | null
 
     /**
      * Redirect Type of PayPay payment.
