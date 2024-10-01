@@ -1,12 +1,7 @@
-<<<<<<< HEAD
 import { Modify } from "../utils/utilTypes"
 import { Pagination } from "./pagination"
-=======
-import { Modify } from "../utils/utilTypes.js"
-import { Pagination } from "./pagination.js"
-import { PayType } from "./payment.js"
-import { PlanIntervalCount, PlanIntervalPattern } from "./plan.js"
->>>>>>> feat/direct-debit
+import { PayType } from "./payment"
+import { PlanIntervalCount, PlanIntervalPattern } from "./plan"
 
 /**
      * Subscription object
