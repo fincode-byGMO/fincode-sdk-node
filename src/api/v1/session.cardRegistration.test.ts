@@ -35,7 +35,7 @@ describe("Card-Registration Session API testing", () => {
 
         const reqBody: CreatingCardRegistrationSessionRequest = {
             expire: expireStr,
-            shop_service_name: "fincode Node",
+            shop_service_name: "fincode Node.js",
         }
 
         const res = await fincode.cardRegistrationSessions.create(reqBody)

@@ -38,12 +38,12 @@ describe("Payment Session API testing", () => {
 
         const reqBody: CreatingPaymentSessionRequest = {
             expire: expireStr,
-            shop_service_name: "fincode Node",
+            shop_service_name: "fincode Node.js",
             transaction: {
                 order_id: orderId,
                 pay_type: ["Card"],
                 amount: "1000",
-                client_field_1: "fincode Node",
+                client_field_1: "fincode Node.js",
             },
             card: {
                 job_code: "CAPTURE",
