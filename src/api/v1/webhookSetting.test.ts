@@ -1,6 +1,6 @@
 import dotenv from "dotenv"
 import path from "path"
-import { createFincode } from "./fincode.js"
+import { createFincode } from "./fincode"
 import { CreatingWebhookSettingRequest, WebhookEvent, UpdatingWebhookSettingRequest } from "../../types"
 import { generateUUIDv4 } from "../../utils/random"
 
