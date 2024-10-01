@@ -66,7 +66,8 @@
 		"test:v1/subscription": "jest ./src/api/v1/subscription.test.ts --silent=false --verbose false --no-cache",
 		"test:v1/tenant": "jest ./src/api/v1/tenant.test.ts --silent=false --verbose false --no-cache",
 		"test:v1/webhook_setting": "jest ./src/api/v1/webhookSetting.test.ts --silent=false --verbose false --no-cache",
-		"test:v1": "yarn test:v1/account & yarn test:v1/bulk.payment & yarn test:v1/card & yarn test:v1/customer & yarn test:v1/payment & yarn test:v1/plan & yarn test:v1/platform_account & yarn test:v1/session.cardRegistration & yarn test:v1/session.payment & yarn test:v1/subscription & yarn test:v1/tenant & yarn test:v1/webhook_setting"
+    "test:v1/payment_method": "jest ./src/api/v1/paymentMethod.test.ts --silent=false --verbose false --no-cache",
+    "test:v1": "yarn test:v1/account & yarn test:v1/bulk.payment & yarn test:v1/card & yarn test:v1/customer & yarn test:v1/payment & yarn test:v1/plan & yarn test:v1/platform_account & yarn test:v1/session.cardRegistration & yarn test:v1/session.payment & yarn test:v1/subscription & yarn test:v1/tenant & yarn test:v1/webhook_setting & yarn test:v1/payment_method"
 	},
 	"keywords": [
 		"fincode",
