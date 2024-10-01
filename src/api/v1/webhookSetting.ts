@@ -8,10 +8,10 @@ import {
     WebhookSettingObject,
     UpdatingWebhookSettingRequest,
     DeletingWebhookSettingResponse,
-} from "../../types/index.js";
-import { FincodeRequestHeaders, createFincodeRequestFetch } from "./http.js";
-import { FincodeConfig } from "./fincode.js";
-import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_errorMessages.js";
+} from "../../types/index";
+import { FincodeRequestHeaders, createFincodeRequestFetch } from "./http";
+import { FincodeConfig } from "./fincode";
+import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_errorMessages";
 
 
 export class WebhookSetting {

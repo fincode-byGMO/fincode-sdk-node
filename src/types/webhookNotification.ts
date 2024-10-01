@@ -1,7 +1,7 @@
-import { PaymentBulkStatus } from "./bulk.payment.js"
-import { ContractAquirer, ExaminationStatusCode } from "./contract.js"
-import { KonbiniCode, PayType, PaymentJobCode, PaymentStatus } from "./payment.js"
-import { SubscriptionStatus } from "./subscription.js"
+import { PaymentBulkStatus } from "./bulk.payment"
+import { ContractAquirer, ExaminationStatusCode } from "./contract"
+import { KonbiniCode, PayType, PaymentJobCode, PaymentStatus } from "./payment"
+import { SubscriptionStatus } from "./subscription"
 
 export type WebhookListenerResponse = {
     receive: "0" | "1"

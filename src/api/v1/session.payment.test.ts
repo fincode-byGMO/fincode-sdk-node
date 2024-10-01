@@ -1,7 +1,7 @@
 import {
     CreatingPaymentSessionRequest,
 } from "./../../types"
-import { createFincode } from "./fincode.js"
+import { createFincode } from "./fincode"
 import dotenv from "dotenv"
 import path from "path"
 
@@ -38,12 +38,12 @@ describe("Payment Session API testing", () => {
 
         const reqBody: CreatingPaymentSessionRequest = {
             expire: expireStr,
-            shop_service_name: "fincode Node.js",
+            shop_service_name: "fincode Node",
             transaction: {
                 order_id: orderId,
                 pay_type: ["Card"],
                 amount: "1000",
-                client_field_1: "fincode Node.js",
+                client_field_1: "fincode Node",
             },
             card: {
                 job_code: "CAPTURE",
