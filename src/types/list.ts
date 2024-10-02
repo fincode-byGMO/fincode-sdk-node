@@ -1,4 +1,4 @@
-import { APIErrorObject } from "./error.js"
+import { APIErrorObject } from "./error"
 
 export type ListResponse<T> = {
     total_count?: number | null

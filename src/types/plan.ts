@@ -1,5 +1,5 @@
-import { Modify } from "../utils/utilTypes.js"
-import { Pagination } from "./pagination.js"
+import { Modify } from "../utils/utilTypes"
+import { Pagination } from "./pagination"
 
 export type PlanObject = {
     /**
@@ -47,14 +47,14 @@ export type PlanObject = {
      * - `month`: Monthly
      * - `year`: Yearly
      */
-    interval_pattern: "month" | "year"
+    interval_pattern: PlanIntervalPattern
 
     /**
      * Interval count.
      * 
      * How many intervals are there in a cycle.
      */
-    interval_count: 1 | 2 | 3 | 6
+    interval_count: PlanIntervalCount
 
     used_flag: "0" | "1"
     delete_flag: "0" | "1"
@@ -101,7 +101,7 @@ export type RetrievingPlanListQueryParams = Modify<Pagination, {
     /**
      * Interval Pattern.
      */
-    interval_pattern?: "month" | "year" | null
+    interval_pattern?: PlanIntervalPattern | null
 
     /**
      * Update date (from).
@@ -155,7 +155,7 @@ export type CreatingPlanRequest = {
      * - `month`: Monthly
      * - `year`: Yearly
      */
-    interval_pattern?: "month" | "year" | null
+    interval_pattern?: PlanIntervalPattern | null
 
     /**
      * Interval count.
@@ -192,7 +192,7 @@ export type UpdatingPlanRequest = {
     /**
      * Interval pattern.
      */
-    interval_pattern?: "month" | "year" | null
+    interval_pattern?: PlanIntervalPattern | null
 
     /**
      * Interval count.
@@ -240,14 +240,14 @@ export type DeletingPlanResponse = {
      * - `month`: Monthly
      * - `year`: Yearly
      */
-    interval_pattern: "month" | "year"
+    interval_pattern: PlanIntervalPattern
 
     /**
      * Interval count.
      * 
      * How many intervals are there in a cycle.
      */
-    interval_count: 1 | 2 | 3 | 6
+    interval_count: PlanIntervalCount
 
     /**
      * Whether this plan is used or not.
@@ -273,3 +273,6 @@ export type DeletingPlanResponse = {
      */
     updated?: string | null
 }
+
+export type PlanIntervalPattern = "month" | "year"
+export type PlanIntervalCount = 1 | 2 | 3 | 6

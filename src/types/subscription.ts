@@ -1,5 +1,7 @@
-import { Modify } from "../utils/utilTypes.js"
-import { Pagination } from "./pagination.js"
+import { Modify } from "../utils/utilTypes"
+import { Pagination } from "./pagination"
+import { PayType } from "./payment"
+import { PlanIntervalCount, PlanIntervalPattern } from "./plan"
 
 /**
      * Subscription object
@@ -14,8 +16,9 @@ export type SubscriptionObject = {
      * Payment method used for this subscription.
      * 
      * - `Card`: Card
+     * - `Directdebit`: Direct Debit
      */
-    pay_type: "Card"
+    pay_type: Extract<PayType, "Card" | "Directdebit">
 
     /**
      * Plan ID.
@@ -71,6 +74,11 @@ export type SubscriptionObject = {
      * Card ID.
      */
     card_id?: string | null
+
+    /**
+     * Payment method ID.
+     */
+    payment_method_id: string
 
     /**
      * Subscription status.
@@ -129,12 +137,12 @@ export type SubscriptionObject = {
      * - `month`: Monthly
      * - `year`: Yearly
      */
-    interval_pattern: "month" | "year"
+    interval_pattern: PlanIntervalPattern
 
     /**
      * Interval Count.
      */
-    interval_count: 1 | 2 | 3 | 6
+    interval_count: PlanIntervalCount
 
     /**
      * Error code.
@@ -154,6 +162,15 @@ export type SubscriptionObject = {
      * Format: `yyyy/MM/dd HH:mm:ss.SSS`
      */
     updated?: string | null
+
+    // ---
+    // Direct debit subscription
+    // ---
+
+    /**
+     * Usage details that will be displayed on the customer's bank statement.
+     */
+    remarks?: string | null
 }
 
 /**
@@ -167,8 +184,11 @@ export type CreatingSubscriptionRequest = {
 
     /**
      * Payment method used for this subscription.
+     * 
+     * - `Card`: Card
+     * - `Directdebit`: Direct Debit
      */
-    pay_type: "Card"
+    pay_type: Extract<PayType, "Card" | "Directdebit">
 
     /**
      * Plan ID.
@@ -186,6 +206,13 @@ export type CreatingSubscriptionRequest = {
      * If you do not specify this parameter, the default card will be used.
      */
     card_id?: string | null
+
+    /**
+     * Payment method ID.
+     * 
+     * If you do not specify this parameter, the default payment method will be used.
+     */
+    payment_method_id?: string | null
 
     /**
      * Start date.
@@ -227,6 +254,15 @@ export type CreatingSubscriptionRequest = {
      * Initial tax.
      */
     initial_tax?: string | null
+
+    // ---
+    // Direct debit subscription
+    // ---
+
+    /**
+     * Usage details that will be displayed on the customer's bank statement.
+     */
+    remarks?: string | null
 }
 
 /**
@@ -235,8 +271,11 @@ export type CreatingSubscriptionRequest = {
 export type RetrievingSubscriptionListQueryParams = Modify<Pagination, {
     /**
      * Payment method used for this subscription.
+     * 
+     * - `Card`: Card
+     * - `Directdebit`: Direct Debit
      */
-    pay_type: "Card"
+    pay_type: Extract<PayType, "Card" | "Directdebit">
 
     /**
      * Subscription ID
@@ -261,7 +300,7 @@ export type RetrievingSubscriptionListQueryParams = Modify<Pagination, {
     /**
      * Interval Pattern.
      */
-    interval_pattern?: "month" | "year" | null
+    interval_pattern?: PlanIntervalPattern | null
 
     /**
      * Start date (from).
@@ -336,8 +375,11 @@ export type RetrievingSubscriptionListQueryParams = Modify<Pagination, {
 export type RetrievingSubscriptionQueryParams = {
     /**
      * Payment method used for this subscription.
+     * 
+     * - `Card`: Card
+     * - `Directdebit`: Direct Debit
      */
-    pay_type: "Card"
+    pay_type: Extract<PayType, "Card" | "Directdebit">
 }
 
 /**
@@ -346,8 +388,11 @@ export type RetrievingSubscriptionQueryParams = {
 export type UpdatingSubscriptionRequest = {
     /**
      * Payment method used for this subscription.
+     * 
+     * - `Card`: Card
+     * - `Directdebit`: Direct Debit
      */
-    pay_type: "Card"
+    pay_type: Extract<PayType, "Card" | "Directdebit">
 
     /**
      * Plan ID.
@@ -400,8 +445,11 @@ export type UpdatingSubscriptionRequest = {
 export type CancelingSubscriptionQueryParams = {
     /**
      * Payment method used for this subscription.
+     * 
+     * - `Card`: Card
+     * - `Directdebit`: Direct Debit
      */
-    pay_type: "Card"
+    pay_type: Extract<PayType, "Card" | "Directdebit">
 }
 
 /**
@@ -415,8 +463,11 @@ export type CancelingSubscriptionResponse = {
 
     /**
      * PayType
+     * 
+     * - `Card`: Card
+     * - `Directdebit`: Direct Debit
      */
-    pay_type: "Card"
+    pay_type: Extract<PayType, "Card" | "Directdebit">
 
     /**
      * Plan ID.
@@ -527,14 +578,14 @@ export type CancelingSubscriptionResponse = {
      * - `month`: Monthly
      * - `year`: Yearly
      */
-    interval_pattern: "month" | "year"
+    interval_pattern: PlanIntervalPattern
 
     /**
      * Interval count
      * 
      * How many intervals are there in a cycle.
      */
-    interval_count: 1 | 2 | 3 | 6
+    interval_count: PlanIntervalCount
 
     /**
      * Error code
@@ -562,8 +613,11 @@ export type CancelingSubscriptionResponse = {
 export type RetrievingSubscriptionResultListQueryParams = Modify<Pagination, {
     /**
      * Payment method used for this subscription.
+     * 
+     * - `Card`: Card
+     * - `Directdebit`: Direct Debit
      */
-    pay_type: "Card"
+    pay_type: Extract<PayType, "Card" | "Directdebit">
 }>
 
 /**
@@ -577,8 +631,11 @@ export type SubscriptionResultObject = {
 
     /**
      * Pay type
+     * 
+     * - `Card`: Card
+     * - `Directdebit`: Direct Debit
      */
-    pay_type: "Card"
+    pay_type: Extract<PayType, "Card" | "Directdebit">
 
     /**
      * Status
@@ -643,14 +700,14 @@ export type SubscriptionResultObject = {
      * - `month`: Monthly
      * - `year`: Yearly
      */
-    interval_pattern: "month" | "year"
+    interval_pattern: PlanIntervalPattern
 
     /**
      * Interval count
      * 
      * How many intervals are there in a cycle.
      */
-    interval_count: 1 | 2 | 3 | 6
+    interval_count: PlanIntervalCount
 
     /**
      * Error code

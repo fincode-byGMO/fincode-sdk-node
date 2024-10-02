@@ -1,16 +1,17 @@
-import { PaymentBulk } from "./bulk.payment.js";
-import { Card } from "./card.js";
-import { Customer } from "./customer.js";
-import { Payment } from "./payment.js";
-import { Plan } from "./plan.js";
-import { Platform } from "./platform.js";
-import { PlatformAccount } from "./platform_account.js";
-import { CardRegistrationSession } from "./session.cardRegistration.js";
-import { PaymentSession } from "./session.payment.js";
-import { Subscription } from "./subscription.js";
-import { Tenant } from "./tenant.js";
-import { WebhookSetting } from "./webhookSetting.js";
-import { Account } from "./account.js";
+import { PaymentBulk } from "./bulk.payment";
+import { Card } from "./card";
+import { Customer } from "./customer";
+import { Payment } from "./payment";
+import { Plan } from "./plan";
+import { Platform } from "./platform";
+import { PlatformAccount } from "./platform_account";
+import { CardRegistrationSession } from "./session.cardRegistration";
+import { PaymentSession } from "./session.payment";
+import { Subscription } from "./subscription";
+import { Tenant } from "./tenant";
+import { WebhookSetting } from "./webhookSetting";
+import { Account } from "./account";
+import { PaymentMethod } from "./paymentMethod";
 
 /**
  * @typedef {object} FincodeInitOptions
@@ -78,6 +79,7 @@ class Fincode {
         this._tenants = new Tenant(this.config);
         this._webhookSettings = new WebhookSetting(this.config);
         this._accounts = new Account(this.config);
+        this._paymentMethods = new PaymentMethod(this.config);
     }
 
     private _accounts: Account;
@@ -143,6 +145,11 @@ class Fincode {
     private _webhookSettings: WebhookSetting;
     get webhookSettings(): WebhookSetting {
         return this._webhookSettings;
+    }
+
+    private _paymentMethods: PaymentMethod;
+    get paymentMethods(): PaymentMethod {
+        return this._paymentMethods;
     }
 }
 export { Fincode, FincodeConfig };

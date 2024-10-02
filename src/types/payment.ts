@@ -1,6 +1,6 @@
-import { Modify } from "../utils/utilTypes.js"
-import * as Card from "./card.js"
-import { Pagination } from "./pagination.js"
+import { Modify } from "../utils/utilTypes"
+import * as Card from "./card"
+import { Pagination } from "./pagination"
 
 /**
  * Payment Object
@@ -23,6 +23,8 @@ export type PaymentObject = {
      * - `Konbini`: this payment accepts konbini.
      * - `Paypay`: this payment accepts PayPay.
      * - `Applepay`: this payment accepts Apple Pay.
+     * - `Directdebit`: this payment accepts Direct Debit.
+     * - `Virtualaccount`: this payment accepts Virtual Account.
      */
     pay_type: PayType
 
@@ -60,6 +62,16 @@ export type PaymentObject = {
     job_code?: Extract<PaymentJobCode, "CHECK" | "AUTH" | "CAPTURE"> | null
 
     /**
+     * The term payment is available in Konbini or Virtual Account.
+     */
+    payment_term_day?: string | null
+
+    /**
+     * The deadline of payment in Konbini or Virtual Account.
+     */
+    payment_term?: string | null
+
+    /**
      * Code string identifying the product category.
      */
     item_code?: string | null
@@ -80,6 +92,7 @@ export type PaymentObject = {
      */
     total_amount?: number | null
 
+
     /**
      * If your shop type is "platform" and does not shareing customers between tenants, this param will be set some group id.
      */
@@ -89,6 +102,27 @@ export type PaymentObject = {
      * If some customer is used in this payment, this field will be filled it's id (Customer ID).
      */
     customer_id?: string | null
+
+    /**
+     * Overpayment flag.
+     * 
+     * if customer overpaid, this flag will be set to `1`.
+     */
+    overpayment_flag?: "0" | "1" | null
+
+    /**
+     * Cancel overpayment flag.
+     * 
+     * if customer paid after canceling, this flag will be set to `1`.
+     */
+    cancel_overpayment_flag?: "0" | "1" | null
+
+    /**
+     * Expire overpayment flag.
+     * 
+     * if customer paid after expiration, this flag will be set to `1`.
+     */
+    expire_overpayment_flag?: "0" | "1" | null
 
     /**
      * Date this payment was created.
@@ -121,6 +155,11 @@ export type PaymentObject = {
      * If any card have not been used in this payment yet, this field will be null.
      */
     card_id?: string | null
+
+    /**
+     * Payment Method ID used in this payment.
+     */
+    payment_method_id?: string | null
 
     /**
      * The expiring date of the card used in this payment. 
@@ -191,6 +230,12 @@ export type PaymentObject = {
     auth_max_date?: string | null
 
     /**
+     * - [PayPay]: Customer will be redirected after finishing payment on PayPay app/website.
+     * - [Card]: Payment with 3-D Secure 2 authentication will be started by accessing this URL by customer.
+     */
+    redirect_url?: string | null
+
+    /**
      * Fields where merchants can freely set values
      */
     client_field_1?: string | null
@@ -198,38 +243,50 @@ export type PaymentObject = {
     client_field_3?: string | null
 
     /**
-     * Defines the behavior of 3D Secure 2.0
+     * Defines the behavior of 3D Secure 2
      * 
-     * - `0`: Not use 3D Secure 2.0.
-     * - `2`: Use 3D Secure 2.0 Authentication
+     * - `0`: Not use 3D Secure 2.
+     * - `2`: Use 3D Secure 2 Authentication
      */
     tds_type?: "0" | "2" | null
 
     /**
-     * Defines the behavior payment when the card used in this payment does not support 3D Secure 2.0 
+     * Defines the behavior payment when the card used in this payment does not support 3D Secure 2 
      * 
      * - `2`: fincode API will return HTTP Error(400) and not execute this payment.
-     * - `3`: fincode API will execute this payment without 3D Secure 2.0 authentication. 
+     * - `3`: fincode API will execute this payment without 3D Secure 2 authentication. 
      */
     tds2_type?: "2" | "3" | null
 
     /**
-     * Returning URL of your website when 3D Secure 2.0 authentication is completed.
+     * Returning URL of your website when 3D Secure 2 authentication is completed.
      * 
      * For the URL specified in this field, the following values are passed with the redirect.
      * 
      * - `MD`: this value equals "access_id" and will return as query string.
      * - `requestorTransId`: this value will return as "application/x-www-form-urlencoded"
      * - `event`: this value will return as "application/x-www-form-urlencoded"
-     * - `param`: this value will be used in 3D Secure 2.0 authentication after redirecting this url and return as "application/x-www-form-urlencoded".
+     * - `param`: this value will be used in 3D Secure 2 authentication after redirecting this url and return as "application/x-www-form-urlencoded".
      */
     tds2_ret_url?: string | null
 
     /**
-     * The processing status of 3D Secure 2.0 authentication.
+     * Returning URL of your website when 3D Secure 2 authentication is completed and the payment is successful. (自動リダイレクト型3Dセキュア認証; Automatic Redirect Type 3D Secure Authentication)
+     * The redirect to this URL will be executed with POST method.
+     */
+    return_url?: string | null
+
+    /**
+     * Returning URL of your website when 3D Secure 2 authentication or payment is failed. (自動リダイレクト型3Dセキュア認証; Automatic Redirect Type 3D Secure Authentication)
+     * The redirect to this URL will be executed with POST method.
+     */
+    return_url_on_failure?: string | null
+
+    /**
+     * The processing status of 3D Secure 2 authentication.
      * 
      * - `2`: fincode API will return HTTP Error(400) and not execute this payment.
-     * - `3`: fincode API will execute this payment without 3D Secure 2.0 authentication. 
+     * - `3`: fincode API will execute this payment without 3D Secure 2 authentication. 
      */
     tds2_status?: "2" | "3" | null
 
@@ -270,16 +327,6 @@ export type PaymentObject = {
     // ---
     // Konbini Payment
     // ---
-
-    /**
-     * The term payment is available in Konbini.
-     */
-    payment_term_day?: string | null
-
-    /**
-     * The deadline of payment in Konbini. 
-     */
-    payment_term?: string | null
 
     /**
      * Device name that displays barcode image.
@@ -368,20 +415,6 @@ export type PaymentObject = {
      */
     konbini_store_code?: string | null
 
-    /**
-     * Overpayment flag.
-     * 
-     * if customer overpaid, this flag will be set to `1`.
-     */
-    overpayment_flag?: "0" | "1" | null
-
-    /**
-     * Cancel overpayment flag.
-     * 
-     * if customer paid after canceling, this flag will be set to `1`.
-     */
-    cancel_overpayment_flag?: "0" | "1" | null
-
     // ---
     // PayPay Payment
     // ---
@@ -412,11 +445,6 @@ export type PaymentObject = {
      * Canceling order description that customer can read on PayPay app.
      */
     cancel_description?: string | null
-
-    /**
-     * Redirect URL that customer will be redirected after finishing payment on PayPay app/website.
-     */
-    redirect_url?: string | null
 
     /**
      * Redirect Type of PayPay payment.
@@ -487,6 +515,139 @@ export type PaymentObject = {
     // Apple Pay Payment
     // ---
 
+    // ---
+    // Direct Debit Payment
+    // ---
+
+    /**
+     * Target date (The date direct debit billing will be executed.)
+     */
+    target_date?: string | null
+
+    /**
+     * Withdrawal date (The date direct debit billing was executed.)
+     */
+    withdrawal_date?: string | null
+
+    /**
+     * End date of accepting payment request.
+     */
+    request_accept_end_date?: string | null
+
+    /**
+     * The date result of transfer will be notified.
+     */
+    transfer_return_date?: string | null
+
+    /**
+     * Bank code of the bank account used in this direct debit payment.
+     */
+    bank_code?: string | null
+
+    /**
+     * Bank name of the bank account used in this direct debit payment.
+     */
+    bank_name?: string | null
+
+    /**
+     * Branch code of the bank account used in this direct debit payment.
+     */
+    branch_code?: string | null
+
+    /**
+     * Branch name of the bank account used in this direct debit payment.
+     */
+    branch_name?: string | null
+
+    /**
+     * Usage details that will be displayed on the customer's bank statement.
+     */
+    remarks?: string | null
+
+    /**
+     * Result code of direct debit payment (returned by the direct debit payment provider.)
+     */
+    result_code?: DirectDebitResultCode | null
+
+    // ---
+    // Virtual Account Payment
+    // ---
+
+    /**
+     * Billing amount of Virtual Account payment.
+     */
+    billing_amount?: number | null
+
+    /**
+     * Billing tax of Virtual Account payment.
+     */
+    billing_tax?: number | null
+
+    /**
+     * Billing total amount of Virtual Account payment.
+     */
+    billing_total_amount?: number | null
+
+    /**
+     * Branch code of the virtual account used in this payment.
+     */
+    va_branch_code?: string | null
+
+    /**
+     * Branch name of the virtual account used in this payment.
+     */
+    va_branch_name?: string | null
+
+    /**
+     * Account number of the virtual account used in this payment.
+     */
+    va_account_number?: string | null
+
+    /**
+     * Account holder name of the virtual account used in this payment.
+     */
+    va_account_name?: string | null
+
+    /**
+     * The date this virtual account was assigned.
+     * 
+     * Format: `yyyy/MM/dd HH:mm:ss.SSS`
+     */
+    account_assignment_date?: string | null
+
+    /**
+     * Virtual account identifier.
+     */
+    virtual_account_id?: string | null
+
+    /**
+     * The date this virtual account was paid.
+     * 
+     * Format: `yyyy/MM/dd`
+     */
+    transaction_date?: string | null
+
+    /**
+     * The business day of the virtual account payment was processed by the bank.
+     * 
+     * Format: `yyyy/MM/dd`
+     */
+    value_date?: string | null
+
+    /**
+     * Remitter account holder name of the virtual account payment.
+     */
+    remitter_account_name?: string | null
+
+    /**
+     * Remitter bank name of the virtual account payment.
+     */
+    remitter_bank_name?: string | null
+
+    /**
+     * Remitter branch name of the virtual account payment.
+     */
+    remitter_branch_name?: string | null
 }
 
 /**
@@ -563,6 +724,8 @@ export type RetrievingPaymentListQueryParams = Modify<Pagination, {
      * - `Konbini`: Konbini payment
      * - `Paypay`: PayPay payment
      * - `Applepay`: Apple Pay payment
+     * - `Directdebit`: Direct Debit payment
+     * - `Virtualaccount`: Virtual Account payment
      */
     pay_type: PayType
 
@@ -668,6 +831,8 @@ export type CreatingPaymentRequest = {
      * - `Konbini`: this Payment accepts payment by Konbini.
      * - `Paypay`: this Payment accepts payment by PayPay.
      * - `Applepay`: this Payment accepts payment by Apple Pay.
+     * - `Directdebit`: this Payment accepts payment by Direct Debit.
+     * - `Virtualaccount`: this Payment accepts payment by Virtual Account.
      */
     pay_type: PayType
 
@@ -679,10 +844,6 @@ export type CreatingPaymentRequest = {
      * - `CAPTURE`: fincode captures authorized charge.
      */
     job_code?: Extract<PaymentJobCode, "CHECK" | "AUTH" | "CAPTURE"> | null
-
-    //---
-    // Card Payment
-    //---
 
     /**
      * Amount payment. this value must be in range of `"0"` to `"9999999"`.
@@ -707,11 +868,15 @@ export type CreatingPaymentRequest = {
      */
     send_url?: string | null
 
+    //---
+    // Card Payment
+    //---
+
     /**
-     * Defines the behavior of 3D Secure 2.0
+     * Defines the behavior of 3D Secure 2
      * 
      * - `0`: Not use.
-     * - `2`: Use 3D Secure 2.0 Authentication
+     * - `2`: Use 3D Secure 2 Authentication
      */
     tds_type?: "0" | "2" | null
 
@@ -726,10 +891,10 @@ export type CreatingPaymentRequest = {
     subscription_id?: string | null
 
     /**
-     * Defines the behavior payment when the card used in this payment does not support 3D Secure 2.0 
+     * Defines the behavior payment when the card used in this payment does not support 3D Secure 2 
      * 
      * - `2`: fincode API will return HTTP Error(400) and not execute this payment.
-     * - `3`: fincode API will execute this payment without 3D Secure 2.0 authentication. 
+     * - `3`: fincode API will execute this payment without 3D Secure 2 authentication. 
      */
     tds2_type?: "2" | "3" | null
 
@@ -756,6 +921,31 @@ export type CreatingPaymentRequest = {
      * Token that is generated by Apple Device.
      */
     token?: string | null
+
+    // ---
+    // Direct Debit Payment
+    // ---
+
+    /**
+     * Usage details that will be displayed on the customer's bank statement.
+     */
+    remarks?: string | null
+
+    // ---
+    // Virtual Account Payment
+    // ---
+
+    /**
+     * Billing amount of Virtual Account payment.
+     * 
+     * required when "pay_type" is "Virtualaccount".
+     */
+    billing_amount?: string | null
+
+    /**
+     * Billing tax of Virtual Account payment.
+     */
+    billing_tax?: string | null
 }
 
 /**
@@ -769,6 +959,8 @@ export type ExecutingPaymentRequest = {
      * - `Konbini`: konbini payment.
      * - `Paypay`: PayPay payment.
      * - `Applepay`: Apple Pay payment.
+     * - `Directdebit`: Direct Debit payment.
+     * - `Virtualaccount`: Virtual Account payment.
      */
     pay_type: PayType
 
@@ -776,6 +968,10 @@ export type ExecutingPaymentRequest = {
      * access ID issued for this payment to use in this payment context.
      */
     access_id: string
+
+    // ---
+    // Card Payment
+    // ---
 
     /**
      * One-time token that used to identify card that will be used in this payment.
@@ -797,6 +993,29 @@ export type ExecutingPaymentRequest = {
      * You must fill both this and "card_id" fields or "token" field.
      */
     customer_id?: string | null
+
+
+
+    /**
+     * The term payment is available.
+     * 
+     * (You can use this field when `pay_type` is `Konbini` or `Virtualaccount`)
+     * 
+     * - min: `"0"`
+     * - max: `"14"`
+     */
+    payment_term_day?: string | null
+
+    /**
+     * Customer's payment method ID that will be used in this payment. 
+     * 
+     * (You can use this field when `pay_type` is `Card` or `Directdebit`)
+     */
+    payment_method_id?: string | null
+
+    // ---
+    // card payment
+    // ---
 
     /**
      * Customer's card ID that will be used in this payment.
@@ -829,37 +1048,53 @@ export type ExecutingPaymentRequest = {
 
 
     // ---------------------------
-    // 3D Secure 2.0 Params
+    // 3D Secure 2 Params
     // ---------------------------
 
     /**
-     * Returning URL of your website when 3D Secure 2.0 authentication is completed.
+     * Returning URL of your website when 3D Secure 2 authentication is completed and the payment is successful. (自動リダイレクト型3Dセキュア認証; Automatic Redirect Type 3D Secure Authentication)
+     * The redirect to this URL will be executed with POST method.
+     * 
+     * If the `tds2_ret_url` is set, this field will be ignored.
+     */
+    return_url?: string | null
+
+    /**
+     * Returning URL of your website when 3D Secure 2 authentication or payment is failed. (自動リダイレクト型3Dセキュア認証; Automatic Redirect Type 3D Secure Authentication)
+     * The redirect to this URL will be executed with POST method.
+     * 
+     * If the `tds2_ret_url` is set, this field will be ignored.
+     */
+    return_url_on_failure?: string | null
+
+    /**
+     * Returning URL of your website when 3D Secure 2 authentication is completed.
      * 
      * For the URL specified in this field, the following values are passed with the redirect.
      * 
      * - MD?: this value equals "access_id" and will return as query string.
      * - requestorTransId?: this value will return as "application/x-www-form-urlencoded"
      * - event?: this value will return as "application/x-www-form-urlencoded"
-     * - param?: this value will be used in 3D Secure 2.0 authentication after redirecting this url and return as "application/x-www-form-urlencoded".
+     * - param?: this value will be used in 3D Secure 2 authentication after redirecting this url and return as "application/x-www-form-urlencoded".
      */
     tds2_ret_url?: string | null
 
     /**
-     * Date the account who requests 3D Secure 2.0 was last updated.
+     * Date the account who requests 3D Secure 2 was last updated.
      * 
      * Format: `yyyyMMdd`
      */
     tds2_ch_acc_change?: string | null
 
     /**
-     * Date the account who requests 3D Secure 2.0 was created.
+     * Date the account who requests 3D Secure 2 was created.
      * 
      * Format: `yyyyMMdd`
      */
     tds2_ch_acc_date?: string | null
 
     /**
-     * Date the password of the account who requests 3D Secure 2.0 was changed.
+     * Date the password of the account who requests 3D Secure 2 was changed.
      * 
      * Format: `yyyyMMdd`
      */
@@ -1121,14 +1356,6 @@ export type ExecutingPaymentRequest = {
     // ---
 
     /**
-     * The term payment is available in Konbini.
-     * 
-     * - min: `"0"`
-     * - max: `"14"`
-     */
-    payment_term_day?: string | null
-
-    /**
      * Device name.
      * 
      * You can use the value of 
@@ -1187,6 +1414,36 @@ export type ExecutingPaymentRequest = {
      * User Agent information of the browser of your URL that customer will be redirected after finishing payment on PayPay app/website.
      */
     user_agent?: string | null
+
+    //---
+    // Apple Pay Payment
+    //---
+
+    //---
+    // Direct Debit Payment
+    //---
+
+    /**
+     * Target date (The date direct debit billing will be executed.)
+     * 
+     * Format: `yyyy/MM/dd`
+     */
+    target_date?: string | null
+
+    //---
+    // Virtual Account Payment
+    //---
+
+    /**
+     * If you want to use same Virtual Account for multiple payments, you can set the reference ID of Virtual Account payment.
+     */
+    reference_order_id?: string | null
+
+    /**
+     * Account Name of Virtual Account.
+     * (Use the statement notation registered in the fincode shop info.)
+     */
+    account_shop_name?: string | null
 }
 
 
@@ -1233,6 +1490,8 @@ export type CancelingPaymentRequest = {
      * - `Konbini`: konbini payment.
      * - `Paypay`: PayPay payment.
      * - `Applepay`: Apple Pay payment.
+     * - `Directdebit`: Direct Debit payment.
+     * - `Virtualaccount`: Virtual Account payment.
      */
     pay_type: PayType
 
@@ -1367,7 +1626,7 @@ export type Executing3DSecureAuthRequest = {
  */
 export type Executing3DSecureAuthResponse = {
     /**
-     * Result code of 3D Secure 2.0 authentication
+     * Result code of 3D Secure 2 authentication
      * 
      * - `Y`: Authentication or bank account successfully verified.
      * - `N`: Unauthorized or account could not be verified, or the payment was rejected.
@@ -1379,7 +1638,7 @@ export type Executing3DSecureAuthResponse = {
     tds2_trans_result?: ThreeDSecureAuthResult | null
 
     /**
-     * Reason of result of 3D Secure 2.0 authentication.
+     * Reason of result of 3D Secure 2 authentication.
      */
     tds2_trans_result_reason?: string | null
 
@@ -1395,7 +1654,7 @@ export type Executing3DSecureAuthResponse = {
  */
 export type Retrieving3DSecureAuthResponse = {
     /**
-     * Result code of 3D Secure 2.0 authentication
+     * Result code of 3D Secure 2 authentication
      * 
      * - `Y`: Authentication or bank account successfully verified.
      * - `N`: Unauthorized or account could not be verified, or the payment was rejected.
@@ -1407,7 +1666,7 @@ export type Retrieving3DSecureAuthResponse = {
     tds2_trans_result?: ThreeDSecureAuthResult | null
 
     /**
-     * Reason of result of 3D Secure 2.0 authentication.
+     * Reason of result of 3D Secure 2 authentication.
      */
     tds2_trans_result_reason?: string | null
 }
@@ -1419,8 +1678,10 @@ export type Retrieving3DSecureAuthResponse = {
  * - `Konbini`: Konbini payment
  * - `Paypay`: PayPay payment
  * - `Applepay`: Apple Pay payment
+ * - `Directdebit`: Direct Debit payment
+ * - `Virtualaccount`: Virtual Account payment
  */
-export type PayType = "Card" | "Konbini" | "Paypay" | "Applepay"
+export type PayType = "Card" | "Konbini" | "Paypay" | "Applepay" | "Directdebit" | "Virtualaccount"
 
 /**
  * Status of a payment.
@@ -1433,8 +1694,9 @@ export type PayType = "Card" | "Konbini" | "Paypay" | "Applepay"
  * - `AUTHENTICATED`: 3D Secure Authentication has already finished. So this payment is awaiting for Payment-After-3DSecure (PUT /v1/payments/{id}/secure)
  * - `AWAITING_CUSTOMER_PAYMENT`: This payment is awaiting for customer's payment.
  * - `EXPIRED`: This payment is expired.
+ * - `FAILED`: This payment is failed. (You shoude re-create payment.)
  */
-export type PaymentStatus = "UNPROCESSED" | "CHECKED" | "AUTHORIZED" | "CAPTURED" | "CANCELED" | "AUTHENTICATED" | "AWAITING_CUSTOMER_PAYMENT" | "EXPIRED"
+export type PaymentStatus = "UNPROCESSED" | "CHECKED" | "AUTHORIZED" | "CAPTURED" | "CANCELED" | "AUTHENTICATED" | "AWAITING_CUSTOMER_PAYMENT" | "EXPIRED" | "FAILED"
 
 /**
  * 3D Secure authentication result.
@@ -1499,3 +1761,24 @@ export type GeneratingKonbiniPaymentBarcodeRequest = {
      */
     win_size_type: string
 }
+
+/**
+ * Result code of direct debit payment. (returned by the direct debit payment provider.)
+ * 
+ * - `0`: Success.
+ * - `1`: Failed due to insufficient balance.
+ * - `2`: Failed because the bank account does not exist.
+ * - `3`: Failed due to buyer's action.
+ * - `4`: Failed due to missing or incomplete request form. This occurs when the direct debit request form is not registered with the financial institution.
+ * - `8`: Failed because there are something wrong with the requester shop.
+ * - `9|E|N`: Failed because of some abnormal error. (Please contact fincode support.)
+ */
+export type DirectDebitResultCode =
+    | "0"
+    | "1"
+    | "2"
+    | "3"
+    | "4"
+    | "9"
+    | "E"
+    | "N"
