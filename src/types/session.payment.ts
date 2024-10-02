@@ -125,18 +125,18 @@ export type PaymentSessionObject = {
         item_code?: string | null
 
         /**
-         * Defines the behavior of 3D Secure 2.0
+         * Defines the behavior of 3D Secure 2
          * 
-         * - `0`: Not use 3D Secure 2.0.
-         * - `2`: Use 3D Secure 2.0 Authentication
+         * - `0`: Not use 3D Secure 2.
+         * - `2`: Use 3D Secure 2 Authentication
          */
         tds_type?: "0" | "2" | null
 
         /**
-         * Defines the behavior payment when the card used in this payment does not support 3D Secure 2.0 
+         * Defines the behavior payment when the card used in this payment does not support 3D Secure 2 
          * 
          * - `2`: fincode API will return HTTP Error(400) and not execute this payment.
-         * - `3`: fincode API will execute this payment without 3D Secure 2.0 authentication. 
+         * - `3`: fincode API will execute this payment without 3D Secure 2 authentication. 
          */
         tds2_type?: "2" | "3" | null
 
@@ -284,18 +284,18 @@ export type CreatingPaymentSessionRequest = {
         job_code?: "AUTH" | "CAPTURE" | null
 
         /**
-         * Defines the behavior of 3D Secure 2.0
+         * Defines the behavior of 3D Secure 2
          * 
-         * - `0`: Not use 3D Secure 2.0.
-         * - `2`: Use 3D Secure 2.0 Authentication
+         * - `0`: Not use 3D Secure 2.
+         * - `2`: Use 3D Secure 2 Authentication
          */
         tds_type?: "0" | "2" | null
 
         /**
-         * Defines the behavior payment when the card used in this payment does not support 3D Secure 2.0 
+         * Defines the behavior payment when the card used in this payment does not support 3D Secure 2 
          * 
          * - `2`: fincode API will return HTTP Error(400) and not execute this payment.
-         * - `3`: fincode API will execute this payment without 3D Secure 2.0 authentication. 
+         * - `3`: fincode API will execute this payment without 3D Secure 2 authentication. 
          */
         tds2_type?: "2" | "3" | null
 
@@ -306,21 +306,21 @@ export type CreatingPaymentSessionRequest = {
 
 
         /**
-         * Date the account who requests 3D Secure 2.0 was last updated.
+         * Date the account who requests 3D Secure 2 was last updated.
          * 
          * Format: `yyyyMMdd`
          */
         tds2_ch_acc_change?: string | null
 
         /**
-         * Date the account who requests 3D Secure 2.0 was created.
+         * Date the account who requests 3D Secure 2 was created.
          * 
          * Format: `yyyyMMdd`
          */
         tds2_ch_acc_date?: string | null
 
         /**
-         * Date the password of the account who requests 3D Secure 2.0 was changed.
+         * Date the password of the account who requests 3D Secure 2 was changed.
          * 
          * Format: `yyyyMMdd`
          */

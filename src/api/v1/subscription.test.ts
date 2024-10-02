@@ -3,7 +3,7 @@ import {
     SubscriptionObject,
     UpdatingSubscriptionRequest,
 } from "./../../types"
-import { createFincode } from "./fincode.js"
+import { createFincode } from "./fincode"
 import dotenv from "dotenv"
 import path from "path"
 
