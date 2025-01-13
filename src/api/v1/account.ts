@@ -6,6 +6,7 @@ import {
     APIErrorResponse,
     FincodeAPIError,
     FincodeSDKError,
+    RetrievingAccountDetailListQuery,
 } from "../../types/index"
 import { FincodeConfig } from "./fincode"
 import { createFincodeRequestFetch, FincodeRequestHeaders } from "./http"
@@ -21,12 +22,12 @@ class Account {
 
     /**
      * **Retrieve account list **
-     * 
+     *
      * corresponds to `POST /v1/accounts`
-     * 
+     *
      * @param {RetrievingAccountListQueryParams} [queryParams] - query parameters
      * @param {FincodeRequestHeaders} [headers] - request header
-     * 
+     *
      * @returns {Promise<ListResponse<AccountObject>>} - account object list
     */
     public retrieveList(
@@ -65,12 +66,12 @@ class Account {
 
     /**
      * **Retrieve a account**
-     * 
+     *
      * corresponds to `GET /v1/accounts/:id`
-     * 
+     *
      * @param {string} id - account ID
      * @param {FincodeRequestHeaders} [headers] - request headers
-     * 
+     *
      * @returns {Promise<AccountObject>} - account object
      */
     public retrieve(
@@ -110,18 +111,20 @@ class Account {
 
     /**
      * **Retrieve a account detail*
-     * 
+     *
      * corresponds to `GET /v1/accounts/:id/detail`
-     * 
+     *
      * @param {string} id - account ID
      * @param {FincodeRequestHeaders} [headers] - request headers
-     * 
+     * @param {RetrievingAccountDetailListQuery} [queryParams] - request params
+     *
      * @returns {Promise<AccountObject>} - account object
      */
 
     public retrieveDetailList(
         id: string,
         headers?: FincodeRequestHeaders,
+        params?: RetrievingAccountDetailListQuery
     ): Promise<ListResponse<AccountDetailObject>> {
 
         return new Promise((resolve, reject) => {
@@ -131,7 +134,7 @@ class Account {
                 `/v1/accounts/${id}/detail`,
                 undefined,
                 headers,
-                undefined,
+                params,
             )
 
             fetch().then((res) => {

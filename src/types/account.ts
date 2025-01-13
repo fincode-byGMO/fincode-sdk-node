@@ -3,7 +3,7 @@ import { Pagination } from "./pagination"
 
 /**
  * Deposit status code
- * 
+ *
  * - `3001`: before deposit amount is confirmed
  * - `3002`: after deposit amount is confirmed
  * - `3003`: already deposited
@@ -16,7 +16,7 @@ import { Pagination } from "./pagination"
  * - `3010`: identity verification document is not uploaded
  * - `3011`: deposit has already been completed
  * - `3012`: before deposit
- * - `3013`: contract failed 
+ * - `3013`: contract failed
  */
 export type DepositStatusCode = 3001 | 3002 | 3003 | 3004 | 3005 | 3006 | 3007 | 3008 | 3009 | 3010 | 3011 | 3012 | 3013
 
@@ -41,21 +41,21 @@ export type AccountObject = {
 
     /**
      * Date of deposit
-     * 
+     *
      * Format: `yyyy/MM/dd HH:mm`
      */
     schedled_deposit_date: string
 
     /**
      * Date the aggregate deposit starts
-     * 
+     *
      * Format: `yyyy/MM/dd HH:mm`
      */
     aggregate_term_start: string
 
     /**
      * Date the aggregate deposit ends
-     * 
+     *
      * Format: `yyyy/MM/dd HH:mm`
      */
     aggregate_term_end: string
@@ -120,14 +120,14 @@ export type AccountObject = {
 
     /**
      * Created timestamp
-     * 
+     *
      * Format: `yyyy/MM/dd HH:mm:ss.SSS`
      */
     created: string
 
     /**
      * Updated timestamp
-     * 
+     *
      * Format: `yyyy/MM/dd HH:mm:ss.SSS`
      */
     updated?: string | null
@@ -149,14 +149,14 @@ export type RetrievingAccountListQueryParams = Modify<Omit<Pagination, "sort">, 
 
     /**
      * Deposit scheduled date (from)
-     * 
+     *
      * Format: `yyyy/MM/dd`
      */
     scheduled_from?: string | null
 
     /**
      * Deposit scheduled date (to)
-     * 
+     *
      * Format: `yyyy/MM/dd`
      */
     scheduled_to?: string | null
@@ -191,3 +191,8 @@ export type AccountDetailObject = {
  */
 // export type RetrievingAccountDetailListQueryParams = Modify<Omit<Pagination, "sort">, {}>
 export type RetrievingAccountDetailListQueryParams = Omit<Pagination, "sort">
+
+type TradeType = 1 | 2 | 3 | 4 | 5;
+export type RetrievingAccountDetailListQuery = Omit<Pagination, "sort"> & {
+    trade_type?: TradeType[]
+}
