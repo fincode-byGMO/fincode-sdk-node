@@ -32,7 +32,7 @@ export type PaymentObject = {
      * Status payment.
      * 
      * - `UNPROCESSED`: This payment has been registered but no action has been taken yet.
-     * - `CHECK`: This payment is only used for checking if the card is valid or not.
+     * - `CHECKED`: This payment is only used for checking if the card is valid or not.
      * - `AUTHORIZED`: Card authorization was already accepted. So this payment is waiting for capturing.
      * - `CAPTURED`: The sale from this payment has already been captured.
      * - `CANCELED`: This payment is canceled by request.
@@ -1687,7 +1687,7 @@ export type PayType = "Card" | "Konbini" | "Paypay" | "Applepay" | "Directdebit"
  * Status of a payment.
  * 
  * - `UNPROCESSED`: This payment has been registered but no action has been taken yet.
- * - `CHECK`: This payment is only used for checking if the card is valid or not.
+ * - `CHECKED`: This payment is only used for checking if the card is valid or not.
  * - `AUTHORIZED`: Card authorization was already accepted. So this payment is waiting for capturing.
  * - `CAPTURED`: The sale from this payment has already been captured.
  * - `CANCELED`: This payment is canceled by request.
