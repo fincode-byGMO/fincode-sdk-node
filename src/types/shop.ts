@@ -421,7 +421,7 @@ export type ShopInformation_V2 = {
         /**
          * This shop provides some digital contents or not.
          */
-        digital_content?: boolean | null
+        digital_contents?: boolean | null
     }
 
     /**

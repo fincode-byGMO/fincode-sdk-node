@@ -337,7 +337,7 @@ export type UpdatingTenantRequest = {
      * - `jad`: JCB/American Express/Diners
      * - `konbini`: Konbini
      */
-    id?: Shop.ExaminationMaster | null
+    examination_master_id?: Shop.ExaminationMaster | null
 
     /**
      * Platform rate
@@ -425,7 +425,7 @@ export type UpdatingExaminationInfoRequest = {
      * - `4`: 6 times closing per month with payment 5 days after each closing (required to contact fincode support)
      * - `5`: Daily closing with payment 3 business days after each closing (required to contact fincode support)
      */
-    deoisut_cycle_master_id?: Shop.DepositCycleMasterId | null
+    deposit_cycle_master_id?: Shop.DepositCycleMasterId | null
 
     /**
      * Contract detail
@@ -440,7 +440,7 @@ export type UpdatingExaminationInfoRequest = {
     /**
      * Bank account
      */
-    bank_account?: Partial<Contract.ContractBankAccount> | null
+    contract_bank_account?: Partial<Contract.ContractBankAccount> | null
 }
 
 /**
