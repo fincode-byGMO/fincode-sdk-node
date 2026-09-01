@@ -383,11 +383,14 @@ export type RequestingExaminationResponse = {
     shop_id: string
 
     /**
-     * Result of challange to use VISA / Mastercard immediately
+     * Application status.
      * 
-     * - `1`: Success
-     * - `2`: Failure
-     * - `3`: Pending
+     * - `1`: OK. The application is complete and will be examined.
+     *   If `enable_immediate_use` was `true`, immediate use is granted and
+     *   VISA / Mastercard payments can be accepted.
+     * - `2`: NG. Use of fincode was not approved.
+     * - `3`: Pending. Immediate use was not granted. The application is
+     *   complete and examination continues.
      */
     status_code: 1 | 2 | 3
 }

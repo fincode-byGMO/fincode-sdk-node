@@ -40,7 +40,10 @@ export type PlatformAccountObject = {
     shop_id: string
 
     /**
-     * Date of deposit
+     * Scheduled date of deposit.
+     * 
+     * This is the planned date, not the actual one. The date the deposit
+     * was actually made is returned in `deposit_date`.
      * 
      * Format: `yyyy/MM/dd HH:mm`
      */
