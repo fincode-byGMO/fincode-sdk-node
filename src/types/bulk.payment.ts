@@ -274,7 +274,7 @@ export type PaymentBulkDetailObject = {
      * - `1`: The customer will be charged for this payment in a lump-sum.
      * - `2`: The customer will be charged for this payment in several installments.
      */
-    method?: "1" | "2" | null
+    method?: "1" | "2" | "5" | null
 
     /**
      * The number of installments that will charge to the customer in this payment registered as installment payment.

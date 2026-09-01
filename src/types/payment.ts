@@ -29,14 +29,10 @@ export type PaymentObject = {
     pay_type: PayType
 
     /**
-     * Status payment.
+     * Status of this payment.
      * 
-     * - `UNPROCESSED`: This payment has been registered but no action has been taken yet.
-     * - `CHECK`: This payment is only used for checking if the card is valid or not.
-     * - `AUTHORIZED`: Card authorization was already accepted. So this payment is waiting for capturing.
-     * - `CAPTURED`: The sale from this payment has already been captured.
-     * - `CANCELED`: This payment is canceled by request.
-     * - `AUTHENTICATED`: 3D Secure Authentication has already finished. So this payment is awaiting for Payment-After-3DSecure (PUT /v1/payments/{id}/secure)
+     * Which values can appear depends on `pay_type`. See `PaymentStatus`
+     * for the values available per payment type.
      */
     status: PaymentStatus
 
@@ -55,11 +51,16 @@ export type PaymentObject = {
     /**
      * Job category payment.
      * 
-     * - `CHECK`: fincode checks if the card is valid.
-     * - `AUTH`: fincode authorizes a charge.
-     * - `CAPTURE`: fincode captures authorized payment.
+     * `CHECK`, `AUTH` and `CAPTURE` can also be sent when registering or
+     * executing a payment. `SALES` and `CANCEL` only appear in responses.
+     * 
+     * - `CHECK`: The card validity was checked.
+     * - `AUTH`: The charge was authorized. (仮売上)
+     * - `CAPTURE`: The charge was captured on execution. (即時売上)
+     * - `SALES`: An authorized charge was captured afterwards. (実売上)
+     * - `CANCEL`: The payment was canceled.
      */
-    job_code?: Extract<PaymentJobCode, "CHECK" | "AUTH" | "CAPTURE"> | null
+    job_code?: Extract<PaymentJobCode, "CHECK" | "AUTH" | "CAPTURE" | "SALES" | "CANCEL"> | null
 
     /**
      * The term payment is available in Konbini or Virtual Account.
@@ -189,7 +190,7 @@ export type PaymentObject = {
      * - `1`: The customer will be charged for this payment in a lump-sum.
      * - `2`: The customer will be charged for this payment in several installments.
      */
-    method?: "1" | "2" | null
+    method?: "1" | "2" | "5" | null
 
     /**
      * The number of installments that will charge to the customer in this payment registered as installment payment.
@@ -285,10 +286,11 @@ export type PaymentObject = {
     /**
      * The processing status of 3D Secure 2 authentication.
      * 
-     * - `2`: fincode API will return HTTP Error(400) and not execute this payment.
-     * - `3`: fincode API will execute this payment without 3D Secure 2 authentication. 
+     * - `AUTHENTICATING`: Authentication is in progress.
+     * - `CHALLENGE`: Challenge authentication is required.
+     * - `AUTHENTICATED`: Authentication has completed.
      */
-    tds2_status?: "2" | "3" | null
+    tds2_status?: ThreeDSecure2Status | null
 
     /**
      * The value will be used as your business name in redirect page of 3D Secure. 
@@ -701,13 +703,16 @@ export type KonbiniPaymentProviderProcessResult =
  * 
  * - `00010`: Seven-Eleven
  * - `00020`: Lawson
- * - `00050`: Daily Yamazaki and other stores
+ * - `00030`: FamilyMart
+ * - `00050`: Daily Yamazaki and other stores. These stores no longer accept
+ *   new payments. Payments made while they did still return this code.
  * - `00080`: Mini Stop
- * - `00760`: Seicomart 
+ * - `00760`: Seicomart
  */
 export type KonbiniCode =
     "00010" |
     "00020" |
+    "00030" |
     "00050" |
     "00080" |
     "00760"
@@ -805,7 +810,7 @@ export type RetrievingPaymentListQueryParams = Modify<Pagination, {
     /**
      * Payment Pattern
      */
-    pay_pattern?: ("onetime" | "subscription")[] | null
+    pay_pattern?: ("onetime" | "subscription" | "bulk")[] | null
 
     /**
      * Subscription ID
@@ -1032,7 +1037,7 @@ export type ExecutingPaymentRequest = {
      * 
      * You must fill this field when this payment's job_type is `AUTH` or `CAPTURE`
      */
-    method?: "1" | "2" | null
+    method?: "1" | "2" | "5" | null
 
     /**
      * The number of installments that will charge to the customer in this payment registered as installment payment.
@@ -1165,7 +1170,7 @@ export type ExecutingPaymentRequest = {
      * - `05`: With 3rd Party authoriztion.
      * - `06`: With FIDO authorization.
      */
-    tds2_three_ds_req_auth_method?: "01" | "02" | "03" | "04" | "05" | null
+    tds2_three_ds_req_auth_method?: "01" | "02" | "03" | "04" | "05" | "06" | null
 
     /**
      * Date the customer logged in.
@@ -1325,19 +1330,33 @@ export type ExecutingPaymentRequest = {
     tds2_pre_order_date?: string | null
 
     /**
+     * Whether the product is already on sale or is a pre-order.
      * 
+     * - `01`: Already on sale.
+     * - `02`: Pre-order.
      */
-    tds2_pre_order_purchase_ind?: string | null
+    tds2_pre_order_purchase_ind?: "01" | "02" | null
 
     /**
+     * Whether this is a first-time order or a reorder.
      * 
+     * - `01`: First-time order.
+     * - `02`: Reorder.
      */
-    tds2_reorder_items_ind?: string | null
+    tds2_reorder_items_ind?: "01" | "02" | null
 
     /**
+     * Shipping method of the purchased product.
      * 
+     * - `01`: Ship to the cardholder's billing address.
+     * - `02`: Ship to an address the merchant has on file and has verified. (not the billing address)
+     * - `03`: Ship to an address that differs from the cardholder's billing address.
+     * - `04`: Ship to a store. (the store address is given as the shipping address)
+     * - `05`: Digital goods, including online services, electronic gift cards and redemption codes.
+     * - `06`: No shipping. (travel and event tickets)
+     * - `07`: Other, such as games, digital services that are not shipped, and digital media subscriptions.
      */
-    tds2_ship_ind?: string | null
+    tds2_ship_ind?: "01" | "02" | "03" | "04" | "05" | "06" | "07" | null
 
     /**
      * Expiring date of recurring billing.
@@ -1471,7 +1490,7 @@ export type CapturingPaymentRequest = {
      * 
      * You must fill this field when this payment's job_type is `AUTH` or `CAPTURE`
      */
-    method?: "1" | "2" | null
+    method?: "1" | "2" | "5" | null
 
     /**
      * The number of installments that will charge to the customer in this payment registered as installment payment.
@@ -1533,7 +1552,7 @@ export type ReauthorizingPaymentRequest = {
      * 
      * You must fill this field when this payment's job_type is `AUTH` or `CAPTURE`
      */
-    method: "1" | "2"
+    method: "1" | "2" | "5"
 
     /**
      * The number of installments that will charge to the customer in this payment registered as installment payment.
@@ -1678,25 +1697,37 @@ export type Retrieving3DSecureAuthResponse = {
  * - `Konbini`: Konbini payment
  * - `Paypay`: PayPay payment
  * - `Applepay`: Apple Pay payment
+ * - `Googlepay`: Google Pay payment
  * - `Directdebit`: Direct Debit payment
  * - `Virtualaccount`: Virtual Account payment
  */
-export type PayType = "Card" | "Konbini" | "Paypay" | "Applepay" | "Directdebit" | "Virtualaccount"
+export type PayType = "Card" | "Konbini" | "Paypay" | "Applepay" | "Googlepay" | "Directdebit" | "Virtualaccount"
 
 /**
  * Status of a payment.
  * 
  * - `UNPROCESSED`: This payment has been registered but no action has been taken yet.
- * - `CHECK`: This payment is only used for checking if the card is valid or not.
+ * - `CHECKED`: The card validity check has completed.
  * - `AUTHORIZED`: Card authorization was already accepted. So this payment is waiting for capturing.
  * - `CAPTURED`: The sale from this payment has already been captured.
  * - `CANCELED`: This payment is canceled by request.
  * - `AUTHENTICATED`: 3D Secure Authentication has already finished. So this payment is awaiting for Payment-After-3DSecure (PUT /v1/payments/{id}/secure)
  * - `AWAITING_CUSTOMER_PAYMENT`: This payment is awaiting for customer's payment.
+ * - `AWAITING_PAYMENT_APPROVAL`: This payment is awaiting the transfer to be processed by fincode and the financial institution.
  * - `EXPIRED`: This payment is expired.
- * - `FAILED`: This payment is failed. (You shoude re-create payment.)
+ * - `FAILED`: This payment failed. Register the payment again to retry.
+ *
+ * Which values a payment can take depends on its `pay_type`:
+ *
+ * - `Card`: UNPROCESSED, CHECKED, AUTHORIZED, CAPTURED, CANCELED, AUTHENTICATED
+ * - `Konbini`: UNPROCESSED, AWAITING_CUSTOMER_PAYMENT, CAPTURED, CANCELED, EXPIRED
+ * - `Paypay`: UNPROCESSED, AUTHORIZED, AWAITING_CUSTOMER_PAYMENT, CAPTURED, CANCELED, EXPIRED
+ * - `Applepay`: UNPROCESSED, AUTHORIZED, CAPTURED, CANCELED
+ * - `Googlepay`: UNPROCESSED, AUTHORIZED, CAPTURED, CANCELED, AUTHENTICATED
+ * - `Directdebit`: UNPROCESSED, AWAITING_PAYMENT_APPROVAL, CAPTURED, CANCELED, FAILED
+ * - `Virtualaccount`: UNPROCESSED, AWAITING_CUSTOMER_PAYMENT, CAPTURED, CANCELED, EXPIRED
  */
-export type PaymentStatus = "UNPROCESSED" | "CHECKED" | "AUTHORIZED" | "CAPTURED" | "CANCELED" | "AUTHENTICATED" | "AWAITING_CUSTOMER_PAYMENT" | "EXPIRED" | "FAILED"
+export type PaymentStatus = "UNPROCESSED" | "CHECKED" | "AUTHORIZED" | "CAPTURED" | "CANCELED" | "AUTHENTICATED" | "AWAITING_CUSTOMER_PAYMENT" | "AWAITING_PAYMENT_APPROVAL" | "EXPIRED" | "FAILED"
 
 /**
  * 3D Secure authentication result.
@@ -1763,6 +1794,15 @@ export type GeneratingKonbiniPaymentBarcodeRequest = {
 }
 
 /**
+ * Processing status of 3D Secure 2 authentication.
+ * 
+ * - `AUTHENTICATING`: Authentication is in progress.
+ * - `CHALLENGE`: Challenge authentication is required.
+ * - `AUTHENTICATED`: Authentication has completed.
+ */
+export type ThreeDSecure2Status = "AUTHENTICATING" | "CHALLENGE" | "AUTHENTICATED"
+
+/**
  * Result code of direct debit payment. (returned by the direct debit payment provider.)
  * 
  * - `0`: Success.
@@ -1770,8 +1810,11 @@ export type GeneratingKonbiniPaymentBarcodeRequest = {
  * - `2`: Failed because the bank account does not exist.
  * - `3`: Failed due to buyer's action.
  * - `4`: Failed due to missing or incomplete request form. This occurs when the direct debit request form is not registered with the financial institution.
+ * - `7`: Failed due to a data error. (Direct Debit on the 1st, 5th, 20th and 26th only)
  * - `8`: Failed because there are something wrong with the requester shop.
- * - `9|E|N`: Failed because of some abnormal error. (Please contact fincode support.)
+ * - `9`: Failed because of some other error. (Please contact fincode support.)
+ * - `E`: Failed due to a data error. (Direct Debit on the 5th, 6th, 23rd and 27th only)
+ * - `N`: The transfer result has not arrived yet. (Direct Debit on the 5th, 6th, 23rd and 27th only)
  */
 export type DirectDebitResultCode =
     | "0"
@@ -1779,6 +1822,8 @@ export type DirectDebitResultCode =
     | "2"
     | "3"
     | "4"
+    | "7"
+    | "8"
     | "9"
     | "E"
     | "N"

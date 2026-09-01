@@ -391,7 +391,7 @@ export type CreatingPaymentSessionRequest = {
          * - `05`: With 3rd Party authoriztion.
          * - `06`: With FIDO authorization.
          */
-        tds2_three_ds_req_auth_method?: "01" | "02" | "03" | "04" | "05" | null
+        tds2_three_ds_req_auth_method?: "01" | "02" | "03" | "04" | "05" | "06" | null
 
         /**
          * Date the customer logged in.
@@ -551,19 +551,33 @@ export type CreatingPaymentSessionRequest = {
         tds2_pre_order_date?: string | null
 
         /**
+         * Whether the product is already on sale or is a pre-order.
          * 
+         * - `01`: Already on sale.
+         * - `02`: Pre-order.
          */
-        tds2_pre_order_purchase_ind?: string | null
+        tds2_pre_order_purchase_ind?: "01" | "02" | null
 
         /**
+         * Whether this is a first-time order or a reorder.
          * 
+         * - `01`: First-time order.
+         * - `02`: Reorder.
          */
-        tds2_reorder_items_ind?: string | null
+        tds2_reorder_items_ind?: "01" | "02" | null
 
         /**
+         * Shipping method of the purchased product.
          * 
+         * - `01`: Ship to the cardholder's billing address.
+         * - `02`: Ship to an address the merchant has on file and has verified. (not the billing address)
+         * - `03`: Ship to an address that differs from the cardholder's billing address.
+         * - `04`: Ship to a store. (the store address is given as the shipping address)
+         * - `05`: Digital goods, including online services, electronic gift cards and redemption codes.
+         * - `06`: No shipping. (travel and event tickets)
+         * - `07`: Other, such as games, digital services that are not shipped, and digital media subscriptions.
          */
-        tds2_ship_ind?: string | null
+        tds2_ship_ind?: "01" | "02" | "03" | "04" | "05" | "06" | "07" | null
 
         /**
          * Expiring date of recurring billing.
