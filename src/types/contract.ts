@@ -719,23 +719,14 @@ export type ContractBankAccount = {
 
 export type Examination = {
     /**
-     * Examination master ID
-     * 
-     * - `1`: VISA / Mastercard (UC Card)
-     * - `2`: JCB / American Express / Diners Club
-     * - `3`: VISA / Mastercard (Toyota Finance)
-     * - `101`: Konbini (Densan System)
+     * Examination master ID.
      */
-    examination_master_id?: 1 | 2 | 3 | 101 | null
+    examination_master_id?: ContractExaminationMasterId | null
 
     /**
-     * Status code
-     * 
-     * - `1`: Examination is now in progress.
-     * - `2`: Examination has been successfully completed.
-     * - `3`: Examination has been failed.
+     * Result of this payment provider's examination.
      */
-    status_code?: 1 | 2 | 3 | null
+    status_code?: ExaminationStatus | null
 
     /**
      * Marchant Member code
@@ -807,13 +798,12 @@ export type CardPaymentSetting = {
 export type ContractStatus = 101 | 102 | 103 | 105 | 106 | 107
 
 /**
- * Sales deposit status code
+ * Status of the identity verification required before sales can be deposited.
  * 
- * - `501`: Before procedure
- * - `502`: Receivable
- * - `503`: Withholding
+ * - `501`: The procedure required for deposits has not been completed.
+ * - `502`: Deposits are available.
  */
-export type SalesDepositStatusCode = 501 | 502 | 503
+export type SalesDepositStatusCode = 501 | 502
 
 /**
  * Status updated notification
@@ -828,7 +818,7 @@ export type StatusUpdatedNotification = {
      * - `DINERS`: Diners Club (JCB)
      * - `PAYSLE`: Konbini (Denan System)
      */
-    acquirer?: 'UC' | 'TFC' | 'JCB/AMEX' | 'DINERS' | 'PAYSLE' | null
+    acquirer?: ContractAquirer | null
 
     /**
      * Examination task
@@ -892,7 +882,101 @@ export type StatusUpdatedNotification = {
  */
 export type ExaminationStatusCode = 701 | 702 | 703 | 704 | 705 | 706 | 707 | 708 | 709
 
-export type ContractAquirer = "UC" | "TFC" | "JCB/AMEX" | "DINERS" | "APPLE PAY UC" | "APPLE PAY JCB/AMEX" | "PAYSLE" | "PAYPAY"
+/**
+ * The acquirer or payment provider that an examination targets.
+ * 
+ * - `UC`: VISA / Mastercard (UC Card)
+ * - `TFC`: VISA / Mastercard (Toyota Finance)
+ * - `ORICO`: VISA / Mastercard (Orient Corporation)
+ * - `AFS`: VISA / Mastercard (AEON Financial Service)
+ * - `MUN`: VISA / Mastercard (Mitsubishi UFJ Nicos)
+ * - `JCB/AMEX`: JCB / American Express (JCB)
+ * - `DINERS`: Diners Club (JCB)
+ * - `APPLE PAY UC`: Apple Pay (UC Card)
+ * - `APPLE PAY JCB/AMEX`: Apple Pay (JCB)
+ * - `GOOGLE PAY UC`: Google Pay (UC Card)
+ * - `GOOGLE PAY TFC`: Google Pay (Toyota Finance)
+ * - `GOOGLE PAY ORICO`: Google Pay (Orient Corporation)
+ * - `GOOGLE PAY AFS`: Google Pay (AEON Financial Service)
+ * - `GOOGLE PAY MUN`: Google Pay (Mitsubishi UFJ Nicos)
+ * - `GOOGLE PAY JCB/AMEX`: Google Pay (JCB)
+ * - `GOOGLE PAY DINERS`: Google Pay (Diners Club)
+ * - `PAYSLE`: Konbini (Densan System)
+ * - `PAYPAY`: Konbini (PayPay)
+ * - `DIRECT DEBIT`: Direct Debit (withdrawal on the 5th, 6th, 23rd and 27th)
+ * - `DIRECT DEBIT MIZUHO`: Direct Debit (withdrawal on the 1st, 5th, 20th and 26th)
+ * - `VIRTUAL ACCOUNT`: Bank transfer (Virtual Account)
+ * - `VIRTUAL ACCOUNT BULK`: Bulk payment (Virtual Account)
+ * - `CARD UPDATER`: Card Updater
+ */
+export type ContractAquirer =
+    | "UC"
+    | "TFC"
+    | "ORICO"
+    | "AFS"
+    | "MUN"
+    | "JCB/AMEX"
+    | "DINERS"
+    | "APPLE PAY UC"
+    | "APPLE PAY JCB/AMEX"
+    | "GOOGLE PAY UC"
+    | "GOOGLE PAY TFC"
+    | "GOOGLE PAY ORICO"
+    | "GOOGLE PAY AFS"
+    | "GOOGLE PAY MUN"
+    | "GOOGLE PAY JCB/AMEX"
+    | "GOOGLE PAY DINERS"
+    | "PAYSLE"
+    | "PAYPAY"
+    | "DIRECT DEBIT"
+    | "DIRECT DEBIT MIZUHO"
+    | "VIRTUAL ACCOUNT"
+    | "VIRTUAL ACCOUNT BULK"
+    | "CARD UPDATER"
+
+/**
+ * Examination status of a payment provider.
+ * 
+ * - `1`: In progress. This payment method cannot accept payments yet.
+ * - `2`: Passed. This payment method can accept payments.
+ * - `3`: Rejected. This payment method cannot accept payments.
+ */
+export type ExaminationStatus = 1 | 2 | 3
+
+/**
+ * Examination master ID. Identifies which payment method an examination is for.
+ * 
+ * - `1`: Card (VISA / Mastercard, UC Card)
+ * - `2`: Card (JCB / American Express / Diners Club / Discover)
+ * - `3`: Card (VISA / Mastercard, Toyota Finance)
+ * - `4`: Card (VISA / Mastercard, Orient Corporation)
+ * - `5`: Card (VISA / Mastercard, AEON Financial Service)
+ * - `6`: Card (VISA / Mastercard, Mitsubishi UFJ Nicos)
+ * - `51`: Apple Pay (VISA / Mastercard, UC Card)
+ * - `52`: Apple Pay (JCB / American Express)
+ * - `56`: Google Pay (VISA / Mastercard, UC Card)
+ * - `57`: Google Pay (JCB / American Express / Diners Club)
+ * - `58`: Google Pay (VISA / Mastercard, Toyota Finance)
+ * - `59`: Google Pay (VISA / Mastercard, Orient Corporation)
+ * - `60`: Google Pay (VISA / Mastercard, AEON Financial Service)
+ * - `61`: Google Pay (VISA / Mastercard, Mitsubishi UFJ Nicos)
+ * - `101`: Konbini
+ * - `201`: PayPay
+ * - `301`: Direct Debit (withdrawal on the 5th, 6th, 23rd and 27th)
+ * - `302`: Direct Debit (withdrawal on the 1st, 5th, 20th and 26th)
+ * - `401`: Bank transfer (Virtual Account)
+ * - `403`: Bulk payment (Virtual Account)
+ * - `701`: Card Updater
+ */
+export type ContractExaminationMasterId =
+    | 1 | 2 | 3 | 4 | 5 | 6
+    | 51 | 52
+    | 56 | 57 | 58 | 59 | 60 | 61
+    | 101
+    | 201
+    | 301 | 302
+    | 401 | 403
+    | 701
 
 /**
  * Contract status (v2)
