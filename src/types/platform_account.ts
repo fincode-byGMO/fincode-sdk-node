@@ -44,7 +44,7 @@ export type PlatformAccountObject = {
      * 
      * Format: `yyyy/MM/dd HH:mm`
      */
-    schedled_deposit_date: string
+    scheduled_deposit_date: string
 
     /**
      * Date the aggregate deposit starts

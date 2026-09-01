@@ -163,7 +163,7 @@ export type PaymentSessionObject = {
         /**
          * Flag to send barcode payment email or not.
          */
-        konbini_receipt_mail_send_flag?: "0" | "1" | null
+        konbini_reception_mail_send_flag?: "0" | "1" | null
     }
 
     /**

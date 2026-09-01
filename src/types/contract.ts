@@ -119,7 +119,7 @@ export type ContractObject = {
     /**
      * Stop cancelation memo
      */
-    stop_cancel_memo?: string | null
+    stop_cancelaltion_memo?: string | null
 
     /**
      * Obligations notice
@@ -828,7 +828,7 @@ export type StatusUpdatedNotification = {
      * - `DINERS`: Diners Club (JCB)
      * - `PAYSLE`: Konbini (Denan System)
      */
-    aquirer?: 'UC' | 'TFC' | 'JCB/AMEX' | 'DINERS' | 'PAYSLE' | null
+    acquirer?: 'UC' | 'TFC' | 'JCB/AMEX' | 'DINERS' | 'PAYSLE' | null
 
     /**
      * Examination task

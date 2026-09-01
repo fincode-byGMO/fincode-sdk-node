@@ -389,7 +389,7 @@ export type RequestingExaminationResponse = {
      * - `2`: Failure
      * - `3`: Pending
      */
-    enable_immediate_use: 1 | 2 | 3
+    status_code: 1 | 2 | 3
 }
 
 /**

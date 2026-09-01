@@ -597,14 +597,14 @@ export type CancelingSubscriptionResponse = {
      * 
      * Format: `yyyy/MM/dd HH:mm:ss.SSS`
      */
-    created_date: string
+    created: string
 
     /**
      * Updated date.
      * 
      * Format: `yyyy/MM/dd HH:mm:ss.SSS`
      */
-    updated_date: string
+    updated: string
 }
 
 /**

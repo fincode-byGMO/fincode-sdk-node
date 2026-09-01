@@ -158,7 +158,7 @@ type PaymentMethodCard = {
      * - `2`: Prepaid card.
      * - `3`: Credit card.
      */
-    card_type: CardType
+    type: CardType
 
     /**
      * Card brands user can use in fincode.
