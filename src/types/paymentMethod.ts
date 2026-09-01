@@ -291,10 +291,10 @@ type PaymentMehtodDirectDebit = {
     /**
      * Account type
      * 
-     * - `0`: Savings account (普通預金)
-     * - `1`: Current account (当座預金)
+     * - `1`: Savings account (普通預金)
+     * - `2`: Current account (当座預金)
      */
-    account_type?: "0" | "1" | null
+    account_type?: "1" | "2" | null
 
     /**
      * Account number
@@ -781,10 +781,10 @@ export type CreatingPaymentMethodRequest = {
          * 
          * required if `directdebit.bank_code` is not `9900`(JP Bank)
          * 
-         * - `0`: Savings account (普通預金)
-         * - `1`: Current account (当座預金)
+         * - `1`: Savings account (普通預金)
+         * - `2`: Current account (当座預金)
          */
-        account_type?: "0" | "1" | null
+        account_type?: "1" | "2" | null
 
         /**
          * Account number
