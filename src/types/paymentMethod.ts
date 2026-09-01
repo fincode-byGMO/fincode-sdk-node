@@ -708,7 +708,7 @@ export type CreatingPaymentMethodRequest = {
         /**
          * 
          */
-        tds2_pre_order_purchaselnd?: string | null
+        tds2_pre_order_purchase_ind?: string | null
 
         /**
          * 
@@ -725,12 +725,12 @@ export type CreatingPaymentMethodRequest = {
          * 
          * Format: `yyyyMMdd`
          */
-        tds2_recuring_expiry?: string | null
+        tds2_recurring_expiry?: string | null
 
         /**
          * Minimum interval days of recurring billing.
          */
-        tds2_recuring_frequency?: string | null
+        tds2_recurring_frequency?: string | null
     }
 
     /**
