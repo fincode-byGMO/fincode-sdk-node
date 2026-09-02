@@ -7,55 +7,65 @@ import { HttpsProxyAgent } from "https-proxy-agent"
 const BASE_URL = "https://api.fincode.jp"
 const BASE_URL_TEST = "https://api.test.fincode.jp"
 
-export const buildQueryString = (queryParams: any) => {
+/**
+ * Build a query string from a query parameter object.
+ * 
+ * fincode expects a list to be a single comma-separated value. Repeating the
+ * same key keeps only the first value, so the list must be joined instead of
+ * appended one by one.
+ * 
+ * `null` and `undefined` values are left out of the query string.
+ */
+export const buildQueryString = (queryParams: unknown): string => {
     const urlSearchParams = new URLSearchParams()
-    interpretQueryParams(urlSearchParams, null, queryParams)
+
+    if (queryParams === null || typeof queryParams !== "object" || Array.isArray(queryParams)) {
+        return ""
+    }
+
+    Object.entries(queryParams as Record<string, unknown>).forEach(([key, value]) => {
+        const serialized = serializeQueryValue(key, value)
+        if (serialized !== undefined) {
+            urlSearchParams.append(key, serialized)
+        }
+    })
 
     return urlSearchParams.toString()
 }
 
-const interpretQueryParams = (urlSearchParams: URLSearchParams, key: string | null, value: any) => {
+const isSort = (value: object): value is Sort =>
+    "field" in value && "order" in value
+
+/**
+ * Turn one query parameter value into the string fincode expects.
+ * 
+ * Returns `undefined` when the value should be left out entirely.
+ */
+const serializeQueryValue = (key: string, value: unknown): string | undefined => {
+    if (value === null || value === undefined) {
+        return undefined
+    }
+
+    if (Array.isArray(value)) {
+        const parts = value
+            .map((v) => serializeQueryValue(key, v))
+            .filter((v): v is string => v !== undefined)
+
+        return parts.length > 0 ? parts.join(",") : undefined
+    }
+
     switch (typeof value) {
         case "object":
-            if (Array.isArray(value)) {
-                value.forEach((v, i) => {
-                    if (key) {
-                        interpretQueryParams(urlSearchParams, key, v)
-                    } else {
-                        throw new Error("key is not defined")
-                    }
-                })
-            } else {
-                if (
-                    value.field &&
-                    value.order
-                ) {
-                    const sort = value as Sort
-                    if (key) {
-                        urlSearchParams.append(key, `${sort.field} ${sort.order}`)
-                    } else {
-                        throw new Error("key is not defined")
-                    }
-                } else {
-                    Object.keys(value).forEach((k) => {
-                        interpretQueryParams(urlSearchParams, k, value[k])
-                    })
-                }
+            if (isSort(value)) {
+                return `${value.field} ${value.order}`
             }
-            break
+            throw new Error(`Unexpected object in query parameter "${key}"`)
         case "boolean":
         case "number":
         case "string":
-            if (key) {
-                urlSearchParams.append(key, value.toString())
-            } else {
-                throw new Error("key is not defined")
-            }
-            break
-        case "undefined":
-            break
+            return String(value)
         default:
-            throw new Error(`Unexpected type of query parameter: ${typeof value}`)
+            throw new Error(`Unexpected type of query parameter "${key}": ${typeof value}`)
     }
 }
 
