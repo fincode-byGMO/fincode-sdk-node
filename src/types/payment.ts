@@ -1614,7 +1614,7 @@ export type CreatingPayPayPaymentRequest = CreatingPaymentCommonFields & {
  */
 export type CreatingApplePayPaymentRequest = CreatingPaymentCommonFields & {
     /**
-     * Payment method. Must be `Applepay` for a Apple Pay payment.
+     * Payment method. Must be `Applepay` for an Apple Pay payment.
      */
     pay_type: Extract<PayType, "Applepay">
 
@@ -1965,7 +1965,7 @@ export type ExecutingPayPayPaymentRequest = ExecutingPaymentCommonFields & {
  */
 export type ExecutingApplePayPaymentRequest = ExecutingPaymentCommonFields & {
     /**
-     * Payment method. Must be `Applepay` for a Apple Pay payment.
+     * Payment method. Must be `Applepay` for an Apple Pay payment.
      */
     pay_type: Extract<PayType, "Applepay">
 
@@ -2117,21 +2117,10 @@ export type ExecutingPaymentRequest =
 
 
 /**
- * Request object of Capturing payment (used for PUT /v1/payments/{id}/capture)
+ * Installment settings, for the payment types that let the card be charged in
+ * installments.
  */
-export type CapturingPaymentRequest = {
-    /**
-     * Payment method you want to use in this payment execution.
-     * 
-     * - `Card`: card payment.
-     */
-    pay_type: Extract<PayType, "Card" | "Paypay">
-
-    /**
-     * access ID issued for this payment to use in this payment context.
-     */
-    access_id: string
-
+type CardInstallmentFields = {
     /**
      * Charging method of card payment.
      * 
@@ -2149,45 +2138,115 @@ export type CapturingPaymentRequest = {
 }
 
 /**
- * Request object of Canceling payment (used for PUT /v1/payments/{id}/cancel)
+ * Request object for capturing a card or Google Pay payment.
  */
-export type CancelingPaymentRequest = {
+export type CapturingCardPaymentRequest = CardInstallmentFields & {
     /**
-     * Payment method you want to use in this payment execution.
-     * 
-     * - `Card`: card payment.
-     * - `Konbini`: konbini payment.
-     * - `Paypay`: PayPay payment.
-     * - `Applepay`: Apple Pay payment.
-     * - `Directdebit`: Direct Debit payment.
-     * - `Virtualaccount`: Virtual Account payment.
+     * Payment method of the payment.
      */
-    pay_type: PayType
+    pay_type: Extract<PayType, "Card" | "Googlepay">
+
+    /**
+     * access ID issued for this payment to use in this payment context.
+     */
+    access_id: string
+}
+
+
+
+/**
+ * Request object for capturing an Apple Pay payment.
+ */
+export type CapturingApplePayPaymentRequest = {
+    /**
+     * Payment method. Must be `Applepay` for an Apple Pay payment.
+     */
+    pay_type: Extract<PayType, "Applepay">
+
+    /**
+     * access ID issued for this payment to use in this payment context.
+     */
+    access_id: string
+}
+
+/**
+ * Request object for capturing a PayPay payment.
+ */
+export type CapturingPayPayPaymentRequest = {
+    /**
+     * Payment method. Must be `Paypay` for a PayPay payment.
+     */
+    pay_type: Extract<PayType, "Paypay">
 
     /**
      * access ID issued for this payment to use in this payment context.
      */
     access_id: string
 
-    // ---
-    // PayPay payment
-    // ---
+    /**
+     * Description shown to the payer when the payment is captured.
+     */
+    capture_description?: string | null
+}
+
+/**
+ * Request object for capturing a payment.
+ * (used for `PUT /v1/payments/{id}/capture`)
+ * 
+ * Konbini, direct debit and virtual account payments cannot be captured.
+ */
+export type CapturingPaymentRequest =
+    | CapturingCardPaymentRequest
+    | CapturingApplePayPaymentRequest
+    | CapturingPayPayPaymentRequest
+
+/**
+ * Request object for canceling a payment.
+ * (used for `PUT /v1/payments/{id}/cancel`)
+ * 
+ * Every payment type can be canceled. PayPay additionally takes a description
+ * shown to the payer.
+ */
+export type CancelingPaymentRequest =
+    | {
+        /**
+         * Payment method of the payment being canceled.
+         */
+        pay_type: Exclude<PayType, "Paypay">
+
+    /**
+     * access ID issued for this payment to use in this payment context.
+     */
+    access_id: string
+    }
+    | {
+        /**
+         * Payment method. Must be `Paypay` for a PayPay payment.
+         */
+        pay_type: Extract<PayType, "Paypay">
+
+    /**
+     * access ID issued for this payment to use in this payment context.
+     */
+    access_id: string
+
     /**
      * Order canceling description that customer can read on PayPay app.
      */
     cancel_description?: string | null
-}
+    }
 
 /**
- * Request object of Re-authorization payment (used for PUT /v1/payments/{id}/cancel)
+ * Request object for authorizing a payment again.
+ * (used for `PUT /v1/payments/{id}/auth`)
+ * 
+ * Only card and Google Pay payments can be authorized again.
  */
 export type ReauthorizingPaymentRequest = {
     /**
-     * Payment method you want to use in this payment execution.
-     * 
-     * - `Card`: card payment.
+     * Payment method of the payment.
      */
-    pay_type: Extract<PayType, "Card">
+    pay_type: Extract<PayType, "Card" | "Googlepay">
 
     /**
      * access ID issued for this payment to use in this payment context.
@@ -2210,17 +2269,17 @@ export type ReauthorizingPaymentRequest = {
     pay_times?: CardPayTimes | null
 }
 
+
+
+
 /**
- * Request object of Change the amount of payment (used for PUT /v1/payments/{id}/change)
+ * Request object for changing the amount of a card or Google Pay payment.
  */
-export type ChangingPaymentAmountRequest = {
+export type ChangingCardPaymentAmountRequest = {
     /**
-     * Payment method you want to use in this payment execution.
-     * 
-     * - `Card`: card payment.
-     * - `Paypay`: PayPay payment.
+     * Payment method of the payment.
      */
-    pay_type: Extract<PayType, "Card" | "Paypay">
+    pay_type: Extract<PayType, "Card" | "Googlepay">
 
     /**
      * access ID issued for this payment to use in this payment context.
@@ -2246,28 +2305,18 @@ export type ChangingPaymentAmountRequest = {
      * Tax and shipping fee. if this param is set, "amount" param must also be set.
      */
     tax?: string | null
-
-    // ---
-    // PayPay payment
-    // ---
-
-    /**
-     * Order updating description that customer can read on PayPay app.
-     */
-    update_description?: string | null
 }
 
 
+
 /**
- * Request object of executing payment after 3D Secure (used for PUT /v1/payments/{id}/secure)
+ * Request object for changing the amount of a PayPay payment.
  */
-export type ExecutingPaymentAfter3DSecureRequest = {
+export type ChangingPayPayPaymentAmountRequest = {
     /**
-     * Payment method you want to use in this payment execution.
-     * 
-     * - `Card`: card payment.
+     * Payment method. Must be `Paypay` for a PayPay payment.
      */
-    pay_type: Extract<PayType, "Card">
+    pay_type: Extract<PayType, "Paypay">
 
     /**
      * access ID issued for this payment to use in this payment context.
@@ -2275,7 +2324,82 @@ export type ExecutingPaymentAfter3DSecureRequest = {
     access_id: string
 
     /**
-     * Developer should ignore this field.
+     * Amount payment. this value must be in range of `"0"` to `"9999999"`.
+     * If "job_code" param's value is "AUTH" or "CAPTURE", then this param become required.
+     */
+    amount: string
+
+    /**
+     * Tax and shipping fee. if this param is set, "amount" param must also be set.
+     */
+    tax?: string | null
+
+    /**
+     * Order updating description that customer can read on PayPay app.
+     */
+    update_description?: string | null
+}
+
+/**
+ * Request object for changing the amount of a direct debit payment.
+ */
+export type ChangingDirectDebitPaymentAmountRequest = {
+    /**
+     * Payment method. Must be `Directdebit` for a direct debit payment.
+     */
+    pay_type: Extract<PayType, "Directdebit">
+
+    /**
+     * access ID issued for this payment to use in this payment context.
+     */
+    access_id: string
+
+    /**
+     * Amount payment. this value must be in range of `"0"` to `"9999999"`.
+     * If "job_code" param's value is "AUTH" or "CAPTURE", then this param become required.
+     */
+    amount: string
+
+    /**
+     * Tax and shipping fee. if this param is set, "amount" param must also be set.
+     */
+    tax?: string | null
+}
+
+/**
+ * Request object for changing the amount of a payment.
+ * (used for `PUT /v1/payments/{id}/change`)
+ * 
+ * Card and Google Pay take `job_code`; PayPay and direct debit do not.
+ * Konbini, Apple Pay and virtual account payments cannot have their amount
+ * changed.
+ */
+export type ChangingPaymentAmountRequest =
+    | ChangingCardPaymentAmountRequest
+    | ChangingPayPayPaymentAmountRequest
+    | ChangingDirectDebitPaymentAmountRequest
+
+/**
+ * Request object for executing a payment after 3D Secure authentication.
+ * (used for `PUT /v1/payments/{id}/secure`)
+ * 
+ * Only card and Google Pay payments go through 3D Secure.
+ */
+export type ExecutingPaymentAfter3DSecureRequest = {
+    /**
+     * Payment method of the authenticated payment.
+     */
+    pay_type: Extract<PayType, "Card" | "Googlepay">
+
+    /**
+     * access ID issued for this payment to use in this payment context.
+     */
+    access_id: string
+
+    /**
+     * Result message of the 3D Secure service.
+     * 
+     * @deprecated 3D Secure 1.0 only. The feature is no longer available.
      */
     pa_res?: string | null
 }
