@@ -1,6 +1,6 @@
 import { Modify } from "../utils/utilTypes"
 import { Pagination } from "./pagination"
-import { PayType } from "./payment"
+import { CardPayTimesResponse, PayType } from "./payment"
 
 /**
      * Bulk payment object
@@ -279,7 +279,7 @@ export type PaymentBulkDetailObject = {
     /**
      * The number of installments that will charge to the customer in this payment registered as installment payment.
      */
-    pay_times?: string | null
+    pay_times?: CardPayTimesResponse | null
 
     /**
      * Customer ID.

@@ -1,8 +1,11 @@
 export type Pagination = {
     /**
      * Maximum number of items to return.
+     * 
+     * Must be between 10 and 100; the API rejects other values.
+     * Defaults to 10.
      */
-    limit?: string | number | null
+    limit?: number | null
 
     /**
      * Number of this page.

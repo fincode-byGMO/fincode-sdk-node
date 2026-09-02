@@ -45,7 +45,7 @@ export type ShopObject = {
     /**
      * Days to keep logs
      */
-    log_keep_days?: string | null
+    log_keep_days?: number | null
 
     /**
      * API version

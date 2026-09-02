@@ -755,7 +755,7 @@ export type ContractDestination = {
     contract_card_info_master_id?: number | null
     examination_master_id?: number | null
     destination?: string | null
-    destination_type?: string | null
+    destination_type?: number | null
 }
 
 export type CardPaymentSetting = {

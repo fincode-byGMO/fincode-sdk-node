@@ -63,9 +63,13 @@ export type PaymentObject = {
     job_code?: Extract<PaymentJobCode, "CHECK" | "AUTH" | "CAPTURE" | "SALES" | "CANCEL"> | null
 
     /**
-     * The term payment is available in Konbini or Virtual Account.
+     * Number of days this payment can be paid in, for Konbini and Virtual
+     * Account payments.
+     * 
+     * Konbini accepts 0 to 14 days, Virtual Account accepts 0 to 99.
+     * Requests take this as a string.
      */
-    payment_term_day?: string | null
+    payment_term_day?: number | null
 
     /**
      * The deadline of payment in Konbini or Virtual Account.
@@ -195,7 +199,7 @@ export type PaymentObject = {
     /**
      * The number of installments that will charge to the customer in this payment registered as installment payment.
      */
-    pay_times?: string | null
+    pay_times?: CardPayTimesResponse | null
 
     /**
      * Value that identifies the company to which fincode requests payment processing.
@@ -748,12 +752,12 @@ export type RetrievingPaymentListQueryParams = Modify<Pagination, {
     /**
      * Minimum total amount of payment.
      */
-    total_amount_min?: string | null
+    total_amount_min?: number | null
 
     /**
      * Maximum total amount of payment.
      */
-    total_amount_max?: string | null
+    total_amount_max?: number | null
 
     /**
      * Customer ID
@@ -1042,7 +1046,7 @@ export type ExecutingPaymentRequest = {
     /**
      * The number of installments that will charge to the customer in this payment registered as installment payment.
      */
-    pay_times?: string | null
+    pay_times?: CardPayTimes | null
 
     /**
      * Holder name of the card used in this payment.
@@ -1495,7 +1499,7 @@ export type CapturingPaymentRequest = {
     /**
      * The number of installments that will charge to the customer in this payment registered as installment payment.
      */
-    pay_times?: string | null
+    pay_times?: CardPayTimes | null
 }
 
 /**
@@ -1557,7 +1561,7 @@ export type ReauthorizingPaymentRequest = {
     /**
      * The number of installments that will charge to the customer in this payment registered as installment payment.
      */
-    pay_times?: string | null
+    pay_times?: CardPayTimes | null
 }
 
 /**
@@ -1792,6 +1796,20 @@ export type GeneratingKonbiniPaymentBarcodeRequest = {
      */
     win_size_type: string
 }
+
+/**
+ * Number of installments, as sent in a request.
+ * 
+ * Responses carry the same value as a number. See `CardPayTimesResponse`.
+ */
+export type CardPayTimes = "3" | "5" | "6" | "10" | "12" | "15" | "18" | "20" | "24"
+
+/**
+ * Number of installments, as returned in a response.
+ * 
+ * Requests carry the same value as a string. See `CardPayTimes`.
+ */
+export type CardPayTimesResponse = 3 | 5 | 6 | 10 | 12 | 15 | 18 | 20 | 24
 
 /**
  * Processing status of 3D Secure 2 authentication.

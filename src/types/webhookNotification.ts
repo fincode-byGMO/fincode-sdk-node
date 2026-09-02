@@ -121,9 +121,9 @@ export type SubscriptionWebhookNotification = {
  * - `recurring.card.batch`
  */
 export type RecurringWebhookNotification = {
-    succeeded?: number | null
-    failed?: number | null
-    total?: number | null
+    succeeded?: string | null
+    failed?: string | null
+    total?: string | null
     shop_id?: string | null
     process_date?: string | null
     charge_date?: string | null
@@ -141,12 +141,12 @@ export type PaymentBulkWebhookNotification = {
     process_plan_date?: string | null
     status?: PaymentBulkStatus | null
 
-    error_total_count?: number | null
-    regist_total_count?: number | null
+    error_total_count?: string | null
+    regist_total_count?: string | null
 
-    succeeded_count?: number | null
-    failed_count?: number | null
-    total_count?: number | null
+    succeeded_count?: string | null
+    failed_count?: string | null
+    total_count?: string | null
 
     error_code?: string | null
     bulk_search_url?: string | null

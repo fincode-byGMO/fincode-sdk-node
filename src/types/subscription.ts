@@ -290,12 +290,12 @@ export type RetrievingSubscriptionListQueryParams = Modify<Pagination, {
     /**
      * Minimam total amount
      */
-    total_amount_min?: string | null
+    total_amount_min?: number | null
 
     /**
      * Maximum total amount
      */
-    total_amount_max?: string | null
+    total_amount_max?: number | null
 
     /**
      * Interval Pattern.
