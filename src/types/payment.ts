@@ -1169,254 +1169,13 @@ export type RetrievingPaymentListQueryParams =
 
 
 /**
- * Request object of Creating payment (used for POST /v1/payments)
+ * 3D Secure 2 authentication parameters, shared by the payment types that
+ * support 3D Secure.
+ * 
+ * These are hints for the card brand's risk-based authentication. None of
+ * them is required.
  */
-export type CreatingPaymentRequest = {
-
-    /**
-     * Payment ID. (sometimes called "Order ID")
-     */
-    id?: string | null
-
-    /**
-     * Accepted payment method in this payment.
-     * 
-     * - `Card`: this Payment accepts payment by card.
-     * - `Konbini`: this Payment accepts payment by Konbini.
-     * - `Paypay`: this Payment accepts payment by PayPay.
-     * - `Applepay`: this Payment accepts payment by Apple Pay.
-     * - `Directdebit`: this Payment accepts payment by Direct Debit.
-     * - `Virtualaccount`: this Payment accepts payment by Virtual Account.
-     */
-    pay_type: PayType
-
-    /**
-     * Job category payment.
-     * 
-     * - `CHECK`: fincode checks if the card is valid.
-     * - `AUTH`: fincode authorizes a charge with sum of "amount" and "tax".
-     * - `CAPTURE`: fincode captures authorized charge.
-     */
-    job_code?: Extract<PaymentJobCode, "CHECK" | "AUTH" | "CAPTURE"> | null
-
-    /**
-     * Amount payment. this value must be in range of `"0"` to `"9999999"`.
-     * If "job_code" param's value is "AUTH" or "CAPTURE", then this param become required.
-     */
-    amount?: string | null
-
-    /**
-     * Tax and shipping fee. if this param is set, "amount" param must also be set.
-     */
-    tax?: string | null
-
-    /**
-     * Fields where merchants can freely set values
-     */
-    client_field_1?: string | null
-    client_field_2?: string | null
-    client_field_3?: string | null
-
-    /**
-     * (Warning!) This field is no longer used.
-     */
-    send_url?: string | null
-
-    //---
-    // Card Payment
-    //---
-
-    /**
-     * Defines the behavior of 3D Secure 2
-     * 
-     * - `0`: Not use.
-     * - `2`: Use 3D Secure 2 Authentication
-     */
-    tds_type?: "0" | "2" | null
-
-    /**
-     * The value will be used as your business name in redirect page of 3D Secure. 
-     */
-    td_tenant_name?: string | null
-
-    /**
-     * This field will be filled if this payment is created by subscription payment.
-     */
-    subscription_id?: string | null
-
-    /**
-     * Defines the behavior payment when the card used in this payment does not support 3D Secure 2 
-     * 
-     * - `2`: fincode API will return HTTP Error(400) and not execute this payment.
-     * - `3`: fincode API will execute this payment without 3D Secure 2 authentication. 
-     */
-    tds2_type?: "2" | "3" | null
-
-    //---
-    // Konbini Payment
-    //---
-
-    // There is no params specific to konbini payment.
-
-    //---
-    // PayPay Payment
-    //---
-
-    /**
-     * Order description that customer can read on PayPay app.
-     */
-    order_description?: string | null
-
-    // ---
-    // Direct Debit Payment
-    // ---
-
-    /**
-     * Usage details that will be displayed on the customer's bank statement.
-     */
-    remarks?: string | null
-
-    // ---
-    // Virtual Account Payment
-    // ---
-
-    /**
-     * Billing amount of Virtual Account payment.
-     * 
-     * required when "pay_type" is "Virtualaccount".
-     */
-    billing_amount?: string | null
-
-    /**
-     * Billing tax of Virtual Account payment.
-     */
-    billing_tax?: string | null
-}
-
-/**
- * Request object of Executing payment (used for PUT /v1/payments/{id})
- */
-export type ExecutingPaymentRequest = {
-    /**
-     * Payment method you want to use in this payment execution.
-     * 
-     * - `Card`: card payment.
-     * - `Konbini`: konbini payment.
-     * - `Paypay`: PayPay payment.
-     * - `Applepay`: Apple Pay payment.
-     * - `Directdebit`: Direct Debit payment.
-     * - `Virtualaccount`: Virtual Account payment.
-     */
-    pay_type: PayType
-
-    /**
-     * access ID issued for this payment to use in this payment context.
-     */
-    access_id: string
-
-    // ---
-    // Card Payment
-    // ---
-
-    /**
-     * One-time token that used to identify card that will be used in this payment.
-     * 
-     * You must fill this field or both "card_id" and "customer_id" fields.
-     */
-    token?: string | null
-
-    /**
-     * Customer's customer ID that will be charged because payment.
-     * 
-     * You must fill both this and "card_id" fields or "token" field.
-     */
-    customer_id?: string | null
-
-
-
-    /**
-     * The term payment is available.
-     * 
-     * (You can use this field when `pay_type` is `Konbini` or `Virtualaccount`)
-     * 
-     * - min: `"0"`
-     * - max: `"14"`
-     */
-    payment_term_day?: string | null
-
-    /**
-     * Customer's payment method ID that will be used in this payment. 
-     * 
-     * (You can use this field when `pay_type` is `Card` or `Directdebit`)
-     */
-    payment_method_id?: string | null
-
-    // ---
-    // card payment
-    // ---
-
-    /**
-     * Customer's card ID that will be used in this payment.
-     * 
-     * You must fill both this and "customer_id" fields or "token" field.
-     */
-    card_id?: string | null
-
-    /**
-     * Charging method of card payment.
-     * 
-     * - `1`: The customer will be charged for this payment in a lump-sum.
-     * - `2`: The customer will be charged for this payment in several installments.
-     * 
-     * You must fill this field when this payment's job_type is `AUTH` or `CAPTURE`
-     */
-    method?: "1" | "2" | "5" | null
-
-    /**
-     * The number of installments that will charge to the customer in this payment registered as installment payment.
-     */
-    pay_times?: CardPayTimes | null
-
-    /**
-     * Holder name of the card used in this payment.
-     * 
-     * If any card have not been used in this payment yet, this field will be null.
-     */
-    holder_name?: string | null
-
-
-    // ---------------------------
-    // 3D Secure 2 Params
-    // ---------------------------
-
-    /**
-     * Returning URL of your website when 3D Secure 2 authentication is completed and the payment is successful. (自動リダイレクト型3Dセキュア認証; Automatic Redirect Type 3D Secure Authentication)
-     * The redirect to this URL will be executed with POST method.
-     * 
-     * If the `tds2_ret_url` is set, this field will be ignored.
-     */
-    return_url?: string | null
-
-    /**
-     * Returning URL of your website when 3D Secure 2 authentication or payment is failed. (自動リダイレクト型3Dセキュア認証; Automatic Redirect Type 3D Secure Authentication)
-     * The redirect to this URL will be executed with POST method.
-     * 
-     * If the `tds2_ret_url` is set, this field will be ignored.
-     */
-    return_url_on_failure?: string | null
-
-    /**
-     * Returning URL of your website when 3D Secure 2 authentication is completed.
-     * 
-     * For the URL specified in this field, the following values are passed with the redirect.
-     * 
-     * - MD?: this value equals "access_id" and will return as query string.
-     * - requestorTransId?: this value will return as "application/x-www-form-urlencoded"
-     * - event?: this value will return as "application/x-www-form-urlencoded"
-     * - param?: this value will be used in 3D Secure 2 authentication after redirecting this url and return as "application/x-www-form-urlencoded".
-     */
-    tds2_ret_url?: string | null
-
+export type ThreeDSecure2RequestFields = {
     /**
      * Date the account who requests 3D Secure 2 was last updated.
      * 
@@ -1702,10 +1461,437 @@ export type ExecutingPaymentRequest = {
      * Minimum interval days of recurring billing.
      */
     tds2_recurring_frequency?: string | null
+}
 
-    // ---
-    // Konbini payment
-    // ---
+/**
+ * Fields shared by every payment type when registering a payment.
+ */
+type CreatingPaymentCommonFields = {
+
+    /**
+     * Payment ID. (sometimes called "Order ID")
+     */
+    id?: string | null
+
+    /**
+     * Fields where merchants can freely set values
+     */
+    client_field_1?: string | null
+
+    /**
+     * Fields where merchants can freely set values
+     */
+    client_field_2?: string | null
+
+    /**
+     * Fields where merchants can freely set values
+     */
+    client_field_3?: string | null
+}
+
+/**
+ * Request object for registering a card payment.
+ */
+export type CreatingCardPaymentRequest = CreatingPaymentCommonFields & {
+    /**
+     * Payment method. Must be `Card` for a card payment.
+     */
+    pay_type: Extract<PayType, "Card">
+
+    /**
+     * Job category payment.
+     * 
+     * - `CHECK`: fincode checks if the card is valid.
+     * - `AUTH`: fincode authorizes a charge with sum of "amount" and "tax".
+     * - `CAPTURE`: fincode captures authorized charge.
+     */
+    job_code: Extract<PaymentJobCode, "CHECK" | "AUTH" | "CAPTURE">
+
+    /**
+     * Amount of this payment, excluding tax and shipping.
+     * 
+     * Must be in the range `"0"` to `"9999999"`.
+     */
+    amount?: string | null
+
+    /**
+     * Tax and shipping fee of this payment.
+     */
+    tax?: string | null
+
+    /**
+     * Defines the behavior of 3D Secure 2
+     * 
+     * - `0`: Not use.
+     * - `2`: Use 3D Secure 2 Authentication
+     */
+    tds_type?: "0" | "2" | null
+
+    /**
+     * Defines the behavior payment when the card used in this payment does not support 3D Secure 2 
+     * 
+     * - `2`: fincode API will return HTTP Error(400) and not execute this payment.
+     * - `3`: fincode API will execute this payment without 3D Secure 2 authentication. 
+     */
+    tds2_type?: "2" | "3" | null
+
+    /**
+     * The value will be used as your business name in redirect page of 3D Secure. 
+     */
+    td_tenant_name?: string | null
+
+    /**
+     * (Warning!) This field is no longer used.
+     */
+    send_url?: string | null
+
+    /**
+     * This field will be filled if this payment is created by subscription payment.
+     */
+    subscription_id?: string | null
+}
+
+/**
+ * Request object for registering a Konbini payment.
+ */
+export type CreatingKonbiniPaymentRequest = CreatingPaymentCommonFields & {
+    /**
+     * Payment method. Must be `Konbini` for a Konbini payment.
+     */
+    pay_type: Extract<PayType, "Konbini">
+
+    /**
+     * Amount of this payment, excluding tax and shipping.
+     * 
+     * Must be in the range `"0"` to `"9999999"`.
+     */
+    amount: string
+
+    /**
+     * Tax and shipping fee of this payment.
+     */
+    tax?: string | null
+}
+
+/**
+ * Request object for registering a PayPay payment.
+ */
+export type CreatingPayPayPaymentRequest = CreatingPaymentCommonFields & {
+    /**
+     * Payment method. Must be `Paypay` for a PayPay payment.
+     */
+    pay_type: Extract<PayType, "Paypay">
+
+    /**
+     * Job category payment.
+     * 
+     * - `CHECK`: fincode checks if the card is valid.
+     * - `AUTH`: fincode authorizes a charge with sum of "amount" and "tax".
+     * - `CAPTURE`: fincode captures authorized charge.
+     */
+    job_code: Extract<PaymentJobCode, "CHECK" | "AUTH" | "CAPTURE">
+
+    /**
+     * Amount of this payment, excluding tax and shipping.
+     * 
+     * Must be in the range `"0"` to `"9999999"`.
+     */
+    amount: string
+
+    /**
+     * Tax and shipping fee of this payment.
+     */
+    tax?: string | null
+
+    /**
+     * Order description that customer can read on PayPay app.
+     */
+    order_description?: string | null
+}
+
+/**
+ * Request object for registering an Apple Pay payment.
+ */
+export type CreatingApplePayPaymentRequest = CreatingPaymentCommonFields & {
+    /**
+     * Payment method. Must be `Applepay` for a Apple Pay payment.
+     */
+    pay_type: Extract<PayType, "Applepay">
+
+    /**
+     * Job category payment.
+     * 
+     * - `CHECK`: fincode checks if the card is valid.
+     * - `AUTH`: fincode authorizes a charge with sum of "amount" and "tax".
+     * - `CAPTURE`: fincode captures authorized charge.
+     */
+    job_code: Extract<PaymentJobCode, "CHECK" | "AUTH" | "CAPTURE">
+
+    /**
+     * Amount of this payment, excluding tax and shipping.
+     * 
+     * Must be in the range `"0"` to `"9999999"`.
+     */
+    amount: string
+
+    /**
+     * Tax and shipping fee of this payment.
+     */
+    tax?: string | null
+
+    /**
+     * Item code of the product being purchased.
+     */
+    item_code?: string | null
+
+    /**
+     * (Warning!) This field is no longer used.
+     */
+    send_url?: string | null
+}
+
+/**
+ * Request object for registering a Google Pay payment.
+ */
+export type CreatingGooglePayPaymentRequest = CreatingPaymentCommonFields & {
+    /**
+     * Payment method. Must be `Googlepay` for a Google Pay payment.
+     */
+    pay_type: Extract<PayType, "Googlepay">
+
+    /**
+     * Job category payment.
+     * 
+     * - `CHECK`: fincode checks if the card is valid.
+     * - `AUTH`: fincode authorizes a charge with sum of "amount" and "tax".
+     * - `CAPTURE`: fincode captures authorized charge.
+     */
+    job_code: Extract<PaymentJobCode, "CHECK" | "AUTH" | "CAPTURE">
+
+    /**
+     * Amount of this payment, excluding tax and shipping.
+     * 
+     * Must be in the range `"0"` to `"9999999"`.
+     */
+    amount: string
+
+    /**
+     * Tax and shipping fee of this payment.
+     */
+    tax?: string | null
+
+    /**
+     * Defines the behavior of 3D Secure 2
+     * 
+     * - `0`: Not use.
+     * - `2`: Use 3D Secure 2 Authentication
+     */
+    tds_type?: "0" | "2" | null
+
+    /**
+     * Defines the behavior payment when the card used in this payment does not support 3D Secure 2 
+     * 
+     * - `2`: fincode API will return HTTP Error(400) and not execute this payment.
+     * - `3`: fincode API will execute this payment without 3D Secure 2 authentication. 
+     */
+    tds2_type?: "2" | "3" | null
+
+    /**
+     * The value will be used as your business name in redirect page of 3D Secure. 
+     */
+    td_tenant_name?: string | null
+}
+
+/**
+ * Request object for registering a direct debit payment.
+ */
+export type CreatingDirectDebitPaymentRequest = CreatingPaymentCommonFields & {
+    /**
+     * Payment method. Must be `Directdebit` for a direct debit payment.
+     */
+    pay_type: Extract<PayType, "Directdebit">
+
+    /**
+     * Amount of this payment, excluding tax and shipping.
+     * 
+     * Must be in the range `"0"` to `"9999999"`.
+     */
+    amount: string
+
+    /**
+     * Tax and shipping fee of this payment.
+     */
+    tax?: string | null
+
+    /**
+     * Usage details that will be displayed on the customer's bank statement.
+     */
+    remarks?: string | null
+
+    /**
+     * This field will be filled if this payment is created by subscription payment.
+     */
+    subscription_id?: string | null
+}
+
+/**
+ * Request object for registering a virtual account payment.
+ */
+export type CreatingVirtualAccountPaymentRequest = CreatingPaymentCommonFields & {
+    /**
+     * Payment method. Must be `Virtualaccount` for a virtual account payment.
+     */
+    pay_type: Extract<PayType, "Virtualaccount">
+
+    /**
+     * Billing amount of Virtual Account payment.
+     */
+    billing_amount: string
+
+    /**
+     * Billing tax of Virtual Account payment.
+     */
+    billing_tax?: string | null
+
+    /**
+     * Whether to reject a transfer whose amount does not match the billed amount.
+     */
+    use_exact_deposit_amount?: boolean | null
+}
+
+/**
+ * Request object for registering a payment.
+ * (used for `POST /v1/payments`)
+ * 
+ * Which fields are available, and which are required, depends on `pay_type`.
+ */
+export type CreatingPaymentRequest =
+    | CreatingCardPaymentRequest
+    | CreatingKonbiniPaymentRequest
+    | CreatingPayPayPaymentRequest
+    | CreatingApplePayPaymentRequest
+    | CreatingGooglePayPaymentRequest
+    | CreatingDirectDebitPaymentRequest
+    | CreatingVirtualAccountPaymentRequest
+
+/**
+ * Fields shared by every payment type when executing a payment.
+ */
+type ExecutingPaymentCommonFields = {
+    /**
+     * access ID issued for this payment to use in this payment context.
+     */
+    access_id: string
+
+    /**
+     * Customer's customer ID that will be charged because payment.
+     * 
+     * You must fill both this and "card_id" fields or "token" field.
+     */
+    customer_id?: string | null
+}
+
+/**
+ * Request object for executing a card payment.
+ */
+export type ExecutingCardPaymentRequest =
+    ExecutingPaymentCommonFields &
+    ThreeDSecure2RequestFields & {
+    /**
+     * Payment method. Must be `Card` for a card payment.
+     */
+    pay_type: Extract<PayType, "Card">
+
+    /**
+     * One-time token that used to identify card that will be used in this payment.
+     * 
+     * You must fill this field or both "card_id" and "customer_id" fields.
+     */
+    token?: string | null
+
+    /**
+     * Customer's card ID that will be used in this payment.
+     * 
+     * You must fill both this and "customer_id" fields or "token" field.
+     */
+    card_id?: string | null
+
+    /**
+     * Holder name of the card used in this payment.
+     * 
+     * If any card have not been used in this payment yet, this field will be null.
+     */
+    holder_name?: string | null
+
+    /**
+     * Charging method of card payment.
+     * 
+     * - `1`: The customer will be charged for this payment in a lump-sum.
+     * - `2`: The customer will be charged for this payment in several installments.
+     * 
+     * Required when `job_code` is `AUTH` or `CAPTURE`.
+     */
+    method?: "1" | "2" | "5" | null
+
+    /**
+     * The number of installments that will charge to the customer in this payment registered as installment payment.
+     */
+    pay_times?: CardPayTimes | null
+
+    /**
+     * Returning URL of your website when 3D Secure 2 authentication is completed.
+     * 
+     * For the URL specified in this field, the following values are passed with the redirect.
+     * 
+     * - MD?: this value equals "access_id" and will return as query string.
+     * - requestorTransId?: this value will return as "application/x-www-form-urlencoded"
+     * - event?: this value will return as "application/x-www-form-urlencoded"
+     * - param?: this value will be used in 3D Secure 2 authentication after redirecting this url and return as "application/x-www-form-urlencoded".
+     */
+    tds2_ret_url?: string | null
+
+    /**
+     * Returning URL of your website when 3D Secure 2 authentication is completed and the payment is successful. (自動リダイレクト型3Dセキュア認証; Automatic Redirect Type 3D Secure Authentication)
+     * The redirect to this URL will be executed with POST method.
+     * 
+     * If the `tds2_ret_url` is set, this field will be ignored.
+     */
+    return_url?: string | null
+
+    /**
+     * Returning URL of your website when 3D Secure 2 authentication or payment is failed. (自動リダイレクト型3Dセキュア認証; Automatic Redirect Type 3D Secure Authentication)
+     * The redirect to this URL will be executed with POST method.
+     * 
+     * If the `tds2_ret_url` is set, this field will be ignored.
+     */
+    return_url_on_failure?: string | null
+
+    /**
+     * Security code of the registered card.
+     * 
+     * Send this to have the card brand check the code again when charging a
+     * card that is already registered.
+     */
+    security_code?: string | null
+}
+
+/**
+ * Request object for executing a Konbini payment.
+ */
+export type ExecutingKonbiniPaymentRequest = ExecutingPaymentCommonFields & {
+    /**
+     * Payment method. Must be `Konbini` for a Konbini payment.
+     */
+    pay_type: Extract<PayType, "Konbini">
+
+    /**
+     * The term payment is available.
+     * 
+     * 
+     * - min: `"0"`
+     * - max: `"14"`
+     */
+    payment_term_day?: string | null
 
     /**
      * Device name.
@@ -1716,17 +1902,17 @@ export type ExecutingPaymentRequest = {
      *  - `"iPhone"` (fixed value) when barcode will be displayed on iOS.
      * 
      */
-    device_name?: string | null
+    device_name: string
 
     /**
      * Window width. (px)
      */
-    win_width?: string | null
+    win_width: string
 
     /**
      * Window height. (px)
      */
-    win_height?: string | null
+    win_height: string
 
     /**
      * Device pixel ratio.
@@ -1735,7 +1921,7 @@ export type ExecutingPaymentRequest = {
      * 
      * See also: [Window.devicePixelRatio @ MDN](https://developer.mozilla.org/docs/Web/API/Window/devicePixelRatio)
      */
-    pixel_ratio?: string | null
+    pixel_ratio: string
 
     /**
      * Window size type.
@@ -1743,16 +1929,22 @@ export type ExecutingPaymentRequest = {
      * - `1`: Device pixel (Android)
      * - `2`: CSS pixel (iOS & Browser)
      */
-    win_size_type?: "1" | "2" | null
+    win_size_type: "1" | "2"
+}
 
-    // ---
-    // PayPay payment
-    // ---
+/**
+ * Request object for executing a PayPay payment.
+ */
+export type ExecutingPayPayPaymentRequest = ExecutingPaymentCommonFields & {
+    /**
+     * Payment method. Must be `Paypay` for a PayPay payment.
+     */
+    pay_type: Extract<PayType, "Paypay">
 
     /**
      * Redirect URL that customer will be redirected after finishing payment on PayPay app/website.
      */
-    redirect_url?: string | null
+    redirect_url: string
 
     /**
      * Redirect Type of PayPay payment.
@@ -1766,31 +1958,162 @@ export type ExecutingPaymentRequest = {
      * User Agent information of the browser of your URL that customer will be redirected after finishing payment on PayPay app/website.
      */
     user_agent?: string | null
+}
 
-    //---
-    // Apple Pay Payment
-    //---
+/**
+ * Request object for executing an Apple Pay payment.
+ */
+export type ExecutingApplePayPaymentRequest = ExecutingPaymentCommonFields & {
+    /**
+     * Payment method. Must be `Applepay` for a Apple Pay payment.
+     */
+    pay_type: Extract<PayType, "Applepay">
 
-    //---
-    // Direct Debit Payment
-    //---
+    /**
+     * One-time token that used to identify card that will be used in this payment.
+     * 
+     * Required. Apple Pay and Google Pay do not accept a registered card in
+     * place of a token.
+     */
+    token: string
+}
+
+/**
+ * Request object for executing a Google Pay payment.
+ */
+export type ExecutingGooglePayPaymentRequest =
+    ExecutingPaymentCommonFields &
+    ThreeDSecure2RequestFields & {
+    /**
+     * Payment method. Must be `Googlepay` for a Google Pay payment.
+     */
+    pay_type: Extract<PayType, "Googlepay">
+
+    /**
+     * One-time token that used to identify card that will be used in this payment.
+     * 
+     * Required. Apple Pay and Google Pay do not accept a registered card in
+     * place of a token.
+     */
+    token: string
+
+    /**
+     * Charging method of card payment.
+     * 
+     * - `1`: The customer will be charged for this payment in a lump-sum.
+     * - `2`: The customer will be charged for this payment in several installments.
+     * 
+     */
+    method: "1" | "2" | "5"
+
+    /**
+     * The number of installments that will charge to the customer in this payment registered as installment payment.
+     */
+    pay_times?: CardPayTimes | null
+
+    /**
+     * Returning URL of your website when 3D Secure 2 authentication is completed.
+     * 
+     * For the URL specified in this field, the following values are passed with the redirect.
+     * 
+     * - MD?: this value equals "access_id" and will return as query string.
+     * - requestorTransId?: this value will return as "application/x-www-form-urlencoded"
+     * - event?: this value will return as "application/x-www-form-urlencoded"
+     * - param?: this value will be used in 3D Secure 2 authentication after redirecting this url and return as "application/x-www-form-urlencoded".
+     */
+    tds2_ret_url?: string | null
+
+    /**
+     * Returning URL of your website when 3D Secure 2 authentication is completed and the payment is successful. (自動リダイレクト型3Dセキュア認証; Automatic Redirect Type 3D Secure Authentication)
+     * The redirect to this URL will be executed with POST method.
+     * 
+     * If the `tds2_ret_url` is set, this field will be ignored.
+     */
+    return_url?: string | null
+
+    /**
+     * Returning URL of your website when 3D Secure 2 authentication or payment is failed. (自動リダイレクト型3Dセキュア認証; Automatic Redirect Type 3D Secure Authentication)
+     * The redirect to this URL will be executed with POST method.
+     * 
+     * If the `tds2_ret_url` is set, this field will be ignored.
+     */
+    return_url_on_failure?: string | null
+}
+
+/**
+ * Request object for executing a direct debit payment.
+ */
+export type ExecutingDirectDebitPaymentRequest = ExecutingPaymentCommonFields & {
+    /**
+     * Payment method. Must be `Directdebit` for a direct debit payment.
+     */
+    pay_type: Extract<PayType, "Directdebit">
+
+    /**
+     * Customer's customer ID that will be charged because payment.
+     * 
+     * You must fill both this and "card_id" fields or "token" field.
+     */
+    customer_id: string
+
+    /**
+     * Customer's payment method ID that will be used in this payment. 
+     * 
+     */
+    payment_method_id?: string | null
 
     /**
      * Target date (The date direct debit billing will be executed.)
      * 
      * Format: `yyyy/MM/dd`
      */
-    target_date?: string | null
+    target_date: string
+}
 
-    //---
-    // Virtual Account Payment
-    //---
+/**
+ * Request object for executing a virtual account payment.
+ */
+export type ExecutingVirtualAccountPaymentRequest = ExecutingPaymentCommonFields & {
+    /**
+     * Payment method. Must be `Virtualaccount` for a virtual account payment.
+     */
+    pay_type: Extract<PayType, "Virtualaccount">
+
+    /**
+     * The term payment is available.
+     * 
+     * 
+     * - min: `"0"`
+     * - max: `"14"`
+     */
+    payment_term_day?: string | null
 
     /**
      * If you want to use same Virtual Account for multiple payments, you can set the reference ID of Virtual Account payment.
      */
     reference_order_id?: string | null
+
+    /**
+     * Customer's payment method ID that will be used in this payment. 
+     * 
+     */
+    payment_method_id?: string | null
 }
+
+/**
+ * Request object for executing a payment.
+ * (used for `PUT /v1/payments/{id}`)
+ * 
+ * Which fields are available, and which are required, depends on `pay_type`.
+ */
+export type ExecutingPaymentRequest =
+    | ExecutingCardPaymentRequest
+    | ExecutingKonbiniPaymentRequest
+    | ExecutingPayPayPaymentRequest
+    | ExecutingApplePayPaymentRequest
+    | ExecutingGooglePayPaymentRequest
+    | ExecutingDirectDebitPaymentRequest
+    | ExecutingVirtualAccountPaymentRequest
 
 
 /**
