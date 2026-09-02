@@ -134,7 +134,7 @@ type PaymentMethodCard = {
      * 
      * If any card have not been used in this payment yet, this field will be null.
      */
-    expire: string
+    expire?: string | null
 
     /**
      * Holder name of the card used in this payment.
@@ -158,7 +158,7 @@ type PaymentMethodCard = {
      * - `2`: Prepaid card.
      * - `3`: Credit card.
      */
-    type: CardType
+    type?: CardType | null
 
     /**
      * Card brands user can use in fincode.
@@ -171,7 +171,7 @@ type PaymentMethodCard = {
      * - `DISCOVER`: Discover card.
      * - `(empty string)`: Unknown card brand and Test card.
      */
-    brand: CardBrand
+    brand?: CardBrand | null
 
 
     /**
@@ -765,7 +765,7 @@ export type CreatingPaymentMethodRequest = {
          * 
          * Example: `0001`
          */
-        bank_code: string | null
+        bank_code: string
 
         /**
          * Branch code

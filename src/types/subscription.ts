@@ -28,7 +28,7 @@ export type SubscriptionObject = {
     /**
      * Plan name.
      */
-    plan_name: string
+    plan_name?: string | null
 
     /**
      * Amount
@@ -78,7 +78,7 @@ export type SubscriptionObject = {
     /**
      * Payment method ID.
      */
-    payment_method_id: string
+    payment_method_id?: string | null
 
     /**
      * Subscription status.
@@ -109,7 +109,7 @@ export type SubscriptionObject = {
      * 
      * Format: `yyyy/MM/dd HH:mm:ss.SSS`
      */
-    next_charge_date: string
+    next_charge_date?: string | null
 
     /**
      * Flag that means this subscription charges at the end of the month.
@@ -117,7 +117,7 @@ export type SubscriptionObject = {
      * - `0`: No. This subscription charges at *dd* of `start_date`.
      * - `1`: Yes. This subscription charges at the end of the month.
      */
-    end_month_flag: "0" | "1"
+    end_month_flag?: "0" | "1" | null
 
     /**
      * Send URL.
@@ -454,158 +454,10 @@ export type CancelingSubscriptionQueryParams = {
 
 /**
  * Response object for Canceling a subscription (used for `DELETE /v1/subscriptions/:id`)
+ * 
+ * The API returns the same object as the other subscription endpoints.
  */
-export type CancelingSubscriptionResponse = {
-    /**
-     * Subscription ID.
-     */
-    id: string
-
-    /**
-     * PayType
-     * 
-     * - `Card`: Card
-     * - `Directdebit`: Direct Debit
-     */
-    pay_type: Extract<PayType, "Card" | "Directdebit">
-
-    /**
-     * Plan ID.
-     */
-    plan_id: string
-
-    /**
-     * Plan name.
-     */
-    plan_name: string
-
-    /**
-     * Amount.
-     */
-    amount: number
-
-    /**
-     * Tax.
-     */
-    tax: number
-
-    /**
-     * Total amount.
-     */
-    total_amount: number
-
-    /**
-     * Initial amount.
-     */
-    initial_amount: number
-
-    /**
-     * Initial tax.
-     */
-    initial_tax: number
-
-    /**
-     * Initial total amount.
-     */
-    initial_total_amount: number
-
-    /**
-     * Customer ID.
-     */
-    customer_id: string
-
-    /**
-     * Shop ID.
-     */
-    shop_id: string
-
-    /**
-     * Card ID.
-     */
-    card_id: string
-
-    /**
-     * Status
-     * 
-     * - `ACTIVE`: Active
-     * - `RUNNING`: Running
-     * - `CANCELED`: Canceled
-     * - `INCOMPLETE`: Incomplete
-     */
-    status: SubscriptionStatus
-
-    /**
-     * Start date.
-     * 
-     * Format: `yyyy/MM/dd HH:mm:ss.SSS`
-     */
-    start_date: string
-
-    /**
-     * Stop date.
-     * 
-     * Format: `yyyy/MM/dd HH:mm:ss.SSS`
-     */
-    stop_date?: string | null
-
-    /**
-     * Next charge date.
-     * 
-     * Format: `yyyy/MM/dd HH:mm:ss.SSS`
-     */
-    next_charge_date?: string | null
-
-    /**
-     * Whether or not this subscription charges at the end of the month.
-     */
-    end_month_flag: "0" | "1"
-
-    /**
-     * Webhook URL.
-     */
-    send_url?: string | null
-
-    /**
-     * Fields where merchants can freely set values
-     */
-    client_field_1?: string | null
-    client_field_2?: string | null
-    client_field_3?: string | null
-
-    /**
-     * Interval pattern
-     * 
-     * - `month`: Monthly
-     * - `year`: Yearly
-     */
-    interval_pattern: PlanIntervalPattern
-
-    /**
-     * Interval count
-     * 
-     * How many intervals are there in a cycle.
-     */
-    interval_count: PlanIntervalCount
-
-    /**
-     * Error code
-     */
-    error_code?: string | null
-
-    /**
-     * Created date.
-     * 
-     * Format: `yyyy/MM/dd HH:mm:ss.SSS`
-     */
-    created: string
-
-    /**
-     * Updated date.
-     * 
-     * Format: `yyyy/MM/dd HH:mm:ss.SSS`
-     */
-    updated: string
-}
+export type CancelingSubscriptionResponse = SubscriptionObject
 
 /**
  * Pagination object for Retrieving subscription result list (used for `GET /v1/subscriptions/{id}/result`)

@@ -607,10 +607,12 @@ export type CreatingPaymentSessionRequest = {
         /**
          * Flag to send reception email.
          * 
-         * - `0`: Not send. (default)
+         * Required when the `konbini` object is given.
+         * 
+         * - `0`: Not send.
          * - `1`: Send.
          */
-        konbini_reception_mail_send_flag?: "0" | "1" | null
+        konbini_reception_mail_send_flag: "0" | "1"
     }
 
     /**
