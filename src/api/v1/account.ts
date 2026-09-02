@@ -1,8 +1,10 @@
 import {
     ListResponse,
     AccountObject,
+    AccountListItemObject,
     AccountDetailObject,
     RetrievingAccountListQueryParams,
+    RetrievingAccountDetailListQueryParams,
     APIErrorResponse,
     FincodeAPIError,
     FincodeSDKError,
@@ -27,12 +29,12 @@ class Account {
      * @param {RetrievingAccountListQueryParams} [queryParams] - query parameters
      * @param {FincodeRequestHeaders} [headers] - request header
      * 
-     * @returns {Promise<ListResponse<AccountObject>>} - account object list
+     * @returns {Promise<ListResponse<AccountListItemObject>>} - account object list
     */
     public retrieveList(
         queryParams?: RetrievingAccountListQueryParams,
         headers?: FincodeRequestHeaders,
-    ): Promise<ListResponse<AccountObject>> {
+    ): Promise<ListResponse<AccountListItemObject>> {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
                 this._config,
@@ -44,7 +46,7 @@ class Account {
             )
 
             fetch().then((res) => {
-                res.json().then((json: ListResponse<AccountObject>) => {
+                res.json().then((json: ListResponse<AccountListItemObject>) => {
                     if (res.ok) {
                         resolve(json)
                     } else {
@@ -114,13 +116,15 @@ class Account {
      * corresponds to `GET /v1/accounts/:id/detail`
      * 
      * @param {string} id - account ID
+     * @param {RetrievingAccountDetailListQueryParams} [queryParams] - query parameters
      * @param {FincodeRequestHeaders} [headers] - request headers
      * 
-     * @returns {Promise<AccountObject>} - account object
+     * @returns {Promise<ListResponse<AccountDetailObject>>} - account detail object list
      */
 
     public retrieveDetailList(
         id: string,
+        queryParams?: RetrievingAccountDetailListQueryParams,
         headers?: FincodeRequestHeaders,
     ): Promise<ListResponse<AccountDetailObject>> {
 
@@ -131,7 +135,7 @@ class Account {
                 `/v1/accounts/${id}/detail`,
                 undefined,
                 headers,
-                undefined,
+                queryParams,
             )
 
             fetch().then((res) => {
