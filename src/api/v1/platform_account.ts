@@ -1,12 +1,14 @@
 import {
     ListResponse,
     PlatformAccountObject,
+    PlatformAccountListItemObject,
     PlatformAccountSummaryObject,
 
     APIErrorResponse,
     FincodeAPIError,
     FincodeSDKError,
     RetrievingPlatformAccountListQueryParams,
+    RetrievingPlatformAccountSummaryListQueryParams,
 } from "../../types/index"
 import { FincodeConfig } from "./fincode"
 import { createFincodeRequestFetch, FincodeRequestHeaders } from "./http"
@@ -28,13 +30,13 @@ class PlatformAccount {
      * @param {RetrievingPlatformAccountListQueryParams} [queryParams] - query parameters
      * @param {FincodeRequestHeaders} [headers] - request header
      * 
-     * @returns {Promise<ListResponse<PlatformAccountObject>>} - platform-account object list
+     * @returns {Promise<ListResponse<PlatformAccountListItemObject>>} - platform-account object list
      * 
     */
     public retrieveList(
         queryParams?: RetrievingPlatformAccountListQueryParams,
         headers?: FincodeRequestHeaders,
-    ): Promise<ListResponse<PlatformAccountObject>> {
+    ): Promise<ListResponse<PlatformAccountListItemObject>> {
         return new Promise((resolve, reject) => {
             const fetch = createFincodeRequestFetch(
                 this._config,
@@ -48,7 +50,7 @@ class PlatformAccount {
             fetch().then((res) => {
                 res.json().then((json) => {
                     if (res.ok) {
-                        const list = json as ListResponse<PlatformAccountObject>
+                        const list = json as ListResponse<PlatformAccountListItemObject>
                         resolve(list)
                     } else {
                         const errRes = json as APIErrorResponse
@@ -119,11 +121,13 @@ class PlatformAccount {
      * @param {string} id - platform-account id
      * @param {FincodeRequestHeaders} [headers] - request header
      * 
-     * @returns {Promise<PlatformAccountObject>} - platform-account object
+     * @param {RetrievingPlatformAccountSummaryListQueryParams} [queryParams] - query parameters
+     * @returns {Promise<ListResponse<PlatformAccountSummaryObject>>} - platform-account summary object list
      */
 
     public retrieveSummaryList(
         id: string,
+        queryParams?: RetrievingPlatformAccountSummaryListQueryParams,
         headers?: FincodeRequestHeaders,
     ): Promise<ListResponse<PlatformAccountSummaryObject>> {
 
@@ -134,7 +138,7 @@ class PlatformAccount {
                 `/v1/platform_accounts/${id}/summary`,
                 undefined,
                 headers,
-                undefined,
+                queryParams,
             )
 
             fetch().then((res) => {
