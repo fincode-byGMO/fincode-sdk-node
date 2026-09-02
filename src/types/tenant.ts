@@ -555,7 +555,7 @@ export type UpdatingExaminationInfoRequest_V2 = {
     /**
      * Bank account information
      */
-    bank_account_info?: Partial<Contract.ContractBankAccount> | null
+    bank_account_info?: Contract.BankAccountInformation_V2 | null
 
     /**
      * Deposit cycle information

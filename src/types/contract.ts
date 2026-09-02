@@ -149,7 +149,7 @@ export type ContractObject = {
     /**
      * Contract virtual bank account
      */
-    contract_virtual_bank?: Omit<ContractBankAccount, "bank_name_kana" | "bank_code" | "branch_code" | "branch_name_kana" | "account_kind"> | null
+    contract_virtual_bank?: ContractBankAccount | null
 
     /**
      * Examination information
@@ -159,7 +159,7 @@ export type ContractObject = {
     /**
      * Contract card destination
      */
-    contract_card_destination?: ContractDestination | null
+    contract_card_destination?: ContractDestination[] | null
 
     /**
      * Card payment setting
@@ -667,6 +667,42 @@ export type ContractDetail = {
     deals_long_apply_content?: boolean | null
 }
 
+/**
+ * Bank account information accepted when updating the V2 examination info.
+ * 
+ * The API takes only these five fields and requires all of them. Responses
+ * carry the bank and branch names as well. See `ContractBankAccount`.
+ */
+export type BankAccountInformation_V2 = {
+    /**
+     * Bank code
+     */
+    bank_code: string
+
+    /**
+     * Branch code
+     */
+    branch_code: string
+
+    /**
+     * Account type
+     * 
+     * - `0`: Savings account (普通預金)
+     * - `1`: Current account (当座預金)
+     */
+    account_kind: 0 | 1
+
+    /**
+     * Account number
+     */
+    account_number: string
+
+    /**
+     * Account holder name
+     */
+    account_name: string
+}
+
 export type ContractBankAccount = {
     /**
      * Bank name
@@ -701,8 +737,8 @@ export type ContractBankAccount = {
     /**
      * Account type
      * 
-     * - `0`: Deposit account
-     * - `1`: Current account
+     * - `0`: Savings account (普通預金)
+     * - `1`: Current account (当座預金)
      */
     account_kind?: 0 | 1 | null
 
