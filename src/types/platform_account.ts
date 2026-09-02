@@ -123,7 +123,9 @@ export type PlatformAccountObject = FeeAmountBreakdown & {
     deposit_amount: number
 
     /**
-     * Verified flag
+     * Whether the income has been verified.
+     * 
+     * @deprecated This is a closed feature.
      */
     verified: boolean
 

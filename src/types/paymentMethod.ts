@@ -210,7 +210,7 @@ type PaymentMethodCard = {
     access_id?: string | null
 
     /**
-     * acs
+     * Whether the ACS was called during 3D Secure authentication.
      */
     acs?: string | null
 }

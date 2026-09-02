@@ -24,7 +24,7 @@ class Account {
     /**
      * **Retrieve account list **
      * 
-     * corresponds to `POST /v1/accounts`
+     * corresponds to `GET /v1/accounts`
      * 
      * @param {RetrievingAccountListQueryParams} [queryParams] - query parameters
      * @param {FincodeRequestHeaders} [headers] - request header

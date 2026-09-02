@@ -503,7 +503,7 @@ class Payment {
      * @param {string} accessId - access id
      * @param {FincodeRequestHeaders} [headers] - request header
      * 
-     * @returns {Promise<Retrieving3DSecureAuthResultResponse>} - retrieved 3D Secure authentication result
+     * @returns {Promise<Retrieving3DSecureAuthResponse>} - retrieved 3D Secure authentication result
      */
     public retrieve3DSecureAuthResult(
         accessId: string,

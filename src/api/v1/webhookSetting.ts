@@ -27,7 +27,7 @@ export class WebhookSetting {
     * 
     * corresponds to `POST /v1/webhook_settings`
     * 
-    * @param {SubscribingWebhookRequest} body - request body
+    * @param {CreatingWebhookSettingRequest} body - request body
     * @param {FincodeRequestHeaders} [headers] - request headers
     * 
     * @returns {Promise<WebhookSettingObject>} - Webhook setting object
@@ -121,7 +121,7 @@ export class WebhookSetting {
      * 
      * @param {FincodeRequestHeaders} [headers] - request headers
      * 
-     * @returns {Promise<ListResponse<WebhookObject>>} Webhook setting object list
+     * @returns {Promise<ListResponse<WebhookSettingObject>>} Webhook setting object list
      */
     public retrieveList(
         headers?: FincodeRequestHeaders,
@@ -163,7 +163,7 @@ export class WebhookSetting {
      * corresponds to `PUT /v1/webhook_settings/:id`
      * 
      * @param {string} id - Webhook ID
-     * @param {UpdatingWebhookRequest} body - request body
+     * @param {UpdatingWebhookSettingRequest} body - request body
      * @param {FincodeRequestHeaders} [headers] - request headers
      * 
      * @returns {Promise<WebhookSettingObject>} Webhook setting object
@@ -213,7 +213,7 @@ export class WebhookSetting {
      * @param {string} id - Webhook ID
      * @param {FincodeRequestHeaders} [headers] - request headers
      * 
-     * @returns {Promise<WebhookObject>} - deleting webhook setting result
+     * @returns {Promise<DeletingWebhookSettingResponse>} - deleting webhook setting result
      */
     public delete(
         id: string,

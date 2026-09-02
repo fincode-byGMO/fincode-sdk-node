@@ -29,7 +29,7 @@ class PaymentBulk {
     /**
      * **Register a payment bulk**
      * 
-     * corresponds to `POST /v1/sessions`
+     * corresponds to `POST /v1/payments/bulk`
      * 
      * @param {CreatingPaymentBulkQueryParams} queryParams - request query parameters
      * @param {CreatingPaymentBulkRequest} body - request body

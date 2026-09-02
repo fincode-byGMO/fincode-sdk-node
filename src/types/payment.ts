@@ -302,7 +302,7 @@ export type PaymentObject = {
     merchant_name?: string | null
 
     /**
-     * (Warning!) This field is no longer used.
+     * @deprecated This is a closed feature.
      */
     send_url?: string | null
 
@@ -1541,7 +1541,7 @@ export type CreatingCardPaymentRequest = CreatingPaymentCommonFields & {
     td_tenant_name?: string | null
 
     /**
-     * (Warning!) This field is no longer used.
+     * @deprecated This is a closed feature.
      */
     send_url?: string | null
 
@@ -1645,7 +1645,7 @@ export type CreatingApplePayPaymentRequest = CreatingPaymentCommonFields & {
     item_code?: string | null
 
     /**
-     * (Warning!) This field is no longer used.
+     * @deprecated This is a closed feature.
      */
     send_url?: string | null
 }

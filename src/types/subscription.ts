@@ -120,7 +120,7 @@ export type SubscriptionObject = {
     end_month_flag?: "0" | "1" | null
 
     /**
-     * Send URL.
+     * @deprecated This is a closed feature.
      */
     send_url?: string | null
 
@@ -237,7 +237,7 @@ export type CreatingSubscriptionRequest = {
     end_month_flag?: "0" | "1" | null
 
     /**
-     * Webhook target URL.
+     * @deprecated This is a closed feature.
      */
     send_url?: string | null
 
@@ -535,7 +535,7 @@ export type SubscriptionResultObject = {
     access_id: string
 
     /**
-     * Webhook URL
+     * @deprecated This is a closed feature.
      */
     send_url?: string | null
 

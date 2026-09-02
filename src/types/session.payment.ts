@@ -102,7 +102,7 @@ export type PaymentSessionObject = {
         client_field_3?: string | null
 
         /**
-         * Webhook URL
+         * URL the payment result is posted to.
          */
         send_url?: string | null
     }

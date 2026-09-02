@@ -25,7 +25,7 @@ class PlatformAccount {
     /**
      * **Retrieve platform-account list **
      * 
-     * corresponds to `POST /v1/platform_accounts`
+     * corresponds to `GET /v1/platform_accounts`
      * 
      * @param {RetrievingPlatformAccountListQueryParams} [queryParams] - query parameters
      * @param {FincodeRequestHeaders} [headers] - request header

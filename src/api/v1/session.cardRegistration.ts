@@ -21,7 +21,7 @@ class CardRegistrationSession {
     /**
      * **Create a card registration session**
      * 
-     * corresponds to `POST /v1/sessions`
+     * corresponds to `POST /v1/card_sessions`
      * 
      * @param {CreatingCardRegistrationSessionRequest} body - request body
      * @param {FincodeRequestHeaders} [headers] - request header

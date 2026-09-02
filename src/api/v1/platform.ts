@@ -23,7 +23,7 @@ class Platform {
     /**
      * **Retrieve platform shop list**
      * 
-     * corresponds to `POST /v1/platforms`
+     * corresponds to `GET /v1/platforms`
      * 
      * @param {RetrievingPlatformShopListQueryParams} [queryParams] - query parameters
      * @param {FincodeRequestHeaders} [headers] - request header

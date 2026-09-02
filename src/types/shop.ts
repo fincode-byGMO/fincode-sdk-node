@@ -226,9 +226,9 @@ export type SpecifiedCommercialTransactionActInfo = {
     shop_charge_description?: string | null
 
     /**
-     * Product delivery time
+     * Time it takes to deliver the product.
      * 
-     * TODO: deliever -> delivery (API returns `delievery`)
+     * The key is misspelled to match what the API returns.
      */
     shop_product_delievery_time?: string | null
 
