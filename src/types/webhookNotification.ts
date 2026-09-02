@@ -60,7 +60,6 @@ export type PaymentWebhookNotification = {
     order_description?: string | null
     payment_id?: string | null
     merchant_payment_id?: string | null
-    merchant_capture_id?: string | null
     merchant_revert_id?: string | null
     merchant_update_id?: string | null
     merchant_refund_id?: string | null
@@ -76,15 +75,23 @@ export type PaymentWebhookNotification = {
 export type CardWebhookNotification = {
     forward?: string | null
     shop_id?: string | null
-    order_id?: string | null
     customer_group_id?: string | null
+    customer_id?: string | null
     card_id?: string | null
     process_date?: string | null
     card_no_display?: string | null
     expire_display?: string | null
     default_flag?: "0" | "1" | null
     pay_type?: Extract<PayType, "Card"> | null
-    error_code?: string | null
+
+    /**
+     * Whether this notification is for a registration or an update.
+     * 
+     * - `I`: The card was registered.
+     * - `U`: The card was updated.
+     */
+    process_type?: "I" | "U" | null
+
     event?: string | null
 }
 
@@ -138,7 +145,6 @@ export type PaymentBulkWebhookNotification = {
     bulk_payment_id?: string | null
     shop_id?: string | null
     file_name?: string | null
-    process_plan_date?: string | null
     status?: PaymentBulkStatus | null
 
     error_total_count?: string | null
