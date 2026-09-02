@@ -1,5 +1,5 @@
 import { PaymentBulkStatus } from "./bulk.payment"
-import { ContractAquirer, ExaminationStatusCode } from "./contract"
+import { ContractAcquirer, ExaminationStatusCode } from "./contract"
 import { KonbiniCode, PayType, PaymentJobCode, PaymentStatus } from "./payment"
 import { SubscriptionStatus } from "./subscription"
 
@@ -170,7 +170,7 @@ export type ContractWebhookNotification = {
 }
 
 export type ContractInformation = {
-    acquirer?: ContractAquirer | null
+    acquirer?: ContractAcquirer | null
     examination_task?: string | null
     status_code?: ExaminationStatusCode | null
     is_updated?: boolean | null

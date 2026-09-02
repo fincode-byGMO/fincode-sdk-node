@@ -2127,7 +2127,7 @@ type CardInstallmentFields = {
      * - `1`: The customer will be charged for this payment in a lump-sum.
      * - `2`: The customer will be charged for this payment in several installments.
      * 
-     * You must fill this field when this payment's job_type is `AUTH` or `CAPTURE`
+     * Can be set for a payment in the `CANCELED` status.
      */
     method?: "1" | "2" | "5" | null
 
@@ -2258,8 +2258,6 @@ export type ReauthorizingPaymentRequest = {
      * 
      * - `1`: The customer will be charged for this payment in a lump-sum.
      * - `2`: The customer will be charged for this payment in several installments.
-     * 
-     * You must fill this field when this payment's job_type is `AUTH` or `CAPTURE`
      */
     method: "1" | "2" | "5"
 

@@ -846,7 +846,7 @@ export type SalesDepositStatusCode = 501 | 502
  */
 export type StatusUpdatedNotification = {
     /**
-     * Aquirer
+     * Acquirer of this examination.
      * 
      * - `UC`: UC Card (VISA / Mastercard)
      * - `TFC`: Toyota Finance (VISA / Mastercard)
@@ -854,7 +854,7 @@ export type StatusUpdatedNotification = {
      * - `DINERS`: Diners Club (JCB)
      * - `PAYSLE`: Konbini (Denan System)
      */
-    acquirer?: ContractAquirer | null
+    acquirer?: ContractAcquirer | null
 
     /**
      * Examination task
@@ -945,7 +945,7 @@ export type ExaminationStatusCode = 701 | 702 | 703 | 704 | 705 | 706 | 707 | 70
  * - `VIRTUAL ACCOUNT BULK`: Bulk payment (Virtual Account)
  * - `CARD UPDATER`: Card Updater
  */
-export type ContractAquirer =
+export type ContractAcquirer =
     | "UC"
     | "TFC"
     | "ORICO"

@@ -119,7 +119,7 @@ export type PaymentMethodObject = {
      * 
      * If this payment method is a bank account for direct debit payment, this field will be filled.
      */
-    directdebit?: PaymentMehtodDirectDebit | null
+    directdebit?: PaymentMethodDirectDebit | null
 }
 
 type PaymentMethodCard = {
@@ -215,7 +215,7 @@ type PaymentMethodCard = {
     acs?: string | null
 }
 
-type PaymentMehtodDirectDebit = {
+type PaymentMethodDirectDebit = {
     /**
      * Direct debit application type
      * 

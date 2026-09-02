@@ -368,7 +368,10 @@ export type RequestingExaminationRequest = {
     shop_id: string
 
     /**
-     * Challange to use VISA / Mastercard immediately 
+     * Whether to request immediate use of VISA / Mastercard.
+     * 
+     * Immediate use cannot be requested when the shop's site is not published
+     * yet, or when the shop deals in content that takes longer to examine.
      */
     enable_immediate_use: boolean
 }
