@@ -722,105 +722,450 @@ export type KonbiniCode =
     "00760"
 
 /**
- * Pagination object of Retrieving a list of payments. (used for GET /v1/payments)
+ * Query parameters shared by every payment type when retrieving a payment list.
  */
-
-export type RetrievingPaymentListQueryParams = Modify<Pagination, {
+type PaymentListCommonQueryParams = Modify<Pagination, {
     /**
-     * Payment method
-     * 
-     * - `Card`: Card payment
-     * - `Konbini`: Konbini payment
-     * - `Paypay`: PayPay payment
-     * - `Applepay`: Apple Pay payment
-     * - `Directdebit`: Direct Debit payment
-     * - `Virtualaccount`: Virtual Account payment
-     */
-    pay_type: PayType
-
-    /**
-     * Search string for 
-     * 
-     * - `client_field_1`
-     * - `client_field_2`
-     * - `client_field_3`
-     * 
-     * (partial match)
-     */
-    keyword?: string | null
-
-    /**
-     * Minimum total amount of payment.
-     */
-    total_amount_min?: number | null
-
-    /**
-     * Maximum total amount of payment.
-     */
-    total_amount_max?: number | null
-
-    /**
-     * Customer ID
+     * Retrieves the payments made by this customer.
      */
     customer_id?: string | null
 
     /**
-     * Process date (from)
+     * Retrieves the payments processed on or after this date.
      * 
-     * Format: `yyyy/MM/dd`
+     * Matched against `process_date`.
+     * Format: `yyyy/MM/dd` or `yyyy/MM/dd HH:mm:ss.SSS`
      */
     process_date_from?: string | null
 
     /**
-     * Process date (to)
+     * Retrieves the payments processed on or before this date.
      * 
-     * Format: `yyyy/MM/dd`
+     * Matched against `process_date`.
+     * Format: `yyyy/MM/dd` or `yyyy/MM/dd HH:mm:ss.SSS`
      */
     process_date_to?: string | null
 
     /**
-     * Authorization Expiration date (from)
-     * 
-     * Format: `yyyy/MM/dd`
+     * Retrieves the payments whose `total_amount` is this value or more.
+     */
+    total_amount_min?: number | null
+
+    /**
+     * Retrieves the payments whose `total_amount` is this value or less.
+     */
+    total_amount_max?: number | null
+
+    /**
+     * Fields where merchants can freely set values. Matched exactly.
+     */
+    client_field_1?: string | null
+    client_field_2?: string | null
+    client_field_3?: string | null
+
+    /**
+     * Free-text search.
+     */
+    keyword?: string | null
+}>
+
+/**
+ * Search by the deadline for capturing an authorized payment.
+ * 
+ * Matched against `auth_max_date`.
+ * Format: `yyyy/MM/dd` or `yyyy/MM/dd HH:mm:ss.SSS`
+ */
+type AuthMaxDateRangeQueryParams = {
+    /**
+     * Retrieves the payments whose authorization expires on or after this date.
      */
     auth_max_date_from?: string | null
 
     /**
-     * Authorization Expiration date (to)
-     * 
-     * Format: `yyyy/MM/dd`
+     * Retrieves the payments whose authorization expires on or before this date.
      */
     auth_max_date_to?: string | null
+}
 
+/**
+ * Search by update date, for the payment types that name the parameter
+ * `update_date_from` / `update_date_to`.
+ * 
+ * Card, Apple Pay and Google Pay use these names. The other payment types use
+ * `updated_from` / `updated_to`.
+ */
+type UpdateDateRangeQueryParams = {
     /**
-     * Update date (from)
+     * Retrieves the payments updated on or after this date.
      * 
-     * Format: `yyyy/MM/dd`
+     * Matched against `updated`.
+     * Format: `yyyy/MM/dd` or `yyyy/MM/dd HH:mm:ss.SSS`
      */
     update_date_from?: string | null
 
     /**
-     * Update date (to)
+     * Retrieves the payments updated on or before this date.
      * 
-     * Format: `yyyy/MM/dd`
+     * Matched against `updated`.
+     * Format: `yyyy/MM/dd` or `yyyy/MM/dd HH:mm:ss.SSS`
      */
     update_date_to?: string | null
+}
 
+/**
+ * Search by update date, for the payment types that name the parameter
+ * `updated_from` / `updated_to`.
+ * 
+ * Konbini, PayPay, direct debit and virtual account use these names. Card,
+ * Apple Pay and Google Pay use `update_date_from` / `update_date_to`.
+ */
+type UpdatedRangeQueryParams = {
     /**
-     * Status
+     * Retrieves the payments updated on or after this date.
+     * 
+     * Matched against `updated`.
+     * Format: `yyyy/MM/dd` or `yyyy/MM/dd HH:mm:ss.SSS`
      */
-    status?: PaymentStatus[] | null
+    updated_from?: string | null
 
     /**
-     * Payment Pattern
+     * Retrieves the payments updated on or before this date.
+     * 
+     * Matched against `updated`.
+     * Format: `yyyy/MM/dd` or `yyyy/MM/dd HH:mm:ss.SSS`
+     */
+    updated_to?: string | null
+}
+
+/**
+ * Search by the deadline the customer must pay by.
+ * 
+ * Matched against `payment_term`.
+ * Format: `yyyy/MM/dd`
+ */
+type PaymentTermRangeQueryParams = {
+    /**
+     * Retrieves the payments whose deadline falls on or after this date.
+     */
+    payment_term_from?: string | null
+
+    /**
+     * Retrieves the payments whose deadline falls on or before this date.
+     */
+    payment_term_to?: string | null
+}
+
+/**
+ * Search by whether a payment was made more than once, or made against a
+ * payment that was already closed.
+ */
+type OverpaymentFlagQueryParams = {
+    /**
+     * Set `1` to retrieve the payments that were paid more than once.
+     */
+    overpayment_flag?: "0" | "1" | null
+
+    /**
+     * Set `1` to retrieve the payments that were paid after being canceled.
+     */
+    cancel_overpayment_flag?: "0" | "1" | null
+}
+
+/**
+ * Query parameters for retrieving a list of card payments.
+ */
+export type RetrievingCardPaymentListQueryParams =
+    PaymentListCommonQueryParams &
+    AuthMaxDateRangeQueryParams &
+    UpdateDateRangeQueryParams & {
+    pay_type: Extract<PayType, "Card">
+
+    /**
+     * Retrieves the payments in these statuses.
+     */
+    status?: Extract<PaymentStatus, "UNPROCESSED" | "CHECKED" | "AUTHORIZED" | "CAPTURED" | "CANCELED" | "AUTHENTICATED">[] | null
+
+    /**
+     * Retrieves the payment with this order ID.
+     * 
+     * Only the main platform shop can set this.
+     */
+    order_id?: string | null
+
+    /**
+     * Retrieves the payments made with a card whose number ends with these
+     * four digits.
+     */
+    last_four_digits?: string | null
+
+    /**
+     * Retrieves the payments charged in these ways.
+     * 
+     * - `onetime`: A one-off payment.
+     * - `subscription`: Charged by a subscription.
+     * - `bulk`: Created by a bulk payment.
      */
     pay_pattern?: ("onetime" | "subscription" | "bulk")[] | null
 
     /**
-     * Subscription ID
+     * Retrieves the payments charged by this subscription.
      */
     subscription_id?: string | null
-}>
+
+    /**
+     * Which shops to search. Only the main platform shop can set this.
+     * 
+     * - `self`: The shop itself. (default)
+     * - `sub`: Every sub shop on the platform.
+     * - `tenant`: Every tenant shop on the platform.
+     */
+    search_scope?: ("self" | "sub" | "tenant")[] | null
+
+    /**
+     * Shops to search. Only the main platform shop can set this.
+     */
+    shop_id_list?: string[] | null
+}
+
+/**
+ * Query parameters for retrieving a list of Apple Pay payments.
+ */
+export type RetrievingApplePayPaymentListQueryParams =
+    PaymentListCommonQueryParams &
+    AuthMaxDateRangeQueryParams &
+    UpdateDateRangeQueryParams & {
+    pay_type: Extract<PayType, "Applepay">
+
+    /**
+     * Retrieves the payments in these statuses.
+     */
+    status?: Extract<PaymentStatus, "UNPROCESSED" | "AUTHORIZED" | "CAPTURED" | "CANCELED">[] | null
+}
+
+/**
+ * Query parameters for retrieving a list of Google Pay payments.
+ */
+export type RetrievingGooglePayPaymentListQueryParams =
+    PaymentListCommonQueryParams &
+    AuthMaxDateRangeQueryParams &
+    UpdateDateRangeQueryParams & {
+    pay_type: Extract<PayType, "Googlepay">
+
+    /**
+     * Retrieves the payments in these statuses.
+     */
+    status?: Extract<PaymentStatus, "UNPROCESSED" | "AUTHORIZED" | "CAPTURED" | "CANCELED" | "AUTHENTICATED">[] | null
+}
+
+/**
+ * Query parameters for retrieving a list of Konbini payments.
+ */
+export type RetrievingKonbiniPaymentListQueryParams =
+    PaymentListCommonQueryParams &
+    PaymentTermRangeQueryParams &
+    OverpaymentFlagQueryParams &
+    UpdatedRangeQueryParams & {
+    pay_type: Extract<PayType, "Konbini">
+
+    /**
+     * Retrieves the payments in these statuses.
+     */
+    status?: Extract<PaymentStatus, "UNPROCESSED" | "AWAITING_CUSTOMER_PAYMENT" | "CAPTURED" | "CANCELED" | "EXPIRED">[] | null
+
+    /**
+     * Retrieves the payments paid on or after this date.
+     * 
+     * Matched against `payment_date`.
+     * Format: `yyyy/MM/dd`
+     */
+    payment_date_from?: string | null
+
+    /**
+     * Retrieves the payments paid on or before this date.
+     * 
+     * Matched against `payment_date`.
+     * Format: `yyyy/MM/dd`
+     */
+    payment_date_to?: string | null
+}
+
+/**
+ * Query parameters for retrieving a list of PayPay payments.
+ */
+export type RetrievingPayPayPaymentListQueryParams =
+    PaymentListCommonQueryParams &
+    AuthMaxDateRangeQueryParams &
+    UpdatedRangeQueryParams & {
+    pay_type: Extract<PayType, "Paypay">
+
+    /**
+     * Retrieves the payments in these statuses.
+     */
+    status?: Extract<PaymentStatus, "UNPROCESSED" | "AUTHORIZED" | "AWAITING_CUSTOMER_PAYMENT" | "CAPTURED" | "CANCELED" | "EXPIRED">[] | null
+
+    /**
+     * Retrieves the payments paid on or after this date.
+     * 
+     * Matched against `payment_date`.
+     * Format: `yyyy/MM/dd`
+     */
+    payment_date_from?: string | null
+
+    /**
+     * Retrieves the payments paid on or before this date.
+     * 
+     * Matched against `payment_date`.
+     * Format: `yyyy/MM/dd`
+     */
+    payment_date_to?: string | null
+}
+
+/**
+ * Query parameters for retrieving a list of direct debit payments.
+ */
+export type RetrievingDirectDebitPaymentListQueryParams =
+    PaymentListCommonQueryParams &
+    UpdatedRangeQueryParams & {
+    pay_type: Extract<PayType, "Directdebit">
+
+    /**
+     * Retrieves the payments in these statuses.
+     */
+    status?: Extract<PaymentStatus, "UNPROCESSED" | "AWAITING_PAYMENT_APPROVAL" | "CAPTURED" | "CANCELED" | "FAILED">[] | null
+
+    /**
+     * Retrieves the payments charged in these ways.
+     * 
+     * - `onetime`: A one-off payment.
+     * - `subscription`: Charged by a subscription.
+     */
+    pay_pattern?: ("onetime" | "subscription")[] | null
+
+    /**
+     * Retrieves the payments charged by this subscription.
+     */
+    subscription_id?: string | null
+
+    /**
+     * Retrieves the payments with these transfer results.
+     */
+    result_code?: DirectDebitResultCode[] | null
+
+    /**
+     * Retrieves the payments whose requested transfer date is on or after this date.
+     * 
+     * Matched against `target_date`.
+     * Format: `yyyy/MM/dd`
+     */
+    target_date_from?: string | null
+
+    /**
+     * Retrieves the payments whose requested transfer date is on or before this date.
+     * 
+     * Matched against `target_date`.
+     * Format: `yyyy/MM/dd`
+     */
+    target_date_to?: string | null
+
+    /**
+     * Retrieves the payments withdrawn on or after this date.
+     * 
+     * Matched against `withdrawal_date`.
+     * Format: `yyyy/MM/dd`
+     */
+    withdrawal_date_from?: string | null
+
+    /**
+     * Retrieves the payments withdrawn on or before this date.
+     * 
+     * Matched against `withdrawal_date`.
+     * Format: `yyyy/MM/dd`
+     */
+    withdrawal_date_to?: string | null
+}
+
+/**
+ * Query parameters for retrieving a list of virtual account payments.
+ */
+export type RetrievingVirtualAccountPaymentListQueryParams =
+    PaymentListCommonQueryParams &
+    PaymentTermRangeQueryParams &
+    OverpaymentFlagQueryParams &
+    UpdatedRangeQueryParams & {
+    pay_type: Extract<PayType, "Virtualaccount">
+
+    /**
+     * Retrieves the payments in these statuses.
+     */
+    status?: Extract<PaymentStatus, "UNPROCESSED" | "AWAITING_CUSTOMER_PAYMENT" | "CAPTURED" | "CANCELED" | "EXPIRED">[] | null
+
+    /**
+     * Retrieves the payments whose `billing_total_amount` is this value or more.
+     */
+    billing_total_amount_min?: number | null
+
+    /**
+     * Retrieves the payments whose `billing_total_amount` is this value or less.
+     */
+    billing_total_amount_max?: number | null
+
+    /**
+     * Retrieves the payments by how the requested transfer amount compares to
+     * the amount charged.
+     * 
+     * `billing_total_amount` is the requested amount, `total_amount` is the
+     * amount charged.
+     * 
+     * - `1`: requested equals charged
+     * - `2`: requested differs from charged
+     * - `3`: requested is less than charged
+     * - `4`: requested is less than or equal to charged
+     * - `5`: requested is greater than charged
+     * - `6`: requested is greater than or equal to charged
+     */
+    amount_pattern?: "1" | "2" | "3" | "4" | "5" | "6" | null
+
+    /**
+     * Retrieves the payments created by this bulk payment.
+     */
+    bulk_payment_id?: string | null
+
+    /**
+     * Retrieves the payments transferred on or after this date.
+     * 
+     * Matched against `transaction_date`.
+     * Format: `yyyy/MM/dd`
+     */
+    transaction_date_from?: string | null
+
+    /**
+     * Retrieves the payments transferred on or before this date.
+     * 
+     * Matched against `transaction_date`.
+     * Format: `yyyy/MM/dd`
+     */
+    transaction_date_to?: string | null
+
+    /**
+     * Set `1` to retrieve the payments that were paid after expiring.
+     */
+    expire_overpayment_flag?: "0" | "1" | null
+}
+
+/**
+ * Query parameters for retrieving a list of payments.
+ * (used for `GET /v1/payments`)
+ * 
+ * Which parameters are available depends on `pay_type`.
+ */
+export type RetrievingPaymentListQueryParams =
+    | RetrievingCardPaymentListQueryParams
+    | RetrievingApplePayPaymentListQueryParams
+    | RetrievingGooglePayPaymentListQueryParams
+    | RetrievingKonbiniPaymentListQueryParams
+    | RetrievingPayPayPaymentListQueryParams
+    | RetrievingDirectDebitPaymentListQueryParams
+    | RetrievingVirtualAccountPaymentListQueryParams
 
 
 /**
