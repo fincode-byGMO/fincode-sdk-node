@@ -313,6 +313,9 @@ export type UploadingChargebackFileRequest = {
  * (used for POST /v1/charge_backs/file_upload)
  */
 export type UploadingChargebackFileResponse = {
+    /**
+     * Files accepted for the chargeback.
+     */
     examination_files?: {
         /**
          * Shop ID the file was accepted for.

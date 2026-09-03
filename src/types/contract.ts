@@ -1399,6 +1399,9 @@ export type UploadingExaminationFileRequest = {
  * (used for POST /v1/contracts/examinations/tenants/{id}/files)
  */
 export type UploadingExaminationFileResponse = {
+    /**
+     * Files accepted for the examination.
+     */
     examination_files?: {
         /**
          * Shop ID the file was accepted for.

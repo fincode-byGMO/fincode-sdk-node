@@ -44,13 +44,13 @@ class Chargeback {
      * 
      * corresponds to `GET /v1/shop_charge_backs/:id`
      * 
-     * @param {string} id - chargeback id
+     * @param {string | number} id - chargeback id
      * @param {FincodeRequestHeaders} [headers] - request header
      * 
      * @returns {Promise<ChargebackObject>} - retrieved chargeback object
      */
     public retrieve(
-        id: string,
+        id: string | number,
         headers?: FincodeRequestHeaders
     ): Promise<ChargebackObject> {
         return executeRequest<ChargebackObject>(this._config, "GET", `/v1/shop_charge_backs/${id}`, {
@@ -66,14 +66,14 @@ class Chargeback {
      * Which fields the fincode team needs depends on what the cardholder
      * claims, given by `request` on the chargeback.
      * 
-     * @param {string} id - chargeback id
+     * @param {string | number} id - chargeback id
      * @param {ReplyingChargebackRequest} body - request body
      * @param {FincodeRequestHeaders} [headers] - request header
      * 
      * @returns {Promise<ChargebackObject>} - chargeback object the reply was registered on
      */
     public reply(
-        id: string,
+        id: string | number,
         body: ReplyingChargebackRequest,
         headers?: FincodeRequestHeaders
     ): Promise<ChargebackObject> {
