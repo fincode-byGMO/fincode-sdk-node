@@ -1,9 +1,9 @@
-import fetch, { BodyInit, FetchError, RequestInit } from "node-fetch"
+import { fetch, FormData, ProxyAgent } from "undici"
+import type { BodyInit, Dispatcher, RequestInit } from "undici"
 import { FincodeConfig } from "./fincode"
 import { FincodeSDKErrorKind } from "../../types/index"
 import { createFincodeRequestHeader } from "../../types/http"
 import { Sort } from "./../../types/index"
-import { HttpsProxyAgent } from "https-proxy-agent"
 
 const BASE_URL = "https://api.fincode.jp"
 const BASE_URL_TEST = "https://api.test.fincode.jp"
@@ -95,6 +95,30 @@ const createFincodeRequestURL = (
 }
 export { createFincodeRequestURL }
 
+const proxyDispatchers = new Map<string, ProxyAgent>()
+
+/**
+ * Reuse one dispatcher per proxy URL.
+ * 
+ * A `ProxyAgent` owns a connection pool. Building one per request throws the
+ * pool away each time, so every call pays for a new TLS handshake.
+ */
+const getProxyDispatcher = (proxyAgent?: string | URL): Dispatcher | undefined => {
+    if (!proxyAgent) {
+        return undefined
+    }
+
+    const uri = String(proxyAgent)
+    const cached = proxyDispatchers.get(uri)
+    if (cached) {
+        return cached
+    }
+
+    const dispatcher = new ProxyAgent(uri)
+    proxyDispatchers.set(uri, dispatcher)
+    return dispatcher
+}
+
 const createFincodeRequestFetch = (
     config: FincodeConfig,
     method: "POST" | "GET" | "PUT" | "DELETE",
@@ -120,15 +144,27 @@ const createFincodeRequestFetch = (
         contentType: headers?.contentType || "application/json",
     })
 
+    if (data instanceof FormData) {
+        // undici writes Content-Type itself so that it carries the multipart
+        // boundary it generated.
+        delete _headers["Content-Type"]
+    }
+
+    const timeout = config.options.timeout ?? DEFAULT_TIMEOUT_MS
+
     const options: RequestInit = {
         method: method,
         headers: _headers,
         body: data,
-        agent: config.options.proxyAgent ? new HttpsProxyAgent(config.options.proxyAgent) : undefined,
-        timeout: config.options.timeout ?? DEFAULT_TIMEOUT_MS,
-
+        dispatcher: getProxyDispatcher(config.options.proxyAgent),
     }
-    return () => fetch(url, options)
+
+    // The signal is created here rather than above so that the timeout starts
+    // when the request is sent, not when it is built.
+    return () => fetch(url, {
+        ...options,
+        signal: timeout > 0 ? AbortSignal.timeout(timeout) : undefined,
+    })
 }
 
 export { createFincodeRequestFetch }
@@ -138,24 +174,33 @@ export type FincodeRequestHeaders = Parameters<typeof createFincodeRequestFetch>
 /**
  * Work out why a request failed.
  * 
- * The `type` values below belong to node-fetch, so this sits next to the
- * fetch that produces them. `fallback` is used when the thrown object says
- * nothing usable.
+ * The shapes below belong to undici, so this sits next to the fetch that
+ * produces them. `fallback` is used when the thrown object says nothing
+ * usable.
  */
+const nameOf = (e: unknown): string | undefined =>
+    typeof e === "object" && e !== null && "name" in e && typeof e.name === "string"
+        ? e.name
+        : undefined
+
 export const classifyRequestError = (e: unknown, fallback: FincodeSDKErrorKind): FincodeSDKErrorKind => {
-    if (!(e instanceof FetchError)) {
-        return fallback
+    // AbortSignal.timeout rejects with a DOMException named TimeoutError.
+    // DOMException is not an Error subclass in Node, so read the name instead
+    // of narrowing by class.
+    if (nameOf(e) === "TimeoutError") {
+        return "timeout"
     }
 
-    switch (e.type) {
-        case "request-timeout":
-        case "body-timeout":
-            return "timeout"
-        case "system":
-            return "network"
-        case "invalid-json":
-            return "response_body"
-        default:
-            return fallback
+    // undici reports every transport failure as TypeError("fetch failed") and
+    // puts the underlying error in `cause`. A TypeError without a cause came
+    // from a bad argument instead.
+    if (e instanceof TypeError && e.cause !== undefined) {
+        return "network"
     }
+
+    if (e instanceof SyntaxError) {
+        return "response_body"
+    }
+
+    return fallback
 }

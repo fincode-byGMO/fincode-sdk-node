@@ -1,4 +1,4 @@
-import FormData from "form-data"
+import { FormData } from "undici"
 import {
     DeletingPaymentBulkResponse,
     ListResponse,
@@ -43,19 +43,13 @@ class PaymentBulk {
         const formData = new FormData()
         formData.append(
             "file",
-            body.file,
-            {
-                filename: body.fileName || `${generateUUIDv4()}.json`,
-                contentType: "application/json"
-            }
+            new Blob([body.file], { type: "application/json" }),
+            body.fileName || `${generateUUIDv4()}.json`,
         )
 
         return executeRequest<PaymentBulkObject>(this._config, "POST", "/v1/payments/bulk", {
             body: formData,
-            headers: {
-                ...headers,
-                contentType: `multipart/form-data; boundary=${formData.getBoundary()}`,
-            },
+            headers,
             queryParams: {
                 pay_type: queryParams.pay_type,
                 process_plan_date: queryParams.process_plan_date,

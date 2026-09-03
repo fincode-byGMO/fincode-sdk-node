@@ -4,12 +4,12 @@
 	"author": "GMO Epsilon, Inc.",
 	"license": "MIT",
 	"type": "commonjs",
-  "module": "dist/main.mjs",
+	"module": "dist/main.mjs",
 	"exports": {
 		".": {
 			"require": "./dist/main.js",
-      "import": "./dist/main.mjs"
-    }
+			"import": "./dist/main.mjs"
+		}
 	},
 	"types": "dist/main.d.ts",
 	"private": false,
@@ -22,12 +22,10 @@
 		"url": "https://github.com/fincode-byGMO/fincode-sdk-node/issues"
 	},
 	"engines": {
-		"node": ">=12.0.0"
+		"node": ">=20.18.1"
 	},
 	"dependencies": {
-		"form-data": "^4.0.0",
-		"https-proxy-agent": "^7.0.2",
-		"node-fetch": "^2.7.0"
+		"undici": "^7.29.0"
 	},
 	"files": [
 		"dist",
@@ -39,7 +37,8 @@
 	"devDependencies": {
 		"@types/jest": "^29.5.11",
 		"@types/node": "^20.11.5",
-		"@types/node-fetch": "^2.6.11",
+		"@typescript-eslint/eslint-plugin": "^5.48.1",
+		"@typescript-eslint/parser": "^5.48.1",
 		"dotenv": "^16.4.0",
 		"eslint": "^8.56.0",
 		"eslint-plugin-jest": "^27.6.3",
@@ -47,8 +46,6 @@
 		"ts-jest": "^29.1.2",
 		"ts-node": "^10.9.2",
 		"tsup": "^8.1.0",
-		"@typescript-eslint/eslint-plugin": "^5.48.1",
-		"@typescript-eslint/parser": "^5.48.1",
 		"typescript": "^4.9.4"
 	},
 	"scripts": {
@@ -69,8 +66,8 @@
 		"test:v1/subscription": "jest ./src/api/v1/subscription.test.ts --silent=false --verbose false --no-cache",
 		"test:v1/tenant": "jest ./src/api/v1/tenant.test.ts --silent=false --verbose false --no-cache",
 		"test:v1/webhook_setting": "jest ./src/api/v1/webhookSetting.test.ts --silent=false --verbose false --no-cache",
-    "test:v1/payment_method": "jest ./src/api/v1/paymentMethod.test.ts --silent=false --verbose false --no-cache",
-    "test:v1": "yarn test:v1/account & yarn test:v1/bulk.payment & yarn test:v1/card & yarn test:v1/customer & yarn test:v1/payment & yarn test:v1/plan & yarn test:v1/platform_account & yarn test:v1/session.cardRegistration & yarn test:v1/session.payment & yarn test:v1/subscription & yarn test:v1/tenant & yarn test:v1/webhook_setting & yarn test:v1/payment_method"
+		"test:v1/payment_method": "jest ./src/api/v1/paymentMethod.test.ts --silent=false --verbose false --no-cache",
+		"test:v1": "yarn test:v1/account & yarn test:v1/bulk.payment & yarn test:v1/card & yarn test:v1/customer & yarn test:v1/payment & yarn test:v1/plan & yarn test:v1/platform_account & yarn test:v1/session.cardRegistration & yarn test:v1/session.payment & yarn test:v1/subscription & yarn test:v1/tenant & yarn test:v1/webhook_setting & yarn test:v1/payment_method"
 	},
 	"keywords": [
 		"fincode",

@@ -1,4 +1,4 @@
-import { BodyInit } from "node-fetch"
+import type { BodyInit } from "undici"
 import { APIErrorResponse, FincodeAPIError, FincodeSDKError } from "../../types/index"
 import { FincodeConfig } from "./fincode"
 import { classifyRequestError, createFincodeRequestFetch, FincodeRequestHeaders } from "./http"
