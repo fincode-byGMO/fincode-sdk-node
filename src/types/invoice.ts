@@ -624,3 +624,185 @@ export type RetrievingInvoiceListQueryParams = Modify<Pagination, {
      */
     is_backfill?: boolean | null
 }>
+
+/**
+ * Fields shared by registering and updating an invoice.
+ */
+type InvoiceRequestCommonFields = {
+    /**
+     * Flag to send the bill email or not.
+     * 
+     * - `0`: Do not send (default)
+     * - `1`: Send
+     */
+    bill_mail_send_flag?: "0" | "1" | null
+
+    /**
+     * Flag to send the receipt email or not.
+     * 
+     * - `0`: Do not send (default)
+     * - `1`: Send
+     */
+    receipt_mail_send_flag?: "0" | "1" | null
+
+    /**
+     * Flag to send the email that bills the difference or not.
+     * 
+     * - `0`: Do not send (default)
+     * - `1`: Send
+     */
+    underpayment_mail_send_flag?: "0" | "1" | null
+
+    /**
+     * Bill number.
+     * 
+     * Assigned automatically when the invoice is opened without one.
+     */
+    invoice_number?: string | null
+
+    customer_id?: string | null
+
+    /**
+     * Honorific placed after the customer's name.
+     */
+    customer_honorific?: string | null
+
+    /**
+     * Customer information that overrides the registered customer on this
+     * invoice.
+     */
+    customer_overwrite?: InvoiceCustomer | null
+
+    /**
+     * Issuer information that overrides the registered issuer on this invoice.
+     * 
+     * Leave it out to use the information submitted when applying for the live
+     * environment.
+     */
+    issuer_overwrite?: Omit<InvoiceIssuer, "name" | "invoice_registration_number"> | null
+
+    /**
+     * Whether the amounts are shown tax-included.
+     * 
+     * - `true`: tax-included
+     * - `false`: tax-excluded
+     */
+    is_tax_included?: boolean | null
+
+    /**
+     * Due date.
+     * 
+     * Format: `yyyy/MM/dd`
+     */
+    due_date?: string | null
+
+    memo?: string | null
+
+    lines?: InvoiceLine[] | null
+
+    /**
+     * Payment methods to make available on this invoice.
+     */
+    pay_types?: InvoicePayType[] | null
+
+    input_type?: InvoiceInputType | null
+
+    card?: Modify<InvoiceCard, {
+        /**
+         * Job code.
+         * 
+         * - `AUTH`: Authorization (default)
+         * - `CAPTURE`: Capture
+         */
+        job_code?: "AUTH" | "CAPTURE" | null
+    }> | null
+
+    virtual_account?: InvoiceVirtualAccount | null
+
+    /**
+     * Direct debit settings.
+     * 
+     * `settlement_route` is decided by the payment method and cannot be given
+     * here.
+     */
+    directdebit?: Omit<InvoiceDirectDebit, "settlement_route"> | null
+
+    /**
+     * Fields where merchants can freely set values
+     */
+    client_field_1?: string | null
+    client_field_2?: string | null
+    client_field_3?: string | null
+
+    /**
+     * Payment to attach this invoice to after the fact.
+     */
+    invoice_backfill?: InvoiceBackfill | null
+}
+
+/**
+ * Request body of Registering an invoice (used for POST /v1/invoices)
+ */
+export type CreatingInvoiceRequest = InvoiceRequestCommonFields & {
+    /**
+     * Invoice ID.
+     * 
+     * Must be unique within the shop. Generated automatically when left out.
+     */
+    id?: string | null
+}
+
+/**
+ * Request body of Updating an invoice (used for PUT /v1/invoices/{id})
+ */
+export type UpdatingInvoiceRequest = InvoiceRequestCommonFields & {
+    /**
+     * Whether to mark this invoice as hard to collect.
+     */
+    is_uncollectible?: boolean | null
+}
+
+/**
+ * Request body of Opening an invoice (used for PUT /v1/invoices/{id}/open)
+ * 
+ * These flags take precedence over the ones given when registering or
+ * updating the invoice.
+ */
+export type OpeningInvoiceRequest = {
+    /**
+     * Flag to send the bill email or not.
+     * 
+     * - `0`: Do not send (default)
+     * - `1`: Send
+     */
+    bill_mail_send_flag?: "0" | "1" | null
+
+    /**
+     * Flag to send the receipt email or not.
+     * 
+     * - `0`: Do not send (default)
+     * - `1`: Send
+     */
+    receipt_mail_send_flag?: "0" | "1" | null
+
+    /**
+     * Flag to send the email that bills the difference or not.
+     * 
+     * - `0`: Do not send (default)
+     * - `1`: Send
+     */
+    underpayment_mail_send_flag?: "0" | "1" | null
+}
+
+/**
+ * Request body of Marking an invoice as paid outside fincode
+ * (used for PUT /v1/invoices/{id}/paid_externally)
+ */
+export type MarkingInvoicePaidExternallyRequest = {
+    /**
+     * Date the payment completed.
+     * 
+     * Format: `yyyy/MM/dd`
+     */
+    transaction_date?: string | null
+}
