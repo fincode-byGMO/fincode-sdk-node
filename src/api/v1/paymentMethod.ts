@@ -2,17 +2,13 @@ import {
     CreatingPaymentMethodRequest,
     RetrievingPaymentMethodListQueryParams,
     PaymentMethodObject,
-
-    APIErrorResponse,
-    FincodeAPIError,
-    FincodeSDKError,
     ListResponse,
     DeletingPaymentMethodResponse,
     RetrievingPaymentMethodQueryParams,
 } from "../../types"
 import { FincodeConfig } from "./fincode"
-import { createFincodeRequestFetch, FincodeRequestHeaders } from "./http"
-import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_errorMessages"
+import { FincodeRequestHeaders } from "./http"
+import { executeRequest } from "./_request"
 
 class PaymentMethod {
 
@@ -38,28 +34,9 @@ class PaymentMethod {
         body: CreatingPaymentMethodRequest,
         headers?: FincodeRequestHeaders
     ): Promise<PaymentMethodObject> {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "POST",
-                `/v1/customers/${customerId}/payment_methods`,
-                JSON.stringify(body),
-                headers,
-                undefined,
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const paymentMethod = json as PaymentMethodObject
-                        resolve(paymentMethod)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(e)
-                    }
-                }).catch((e: unknown) => { reject(e) })
-            }).catch((e: unknown) => { reject(e) })
+        return executeRequest<PaymentMethodObject>(this._config, "POST", `/v1/customers/${customerId}/payment_methods`, {
+            body: JSON.stringify(body),
+            headers,
         })
     }
 
@@ -79,28 +56,9 @@ class PaymentMethod {
         queryParams: RetrievingPaymentMethodListQueryParams,
         headers?: FincodeRequestHeaders,
     ): Promise<ListResponse<PaymentMethodObject>> {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "GET",
-                `/v1/customers/${customerId}/payment_methods`,
-                undefined,
-                headers,
-                queryParams
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const list = json as ListResponse<PaymentMethodObject>
-                        resolve(list)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(e)
-                    }
-                }).catch((e: unknown) => { reject(e) })
-            }).catch((e: unknown) => { reject(e) })
+        return executeRequest<ListResponse<PaymentMethodObject>>(this._config, "GET", `/v1/customers/${customerId}/payment_methods`, {
+            headers,
+            queryParams,
         })
     }
 
@@ -122,28 +80,9 @@ class PaymentMethod {
         queryParams: RetrievingPaymentMethodQueryParams,
         headers?: FincodeRequestHeaders,
     ): Promise<PaymentMethodObject> {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "GET",
-                `/v1/customers/${customerId}/payment_methods/${id}`,
-                undefined,
-                headers,
-                queryParams
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const paymentMethod = json as PaymentMethodObject
-                        resolve(paymentMethod)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(e)
-                    }
-                }).catch((e: unknown) => { reject(e) })
-            }).catch((e: unknown) => { reject(e) })
+        return executeRequest<PaymentMethodObject>(this._config, "GET", `/v1/customers/${customerId}/payment_methods/${id}`, {
+            headers,
+            queryParams,
         })
     }
 
@@ -163,34 +102,8 @@ class PaymentMethod {
         id: string,
         headers?: FincodeRequestHeaders,
     ): Promise<DeletingPaymentMethodResponse> {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "DELETE",
-                `/v1/customers/${customerId}/payment_methods/${id}`,
-                undefined,
-                headers,
-                undefined,
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const data = json as DeletingPaymentMethodResponse
-                        resolve(data)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(e)
-                    }
-                }).catch((e: unknown) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e: unknown) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
+        return executeRequest<DeletingPaymentMethodResponse>(this._config, "DELETE", `/v1/customers/${customerId}/payment_methods/${id}`, {
+            headers,
         })
     }
 

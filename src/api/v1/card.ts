@@ -4,14 +4,10 @@ import {
     ListResponse,
     CreatingCardRequest,
     UpdatingCardRequest,
-
-    APIErrorResponse,
-    FincodeAPIError,
-    FincodeSDKError,
 } from "../../types/index"
 import { FincodeConfig } from "./fincode"
-import { createFincodeRequestFetch, FincodeRequestHeaders } from "./http"
-import { getFetchErrorMessage, getResponseJSONParseErrorMessage, } from "./_errorMessages"
+import { FincodeRequestHeaders } from "./http"
+import { executeRequest } from "./_request"
 
 class Card {
 
@@ -37,34 +33,9 @@ class Card {
         body: CreatingCardRequest,
         headers?: FincodeRequestHeaders
     ): Promise<CardObject> {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "POST",
-                `/v1/customers/${customerId}/cards`,
-                JSON.stringify(body),
-                headers,
-                undefined,
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const card = json as CardObject
-                        resolve(card)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const err = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(err)
-                    }
-                }).catch((e: unknown) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e: unknown) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
+        return executeRequest<CardObject>(this._config, "POST", `/v1/customers/${customerId}/cards`, {
+            body: JSON.stringify(body),
+            headers,
         })
     }
 
@@ -82,34 +53,8 @@ class Card {
         customerId: string,
         headers?: FincodeRequestHeaders
     ): Promise<ListResponse<CardObject>> {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "GET",
-                `/v1/customers/${customerId}/cards`,
-                undefined,
-                headers,
-                undefined,
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const list = json as ListResponse<CardObject>
-                        resolve(list)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const err = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(err)
-                    }
-                }).catch((e: unknown) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e: unknown) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
+        return executeRequest<ListResponse<CardObject>>(this._config, "GET", `/v1/customers/${customerId}/cards`, {
+            headers,
         })
     }
 
@@ -129,34 +74,8 @@ class Card {
         id: string,
         headers?: FincodeRequestHeaders
     ): Promise<CardObject> {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "GET",
-                `/v1/customers/${customerId}/cards/${id}`,
-                undefined,
-                headers,
-                undefined,
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const card = json as CardObject
-                        resolve(card)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const err = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(err)
-                    }
-                }).catch((e: unknown) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e: unknown) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
+        return executeRequest<CardObject>(this._config, "GET", `/v1/customers/${customerId}/cards/${id}`, {
+            headers,
         })
     }
 
@@ -178,34 +97,9 @@ class Card {
         body: UpdatingCardRequest,
         headers?: FincodeRequestHeaders
     ): Promise<CardObject> {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "PUT",
-                `/v1/customers/${customerId}/cards/${id}`,
-                JSON.stringify(body),
-                headers,
-                undefined,
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const card = json as CardObject
-                        resolve(card)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const err = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(err)
-                    }
-                }).catch((e: unknown) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e: unknown) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
+        return executeRequest<CardObject>(this._config, "PUT", `/v1/customers/${customerId}/cards/${id}`, {
+            body: JSON.stringify(body),
+            headers,
         })
     }
 
@@ -225,34 +119,8 @@ class Card {
         id: string,
         headers?: FincodeRequestHeaders
     ): Promise<DeletingCardResponse> {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "DELETE",
-                `/v1/customers/${customerId}/cards/${id}`,
-                undefined,
-                headers,
-                undefined,
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const card = json as DeletingCardResponse
-                        resolve(card)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const err = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(err)
-                    }
-                }).catch((e: unknown) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e: unknown) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
+        return executeRequest<DeletingCardResponse>(this._config, "DELETE", `/v1/customers/${customerId}/cards/${id}`, {
+            headers,
         })
     }
 }
