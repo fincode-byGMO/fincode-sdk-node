@@ -4,6 +4,7 @@ import {
     ListResponse,
     CreatingCardRequest,
     UpdatingCardRequest,
+    RetrievingCardListQueryParams,
 } from "../../types/index"
 import { FincodeConfig } from "./fincode"
 import { FincodeRequestHeaders } from "./http"
@@ -55,6 +56,29 @@ class Card {
     ): Promise<ListResponse<CardObject>> {
         return executeRequest<ListResponse<CardObject>>(this._config, "GET", `/v1/customers/${customerId}/cards`, {
             headers,
+        })
+    }
+
+    /**
+     * **Retrieve card list of the customer information sharing group**
+     * 
+     * corresponds to `GET /v1/cards`
+     * 
+     * Covers every card in the customer information sharing group this shop
+     * belongs to, rather than the cards of a single customer.
+     * 
+     * @param {RetrievingCardListQueryParams} [queryParams] - query parameters
+     * @param {FincodeRequestHeaders} [headers] - request header
+     * 
+     * @returns {Promise<ListResponse<CardObject>>} - card object list
+     */
+    public retrieveGroupList(
+        queryParams?: RetrievingCardListQueryParams,
+        headers?: FincodeRequestHeaders
+    ): Promise<ListResponse<CardObject>> {
+        return executeRequest<ListResponse<CardObject>>(this._config, "GET", "/v1/cards", {
+            headers,
+            queryParams,
         })
     }
 

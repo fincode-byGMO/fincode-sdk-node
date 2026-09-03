@@ -1,4 +1,4 @@
-import { CardBrand, CardType } from "./card";
+import { CardBrand, CardType, CardUpdaterMode } from "./card";
 import { DirectDebitResultCode, PayType, ThreeDSecure2Status } from "./payment";
 
 export type PaymentMethodObject = {
@@ -213,6 +213,29 @@ type PaymentMethodCard = {
      * Whether the ACS was called during 3D Secure authentication.
      */
     acs?: string | null
+    /**
+     * Whether the card updater keeps this card's details up to date.
+     * 
+     * - `enabled`: update this card.
+     * - `disabled`: do not update this card.
+     * - `inherit`: follow the shop setting.
+     */
+    card_updater_mode?: CardUpdaterMode | null
+
+    /**
+     * Date the card details were last updated successfully.
+     * 
+     * Format: `yyyy/MM/dd HH:mm:ss.SSS`
+     */
+    card_updater_last_success_date?: string | null
+
+    /**
+     * Date an update of the card details was last attempted.
+     * 
+     * Format: `yyyy/MM/dd HH:mm:ss.SSS`
+     */
+    card_updater_last_attempt_date?: string | null
+
 }
 
 type PaymentMethodDirectDebit = {
@@ -457,7 +480,16 @@ export type CreatingPaymentMethodRequest = {
          * Card token responded from fincodeJS (Fincode.tokens(...))
          */
         token: string
-        
+
+        /**
+         * Whether the card updater should keep this card's details up to date.
+         * 
+         * - `enabled`: update this card.
+         * - `disabled`: do not update this card.
+         * - `inherit`: follow the shop setting.
+         */
+        card_updater_mode?: CardUpdaterMode | null
+
         /**
          * Defines the behavior of 3D Secure 2 on this payment method registration.
          * 
