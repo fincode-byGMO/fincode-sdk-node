@@ -268,68 +268,241 @@ export type CardWebhookNotification = {
 }
 
 /**
- * Webhook Notification for Subscription API
- * 
- * for
- * - `subscription.**.**`
+ * Fields both subscription notifications carry.
  */
-export type SubscriptionWebhookNotification = {
-    status?: SubscriptionStatus | null
+type SubscriptionWebhookCommonFields = {
     shop_id?: string | null
     subscription_id?: string | null
-    process_date?: string | null
     plan_id?: string | null
     customer_id?: string | null
-    card_id?: string | null
-    default_card_flag?: "0" | "1" | null
-    start_date?: string | null
-    stop_date?: string | null
-    next_charge_date?: string | null
-    end_month_flag?: "0" | "1" | null
+    status?: SubscriptionStatus | null
+
+    /**
+     * Fields where merchants can freely set values
+     */
     client_field_1?: string | null
     client_field_2?: string | null
     client_field_3?: string | null
-    pay_type?: Extract<PayType, "Card"> | null
-    event?: string | null
+
+    start_date?: string | null
+    stop_date?: string | null
+    next_charge_date?: string | null
+
+    /**
+     * Whether the charge falls on the last day of the month.
+     */
+    end_month_flag?: "0" | "1" | null
 }
 
 /**
- * Webhook Notification for Subscription API (Recurring process)
+ * Webhook Notification for Subscription API
  * 
  * for
- * - `recurring.card.batch`
+ * - `subscription.**`
+ * 
+ * A card subscription and a direct debit one are delivered to separate
+ * endpoints and carry different fields, so branch on `pay_type`.
  */
-export type RecurringWebhookNotification = {
-    succeeded?: string | null
-    failed?: string | null
-    total?: string | null
-    shop_id?: string | null
+export type SubscriptionWebhookNotification =
+    | CardSubscriptionWebhookNotification
+    | DirectDebitSubscriptionWebhookNotification
+
+/**
+ * Webhook Notification for a card subscription
+ */
+export type CardSubscriptionWebhookNotification = SubscriptionWebhookCommonFields & {
+    pay_type: Extract<PayType, "Card">
+
+    /**
+     * Card ID used by the subscription.
+     */
+    card_id?: string | null
+
+    /**
+     * Whether the subscription uses the customer's default card.
+     */
+    default_card_flag?: "0" | "1" | null
+
     process_date?: string | null
-    charge_date?: string | null
-    pay_type?: Extract<PayType, "Card"> | null
-    event?: string | null
+
+    event?: Extract<WebhookEvent, `subscription.card.${string}`> | null
 }
 
 /**
- * Webhook Notification for Payment Bulk API
+ * Webhook Notification for a direct debit subscription
  */
-export type PaymentBulkWebhookNotification = {
-    bulk_payment_id?: string | null
+export type DirectDebitSubscriptionWebhookNotification = SubscriptionWebhookCommonFields & {
+    pay_type: Extract<PayType, "Directdebit">
+
+    /**
+     * Payment method ID of the bank account the debit is taken from.
+     */
+    payment_method_id?: string | null
+
+    /**
+     * Whether the subscription uses the customer's default payment method.
+     */
+    default_flag?: "0" | "1" | null
+
+    /**
+     * Usage details that will be displayed on the customer's bank statement.
+     */
+    remarks?: string | null
+
+    event?: Extract<WebhookEvent, `subscription.directdebit.${string}`> | null
+}
+
+/**
+ * Webhook Notification for the recurring charge batch
+ * 
+ * for
+ * - `recurring.**`
+ * 
+ * Only the card batch reports whether a retry is scheduled, so branch on
+ * `pay_type` to read it.
+ */
+export type RecurringWebhookNotification =
+    | CardRecurringWebhookNotification
+    | DirectDebitRecurringWebhookNotification
+
+/**
+ * Fields both recurring batch notifications carry.
+ */
+type RecurringWebhookCommonFields = {
     shop_id?: string | null
+
+    /**
+     * How many charges succeeded.
+     */
+    succeeded?: string | null
+
+    /**
+     * How many charges failed.
+     */
+    failed?: string | null
+
+    /**
+     * How many charges the batch attempted.
+     */
+    total?: string | null
+
+    process_date?: string | null
+
+    /**
+     * Date the batch charged for.
+     */
+    charge_date?: string | null
+}
+
+/**
+ * Webhook Notification for the card recurring charge batch
+ */
+export type CardRecurringWebhookNotification = RecurringWebhookCommonFields & {
+    pay_type: Extract<PayType, "Card">
+
+    /**
+     * Whether a retry is scheduled for the charges that failed.
+     */
+    retry_scheduled?: string | null
+
+    event?: Extract<WebhookEvent, `recurring.card.${string}`> | null
+}
+
+/**
+ * Webhook Notification for the direct debit recurring charge batch
+ */
+export type DirectDebitRecurringWebhookNotification = RecurringWebhookCommonFields & {
+    pay_type: Extract<PayType, "Directdebit">
+
+    event?: Extract<WebhookEvent, `recurring.directdebit.${string}`> | null
+}
+
+/**
+ * Webhook Notification for Bulk Payment API
+ * 
+ * for
+ * - `payments.bulk.**`
+ * 
+ * Registering a file and running the batch report different counts, so branch
+ * on `event`. Unlike the other notifications, the shape here follows the
+ * operation rather than `pay_type`.
+ */
+export type PaymentBulkWebhookNotification =
+    | RegisteringPaymentBulkWebhookNotification
+    | BatchPaymentBulkWebhookNotification
+
+/**
+ * Fields both bulk payment notifications carry.
+ */
+type PaymentBulkWebhookCommonFields = {
+    shop_id?: string | null
+    bulk_payment_id?: string | null
+
+    /**
+     * Name of the uploaded file.
+     */
     file_name?: string | null
+
     status?: PaymentBulkStatus | null
 
-    error_total_count?: string | null
+    /**
+     * Payment method of the bulk payment.
+     */
+    pay_type?: Extract<PayType, "Card" | "Virtualaccount"> | null
+}
+
+/**
+ * Webhook Notification for registering a bulk payment file
+ * 
+ * for
+ * - `payments.bulk.card.regist`
+ * - `payments.bulk.virtualaccount.regist`
+ */
+export type RegisteringPaymentBulkWebhookNotification = PaymentBulkWebhookCommonFields & {
+    /**
+     * How many payments were registered from the file.
+     */
     regist_total_count?: string | null
 
-    succeeded_count?: string | null
-    failed_count?: string | null
-    total_count?: string | null
+    /**
+     * How many rows of the file were rejected.
+     */
+    error_total_count?: string | null
+
+    /**
+     * URL that lists the registered payments.
+     */
+    bulk_search_url?: string | null
 
     error_code?: string | null
-    bulk_search_url?: string | null
-    pay_type?: Extract<PayType, "Card"> | null
-    event?: string | null
+
+    event?: Extract<WebhookEvent, `payments.bulk.${string}.regist`> | null
+}
+
+/**
+ * Webhook Notification for running a bulk payment batch
+ * 
+ * for
+ * - `payments.bulk.card.batch`
+ * - `payments.bulk.virtualaccount.batch`
+ */
+export type BatchPaymentBulkWebhookNotification = PaymentBulkWebhookCommonFields & {
+    /**
+     * How many payments succeeded.
+     */
+    succeeded_count?: string | null
+
+    /**
+     * How many payments failed.
+     */
+    failed_count?: string | null
+
+    /**
+     * How many payments the batch attempted.
+     */
+    total_count?: string | null
+
+    event?: Extract<WebhookEvent, `payments.bulk.${string}.batch`> | null
 }
 
 /**
