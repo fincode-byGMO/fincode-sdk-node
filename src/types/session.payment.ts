@@ -1,4 +1,14 @@
 /**
+ * Payment methods that can be offered on a payment session (redirect) page.
+ * 
+ * - `Card`: Card payment
+ * - `Konbini`: Konbini payment
+ * - `Paypay`: PayPay payment
+ * - `Virtualaccount`: Bank transfer (virtual account) payment
+ */
+export type PaymentSessionPayType = "Card" | "Konbini" | "Paypay" | "Virtualaccount"
+
+/**
      * Payment session object
      */
 export type PaymentSessionObject = {
@@ -77,7 +87,7 @@ export type PaymentSessionObject = {
         /**
          * Payment method types used for this session.
          */
-        pay_type: ("Card" | "Konbini" | "Paypay")[]
+        pay_type: PaymentSessionPayType[]
 
         /**
          * Order ID.
@@ -180,6 +190,55 @@ export type PaymentSessionObject = {
          */
         order_description?: string | null
     }
+
+    /**
+     * Bank transfer (virtual account) payment object
+     */
+    virtualaccount: {
+        /**
+         * Payment URL
+         */
+        virtualaccount_reception_url?: string | null
+
+        /**
+         * Offset days from the date payment request has succeeded.
+         */
+        payment_term_day?: number | null
+
+        /**
+         * Flag to send the payment page guide email or not.
+         */
+        virtualaccount_reception_mail_send_flag?: "0" | "1" | null
+
+        /**
+         * Whether an exact deposit amount is set on the virtual account.
+         * 
+         * When set, the customer cannot transfer an amount other than the
+         * billed one.
+         */
+        use_exact_deposit_amount?: boolean | null
+    }
+
+    /**
+     * Bill ID
+     * 
+     * Set when this session was created from an invoice.
+     */
+    bill_id?: string | null
+
+    /**
+     * Date this session was created.
+     * 
+     * Format: yyyy/MM/dd HH:mm:ss.SSS
+     */
+    created?: string | null
+
+    /**
+     * Date this session was updated.
+     * 
+     * Format: yyyy/MM/dd HH:mm:ss.SSS
+     */
+    updated?: string | null
 }
 
 /**
@@ -245,8 +304,9 @@ export type CreatingPaymentSessionRequest = {
          * - `Card`: Card payment
          * - `Konbini`: Konbini payment
          * - `Paypay`: PayPay payment
+         * - `Virtualaccount`: Bank transfer (virtual account) payment
          */
-        pay_type?: ("Card" | "Konbini" | "Paypay")[] | null
+        pay_type?: PaymentSessionPayType[] | null
 
         /**
          * Order ID.
@@ -631,6 +691,47 @@ export type CreatingPaymentSessionRequest = {
          * Order description of PayPay payment.
          */
         order_description?: string | null
+    }
+
+    /**
+     * Bank transfer (virtual account) parameters.
+     * 
+     * Used when `transaction.pay_type` includes `Virtualaccount`.
+     */
+    virtualaccount?: {
+        /**
+         * Flag to send the payment page guide email or not.
+         * 
+         * - `0`: Do not send
+         * - `1`: Send
+         */
+        virtualaccount_reception_mail_send_flag: "0" | "1"
+
+        /**
+         * Offset days until the virtual account expires.
+         * 
+         * Accepts `"0"` to `"99"`. The account expires in the morning of the
+         * day after the given number of days: executing on 2024/4/1 with `"2"`
+         * expires it in the morning of 2024/4/4.
+         */
+        payment_term_day?: string | null
+
+        /**
+         * Order ID whose virtual account should be reused.
+         * 
+         * The referenced payment must have a `status` of `CAPTURED`,
+         * `CANCELED` or `EXPIRED`, and the transfer into its virtual account
+         * must have happened within the last 90 days.
+         */
+        reference_order_id?: string | null
+
+        /**
+         * Whether to set an exact deposit amount on the virtual account.
+         * 
+         * When set, the customer cannot transfer an amount other than the
+         * billed one. Defaults to `false`.
+         */
+        use_exact_deposit_amount?: boolean | null
     }
 }
 

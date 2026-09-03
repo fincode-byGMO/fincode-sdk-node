@@ -131,6 +131,34 @@ export type PaymentObject = {
     expire_overpayment_flag?: "0" | "1" | null
 
     /**
+     * Whether an exact deposit amount is set on the virtual account used in
+     * this payment.
+     * 
+     * When set, the customer cannot transfer an amount other than the billed
+     * one.
+     */
+    use_exact_deposit_amount?: boolean | null
+
+    /**
+     * Whether this payment uses a virtual account fixed to the customer.
+     */
+    use_static_virtual_account?: boolean | null
+
+    /**
+     * Bill ID
+     * 
+     * Set when this payment was created from an invoice.
+     */
+    bill_id?: string | null
+
+    /**
+     * Invoice ID
+     * 
+     * Set when this payment was created from an invoice.
+     */
+    invoice_id?: string | null
+
+    /**
      * Date this payment was created.
      * 
      * Format: yyyy/MM/dd HH:mm:ss.SSS
@@ -331,13 +359,6 @@ export type PaymentObject = {
      */
     error_code?: string | null
 
-    /**
-     * Bill ID
-     * 
-     * Set when this payment was created from an invoice.
-     */
-    bill_id?: string | null
-
     // ---
     // Konbini Payment
     // ---
@@ -386,11 +407,6 @@ export type PaymentObject = {
      * Order serial ID
      */
     order_serial?: string | null
-
-    /**
-     * Invoice ID
-     */
-    invoice_id?: string | null
 
     /**
      * Barcode image that encoded by base64.
