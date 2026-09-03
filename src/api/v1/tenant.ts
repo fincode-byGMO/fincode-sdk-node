@@ -11,17 +11,13 @@ import {
     ShopObject,
     UpdatingExaminationInfoRequest,
     UpdatingTenantRequest,
-
-    APIErrorResponse,
-    FincodeAPIError,
-    FincodeSDKError,
     ExaminationInfo_V2,
     UpdatingExaminationInfoRequest_V2,
     RetrievingTenantShopListQueryParams,
 } from "../../types/index"
 import { FincodeConfig } from "./fincode"
-import { createFincodeRequestFetch, FincodeRequestHeaders } from "./http"
-import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_errorMessages"
+import { FincodeRequestHeaders } from "./http"
+import { executeRequest } from "./_request"
 
 /**
  * @typedef {object} Tenant
@@ -58,34 +54,9 @@ class Tenant {
         body: CreatingTenantWithExistingUserRequest,
         headers?: FincodeRequestHeaders
     ): Promise<CreatingTenantWithExistingUserResponse> {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "POST",
-                `/v1/join_tenants`,
-                JSON.stringify(body),
-                headers,
-                undefined,
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const tenant = json as CreatingTenantWithExistingUserResponse
-                        resolve(tenant)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(e)
-                    }
-                }).catch((e: unknown) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e: unknown) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
+        return executeRequest<CreatingTenantWithExistingUserResponse>(this._config, "POST", `/v1/join_tenants`, {
+            body: JSON.stringify(body),
+            headers,
         })
     }
 
@@ -103,34 +74,9 @@ class Tenant {
         body: CreatingTenantWithNewUserRequest,
         headers?: FincodeRequestHeaders
     ): Promise<CreatingTenantWithNewUserResponse> {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "POST",
-                `/v1/tenant_entries`,
-                JSON.stringify(body),
-                headers,
-                undefined,
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const tenant = json as CreatingTenantWithNewUserResponse
-                        resolve(tenant)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(e)
-                    }
-                }).catch((e: unknown) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e: unknown) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
+        return executeRequest<CreatingTenantWithNewUserResponse>(this._config, "POST", `/v1/tenant_entries`, {
+            body: JSON.stringify(body),
+            headers,
         })
     }
 
@@ -152,37 +98,9 @@ class Tenant {
         body: UpdatingExaminationInfoRequest,
         headers?: Omit<FincodeRequestHeaders, "tenantShopId">
     ): Promise<ExaminationInfo> {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "PUT",
-                `/v1/contracts/examinations/tenants/${id}`,
-                JSON.stringify(body),
-                {
-                    ...headers,
-                    tenantShopId: id,
-                },
-                undefined,
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const examInfo = json as ExaminationInfo
-                        resolve(examInfo)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(e)
-                    }
-                }).catch((e: unknown) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e: unknown) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
+        return executeRequest<ExaminationInfo>(this._config, "PUT", `/v1/contracts/examinations/tenants/${id}`, {
+            body: JSON.stringify(body),
+            headers: { ...headers, tenantShopId: id },
         })
     }
 
@@ -202,37 +120,8 @@ class Tenant {
         id: string,
         headers?: Omit<FincodeRequestHeaders, "tenantShopId">
     ): Promise<ExaminationInfo> {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "GET",
-                `/v1/contracts/examinations/tenants/${id}`,
-                undefined,
-                {
-                    ...headers,
-                    tenantShopId: id,
-                },
-                undefined,
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const examInfo = json as ExaminationInfo
-                        resolve(examInfo)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(e)
-                    }
-                }).catch((e: unknown) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e: unknown) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
+        return executeRequest<ExaminationInfo>(this._config, "GET", `/v1/contracts/examinations/tenants/${id}`, {
+            headers: { ...headers, tenantShopId: id },
         })
     }
 
@@ -250,34 +139,9 @@ class Tenant {
         body: RequestingExaminationRequest,
         headers?: FincodeRequestHeaders
     ): Promise<RequestingExaminationResponse> {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "POST",
-                `/v1/contracts/examinations`,
-                JSON.stringify(body),
-                headers,
-                undefined,
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const tenant = json as RequestingExaminationResponse
-                        resolve(tenant)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(e)
-                    }
-                }).catch((e: unknown) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e: unknown) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
+        return executeRequest<RequestingExaminationResponse>(this._config, "POST", `/v1/contracts/examinations`, {
+            body: JSON.stringify(body),
+            headers,
         })
     }
 
@@ -295,37 +159,8 @@ class Tenant {
         id: string,
         headers?: Omit<FincodeRequestHeaders, "tenantShopId">
     ): Promise<ContractObject> {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "GET",
-                `/v1/contracts/${id}`,
-                undefined,
-                {
-                    ...headers,
-                    tenantShopId: id,
-                },
-                undefined,
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const contract = json as ContractObject
-                        resolve(contract)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(e)
-                    }
-                }).catch((e: unknown) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e: unknown) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
+        return executeRequest<ContractObject>(this._config, "GET", `/v1/contracts/${id}`, {
+            headers: { ...headers, tenantShopId: id },
         })
     }
 
@@ -345,34 +180,9 @@ class Tenant {
         body: UpdatingTenantRequest,
         headers?: FincodeRequestHeaders
     ): Promise<ShopObject> {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "PUT",
-                `/v1/tenants/${id}`,
-                JSON.stringify(body),
-                headers,
-                undefined,
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const tenant = json as ShopObject
-                        resolve(tenant)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(e)
-                    }
-                }).catch((e: unknown) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e: unknown) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
+        return executeRequest<ShopObject>(this._config, "PUT", `/v1/tenants/${id}`, {
+            body: JSON.stringify(body),
+            headers,
         })
     }
 
@@ -390,34 +200,8 @@ class Tenant {
         id: string,
         headers?: FincodeRequestHeaders
     ): Promise<ShopObject> {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "GET",
-                `/v1/tenants/${id}`,
-                undefined,
-                headers,
-                undefined,
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const tenant = json as ShopObject
-                        resolve(tenant)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(e)
-                    }
-                }).catch((e: unknown) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e: unknown) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
+        return executeRequest<ShopObject>(this._config, "GET", `/v1/tenants/${id}`, {
+            headers,
         })
     }
 
@@ -435,34 +219,9 @@ class Tenant {
         queryParams?: RetrievingTenantShopListQueryParams,
         headers?: FincodeRequestHeaders
     ): Promise<ListResponse<ShopObject>> {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "GET",
-                "/v1/tenants",
-                undefined,
-                headers,
-                queryParams,
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const tenantList = json as ListResponse<ShopObject>
-                        resolve(tenantList)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(e)
-                    }
-                }).catch((e: unknown) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e: unknown) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
+        return executeRequest<ListResponse<ShopObject>>(this._config, "GET", "/v1/tenants", {
+            headers,
+            queryParams,
         })
     }
 
@@ -480,37 +239,8 @@ class Tenant {
         id: string,
         headers?: Omit<FincodeRequestHeaders, "tenantShopId">
     ): Promise<ExaminationInfo_V2> {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "GET",
-                `/v1/contracts/examinations_v2/tenants/${id}`,
-                undefined,
-                {
-                    ...headers,
-                    tenantShopId: id,
-                },
-                undefined,
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const examInfo = json as ExaminationInfo_V2
-                        resolve(examInfo)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(e)
-                    }
-                }).catch((e: unknown) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                }).catch((e: unknown) => {
-                    const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                    reject(err)
-                })
-            })
+        return executeRequest<ExaminationInfo_V2>(this._config, "GET", `/v1/contracts/examinations_v2/tenants/${id}`, {
+            headers: { ...headers, tenantShopId: id },
         })
     }
 
@@ -530,34 +260,9 @@ class Tenant {
         body: UpdatingExaminationInfoRequest_V2,
         headers?: Omit<FincodeRequestHeaders, "tenantShopId">
     ): Promise<ExaminationInfo_V2> {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "PUT",
-                `/v1/contracts/examinations_v2/tenants/${id}`,
-                JSON.stringify(body),
-                {
-                    ...headers,
-                    tenantShopId: id,
-                },
-                undefined,
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const examInfo = json as ExaminationInfo_V2
-                        resolve(examInfo)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(e)
-                    }
-                })
-            }).catch((e: unknown) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
+        return executeRequest<ExaminationInfo_V2>(this._config, "PUT", `/v1/contracts/examinations_v2/tenants/${id}`, {
+            body: JSON.stringify(body),
+            headers: { ...headers, tenantShopId: id },
         })
     }
 

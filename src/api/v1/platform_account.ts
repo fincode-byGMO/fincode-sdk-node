@@ -3,16 +3,12 @@ import {
     PlatformAccountObject,
     PlatformAccountListItemObject,
     PlatformAccountSummaryObject,
-
-    APIErrorResponse,
-    FincodeAPIError,
-    FincodeSDKError,
     RetrievingPlatformAccountListQueryParams,
     RetrievingPlatformAccountSummaryListQueryParams,
 } from "../../types/index"
 import { FincodeConfig } from "./fincode"
-import { createFincodeRequestFetch, FincodeRequestHeaders } from "./http"
-import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_errorMessages"
+import { FincodeRequestHeaders } from "./http"
+import { executeRequest } from "./_request"
 
 class PlatformAccount {
 
@@ -37,34 +33,9 @@ class PlatformAccount {
         queryParams?: RetrievingPlatformAccountListQueryParams,
         headers?: FincodeRequestHeaders,
     ): Promise<ListResponse<PlatformAccountListItemObject>> {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "GET",
-                "/v1/platform_accounts",
-                undefined,
-                headers,
-                queryParams,
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const list = json as ListResponse<PlatformAccountListItemObject>
-                        resolve(list)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(e)
-                    }
-                }).catch((e: unknown) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e: unknown) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
+        return executeRequest<ListResponse<PlatformAccountListItemObject>>(this._config, "GET", "/v1/platform_accounts", {
+            headers,
+            queryParams,
         })
     }
 
@@ -82,34 +53,8 @@ class PlatformAccount {
         id: string,
         headers?: FincodeRequestHeaders,
     ): Promise<PlatformAccountObject> {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "GET",
-                `/v1/platform_accounts/${id}`,
-                undefined,
-                headers,
-                undefined,
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const platformAccount = json as PlatformAccountObject
-                        resolve(platformAccount)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(e)
-                    }
-                }).catch((e: unknown) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e: unknown) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
+        return executeRequest<PlatformAccountObject>(this._config, "GET", `/v1/platform_accounts/${id}`, {
+            headers,
         })
     }
 
@@ -130,35 +75,9 @@ class PlatformAccount {
         queryParams?: RetrievingPlatformAccountSummaryListQueryParams,
         headers?: FincodeRequestHeaders,
     ): Promise<ListResponse<PlatformAccountSummaryObject>> {
-
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "GET",
-                `/v1/platform_accounts/${id}/summary`,
-                undefined,
-                headers,
-                queryParams,
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const list = json as ListResponse<PlatformAccountSummaryObject>
-                        resolve(list)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(e)
-                    }
-                }).catch((e: unknown) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e: unknown) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
+        return executeRequest<ListResponse<PlatformAccountSummaryObject>>(this._config, "GET", `/v1/platform_accounts/${id}/summary`, {
+            headers,
+            queryParams,
         })
     }
 }
