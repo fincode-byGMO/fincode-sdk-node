@@ -2,8 +2,11 @@
 
 ## 2.0.0
 
-型定義をfincode APIの実際の挙動に合わせ直し、通信部分を作り直したメジャー
-リリースです。移行手順は [MIGRATION.md](./MIGRATION.md) を参照してください。
+型定義をfincode APIの実際の挙動に合わせ直し、通信部分を作り直し、未対応だった
+エンドポイントに追いついたメジャーリリースです。移行手順は
+[MIGRATION.md](./MIGRATION.md) を参照してください。
+
+APIリファレンスが定義する fincode の90オペレーションすべてに対応しました。
 
 **Node.js 20.18.1 以上が必要になります。**
 
@@ -79,6 +82,10 @@ APIが受け取らない項目、返さない項目を型から削除しまし�
 JSDocのエンドポイント誤記5件と、存在しない型を指していた `@param` / `@returns`
 5件を直しました。閉塞している項目に `@deprecated` を付けました。
 
+決済手段の削除が決済種別を送っておらず、どう呼んでも
+`EP017023001`「決済種別が指定されていません。」で失敗していました。戻り値の型も
+`id` と `delete_flag` の2項目でしたが、実際は決済手段オブジェクトを全項目返します。
+
 ### 追加
 
 決済のリクエストを決済種別ごとの型に分けました。対象は登録と実行、売上確定、
@@ -104,6 +111,36 @@ enum に不足していた値を追加しました。`PayType` の `Googlepay`�
 
 `retrieveDetailList` と `retrieveSummaryList` がクエリパラメータを受け取るように
 なりました。型は定義済みでしたが、メソッドが引数として受け取っていませんでした。
+
+未対応だったエンドポイントに対応しました。
+
+- インボイス機能（`fincode.invoices`）9操作
+- チャージバック（`fincode.chargebacks`）4操作
+- テナントの変更申請（`fincode.changeRequests`）2操作
+- 社印（`fincode.companyStamps`）3操作
+- 決済手段の更新・停止・再有効化 3操作
+- カード一覧取得（`fincode.cards.retrieveGroupList`）
+- テナントの審査ファイルアップロードと決済手段追加申請 2操作
+
+バーチャル口座の機能拡張に対応しました。決済手段として登録する顧客固定バーチャル
+口座（`pay_type: "Virtualaccount"`）、入金可能額設定
+（`use_exact_deposit_amount`）、決済セッションの `virtualaccount` ブロックです。
+
+口座振替の振替サービス（`settlement_route`）を追加しました。振替日の組み合わせが
+2種類あり、決済・決済手段・サブスクリプション・課金結果の4箇所に現れます。
+
+カード更新機能（洗替）の項目を追加しました。`card_updater_mode` と最終成功日時、
+最終実施日時です。カードと決済手段の両方で読めます。
+
+サブスクリプションのリトライ関連項目を追加しました。`subscription_retry_mode` と
+`is_retry_scheduled` です。`is_retry_scheduled` はサブスクリプションと課金結果で
+意味が違うため、JSDocで書き分けています。
+
+Webhook通知の型を6つから13に増やしました。カード更新完了、インボイス、
+チャージバック、変更申請の4つを追加し、決済手段の通知は決済種別ごとの共用体
+（カード・口座振替・バーチャル口座）にしました。決済手段の通知は種別ごとに
+決済手段IDの項目名が違い、`status` の意味も違います。`event` も種別ごとに絞って
+いるため、届かないイベントを書くとコンパイルエラーになります。
 
 ### 変更
 
@@ -139,6 +176,14 @@ HTTPクライアントを node-fetch から undici に置き換えました。`n
 
 68メソッドが持っていた同一の定型処理を共通の1箇所にまとめました。公開型は
 変わりません。
+
+`options.proxyAgent` を指定しない場合、`HTTP_PROXY` / `HTTPS_PROXY` / `NO_PROXY`
+からプロキシを読むようにしました。v1 はこれらを見ないため、プロキシ配下では
+`options.proxyAgent` を渡さないと接続できませんでした。
+
+`PaymentMethodObject` に `virtualaccount` ブロックを追加し、`pay_type` の値域に
+`Virtualaccount` を加えました。あわせて `PaymentSessionObject.transaction.pay_type`
+にも `Virtualaccount` を加えています。
 
 ### テスト
 

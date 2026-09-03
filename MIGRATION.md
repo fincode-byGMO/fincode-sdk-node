@@ -460,3 +460,94 @@ JSON.stringify(fincode)
 
 SDKが未対応のエンドポイントを `createFincodeRequestFetch` で直接叩いていた場合は
 影響します。
+
+---
+
+## 13. 決済手段APIの変更
+
+### delete に決済種別が必要になりました
+
+`paymentMethods.delete` は決済種別を送っていなかったため、v1 ではどう呼んでも
+`EP017023001`「決済種別が指定されていません。」で失敗していました。第3引数に
+クエリパラメータを取ります。
+
+```ts
+// v1（常に失敗していた）
+await fincode.paymentMethods.delete(customerId, id)
+
+// v2
+await fincode.paymentMethods.delete(customerId, id, { pay_type: "Card" })
+```
+
+戻り値も変わりました。`DeletingPaymentMethodResponse`（`id` と `delete_flag` の
+2項目）から `PaymentMethodObject` になり、この型は削除しました。`id` と
+`delete_flag` はそのまま読めますが、`delete_flag` は省略可能な項目です。
+
+`headers` を第3引数に渡していた場合は第4引数に移してください。
+
+### pay_type の値域が広がりました
+
+`PaymentMethodObject.pay_type` と `RetrievingPaymentMethodQueryParams.pay_type` に
+`Virtualaccount` が加わりました。後者は v1 では `Directdebit` しか受け付けず、
+カードとバーチャル口座の決済手段は取得すらできませんでした。
+
+`pay_type` で網羅的に分岐していた場合は分岐の追加が必要です。
+
+---
+
+## 14. 決済セッションの pay_type の値域
+
+`PaymentSessionObject.transaction.pay_type` に `Virtualaccount` が加わりました。
+この配列の要素で網羅的に分岐していた場合は分岐の追加が必要です。
+
+リクエスト側にも `virtualaccount` ブロックが加わりました。v1 では
+リクエスト・レスポンスとも無く、バーチャル口座を含む決済URLを型どおりには
+作れませんでした。
+
+```ts
+await fincode.paymentSessions.create({
+    transaction: { pay_type: ["Virtualaccount"], amount: "1000" },
+    virtualaccount: {
+        virtualaccount_reception_mail_send_flag: "0",
+        use_exact_deposit_amount: true,
+    },
+})
+```
+
+---
+
+## 15. Webhook通知の型
+
+### 決済手段の通知が共用体になりました
+
+`customers.payment_methods.**` の通知は、決済種別ごとに構造が違います。v1 には
+型が無かったため新規追加ですが、フラットな型を期待して自前で書いていた場合は
+`pay_type` での分岐が必要です。
+
+```ts
+const receive = (p: PaymentMethodWebhookNotification) => {
+    switch (p.pay_type) {
+        case "Card":           return p.card_id
+        case "Directdebit":    return p.payment_method_id
+        case "Virtualaccount": return p.id
+    }
+}
+```
+
+決済手段IDの項目名が種別ごとに違い、`status` の意味も違います。カードの `status`
+は3Dセキュア2.0認証の状態（`AUTHENTICATED` / `CHECK`）で、決済手段の状態は
+`card_status` に入ります。
+
+発火するイベントも種別ごとに違います。5つのイベントが発生するのは顧客固定
+バーチャル口座だけで、カードと口座振替は `customers.payment_methods.updated`
+のみです。
+
+### event を型で絞りました
+
+新しく追加した通知型は `event` を届きうるイベントだけに絞っています。届かない
+イベントを書くとコンパイルエラーになります。
+
+```ts
+// インボイスの受信処理にカード決済のイベントは来ない
+const p: InvoiceWebhookNotification = { event: "payments.card.regist" }
+```
