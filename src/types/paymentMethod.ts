@@ -988,19 +988,15 @@ export type RetrievingPaymentMethodQueryParams = {
 }
 
 /**
- * Response object of Deleting Payment method (used for DELETE /v1/customers/{customer_id}/payment_methods/{id})
+ * Request Query Parameters of Deleting a Payment Method (used for DELETE /v1/customers/{customer_id}/payment_methods/{id})
  */
-export type DeletingPaymentMethodResponse = {
+export type DeletingPaymentMethodQueryParams = {
     /**
-     * Payment Method ID that has just been deleted.
-     */
-    id: string
-
-    /**
-     * Flag this card has already been deleted or not.
+     * Payment method type
      * 
-     * - `0`: Not deleted. This customer is still available.
-     * - `1`: Deleted. This customer is no longer available.
+     * - `Card`: Card
+     * - `Directdebit`: Direct Debit
+     * - `Virtualaccount`: Bank transfer (virtual account)
      */
-    delete_flag: "0" | "1"
+    pay_type: PaymentMethodPayType
 }

@@ -3,7 +3,7 @@ import {
     RetrievingPaymentMethodListQueryParams,
     PaymentMethodObject,
     ListResponse,
-    DeletingPaymentMethodResponse,
+    DeletingPaymentMethodQueryParams,
     RetrievingPaymentMethodQueryParams,
 } from "../../types"
 import { FincodeConfig } from "./fincode"
@@ -93,17 +93,20 @@ class PaymentMethod {
      * 
      * @param {string} customerId - customer id
      * @param {string} id - payment method id
+     * @param {DeletingPaymentMethodQueryParams} queryParams - query parameters
      * @param {FincodeRequestHeaders} [headers] - request header
      *  
-     * @returns {Promise<DeletingPaymentMethodResponse>} - deleting result
+     * @returns {Promise<PaymentMethodObject>} - deleted payment method object
      */
     public delete(
         customerId: string,
         id: string,
+        queryParams: DeletingPaymentMethodQueryParams,
         headers?: FincodeRequestHeaders,
-    ): Promise<DeletingPaymentMethodResponse> {
-        return executeRequest<DeletingPaymentMethodResponse>(this._config, "DELETE", `/v1/customers/${customerId}/payment_methods/${id}`, {
+    ): Promise<PaymentMethodObject> {
+        return executeRequest<PaymentMethodObject>(this._config, "DELETE", `/v1/customers/${customerId}/payment_methods/${id}`, {
             headers,
+            queryParams,
         })
     }
 
