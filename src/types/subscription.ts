@@ -156,6 +156,21 @@ export type SubscriptionObject = {
     interval_count: PlanIntervalCount
 
     /**
+     * Retry setting of the plan this subscription uses.
+     * 
+     * - `enabled`: retried when a charge fails.
+     * - `disabled`: not retried.
+     */
+    subscription_retry_mode?: SubscriptionRetryMode | null
+
+    /**
+     * Whether a retry is scheduled.
+     * 
+     * `true` when a charge has failed and a retry is scheduled for it.
+     */
+    is_retry_scheduled?: boolean | null
+
+    /**
      * Error code.
      */
     error_code?: string | null
@@ -511,6 +526,11 @@ export type SubscriptionResultObject = {
     process_date: string
 
     /**
+     * Plan ID used by the subscription this charge belongs to.
+     */
+    plan_id: string
+
+    /**
      * Amount
      */
     amount: number
@@ -539,6 +559,11 @@ export type SubscriptionResultObject = {
      * Card ID
      */
     card_id?: string | null
+
+    /**
+     * Masked number of the card used in this charge. (e.g. `************9999`)
+     */
+    card_no?: string | null
 
     /**
      * Access ID
@@ -583,6 +608,18 @@ export type SubscriptionResultObject = {
     interval_count: PlanIntervalCount
 
     /**
+     * Whether this charge came from the retry batch.
+     * 
+     * `true` when the retry batch executed it rather than the regular cycle.
+     */
+    is_retry_scheduled?: boolean | null
+
+    /**
+     * The kind of processing that produced this charge log.
+     */
+    process_interface?: string | null
+
+    /**
      * Error code
      */
     error_code?: string | null
@@ -603,6 +640,14 @@ export type SubscriptionResultObject = {
  * - `CANCELED`: Canceled
  * - `INCOMPLETE`: Incomplete
  */
+/**
+ * Retry setting of a subscription.
+ * 
+ * - `enabled`: a failed charge is retried.
+ * - `disabled`: a failed charge is not retried.
+ */
+export type SubscriptionRetryMode = "enabled" | "disabled"
+
 export type SubscriptionStatus = "ACTIVE" | "RUNNING" | "CANCELED" | "INCOMPLETE"
 
 /**
