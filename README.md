@@ -4,6 +4,12 @@ fincode for Node.jsはJavaScript/TypeScriptプロジェクトにおけるfincode
 
 このライブラリはサーバーサイドNode.jsプロジェクトでの利用を想定しています。ブラウザ上で動作するアプリケーションにおいてfincodeを使用したい場合は[fincode for ES Module](https://github.com/fincode-byGMO/fincode-sdk-js.git)を利用できます。
 
+## v1 からの移行
+
+v2.0.0 では型定義をfincode APIの実際の挙動に合わせ直しました。破壊的変更を含みます。
+移行手順は [MIGRATION.md](./MIGRATION.md) を、変更の一覧は
+[CHANGELOG.md](./CHANGELOG.md) を参照してください。
+
 ## Getting Started
 
 プロジェクトでnpmを使っている場合、npm経由でfincode for Node.jsをインストールできます。
@@ -58,10 +64,10 @@ const fincode = createFincode({
         idempotentKey: "{{idempotent key}}"
     })
     // Execute a payment
-    const executedPayment = await fincode.payment.execute(
-        payment.id,
+    const executedPayment = await fincode.payments.execute(
+        createdPayment.id,
         {
-            pay_type: createdPayment.pay_type,
+            pay_type: "Card",
             access_id: createdPayment.access_id,
             customer_id: "{{id of customer}}",
             card_id: "{{id of customer's card}}",
