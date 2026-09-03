@@ -23,6 +23,11 @@ export type FincodeInitOptions = {
     version?: string;
     proxyAgent?: string | URL;
 
+    /**
+     * Request timeout in milliseconds. Defaults to 60000.
+     * 
+     * Pass `0` to wait indefinitely.
+     */
     timeout?: number;
 };
 

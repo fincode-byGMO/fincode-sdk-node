@@ -7,6 +7,14 @@ import { HttpsProxyAgent } from "https-proxy-agent"
 const BASE_URL = "https://api.fincode.jp"
 const BASE_URL_TEST = "https://api.test.fincode.jp"
 
+/**
+ * Timeout applied when `options.timeout` is not set, in milliseconds.
+ * 
+ * Without a timeout a request can hang indefinitely, which leaves the caller
+ * unable to tell whether a payment went through. Pass `0` to disable.
+ */
+const DEFAULT_TIMEOUT_MS = 60_000
+
 
 /**
  * Build a query string from a query parameter object.
@@ -116,7 +124,7 @@ const createFincodeRequestFetch = (
         headers: _headers,
         body: data,
         agent: config.options.proxyAgent ? new HttpsProxyAgent(config.options.proxyAgent) : undefined,
-        timeout: config.options.timeout,
+        timeout: config.options.timeout ?? DEFAULT_TIMEOUT_MS,
 
     }
     return () => fetch(url, options)
