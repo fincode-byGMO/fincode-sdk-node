@@ -7,16 +7,12 @@ import {
     PaymentBulkObject,
     RetrievingPaymentBulkDetailQueryParams,
     RetrievingPaymentBulkQueryParams,
-
-    APIErrorResponse,
-    FincodeAPIError,
-    FincodeSDKError,
     CreatingPaymentBulkRequest,
     CreatingPaymentBulkQueryParams,
 } from "../../types/index"
 import { FincodeConfig } from "./fincode"
-import { createFincodeRequestFetch, FincodeRequestHeaders } from "./http"
-import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_errorMessages"
+import { FincodeRequestHeaders } from "./http"
+import { executeRequest } from "./_request"
 import { generateUUIDv4 } from "./../../utils/random"
 
 class PaymentBulk {
@@ -54,40 +50,16 @@ class PaymentBulk {
             }
         )
 
-        const fetch = createFincodeRequestFetch(
-            this._config,
-            "POST",
-            "/v1/payments/bulk",
-            formData,
-            {
+        return executeRequest<PaymentBulkObject>(this._config, "POST", "/v1/payments/bulk", {
+            body: formData,
+            headers: {
                 ...headers,
-                contentType: `multipart/form-data; boundary=${formData.getBoundary()}`
+                contentType: `multipart/form-data; boundary=${formData.getBoundary()}`,
             },
-            {
+            queryParams: {
                 pay_type: queryParams.pay_type,
                 process_plan_date: queryParams.process_plan_date,
             },
-        )
-
-        return new Promise((resolve, reject) => {
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const bulk = json as PaymentBulkObject
-                        resolve(bulk)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const err = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(err)
-                    }
-                }).catch((e) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
         })
     }
 
@@ -105,34 +77,10 @@ class PaymentBulk {
         queryParams?: RetrievingPaymentBulkQueryParams,
         headers?: FincodeRequestHeaders,
     ): Promise<ListResponse<PaymentBulkObject>> {
-        const fetch = createFincodeRequestFetch(
-            this._config,
-            "GET",
-            "/v1/payments/bulk",
-            undefined,
+
+        return executeRequest<ListResponse<PaymentBulkObject>>(this._config, "GET", "/v1/payments/bulk", {
             headers,
             queryParams,
-        )
-
-        return new Promise((resolve, reject) => {
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const bulkList = json as ListResponse<PaymentBulkObject>
-                        resolve(bulkList)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const err = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(err)
-                    }
-                }).catch((e) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
         })
     }
 
@@ -153,34 +101,9 @@ class PaymentBulk {
         headers?: FincodeRequestHeaders,
     ): Promise<ListWithErrors<PaymentBulkDetailObject>> {
 
-        const fetch = createFincodeRequestFetch(
-            this._config,
-            "GET",
-            `/v1/payments/bulk/${id}`,
-            undefined,
+        return executeRequest<ListWithErrors<PaymentBulkDetailObject>>(this._config, "GET", `/v1/payments/bulk/${id}`, {
             headers,
             queryParams,
-        )
-
-        return new Promise((resolve, reject) => {
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const bulkDetailList = json as ListWithErrors<PaymentBulkDetailObject>
-                        resolve(bulkDetailList)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const err = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(err)
-                    }
-                }).catch((e) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
         })
     }
 
@@ -199,34 +122,8 @@ class PaymentBulk {
         headers?: FincodeRequestHeaders,
     ): Promise<DeletingPaymentBulkResponse> {
 
-        const fetch = createFincodeRequestFetch(
-            this._config,
-            "DELETE",
-            `/v1/payments/bulk/${id}`,
-            undefined,
+        return executeRequest<DeletingPaymentBulkResponse>(this._config, "DELETE", `/v1/payments/bulk/${id}`, {
             headers,
-            undefined,
-        )
-
-        return new Promise((resolve, reject) => {
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const deleteResult = json as DeletingPaymentBulkResponse
-                        resolve(deleteResult)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const err = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(err)
-                    }
-                }).catch((e) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
         })
     }
 }
