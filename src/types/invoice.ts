@@ -35,6 +35,9 @@ export type InvoiceCustomer = {
      */
     name?: string | null
 
+    /**
+     * Email address.
+     */
     email?: string | null
 
     /**
@@ -47,10 +50,25 @@ export type InvoiceCustomer = {
      */
     addr_state?: string | null
 
+    /**
+     * City of the address.
+     */
     addr_city?: string | null
+    /**
+     * Town and block of the address.
+     */
     addr_line_1?: string | null
+    /**
+     * Building and room number of the address.
+     */
     addr_line_2?: string | null
+    /**
+     * Rest of the address.
+     */
     addr_line_3?: string | null
+    /**
+     * Postal code of the address.
+     */
     addr_post_code?: string | null
 }
 
@@ -58,6 +76,9 @@ export type InvoiceCustomer = {
  * Issuer of an invoice.
  */
 export type InvoiceIssuer = {
+    /**
+     * Issuer name.
+     */
     name?: string | null
 
     /**
@@ -70,12 +91,33 @@ export type InvoiceIssuer = {
      */
     addr_state?: string | null
 
+    /**
+     * City of the address.
+     */
     addr_city?: string | null
+    /**
+     * Town and block of the address.
+     */
     addr_line_1?: string | null
+    /**
+     * Building and room number of the address.
+     */
     addr_line_2?: string | null
+    /**
+     * Rest of the address.
+     */
     addr_line_3?: string | null
+    /**
+     * Postal code of the address.
+     */
     addr_post_code?: string | null
+    /**
+     * Email address.
+     */
     email?: string | null
+    /**
+     * Phone number.
+     */
     phone_number?: string | null
 }
 
@@ -93,6 +135,9 @@ export type InvoiceLine = {
      */
     name?: string | null
 
+    /**
+     * Unit price.
+     */
     unit_price?: number | null
     quantity?: number | null
 
@@ -158,10 +203,25 @@ export type InvoiceVirtualAccount = {
  * Paying into this account settles the invoice.
  */
 export type InvoiceEmbeddedVirtualAccount = {
+    /**
+     * Virtual account ID.
+     */
     virtual_account_id?: string | null
+    /**
+     * Branch name.
+     */
     branch_name?: string | null
+    /**
+     * Branch code.
+     */
     branch_code?: string | null
+    /**
+     * Account number.
+     */
     account_number?: string | null
+    /**
+     * Account holder name.
+     */
     account_name?: string | null
 }
 
@@ -169,6 +229,9 @@ export type InvoiceEmbeddedVirtualAccount = {
  * Direct debit settings of an invoice.
  */
 export type InvoiceDirectDebit = {
+    /**
+     * Payment method ID of the bank account the debit is taken from.
+     */
     payment_method_id?: string | null
 
     /**
@@ -204,12 +267,33 @@ export type InvoiceDirectDebit = {
  * Bank account the invoice is debited from.
  */
 export type InvoiceEmbeddedDirectDebit = {
+    /**
+     * Bank name.
+     */
     bank_name?: string | null
+    /**
+     * Bank code.
+     */
     bank_code?: string | null
+    /**
+     * Branch name.
+     */
     branch_name?: string | null
+    /**
+     * Branch code.
+     */
     branch_code?: string | null
+    /**
+     * Account type.
+     */
     account_type?: string | null
+    /**
+     * Account number.
+     */
     account_number?: string | null
+    /**
+     * Account holder name in katakana.
+     */
     account_name_kana?: string | null
 }
 
@@ -241,8 +325,14 @@ export type InvoiceBackfill = {
  * Invoice Object
  */
 export type InvoiceObject = {
+    /**
+     * Invoice ID.
+     */
     id: string
 
+    /**
+     * Status of this invoice.
+     */
     status?: InvoiceStatus | null
 
     /**
@@ -294,6 +384,9 @@ export type InvoiceObject = {
      */
     invoice_number?: string | null
 
+    /**
+     * Customer (billed party) ID.
+     */
     customer_id?: string | null
 
     /**
@@ -301,6 +394,9 @@ export type InvoiceObject = {
      */
     customer_honorific?: string | null
 
+    /**
+     * Customer (billed party) registered in fincode.
+     */
     customer?: InvoiceCustomer | null
 
     /**
@@ -308,6 +404,9 @@ export type InvoiceObject = {
      */
     customer_overwrite?: InvoiceCustomer | null
 
+    /**
+     * Issuer of this invoice.
+     */
     issuer?: InvoiceIssuer | null
 
     /**
@@ -322,10 +421,19 @@ export type InvoiceObject = {
      */
     issue_date?: string | null
 
+    /**
+     * Lines of this invoice.
+     */
     lines?: InvoiceLine[] | null
 
+    /**
+     * Total amount of the lines.
+     */
     total_amount?: number | null
 
+    /**
+     * Total amount billed.
+     */
     billing_total_amount?: number | null
 
     /**
@@ -333,12 +441,24 @@ export type InvoiceObject = {
      */
     pay_types?: InvoicePayType[] | null
 
+    /**
+     * How the amount of each line is given.
+     */
     input_type?: InvoiceInputType | null
 
+    /**
+     * Card payment settings.
+     */
     card?: InvoiceCard | null
 
+    /**
+     * Bank transfer (virtual account) settings.
+     */
     virtual_account?: InvoiceVirtualAccount | null
 
+    /**
+     * Virtual account issued for this invoice.
+     */
     embedded_virtual_account?: InvoiceEmbeddedVirtualAccount | null
 
     /**
@@ -356,6 +476,9 @@ export type InvoiceObject = {
      */
     due_date?: string | null
 
+    /**
+     * Note.
+     */
     memo?: string | null
 
     /**
@@ -377,6 +500,8 @@ export type InvoiceObject = {
 
     /**
      * Date the payment completed.
+     * 
+     * Format: `yyyy/MM/dd HH:mm:ss.SSS`
      */
     transaction_date?: string | null
 
@@ -385,10 +510,19 @@ export type InvoiceObject = {
      */
     bill_id?: string | null
 
+    /**
+     * Direct debit settings.
+     */
     directdebit?: InvoiceDirectDebit | null
 
+    /**
+     * Bank account this invoice is debited from.
+     */
     embedded_directdebit?: InvoiceEmbeddedDirectDebit | null
 
+    /**
+     * Payment this invoice was attached to after the fact.
+     */
     invoice_backfill?: InvoiceBackfill | null
 
     /**
@@ -417,8 +551,14 @@ export type InvoiceObject = {
  * settings.
  */
 export type InvoiceListItemObject = {
+    /**
+     * Invoice ID.
+     */
     id: string
 
+    /**
+     * Status of this invoice.
+     */
     status?: InvoiceStatus | null
 
     /**
@@ -446,8 +586,14 @@ export type InvoiceListItemObject = {
      */
     bill_id?: string | null
 
+    /**
+     * Payment this invoice was attached to after the fact.
+     */
     invoice_backfill?: InvoiceBackfill | null
 
+    /**
+     * Customer (billed party) ID.
+     */
     customer_id?: string | null
 
     /**
@@ -467,8 +613,14 @@ export type InvoiceListItemObject = {
      */
     issue_date?: string | null
 
+    /**
+     * Total amount of the lines.
+     */
     total_amount?: number | null
 
+    /**
+     * Total amount billed.
+     */
     billing_total_amount?: number | null
 
     /**
@@ -502,6 +654,8 @@ export type InvoiceListItemObject = {
 
     /**
      * Date the payment completed.
+     * 
+     * Format: `yyyy/MM/dd HH:mm:ss.SSS`
      */
     transaction_date?: string | null
 
@@ -660,6 +814,9 @@ type InvoiceRequestCommonFields = {
      */
     invoice_number?: string | null
 
+    /**
+     * Customer (billed party) ID.
+     */
     customer_id?: string | null
 
     /**
@@ -696,8 +853,14 @@ type InvoiceRequestCommonFields = {
      */
     due_date?: string | null
 
+    /**
+     * Note.
+     */
     memo?: string | null
 
+    /**
+     * Lines of this invoice.
+     */
     lines?: InvoiceLine[] | null
 
     /**
@@ -705,8 +868,14 @@ type InvoiceRequestCommonFields = {
      */
     pay_types?: InvoicePayType[] | null
 
+    /**
+     * How the amount of each line is given.
+     */
     input_type?: InvoiceInputType | null
 
+    /**
+     * Card payment settings.
+     */
     card?: Modify<InvoiceCard, {
         /**
          * Job code.
@@ -717,6 +886,9 @@ type InvoiceRequestCommonFields = {
         job_code?: "AUTH" | "CAPTURE" | null
     }> | null
 
+    /**
+     * Bank transfer (virtual account) settings.
+     */
     virtual_account?: InvoiceVirtualAccount | null
 
     /**
