@@ -1,6 +1,7 @@
 export * from "./account"
 export * from "./bulk.payment"
 export * from "./card"
+export * from "./chargeback"
 export * from "./contract"
 export * from "./customer"
 export * from "./error"
