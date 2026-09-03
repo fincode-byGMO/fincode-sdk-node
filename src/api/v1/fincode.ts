@@ -11,6 +11,7 @@ import { Subscription } from "./subscription";
 import { Tenant } from "./tenant";
 import { WebhookSetting } from "./webhookSetting";
 import { Account } from "./account";
+import { ChangeRequest } from "./changeRequest"
 import { Chargeback } from "./chargeback"
 import { Invoice } from "./invoice"
 import { PaymentMethod } from "./paymentMethod";
@@ -106,6 +107,7 @@ class Fincode {
         this._paymentMethods = new PaymentMethod(this.config);
         this._invoices = new Invoice(this.config);
         this._chargebacks = new Chargeback(this.config);
+        this._changeRequests = new ChangeRequest(this.config);
     }
 
     private _accounts: Account;
@@ -181,6 +183,11 @@ class Fincode {
     private _chargebacks: Chargeback;
     get chargebacks(): Chargeback {
         return this._chargebacks;
+    }
+
+    private _changeRequests: ChangeRequest;
+    get changeRequests(): ChangeRequest {
+        return this._changeRequests;
     }
 
     private _paymentMethods: PaymentMethod;
