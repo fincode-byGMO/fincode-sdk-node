@@ -264,7 +264,11 @@ export type CardWebhookNotification = {
      */
     process_type?: "I" | "U" | null
 
-    event?: string | null
+    /**
+     * - `card.regist`: the card was registered.
+     * - `card.update`: the card was updated.
+     */
+    event?: Extract<WebhookEvent, "card.regist" | "card.update"> | null
 }
 
 /**
@@ -353,19 +357,6 @@ export type DirectDebitSubscriptionWebhookNotification = SubscriptionWebhookComm
 }
 
 /**
- * Webhook Notification for the recurring charge batch
- * 
- * for
- * - `recurring.**`
- * 
- * Only the card batch reports whether a retry is scheduled, so branch on
- * `pay_type` to read it.
- */
-export type RecurringWebhookNotification =
-    | CardRecurringWebhookNotification
-    | DirectDebitRecurringWebhookNotification
-
-/**
  * Fields both recurring batch notifications carry.
  */
 type RecurringWebhookCommonFields = {
@@ -393,6 +384,19 @@ type RecurringWebhookCommonFields = {
      */
     charge_date?: string | null
 }
+/**
+ * Webhook Notification for the recurring charge batch
+ * 
+ * for
+ * - `recurring.**`
+ * 
+ * Only the card batch reports whether a retry is scheduled, so branch on
+ * `pay_type` to read it.
+ */
+export type RecurringWebhookNotification =
+    | CardRecurringWebhookNotification
+    | DirectDebitRecurringWebhookNotification
+
 
 /**
  * Webhook Notification for the card recurring charge batch
@@ -418,20 +422,6 @@ export type DirectDebitRecurringWebhookNotification = RecurringWebhookCommonFiel
 }
 
 /**
- * Webhook Notification for Bulk Payment API
- * 
- * for
- * - `payments.bulk.**`
- * 
- * Registering a file and running the batch report different counts, so branch
- * on `event`. Unlike the other notifications, the shape here follows the
- * operation rather than `pay_type`.
- */
-export type PaymentBulkWebhookNotification =
-    | RegisteringPaymentBulkWebhookNotification
-    | BatchPaymentBulkWebhookNotification
-
-/**
  * Fields both bulk payment notifications carry.
  */
 type PaymentBulkWebhookCommonFields = {
@@ -450,6 +440,20 @@ type PaymentBulkWebhookCommonFields = {
      */
     pay_type?: Extract<PayType, "Card" | "Virtualaccount"> | null
 }
+/**
+ * Webhook Notification for Bulk Payment API
+ * 
+ * for
+ * - `payments.bulk.**`
+ * 
+ * Registering a file and running the batch report different counts, so branch
+ * on `event`. Unlike the other notifications, the shape here follows the
+ * operation rather than `pay_type`.
+ */
+export type PaymentBulkWebhookNotification =
+    | RegisteringPaymentBulkWebhookNotification
+    | BatchPaymentBulkWebhookNotification
+
 
 /**
  * Webhook Notification for registering a bulk payment file
@@ -510,7 +514,10 @@ export type BatchPaymentBulkWebhookNotification = PaymentBulkWebhookCommonFields
  */
 export type ContractWebhookNotification = {
     shop_id?: string | null
-    event?: string | null
+    /**
+     * - `contracts.status_code.updated`: the contract status changed.
+     */
+    event?: Extract<WebhookEvent, "contracts.status_code.updated"> | null
     body?: ContractInformation[] | null
 }
 
