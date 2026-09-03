@@ -1,17 +1,13 @@
 import {
     ListResponse,
-
-    APIErrorResponse,
-    FincodeAPIError,
-    FincodeSDKError,
     CreatingWebhookSettingRequest,
     WebhookSettingObject,
     UpdatingWebhookSettingRequest,
     DeletingWebhookSettingResponse,
 } from "../../types/index";
-import { FincodeRequestHeaders, createFincodeRequestFetch } from "./http";
+import { FincodeRequestHeaders } from "./http";
 import { FincodeConfig } from "./fincode";
-import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_errorMessages";
+import { executeRequest } from "./_request";
 
 
 export class WebhookSetting {
@@ -37,34 +33,9 @@ export class WebhookSetting {
         body: CreatingWebhookSettingRequest,
         headers?: FincodeRequestHeaders,
     ): Promise<WebhookSettingObject> {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "POST",
-                `/v1/webhook_settings`,
-                JSON.stringify(body),
-                headers,
-                undefined,
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const res = json as WebhookSettingObject
-                        resolve(res)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(e)
-                    }
-                }).catch((e: unknown) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e: unknown) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
+        return executeRequest<WebhookSettingObject>(this._config, "POST", `/v1/webhook_settings`, {
+            body: JSON.stringify(body),
+            headers,
         })
     }
 
@@ -83,34 +54,8 @@ export class WebhookSetting {
         id: string,
         headers?: FincodeRequestHeaders,
     ): Promise<WebhookSettingObject> {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "GET",
-                `/v1/webhook_settings/${id}`,
-                undefined,
-                headers,
-                undefined,
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const res = json as WebhookSettingObject
-                        resolve(res)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(e)
-                    }
-                }).catch((e: unknown) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e: unknown) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
+        return executeRequest<WebhookSettingObject>(this._config, "GET", `/v1/webhook_settings/${id}`, {
+            headers,
         })
     }
 
@@ -126,34 +71,8 @@ export class WebhookSetting {
     public retrieveList(
         headers?: FincodeRequestHeaders,
     ): Promise<Pick<ListResponse<WebhookSettingObject>, "list">> {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "GET",
-                `/v1/webhook_settings`,
-                undefined,
-                headers,
-                undefined,
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const res = json as ListResponse<WebhookSettingObject>
-                        resolve(res)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(e)
-                    }
-                }).catch((e: unknown) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e: unknown) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
+        return executeRequest<Pick<ListResponse<WebhookSettingObject>, "list">>(this._config, "GET", `/v1/webhook_settings`, {
+            headers,
         })
     }
 
@@ -174,34 +93,9 @@ export class WebhookSetting {
         body: UpdatingWebhookSettingRequest,
         headers?: FincodeRequestHeaders,
     ): Promise<WebhookSettingObject> {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "PUT",
-                `/v1/webhook_settings/${id}`,
-                JSON.stringify(body),
-                headers,
-                undefined,
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const res = json as WebhookSettingObject
-                        resolve(res)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(e)
-                    }
-                }).catch((e: unknown) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e: unknown) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
+        return executeRequest<WebhookSettingObject>(this._config, "PUT", `/v1/webhook_settings/${id}`, {
+            body: JSON.stringify(body),
+            headers,
         })
     }
 
@@ -219,34 +113,8 @@ export class WebhookSetting {
         id: string,
         headers?: FincodeRequestHeaders,
     ): Promise<DeletingWebhookSettingResponse> {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "DELETE",
-                `/v1/webhook_settings/${id}`,
-                undefined,
-                headers,
-                undefined,
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const res = json as DeletingWebhookSettingResponse
-                        resolve(res)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(e)
-                    }
-                }).catch((e: unknown) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e: unknown) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
+        return executeRequest<DeletingWebhookSettingResponse>(this._config, "DELETE", `/v1/webhook_settings/${id}`, {
+            headers,
         })
     }
 }

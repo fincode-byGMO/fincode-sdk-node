@@ -1,14 +1,10 @@
 import {
     CreatingPaymentSessionRequest,
     PaymentSessionObject,
-
-    APIErrorResponse,
-    FincodeAPIError,
-    FincodeSDKError,
 } from "../../types/index"
 import { FincodeConfig } from "./fincode"
-import { createFincodeRequestFetch, FincodeRequestHeaders } from "./http"
-import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_errorMessages"
+import { FincodeRequestHeaders } from "./http"
+import { executeRequest } from "./_request"
 
 class PaymentSession {
 
@@ -32,34 +28,9 @@ class PaymentSession {
         body: CreatingPaymentSessionRequest,
         headers?: FincodeRequestHeaders
     ): Promise<PaymentSessionObject> {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "POST",
-                "/v1/sessions",
-                JSON.stringify(body),
-                headers,
-                undefined,
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const session = json as PaymentSessionObject
-                        resolve(session)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(e)
-                    }
-                }).catch((e: unknown) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e: unknown) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
+        return executeRequest<PaymentSessionObject>(this._config, "POST", "/v1/sessions", {
+            body: JSON.stringify(body),
+            headers,
         })
     }
 }

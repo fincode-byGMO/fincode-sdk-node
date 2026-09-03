@@ -1,14 +1,10 @@
 import {
     CreatingCardRegistrationSessionRequest,
     CardRegistrationSessionObject,
-
-    APIErrorResponse,
-    FincodeAPIError,
-    FincodeSDKError,
 } from "../../types/index"
 import { FincodeConfig } from "./fincode"
-import { createFincodeRequestFetch, FincodeRequestHeaders } from "./http"
-import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_errorMessages"
+import { FincodeRequestHeaders } from "./http"
+import { executeRequest } from "./_request"
 
 class CardRegistrationSession {
 
@@ -32,34 +28,9 @@ class CardRegistrationSession {
         body: CreatingCardRegistrationSessionRequest,
         headers?: FincodeRequestHeaders
     ): Promise<CardRegistrationSessionObject> {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "POST",
-                "/v1/card_sessions",
-                JSON.stringify(body),
-                headers,
-                undefined,
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const session = json as CardRegistrationSessionObject
-                        resolve(session)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(e)
-                    }
-                }).catch((e: unknown) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e: unknown) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
+        return executeRequest<CardRegistrationSessionObject>(this._config, "POST", "/v1/card_sessions", {
+            body: JSON.stringify(body),
+            headers,
         })
     }
 }
