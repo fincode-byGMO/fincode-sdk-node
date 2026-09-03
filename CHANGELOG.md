@@ -2,14 +2,38 @@
 
 ## 2.0.0
 
-型定義をfincode APIの実際の挙動に合わせ直したメジャーリリースです。移行手順は
-[MIGRATION.md](./MIGRATION.md) を参照してください。
+型定義をfincode APIの実際の挙動に合わせ直し、通信部分を作り直したメジャー
+リリースです。移行手順は [MIGRATION.md](./MIGRATION.md) を参照してください。
 
-コンパイルエラーにならない変更が3つあります。口座振替の預金区分の値、
-クエリパラメータのリストの送信形式、数値と文字列を取り違えていた項目です。
-移行ガイドの冒頭にまとめています。
+**Node.js 20.18.1 以上が必要になります。**
+
+コンパイルエラーにならない変更が4つあります。口座振替の預金区分の値、
+クエリパラメータのリストの送信形式、数値と文字列を取り違えていた項目、
+リクエストのタイムアウトの既定値です。移行ガイドの冒頭にまとめています。
+
+### セキュリティ
+
+`FincodeConfig` がAPIキーを文字列で持っていたため、`JSON.stringify(fincode)` や
+`console.log(fincode)` にシークレットキーが出力されていました。各リソースクラスも
+同じ `config` を持つので、1インスタンスあたり15回出力されます。`apiKey` を
+`getApiKey(): string` に変えました。関数は `JSON.stringify` の出力に含まれません。
 
 ### 修正
+
+リクエストのタイムアウトに既定値（60秒）を設けました。`options.timeout` を
+指定しない場合、node-fetch に `undefined` が渡って無制限として扱われ、応答が
+返らないリクエストが返らないまま残っていました。決済SDKでは、応答が返らないと
+決済が成立したか判断できません。`0` を渡せば従来どおり無制限になります。
+
+`tenants.retrieveExaminationInfoV2` が通信エラーのときに解決しませんでした。
+通信エラーの catch が JSON 解析の catch に連鎖しており、外側に catch が
+無かったためです。接続に失敗すると Promise が永久に未解決のまま残っていました。
+
+決済手段とプランの6メソッドが、通信エラーを `FincodeSDKError` に包まずそのまま
+reject していました。同じ失敗が呼び出し箇所によって違う型で返っていました。
+
+`FincodeAPIError` と `FincodeSDKError` が `Error` を継承していなかったため、
+`instanceof Error` が `false` で、スタックトレースも持っていませんでした。
 
 送信・返却されるキー名が誤っていた項目を直しました。いずれも値がAPIに届かない、
 あるいは常に `undefined` になっていました。
@@ -92,9 +116,30 @@ enum に不足していた値を追加しました。`PayType` の `Googlepay`�
 
 `buildQueryString` の引数の型を `any` から `unknown` にしました。
 
+HTTPクライアントを node-fetch から undici に置き換えました。`node-fetch`、
+`https-proxy-agent`、`form-data` の3つの依存が undici 1つになり、transitive を
+含めると14パッケージから1パッケージになります。`options.proxyAgent` の指定方法は
+変わりません。プロキシごとに `ProxyAgent` を作り直さず使い回すようにしたので、
+呼び出しごとのTLSハンドシェイクが無くなります。
+
+`FincodeSDKError` に `kind` を持たせました。タイムアウト（`timeout`）、通信失敗
+（`network`）、本文がJSONでない（`response_body`）、それ以外（`unknown`）を
+区別できます。v1 では区別する手段が node-fetch の内部表現である `e.child.type`
+しかありませんでした。本文がJSONでない場合はHTTPステータスも `status` に残ります。
+
+通信の内部実装を公開APIから外しました。`buildQueryString`、
+`createFincodeRequestURL`、`createFincodeRequestFetch`、
+`createFincodeRequestHeader`、型 `FincodeRequestHeader` です。
+
+68メソッドが持っていた同一の定型処理を共通の1箇所にまとめました。公開型は
+変わりません。
+
 ### テスト
 
 クエリ文字列の組み立てのユニットテストを3件から10件に増やしました。
+
+リクエストの送信と失敗の分類のユニットテストを8件追加しました。応答なし・
+非JSON応答・タイムアウト・接続失敗をそれぞれ再現します。認証情報なしで動きます。
 
 ## 1.1.0 以前
 

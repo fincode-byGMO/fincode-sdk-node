@@ -1,10 +1,14 @@
 # v1 から v2 への移行
 
-v2.0.0 では、型定義をfincode APIの実際の挙動に合わせ直しました。変更の大半は
-型定義に閉じており、ランタイムの動作が変わるのはクエリパラメータの送信形式だけです。
+v2.0.0 では、型定義をfincode APIの実際の挙動に合わせ直し、あわせて通信部分を
+作り直しました。
+
+**Node.js 20.18.1 以上が必要になります。** HTTPクライアントを node-fetch から
+undici に変えたためです。`node-fetch`、`https-proxy-agent`、`form-data` への依存は
+なくなりました。
 
 移行にあたっては、まず `tsc` を通してください。誤った名前や型はコンパイルエラーに
-なります。ただし **コンパイルエラーにならない変更が3つ** あるので、そちらは
+なります。ただし **コンパイルエラーにならない変更が4つ** あるので、そちらは
 先に確認してください。
 
 ---
@@ -64,6 +68,28 @@ Webhook通知の `succeeded` / `failed` / `total` / `error_total_count` /
 `regist_total_count` / `succeeded_count` / `failed_count` / `total_count` は
 文字列で届きます。v1 の型に従って数値として足し算していた場合、文字列連結に
 なっていました。
+
+---
+
+### リクエストのタイムアウト
+
+タイムアウトの既定値が60秒になりました。v1 では `options.timeout` を指定しない
+場合、node-fetch に `undefined` が渡って「無制限」として扱われ、応答が返らない
+リクエストが返らないまま残っていました。
+
+決済SDKでこれが問題になるのは、応答が返らないと決済が成立したか判断できないこと
+です。60秒で打ち切り、`FincodeSDKError` を返します。
+
+60秒を超える呼び出しがある場合は `options.timeout` で調整してください。`0` を
+渡すと v1 と同じ無制限になります。
+
+```ts
+const fincode = createFincode({
+    apiKey: "...",
+    isLiveMode: true,
+    options: { timeout: 120000 },  // 2分
+})
+```
 
 ---
 
@@ -297,3 +323,122 @@ APIが受け取らない、あるいは返さない項目です。指定して�
 カードのWebhook通知には代わりに `customer_id` と `process_type` が入りました。
 `process_type` は登録（`I`）と更新（`U`）を区別する項目で、`card.regist` と
 `card.update` を同じエンドポイントで受ける場合に必要になります。
+
+---
+
+## 10. エラーの扱い
+
+### Error を継承するようになりました
+
+`FincodeAPIError` と `FincodeSDKError` が `Error` を継承していなかったため、
+`instanceof Error` が `false` になり、スタックトレースも持っていませんでした。
+エラー監視に渡しても Error として扱われません。
+
+```ts
+// v1
+catch (e) {
+    e instanceof Error   // false
+    e.stack              // undefined
+}
+
+// v2
+catch (e) {
+    e instanceof Error   // true
+    e.stack              // あり
+}
+```
+
+`e instanceof Error` で分岐して SDK のエラーを取りこぼしていた場合、v2 では
+そちらの分岐に入るようになります。
+
+### FincodeSDKError に失敗の種類が付きました
+
+v1 ではタイムアウトも接続失敗もJSONの解析失敗も、すべて
+`FincodeSDKError("Error fetching data")` になっていました。区別するには
+`e.child.type` を読むしかなく、これは node-fetch の内部表現です。
+
+`kind` を見てください。
+
+| `kind` | 意味 |
+|:--|:--|
+| `timeout` | `options.timeout` 内に終わらなかった |
+| `network` | fincode に届かなかった（名前解決・接続・TLS） |
+| `response_body` | 応答は来たが本文がJSONではなかった |
+| `unknown` | それ以外 |
+
+```ts
+catch (e) {
+    if (e instanceof FincodeSDKError && e.kind === "timeout") {
+        // リクエストが fincode に届いている可能性があります。
+        // 決済登録なら、決済が成立しているかを一覧取得で確かめてください。
+    }
+}
+```
+
+`timeout` と `network` の違いは再送の判断で逆になります。`network` は届いて
+いないので同じリクエストを送り直せますが、`timeout` は届いているかもしれません。
+
+再送可否そのものはSDKが持ちません。同じ失敗でも、決済登録の再送は二重決済に
+なりうる一方で一覧取得なら安全で、冪等キーの有無でも変わるため、SDKが一律に
+決められる値ではないという判断です。
+
+本文がJSONでない場合は `status` にHTTPステータスが入ります。fincode 自身はJSONを
+返しますが、手前のプロキシやWAFが 502 や 503 でHTMLを返すことがあります。
+
+### コンストラクタと child の型が変わりました
+
+```ts
+// v1
+new FincodeSDKError(message, thrownObject)
+// v2
+new FincodeSDKError(message, kind, { status, child })
+```
+
+`child` の型が `any` から `unknown` になったため、`e.child.type` のような参照は
+キャストが必要です。中身も node-fetch の `FetchError` から undici のエラーに
+変わっています。`kind` を見れば、HTTPクライアントに依存せず判定できます。
+
+`message` の文字列も種類ごとに変わりました。文字列で分岐していた場合は `kind` に
+置き換えてください。
+
+---
+
+## 11. FincodeConfig の apiKey
+
+`FincodeConfig.apiKey` が `getApiKey(): string` に変わりました。
+
+v1 は `config` にAPIキーを文字列で持っていたため、`JSON.stringify(fincode)` や
+`console.log(fincode)` にシークレットキーがそのまま出ていました。各リソースクラスも
+同じ `config` を持つので、1インスタンスあたり15回出力されます。
+
+```
+JSON.stringify(fincode)
+  {"config":{"isLiveMode":false,"apiKey":"m_test_...","options":{}},
+   "_customers":{"_config":{"isLiveMode":false,"apiKey":"m_test_...
+```
+
+関数は `JSON.stringify` の出力に含まれず、`util.inspect` にも `[Function]` として
+しか出ません。取り出す経路は `config.getApiKey()` として残しています。
+
+`FincodeConfig` を自分で組み立てていた場合は修正が必要です。`createFincode` に
+`apiKey` を渡す通常の使い方には影響しません。
+
+---
+
+## 12. import できなくなった識別子
+
+通信の内部実装が公開APIに出ていたので、公開から外しました。
+
+| 識別子 | 用途 |
+|:--|:--|
+| `buildQueryString` | クエリ文字列の組み立て |
+| `createFincodeRequestURL` | URLの組み立て |
+| `createFincodeRequestFetch` | fetch の組み立て |
+| `createFincodeRequestHeader` | ヘッダの組み立て |
+| `FincodeRequestHeader`（型） | `Record<string, string>` の別名 |
+
+各メソッドの引数に現れる `FincodeRequestHeaders`（末尾が s）は引き続き import
+できます。
+
+SDKが未対応のエンドポイントを `createFincodeRequestFetch` で直接叩いていた場合は
+影響します。

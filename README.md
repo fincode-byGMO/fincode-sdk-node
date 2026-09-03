@@ -46,7 +46,7 @@ const fincode = createFincode({
     options: {   
         // API Version
         version: "20211101",
-        // Timeout
+        // Timeout in milliseconds. Defaults to 60000. Pass 0 to wait indefinitely.
         timeout: 10000,
         // Proxy
         proxyAgent: "http://url.to.proxy:8080"
@@ -250,4 +250,4 @@ fincodeインスタンスが持つメソッドは下記のように各APIと対�
 
 | 環境    | バージョン |
 | :------ | :--------- |
-| Node.js | >=12.0.0   |
+| Node.js | >=20.18.1  |
