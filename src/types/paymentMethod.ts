@@ -213,12 +213,9 @@ type PaymentMethodCard = {
      * Whether the ACS was called during 3D Secure authentication.
      */
     acs?: string | null
+
     /**
      * Whether the card updater keeps this card's details up to date.
-     * 
-     * - `enabled`: update this card.
-     * - `disabled`: do not update this card.
-     * - `inherit`: follow the shop setting.
      */
     card_updater_mode?: CardUpdaterMode | null
 
@@ -235,7 +232,6 @@ type PaymentMethodCard = {
      * Format: `yyyy/MM/dd HH:mm:ss.SSS`
      */
     card_updater_last_attempt_date?: string | null
-
 }
 
 type PaymentMethodDirectDebit = {
@@ -249,9 +245,6 @@ type PaymentMethodDirectDebit = {
 
     /**
      * Transfer service this bank account is registered with.
-     * 
-     * - `1`: Direct debit on the 5th, 6th, 23rd and 27th.
-     * - `2`: Direct debit on the 1st, 5th, 20th and 26th.
      */
     settlement_route?: DirectDebitSettlementRoute | null
 
@@ -483,10 +476,6 @@ export type CreatingPaymentMethodRequest = {
 
         /**
          * Whether the card updater should keep this card's details up to date.
-         * 
-         * - `enabled`: update this card.
-         * - `disabled`: do not update this card.
-         * - `inherit`: follow the shop setting.
          */
         card_updater_mode?: CardUpdaterMode | null
 

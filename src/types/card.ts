@@ -12,8 +12,8 @@ import { Pagination } from "./pagination"
 export type CardUpdaterMode = "enabled" | "disabled" | "inherit"
 
 /**
-     * Card object
-     */
+ * Card object
+ */
 export type CardObject = {
     /**
      * Customer ID of customer who owns this card.
@@ -99,10 +99,6 @@ export type CardObject = {
 
     /**
      * Whether the card updater keeps this card's details up to date.
-     * 
-     * - `enabled`: update this card.
-     * - `disabled`: do not update this card.
-     * - `inherit`: follow the shop setting.
      */
     card_updater_mode?: CardUpdaterMode | null
 
@@ -177,15 +173,11 @@ export type CreatingCardRequest = {
      * Security code (CVC/CVV)
      */
     security_code?: string | null
+
     /**
      * Whether the card updater should keep this card's details up to date.
-     * 
-     * - `enabled`: update this card.
-     * - `disabled`: do not update this card.
-     * - `inherit`: follow the shop setting.
      */
     card_updater_mode?: CardUpdaterMode | null
-
 }
 
 /**
@@ -216,17 +208,13 @@ export type UpdatingCardRequest = {
      * Format: YYMM
      */
     expire?: string | null
+
     /**
      * Whether the card updater should keep this card's details up to date.
      * 
      * Only updated when given.
-     * 
-     * - `enabled`: update this card.
-     * - `disabled`: do not update this card.
-     * - `inherit`: follow the shop setting.
      */
     card_updater_mode?: CardUpdaterMode | null
-
 }
 
 /**

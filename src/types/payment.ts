@@ -146,15 +146,11 @@ export type PaymentObject = {
 
     /**
      * Bill ID
-     * 
-     * Set when this payment was created from an invoice.
      */
     bill_id?: string | null
 
     /**
      * Invoice ID
-     * 
-     * Set when this payment was created from an invoice.
      */
     invoice_id?: string | null
 
@@ -601,9 +597,6 @@ export type PaymentObject = {
 
     /**
      * Transfer service the bank account used in this payment is registered with.
-     * 
-     * - `1`: Direct debit on the 5th, 6th, 23rd and 27th.
-     * - `2`: Direct debit on the 1st, 5th, 20th and 26th.
      */
     settlement_route?: DirectDebitSettlementRoute | null
 

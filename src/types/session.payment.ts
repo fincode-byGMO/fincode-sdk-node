@@ -1,16 +1,6 @@
 /**
- * Payment methods that can be offered on a payment session (redirect) page.
- * 
- * - `Card`: Card payment
- * - `Konbini`: Konbini payment
- * - `Paypay`: PayPay payment
- * - `Virtualaccount`: Bank transfer (virtual account) payment
+ * Payment session object
  */
-export type PaymentSessionPayType = "Card" | "Konbini" | "Paypay" | "Virtualaccount"
-
-/**
-     * Payment session object
-     */
 export type PaymentSessionObject = {
     /** 
      * ID
@@ -221,8 +211,6 @@ export type PaymentSessionObject = {
 
     /**
      * Bill ID
-     * 
-     * Set when this session was created from an invoice.
      */
     bill_id?: string | null
 
@@ -744,4 +732,14 @@ export type CreatingPaymentSessionRequest = {
  * - `PAYSUCCESS`: Payment has succeeded.
  * - `ERROR`: Error has occurred or the payment has been canceled.
  */
+/**
+ * Payment methods that can be offered on a payment session (redirect) page.
+ * 
+ * - `Card`: Card payment
+ * - `Konbini`: Konbini payment
+ * - `Paypay`: PayPay payment
+ * - `Virtualaccount`: Bank transfer (virtual account) payment
+ */
+export type PaymentSessionPayType = "Card" | "Konbini" | "Paypay" | "Virtualaccount"
+
 export type PaymentSessionStatus = "CREATE" | "PAYSTART" | "REQSUCCESS" | "PAYSUCCESS" | "ERROR"

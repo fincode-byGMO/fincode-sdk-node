@@ -111,6 +111,27 @@ describe("Card API testing", () => {
         expect(res.list?.length).toBeLessThanOrEqual(5)
     })
 
+    it("Retrieve card list of the customer information sharing group", async () => {
+        const fincode = createFincode({
+            apiKey: secretKey,
+            isLiveMode: false,
+            options: { proxyAgent: proxy }
+        })
+
+        const res = await fincode.cards.retrieveGroupList({ limit: 10 })
+
+        expect(res.list?.length).toBeGreaterThanOrEqual(0)
+        expect(res.list?.length).toBeLessThanOrEqual(10)
+
+        // The card_id filter must narrow the list down to that one card.
+        const anyCard = res.list?.[0]
+        if (anyCard) {
+            const filtered = await fincode.cards.retrieveGroupList({ limit: 10, card_id: anyCard.id })
+            expect(filtered.list?.length).toBe(1)
+            expect(filtered.list?.[0].id).toBe(anyCard.id)
+        }
+    })
+
     it("Delete card", async () => {
         const cardToken = env.FINCODE_CARD_TOKEN_TESTING_DELETING_CARD
         if (!cardToken) throw new Error("FINCODE_CARD_TOKEN_TESTING_DELETING_CARD is not defined")

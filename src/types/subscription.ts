@@ -136,9 +136,6 @@ export type SubscriptionObject = {
      * Transfer service the bank account is registered with.
      * 
      * Only for `pay_type: "Directdebit"`.
-     * 
-     * - `1`: Direct debit on the 5th, 6th, 23rd and 27th.
-     * - `2`: Direct debit on the 1st, 5th, 20th and 26th.
      */
     settlement_route?: DirectDebitSettlementRoute | null
 
@@ -526,7 +523,7 @@ export type SubscriptionResultObject = {
     process_date: string
 
     /**
-     * Plan ID used by the subscription this charge belongs to.
+     * Plan ID
      */
     plan_id: string
 
@@ -586,9 +583,6 @@ export type SubscriptionResultObject = {
      * Transfer service the bank account is registered with.
      * 
      * Only for `pay_type: "Directdebit"`.
-     * 
-     * - `1`: Direct debit on the 5th, 6th, 23rd and 27th.
-     * - `2`: Direct debit on the 1st, 5th, 20th and 26th.
      */
     settlement_route?: DirectDebitSettlementRoute | null
 
@@ -640,6 +634,8 @@ export type SubscriptionResultObject = {
  * - `CANCELED`: Canceled
  * - `INCOMPLETE`: Incomplete
  */
+export type SubscriptionStatus = "ACTIVE" | "RUNNING" | "CANCELED" | "INCOMPLETE"
+
 /**
  * Retry setting of a subscription.
  * 
@@ -647,8 +643,6 @@ export type SubscriptionResultObject = {
  * - `disabled`: a failed charge is not retried.
  */
 export type SubscriptionRetryMode = "enabled" | "disabled"
-
-export type SubscriptionStatus = "ACTIVE" | "RUNNING" | "CANCELED" | "INCOMPLETE"
 
 /**
  * Result Status
