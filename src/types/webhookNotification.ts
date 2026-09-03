@@ -1,8 +1,9 @@
 import { PaymentBulkStatus } from "./bulk.payment"
 import { ContractAcquirer, ExaminationStatusCode } from "./contract"
+import { Modify } from "../utils/utilTypes"
 import { ChargebackStatusCode } from "./chargeback"
 import { DirectDebitApplicationType, PaymentMethodStatus, PaymentMethodVirtualAccount } from "./paymentMethod"
-import { KonbiniCode, PayType, PaymentJobCode, PaymentStatus } from "./payment"
+import { CardPayTimes, PayType, PaymentObject } from "./payment"
 import { SubscriptionStatus } from "./subscription"
 import { WebhookEvent } from "./webhookSetting"
 
@@ -11,62 +12,230 @@ export type WebhookListenerResponse = {
 }
 
 /**
+ * Fields every payment notification carries, whatever the payment method.
+ */
+type PaymentWebhookCommonFields = Modify<
+    Partial<Pick<PaymentObject,
+        | "shop_id"
+        | "access_id"
+        | "status"
+        | "customer_id"
+        | "client_field_1"
+        | "client_field_2"
+        | "client_field_3"
+        | "error_code"
+    >>,
+    {
+        /**
+         * Order ID of the payment.
+         */
+        order_id?: string | null
+
+        /**
+         * Amount. A string here, unlike the number the payment API answers with.
+         */
+        amount?: string | null
+
+        /**
+         * Tax and shipping fee. A string here, unlike the number the payment
+         * API answers with.
+         */
+        tax?: string | null
+    }
+>
+
+/**
+ * Fields the card, Apple Pay and Google Pay notifications share.
+ */
+type CardLikePaymentWebhookFields = Modify<
+    Partial<Pick<PaymentObject, "job_code" | "forward" | "transaction_id" | "transaction_date" | "approve" | "method">>,
+    {
+        /**
+         * Currency of the payment.
+         */
+        currency?: "JPY" | null
+    }
+>
+
+/**
  * Webhook Notification for Payment API
  * 
  * for
- * - `payments.**.**` (except `payments.bulk.**.**`)
- * - `konbini.**.**`
- * - `paypay.**.**`
+ * - `payments.**` (except `payments.bulk.**`)
+ * 
+ * The payment methods carry different fields, so branch on `pay_type` before
+ * reading anything but what they all share: `shop_id`, `order_id`,
+ * `access_id`, `status`, `customer_id`, `client_field_1` to `client_field_3`,
+ * `amount`, `tax`, `error_code`, `pay_type` and `event`.
  */
-export type PaymentWebhookNotification = {
-    shop_id?: string | null
-    access_id?: string | null
-    order_id?: string | null
-    pay_type?: PayType | null
-    status?: PaymentStatus | null
-    amount?: string | null
-    tax?: string | null
-    currency?: "JPY" | null
-    customer_id?: string | null
-    job_code?: PaymentJobCode | null
-    transaction_id?: string | null
-    transaction_date?: string | null
-    client_field_1?: string | null
-    client_field_2?: string | null
-    client_field_3?: string | null
-    bulk_payment_id?: string | null
-    error_code?: string | null
-    event?: string | null
+export type PaymentWebhookNotification =
+    | CardPaymentWebhookNotification
+    | ApplePayPaymentWebhookNotification
+    | GooglePayPaymentWebhookNotification
+    | KonbiniPaymentWebhookNotification
+    | PayPayPaymentWebhookNotification
+    | DirectDebitPaymentWebhookNotification
+    | VirtualAccountPaymentWebhookNotification
 
-    // ---
-    // Card payment / Apple Pay payment
-    // ---
-    forward?: string | null
-    method?: "1" | "2" | "5"
-    approve?: string | null
-    pay_times?: string | null
+/**
+ * Webhook Notification for a card payment
+ * 
+ * for
+ * - `payments.card.**`
+ */
+export type CardPaymentWebhookNotification = PaymentWebhookCommonFields & CardLikePaymentWebhookFields & {
+    pay_type: Extract<PayType, "Card">
+    event?: Extract<WebhookEvent, `payments.card.${string}`> | null
+} & Modify<
+    Partial<Pick<PaymentObject, "subscription_id" | "bulk_payment_id">>,
+    {
+        /**
+         * How many installments the payment is split into. A string here,
+         * unlike the number the payment API answers with.
+         */
+        pay_times?: CardPayTimes | null
+    }
+>
 
-    // ---
-    // Konbini payment
-    // ---
-    order_serial?: string | null
-    invoice_id?: string | null
-    konbini_code?: KonbiniCode | null
-    konbini_store_code?: string | null
-    overpayment_flag?: "0" | "1" | null
+/**
+ * Webhook Notification for an Apple Pay payment
+ * 
+ * for
+ * - `payments.applepay.**`
+ */
+export type ApplePayPaymentWebhookNotification = PaymentWebhookCommonFields & CardLikePaymentWebhookFields & {
+    pay_type: Extract<PayType, "Applepay">
+    event?: Extract<WebhookEvent, `payments.applepay.${string}`> | null
+}
 
-    // ---
-    // PayPay payment
-    // ---
-    code_expiry_date?: string | null
-    auth_max_date?: string | null
-    order_description?: string | null
-    payment_id?: string | null
-    merchant_payment_id?: string | null
-    merchant_revert_id?: string | null
-    merchant_update_id?: string | null
-    merchant_refund_id?: string | null
-    payment_date?: string | null
+/**
+ * Webhook Notification for a Google Pay payment
+ * 
+ * for
+ * - `payments.googlepay.**`
+ */
+export type GooglePayPaymentWebhookNotification = PaymentWebhookCommonFields & CardLikePaymentWebhookFields & {
+    pay_type: Extract<PayType, "Googlepay">
+    event?: Extract<WebhookEvent, `payments.googlepay.${string}`> | null
+
+    /**
+     * How many installments the payment is split into. A string here, unlike
+     * the number the payment API answers with.
+     */
+    pay_times?: CardPayTimes | null
+}
+
+/**
+ * Webhook Notification for a konbini payment
+ * 
+ * for
+ * - `payments.konbini.**`
+ */
+export type KonbiniPaymentWebhookNotification = PaymentWebhookCommonFields & Partial<Pick<PaymentObject,
+    | "process_date"
+    | "payment_term"
+    | "payment_date"
+    | "konbini_code"
+    | "konbini_store_code"
+    | "order_serial"
+    | "invoice_id"
+    | "overpayment_flag"
+    | "cancel_overpayment_flag"
+>> & {
+    pay_type: Extract<PayType, "Konbini">
+    event?: Extract<WebhookEvent, `payments.konbini.${string}`> | null
+}
+
+/**
+ * Webhook Notification for a PayPay payment
+ * 
+ * for
+ * - `payments.paypay.**`
+ */
+export type PayPayPaymentWebhookNotification = PaymentWebhookCommonFields & Partial<Pick<PaymentObject,
+    | "process_date"
+    | "job_code"
+    | "code_expiry_date"
+    | "auth_max_date"
+    | "order_description"
+    | "code_id"
+    | "payment_id"
+    | "payment_date"
+    | "merchant_payment_id"
+    | "merchant_update_id"
+    | "merchant_revert_id"
+    | "merchant_refund_id"
+>> & {
+    pay_type: Extract<PayType, "Paypay">
+    event?: Extract<WebhookEvent, `payments.paypay.${string}`> | null
+}
+
+/**
+ * Webhook Notification for a direct debit payment
+ * 
+ * for
+ * - `payments.directdebit.**`
+ */
+export type DirectDebitPaymentWebhookNotification = PaymentWebhookCommonFields & Partial<Pick<PaymentObject,
+    | "process_date"
+    | "payment_method_id"
+    | "result_code"
+    | "target_date"
+    | "withdrawal_date"
+    | "request_accept_end_date"
+    | "transfer_return_date"
+    | "remarks"
+    | "subscription_id"
+>> & {
+    pay_type: Extract<PayType, "Directdebit">
+    event?: Extract<WebhookEvent, `payments.directdebit.${string}`> | null
+}
+
+/**
+ * Webhook Notification for a bank transfer (virtual account) payment
+ * 
+ * for
+ * - `payments.virtualaccount.**`
+ */
+export type VirtualAccountPaymentWebhookNotification = PaymentWebhookCommonFields & Partial<Pick<PaymentObject,
+    | "customer_group_id"
+    | "process_date"
+    | "billing_total_amount"
+    | "payment_term_day"
+    | "payment_term"
+    | "payment_method_id"
+    | "va_branch_code"
+    | "va_branch_name"
+    | "va_account_number"
+    | "va_account_name"
+    | "account_assignment_date"
+    | "virtual_account_id"
+    | "transaction_date"
+    | "value_date"
+    | "remitter_bank_name"
+    | "remitter_branch_name"
+    | "remitter_account_name"
+    | "overpayment_flag"
+    | "cancel_overpayment_flag"
+    | "expire_overpayment_flag"
+    | "bulk_payment_id"
+    | "use_static_virtual_account"
+    | "use_exact_deposit_amount"
+>> & {
+    pay_type: Extract<PayType, "Virtualaccount">
+    event?: Extract<WebhookEvent, `payments.virtualaccount.${string}`> | null
+
+    /**
+     * Billing amount. A string here, unlike the number the payment API answers
+     * with.
+     */
+    billing_amount?: string | null
+
+    /**
+     * Tax and shipping fee of the billing amount. A string here, unlike the
+     * number the payment API answers with.
+     */
+    billing_tax?: string | null
 }
 
 /**
