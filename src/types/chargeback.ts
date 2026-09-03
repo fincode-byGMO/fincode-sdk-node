@@ -273,23 +273,19 @@ export type ReplyingChargebackRequest = {
 }
 
 /**
- * Kind of file uploaded for a chargeback.
- * 
- * - `300`: Evidence attached to a chargeback reply.
- */
-export type ChargebackFileType = "300"
-
-/**
  * Request body of Uploading a file for a chargeback
  * (used for POST /v1/charge_backs/file_upload)
  */
 export type UploadingChargebackFileRequest = {
     /**
-     * Kind of file being uploaded.
-     * 
-     * - `300`: Evidence attached to a chargeback reply.
+     * Shop ID the chargeback belongs to.
      */
-    type: ChargebackFileType
+    shop_id: string
+
+    /**
+     * Chargeback ID the file is evidence for.
+     */
+    charge_back_id: number
 
     /**
      * File to upload.
@@ -297,9 +293,12 @@ export type UploadingChargebackFileRequest = {
     data: Buffer | string
 
     /**
-     * File name of the `data`.
+     * File name of the `data`, 1 to 255 characters.
+     * 
+     * The extension is taken from what follows the last dot, so the name has
+     * to carry one.
      */
-    fileName?: string
+    fileName: string
 
     /**
      * MIME type of the `data`.
@@ -323,7 +322,7 @@ export type UploadingChargebackFileResponse = {
         /**
          * Kind of the uploaded file.
          */
-        type?: string | null
+        type?: number | null
 
         /**
          * File name including the extension.

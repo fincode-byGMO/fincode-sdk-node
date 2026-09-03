@@ -88,9 +88,9 @@ class Chargeback {
      * 
      * corresponds to `POST /v1/charge_backs/file_upload`
      * 
-     * Uploads evidence to attach to a chargeback reply. Only the main shop of
-     * a platform can call this, and `headers.tenantShopId` names the tenant
-     * the file belongs to.
+     * Uploads evidence for a chargeback reply. The file name has to carry an
+     * extension; the API takes the name and the extension from the multipart
+     * part.
      * 
      * @param {UploadingChargebackFileRequest} body - request body
      * @param {FincodeRequestHeaders} [headers] - request header
@@ -104,11 +104,12 @@ class Chargeback {
 
         // multipart/form-data
         const formData = new FormData()
-        formData.append("type", body.type)
+        formData.append("shop_id", body.shop_id)
+        formData.append("charge_back_id", String(body.charge_back_id))
         formData.append(
             "data",
             new Blob([body.data], { type: body.contentType ?? "application/octet-stream" }),
-            body.fileName ?? "data",
+            body.fileName,
         )
 
         return executeRequest<UploadingChargebackFileResponse>(this._config, "POST", "/v1/charge_backs/file_upload", {
