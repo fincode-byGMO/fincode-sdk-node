@@ -1,7 +1,9 @@
 import { PaymentBulkStatus } from "./bulk.payment"
 import { ContractAcquirer, ExaminationStatusCode } from "./contract"
+import { ChargebackStatusCode } from "./chargeback"
 import { KonbiniCode, PayType, PaymentJobCode, PaymentStatus } from "./payment"
 import { SubscriptionStatus } from "./subscription"
+import { WebhookEvent } from "./webhookSetting"
 
 export type WebhookListenerResponse = {
     receive: "0" | "1"
@@ -174,4 +176,134 @@ export type ContractInformation = {
     examination_task?: string | null
     status_code?: ExaminationStatusCode | null
     is_updated?: boolean | null
+}
+
+/**
+ * Webhook Notification for the card updater
+ * 
+ * for
+ * - `card.updater.complete`
+ */
+export type CardUpdaterCompleteWebhookNotification = {
+    shop_id?: string | null
+
+    /**
+     * Customer information sharing group ID.
+     */
+    customer_group_id?: string | null
+
+    /**
+     * Month the card updater ran.
+     * 
+     * Format: `yyyyMM`
+     */
+    card_updater_process_month?: string | null
+
+    /**
+     * How many cards were updated successfully.
+     */
+    success_count?: number | null
+
+    /**
+     * How many cards the updater attempted.
+     */
+    processed_count?: number | null
+
+    event?: Extract<WebhookEvent, "card.updater.complete"> | null
+}
+
+/**
+ * Webhook Notification for Invoice API
+ * 
+ * for
+ * - `invoice.**`
+ */
+export type InvoiceWebhookNotification = {
+    shop_id?: string | null
+
+    /**
+     * ID of the invoice the event happened on.
+     * 
+     * Retrieving the invoice with it gives the current state.
+     */
+    invoice_id?: string | null
+
+    /**
+     * - `invoice.create`: the invoice was created.
+     * - `invoice.update`: the invoice was updated.
+     * - `invoice.open`: the invoice was opened and the customer was billed.
+     * - `invoice.cancel`: the invoice was canceled.
+     * - `invoice.delete`: the invoice was deleted.
+     * - `invoice.expired`: the invoice passed its due date.
+     * - `invoice.paid`: the invoice was paid.
+     */
+    event?: Extract<WebhookEvent,
+        | "invoice.create"
+        | "invoice.update"
+        | "invoice.open"
+        | "invoice.cancel"
+        | "invoice.delete"
+        | "invoice.expired"
+        | "invoice.paid"
+    > | null
+}
+
+/**
+ * Webhook Notification for Chargeback API
+ * 
+ * for
+ * - `charge_backs.**`
+ */
+export type ChargebackWebhookNotification = {
+    /**
+     * Shop ID the chargeback belongs to.
+     */
+    shop_id?: string | null
+
+    /**
+     * ID of the chargeback the event happened on.
+     * 
+     * Retrieving the chargeback with it gives the current state.
+     */
+    charge_back_id?: string | null
+
+    /**
+     * Status of the chargeback at the time of the notification.
+     * 
+     * The same value as `status_code` on the chargeback itself.
+     */
+    status?: ChargebackStatusCode | null
+
+    /**
+     * - `charge_backs.regist`: the chargeback was disclosed to the shop for the first time.
+     * - `charge_backs.update`: the status of a disclosed chargeback changed.
+     */
+    event?: Extract<WebhookEvent, "charge_backs.regist" | "charge_backs.update"> | null
+}
+
+/**
+ * Webhook Notification for Change Request API
+ * 
+ * for
+ * - `change_requests.**`
+ */
+export type ChangeRequestWebhookNotification = {
+    /**
+     * Shop ID the change request belongs to.
+     */
+    shop_id?: string | null
+
+    /**
+     * ID of the change request the event happened on.
+     * 
+     * Retrieving the change request with it and the shop ID gives the current
+     * state.
+     */
+    change_request_id?: string | null
+
+    /**
+     * - `change_requests.regist`: a change request was filed.
+     * - `change_requests.update`: the status of a change request changed.
+     */
+    event?: Extract<WebhookEvent, "change_requests.regist" | "change_requests.update"> | null
 }
