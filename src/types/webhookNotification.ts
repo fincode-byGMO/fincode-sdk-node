@@ -1,6 +1,7 @@
 import { PaymentBulkStatus } from "./bulk.payment"
 import { ContractAcquirer, ExaminationStatusCode } from "./contract"
 import { ChargebackStatusCode } from "./chargeback"
+import { DirectDebitApplicationType, PaymentMethodStatus, PaymentMethodVirtualAccount } from "./paymentMethod"
 import { KonbiniCode, PayType, PaymentJobCode, PaymentStatus } from "./payment"
 import { SubscriptionStatus } from "./subscription"
 import { WebhookEvent } from "./webhookSetting"
@@ -306,4 +307,240 @@ export type ChangeRequestWebhookNotification = {
      * - `change_requests.update`: the status of a change request changed.
      */
     event?: Extract<WebhookEvent, "change_requests.regist" | "change_requests.update"> | null
+}
+
+/**
+ * Bank account details carried by a direct debit payment method notification.
+ * 
+ * A smaller shape than the `directdebit` object of the payment method API,
+ * which nests `request_form_id` and `paper_failure_description` under
+ * `paper_application`.
+ */
+export type WebhookPaymentMethodDirectDebit = {
+    /**
+     * Direct debit application type
+     * 
+     * - `ONLINE`: Online application
+     * - `PAPER`: Paper application
+     */
+    application_type?: DirectDebitApplicationType | null
+
+    /**
+     * ID the registrant gave the paper application form.
+     */
+    request_form_id?: string | null
+
+    /**
+     * Why registering the paper application failed.
+     */
+    paper_failure_description?: string | null
+}
+
+/**
+ * Webhook Notification for Payment Method API
+ * 
+ * for
+ * - `customers.payment_methods.**`
+ * 
+ * The three payment method types carry different fields, name the payment
+ * method differently and give `status` a different meaning, so branch on
+ * `pay_type` before reading anything but the fields all three share:
+ * `shop_id`, `customer_id`, `process_date`, `status`, `client_field_1` to
+ * `client_field_3`, `pay_type` and `event`.
+ * 
+ * Only a virtual account fires all five events. A card or a bank account only
+ * ever fires `customers.payment_methods.updated`.
+ */
+export type PaymentMethodWebhookNotification =
+    | PaymentMethodCardWebhookNotification
+    | PaymentMethodDirectDebitWebhookNotification
+    | PaymentMethodVirtualAccountWebhookNotification
+
+/**
+ * Webhook Notification for a card payment method
+ * 
+ * for
+ * - `customers.payment_methods.updated`
+ */
+export type PaymentMethodCardWebhookNotification = {
+    pay_type: Extract<PayType, "Card">
+
+    shop_id?: string | null
+
+    /**
+     * Order ID of the payment the registration ran as.
+     */
+    order_id?: string | null
+
+    /**
+     * Status of this payment method.
+     */
+    card_status?: PaymentMethodStatus | null
+
+    /**
+     * Customer information sharing group ID.
+     */
+    customer_group_id?: string | null
+
+    customer_id?: string | null
+
+    /**
+     * Card ID. The payment method is named `card_id` here rather than `id`.
+     */
+    card_id?: string | null
+
+    process_date?: string | null
+
+    /**
+     * Whether this notification is for a registration or an update.
+     * 
+     * - `I`: The card was registered.
+     * - `U`: The card was updated.
+     */
+    process_type?: "I" | "U" | null
+
+    /**
+     * Masked card number.
+     */
+    card_no_display?: string | null
+
+    /**
+     * The expiring date of the card. Format: `yymm`
+     */
+    expire_display?: string | null
+
+    /**
+     * Forwarding destination of the registration.
+     */
+    forward?: string | null
+
+    default_flag?: "0" | "1" | null
+
+    /**
+     * State of the 3D Secure 2 authentication, not of the payment method.
+     * 
+     * `card_status` is the one that carries the payment method's state.
+     * 
+     * - `AUTHENTICATED`: authenticating. Also sent when authentication failed.
+     * - `CHECK`: authentication finished.
+     * 
+     * `null` when 3D Secure is not used.
+     */
+    status?: "AUTHENTICATED" | "CHECK" | null
+
+    access_id?: string | null
+
+    transaction_id?: string | null
+
+    approve?: string | null
+
+    /**
+     * Fields where merchants can freely set values
+     */
+    client_field_1?: string | null
+    client_field_2?: string | null
+    client_field_3?: string | null
+
+    error_code?: string | null
+
+    event?: Extract<WebhookEvent, "customers.payment_methods.updated"> | null
+}
+
+/**
+ * Webhook Notification for a direct debit payment method
+ * 
+ * for
+ * - `customers.payment_methods.updated`
+ */
+export type PaymentMethodDirectDebitWebhookNotification = {
+    pay_type: Extract<PayType, "Directdebit">
+
+    shop_id?: string | null
+
+    customer_id?: string | null
+
+    /**
+     * Payment method ID.
+     */
+    payment_method_id?: string | null
+
+    process_date?: string | null
+
+    /**
+     * Status of this payment method.
+     */
+    status?: PaymentMethodStatus | null
+
+    /**
+     * Fields where merchants can freely set values
+     */
+    client_field_1?: string | null
+    client_field_2?: string | null
+    client_field_3?: string | null
+
+    /**
+     * Bank account details.
+     */
+    directdebit?: WebhookPaymentMethodDirectDebit | null
+
+    event?: Extract<WebhookEvent, "customers.payment_methods.updated"> | null
+}
+
+/**
+ * Webhook Notification for a virtual account payment method
+ * 
+ * for
+ * - `customers.payment_methods.created`
+ * - `customers.payment_methods.updated`
+ * - `customers.payment_methods.inactivated`
+ * - `customers.payment_methods.activated`
+ * - `customers.payment_methods.deleted`
+ */
+export type PaymentMethodVirtualAccountWebhookNotification = {
+    pay_type: Extract<PayType, "Virtualaccount">
+
+    shop_id?: string | null
+
+    /**
+     * Payment method ID.
+     */
+    id?: string | null
+
+    customer_id?: string | null
+
+    process_date?: string | null
+
+    /**
+     * Status of this payment method.
+     */
+    status?: PaymentMethodStatus | null
+
+    default_flag?: "0" | "1" | null
+
+    delete_flag?: "0" | "1" | null
+
+    /**
+     * Fields where merchants can freely set values
+     */
+    client_field_1?: string | null
+    client_field_2?: string | null
+    client_field_3?: string | null
+
+    created?: string | null
+
+    updated?: string | null
+
+    /**
+     * Virtual account details. The same eight fields the payment method API
+     * returns under `virtualaccount`.
+     */
+    virtual_account?: PaymentMethodVirtualAccount | null
+
+    event?: Extract<WebhookEvent,
+        | "customers.payment_methods.created"
+        | "customers.payment_methods.updated"
+        | "customers.payment_methods.inactivated"
+        | "customers.payment_methods.activated"
+        | "customers.payment_methods.deleted"
+    > | null
 }

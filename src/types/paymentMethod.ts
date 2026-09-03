@@ -243,7 +243,7 @@ type PaymentMethodCard = {
     card_updater_last_attempt_date?: string | null
 }
 
-type PaymentMethodVirtualAccount = {
+export type PaymentMethodVirtualAccount = {
     /**
      * Branch code of this virtual account.
      */
