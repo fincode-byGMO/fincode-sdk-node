@@ -1,8 +1,8 @@
 import { BodyInit } from "node-fetch"
 import { APIErrorResponse, FincodeAPIError, FincodeSDKError } from "../../types/index"
 import { FincodeConfig } from "./fincode"
-import { createFincodeRequestFetch, FincodeRequestHeaders } from "./http"
-import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_errorMessages"
+import { classifyRequestError, createFincodeRequestFetch, FincodeRequestHeaders } from "./http"
+import { getRequestErrorMessage } from "./_errorMessages"
 
 type RequestOptions = {
     /** Serialized request body. */
@@ -19,7 +19,8 @@ type RequestOptions = {
  * 
  * Rejects with {@link FincodeAPIError} when the API answers with an error
  * status, and with {@link FincodeSDKError} when the request itself fails or
- * the response body is not valid JSON.
+ * the response body is not valid JSON. `FincodeSDKError.kind` says which,
+ * and carries the HTTP status whenever a response arrived.
  */
 export const executeRequest = async <T>(
     config: FincodeConfig,
@@ -41,14 +42,16 @@ export const executeRequest = async <T>(
     try {
         res = await sendRequest()
     } catch (e: unknown) {
-        throw new FincodeSDKError(getFetchErrorMessage(), e)
+        const kind = classifyRequestError(e, "unknown")
+        throw new FincodeSDKError(getRequestErrorMessage(kind), kind, { child: e })
     }
 
     let json: unknown
     try {
         json = await res.json()
     } catch (e: unknown) {
-        throw new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
+        const kind = classifyRequestError(e, "response_body")
+        throw new FincodeSDKError(getRequestErrorMessage(kind), kind, { status: res.status, child: e })
     }
 
     if (!res.ok) {

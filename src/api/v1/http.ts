@@ -1,5 +1,6 @@
-import fetch, { BodyInit, RequestInit } from "node-fetch"
+import fetch, { BodyInit, FetchError, RequestInit } from "node-fetch"
 import { FincodeConfig } from "./fincode"
+import { FincodeSDKErrorKind } from "../../types/index"
 import { createFincodeRequestHeader } from "../../types/http"
 import { Sort } from "./../../types/index"
 import { HttpsProxyAgent } from "https-proxy-agent"
@@ -133,3 +134,28 @@ const createFincodeRequestFetch = (
 export { createFincodeRequestFetch }
 
 export type FincodeRequestHeaders = Parameters<typeof createFincodeRequestFetch>[4]
+
+/**
+ * Work out why a request failed.
+ * 
+ * The `type` values below belong to node-fetch, so this sits next to the
+ * fetch that produces them. `fallback` is used when the thrown object says
+ * nothing usable.
+ */
+export const classifyRequestError = (e: unknown, fallback: FincodeSDKErrorKind): FincodeSDKErrorKind => {
+    if (!(e instanceof FetchError)) {
+        return fallback
+    }
+
+    switch (e.type) {
+        case "request-timeout":
+        case "body-timeout":
+            return "timeout"
+        case "system":
+            return "network"
+        case "invalid-json":
+            return "response_body"
+        default:
+            return fallback
+    }
+}

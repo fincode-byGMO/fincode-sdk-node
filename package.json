@@ -55,6 +55,7 @@
 		"lint": "eslint . --ext .ts,.js",
 		"build": "tsup src/main.ts",
 		"test:v1/http": "jest ./src/api/v1/http.test.ts --silent=false --verbose false --no-cache",
+		"test:v1/request": "jest ./src/api/v1/_request.test.ts --silent=false --verbose false --no-cache",
 		"test:v1/account": "jest ./src/api/v1/account.test.ts --silent=false --verbose false --no-cache",
 		"test:v1/bulk.payment": "jest ./src/api/v1/bulk.payment.test.ts --silent=false --verbose false --no-cache",
 		"test:v1/card": "jest ./src/api/v1/card.test.ts --silent=false --verbose false --no-cache",
