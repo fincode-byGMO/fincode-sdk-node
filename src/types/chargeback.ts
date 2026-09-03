@@ -271,3 +271,68 @@ export type ReplyingChargebackRequest = {
      */
     memo?: string | null
 }
+
+/**
+ * Kind of file uploaded for a chargeback.
+ * 
+ * - `300`: Evidence attached to a chargeback reply.
+ */
+export type ChargebackFileType = "300"
+
+/**
+ * Request body of Uploading a file for a chargeback
+ * (used for POST /v1/charge_backs/file_upload)
+ */
+export type UploadingChargebackFileRequest = {
+    /**
+     * Kind of file being uploaded.
+     * 
+     * - `300`: Evidence attached to a chargeback reply.
+     */
+    type: ChargebackFileType
+
+    /**
+     * File to upload.
+     */
+    data: Buffer | string
+
+    /**
+     * File name of the `data`.
+     */
+    fileName?: string
+
+    /**
+     * MIME type of the `data`.
+     * 
+     * Defaults to `application/octet-stream`.
+     */
+    contentType?: string
+}
+
+/**
+ * Response object of Uploading a file for a chargeback
+ * (used for POST /v1/charge_backs/file_upload)
+ */
+export type UploadingChargebackFileResponse = {
+    examination_files?: {
+        /**
+         * Shop ID the file was accepted for.
+         */
+        shop_id?: string | null
+
+        /**
+         * Kind of the uploaded file.
+         */
+        type?: string | null
+
+        /**
+         * File name including the extension.
+         */
+        filename?: string | null
+
+        /**
+         * File size in bytes.
+         */
+        filesize?: number | null
+    }[] | null
+}

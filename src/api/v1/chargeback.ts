@@ -1,8 +1,11 @@
+import { FormData } from "undici"
 import {
     ChargebackObject,
     ListResponse,
     ReplyingChargebackRequest,
     RetrievingChargebackListQueryParams,
+    UploadingChargebackFileRequest,
+    UploadingChargebackFileResponse,
 } from "../../types/index"
 import { FincodeConfig } from "./fincode"
 import { FincodeRequestHeaders } from "./http"
@@ -76,6 +79,40 @@ class Chargeback {
     ): Promise<ChargebackObject> {
         return executeRequest<ChargebackObject>(this._config, "POST", `/v1/shop_charge_backs/${id}/reply`, {
             body: JSON.stringify(body),
+            headers,
+        })
+    }
+
+    /**
+     * **Upload a file for a chargeback**
+     * 
+     * corresponds to `POST /v1/charge_backs/file_upload`
+     * 
+     * Uploads evidence to attach to a chargeback reply. Only the main shop of
+     * a platform can call this, and `headers.tenantShopId` names the tenant
+     * the file belongs to.
+     * 
+     * @param {UploadingChargebackFileRequest} body - request body
+     * @param {FincodeRequestHeaders} [headers] - request header
+     * 
+     * @returns {Promise<UploadingChargebackFileResponse>} - accepted file
+     */
+    public uploadFile(
+        body: UploadingChargebackFileRequest,
+        headers?: FincodeRequestHeaders
+    ): Promise<UploadingChargebackFileResponse> {
+
+        // multipart/form-data
+        const formData = new FormData()
+        formData.append("type", body.type)
+        formData.append(
+            "data",
+            new Blob([body.data], { type: body.contentType ?? "application/octet-stream" }),
+            body.fileName ?? "data",
+        )
+
+        return executeRequest<UploadingChargebackFileResponse>(this._config, "POST", "/v1/charge_backs/file_upload", {
+            body: formData,
             headers,
         })
     }
