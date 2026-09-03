@@ -11,6 +11,7 @@ import { Subscription } from "./subscription";
 import { Tenant } from "./tenant";
 import { WebhookSetting } from "./webhookSetting";
 import { Account } from "./account";
+import { Invoice } from "./invoice"
 import { PaymentMethod } from "./paymentMethod";
 
 /**
@@ -102,6 +103,7 @@ class Fincode {
         this._webhookSettings = new WebhookSetting(this.config);
         this._accounts = new Account(this.config);
         this._paymentMethods = new PaymentMethod(this.config);
+        this._invoices = new Invoice(this.config);
     }
 
     private _accounts: Account;
@@ -167,6 +169,11 @@ class Fincode {
     private _webhookSettings: WebhookSetting;
     get webhookSettings(): WebhookSetting {
         return this._webhookSettings;
+    }
+
+    private _invoices: Invoice;
+    get invoices(): Invoice {
+        return this._invoices;
     }
 
     private _paymentMethods: PaymentMethod;

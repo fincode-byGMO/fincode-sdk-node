@@ -2,6 +2,7 @@ export * from "./bulk.payment"
 export * from "./card"
 export * from "./customer"
 export * from "./fincode"
+export * from "./invoice"
 // http.ts holds the transport: the fetch builder, the query-string builder
 // and the failure classifier. Exporting all of it made undici's own types
 // part of this package's public surface. Only the header type appears in the

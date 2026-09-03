@@ -806,3 +806,20 @@ export type MarkingInvoicePaidExternallyRequest = {
      */
     transaction_date?: string | null
 }
+
+/**
+ * Response object of Deleting an invoice (used for DELETE /v1/invoices/{id})
+ */
+export type DeletingInvoiceResponse = {
+    /**
+     * Invoice ID that has just been deleted.
+     */
+    id: string
+
+    /**
+     * Delete flag.
+     * 
+     * - `1`: Deleted
+     */
+    delete_flag: "0" | "1"
+}
