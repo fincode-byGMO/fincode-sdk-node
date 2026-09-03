@@ -16,6 +16,15 @@ const BASE_URL_TEST = "https://api.test.fincode.jp"
  */
 const DEFAULT_TIMEOUT_MS = 60_000
 
+/**
+ * Per-request headers accepted by every resource method.
+ */
+export type FincodeRequestHeaders = {
+    idempotentKey?: string
+    tenantShopId?: string
+    contentType?: string
+} | undefined
+
 
 /**
  * Build a query string from a query parameter object.
@@ -124,11 +133,7 @@ const createFincodeRequestFetch = (
     method: "POST" | "GET" | "PUT" | "DELETE",
     path: string,
     data?: BodyInit,
-    headers?: {
-        idempotentKey?: string
-        tenantShopId?: string
-        contentType?: string
-    },
+    headers?: FincodeRequestHeaders,
     queryParams?: {
         [key: string]: any
     }
@@ -168,8 +173,6 @@ const createFincodeRequestFetch = (
 }
 
 export { createFincodeRequestFetch }
-
-export type FincodeRequestHeaders = Parameters<typeof createFincodeRequestFetch>[4]
 
 /**
  * Work out why a request failed.
