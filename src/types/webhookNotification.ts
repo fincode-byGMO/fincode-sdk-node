@@ -8,6 +8,9 @@ import { SubscriptionStatus } from "./subscription"
 import { WebhookEvent } from "./webhookSetting"
 
 export type WebhookListenerResponse = {
+    /**
+     * Whether the notification was received. Answer `"1"`.
+     */
     receive: "0" | "1"
 }
 
@@ -84,6 +87,9 @@ export type PaymentWebhookNotification =
  * - `payments.card.**`
  */
 export type CardPaymentWebhookNotification = PaymentWebhookCommonFields & CardLikePaymentWebhookFields & {
+    /**
+     * Payment method type. Always `Card` on this notification.
+     */
     pay_type: Extract<PayType, "Card">
     event?: Extract<WebhookEvent, `payments.card.${string}`> | null
 } & Modify<
@@ -104,6 +110,9 @@ export type CardPaymentWebhookNotification = PaymentWebhookCommonFields & CardLi
  * - `payments.applepay.**`
  */
 export type ApplePayPaymentWebhookNotification = PaymentWebhookCommonFields & CardLikePaymentWebhookFields & {
+    /**
+     * Payment method type. Always `Applepay` on this notification.
+     */
     pay_type: Extract<PayType, "Applepay">
     event?: Extract<WebhookEvent, `payments.applepay.${string}`> | null
 }
@@ -115,6 +124,9 @@ export type ApplePayPaymentWebhookNotification = PaymentWebhookCommonFields & Ca
  * - `payments.googlepay.**`
  */
 export type GooglePayPaymentWebhookNotification = PaymentWebhookCommonFields & CardLikePaymentWebhookFields & {
+    /**
+     * Payment method type. Always `Googlepay` on this notification.
+     */
     pay_type: Extract<PayType, "Googlepay">
     event?: Extract<WebhookEvent, `payments.googlepay.${string}`> | null
 
@@ -142,6 +154,9 @@ export type KonbiniPaymentWebhookNotification = PaymentWebhookCommonFields & Par
     | "overpayment_flag"
     | "cancel_overpayment_flag"
 >> & {
+    /**
+     * Payment method type. Always `Konbini` on this notification.
+     */
     pay_type: Extract<PayType, "Konbini">
     event?: Extract<WebhookEvent, `payments.konbini.${string}`> | null
 }
@@ -166,6 +181,9 @@ export type PayPayPaymentWebhookNotification = PaymentWebhookCommonFields & Part
     | "merchant_revert_id"
     | "merchant_refund_id"
 >> & {
+    /**
+     * Payment method type. Always `Paypay` on this notification.
+     */
     pay_type: Extract<PayType, "Paypay">
     event?: Extract<WebhookEvent, `payments.paypay.${string}`> | null
 }
@@ -187,6 +205,9 @@ export type DirectDebitPaymentWebhookNotification = PaymentWebhookCommonFields &
     | "remarks"
     | "subscription_id"
 >> & {
+    /**
+     * Payment method type. Always `Directdebit` on this notification.
+     */
     pay_type: Extract<PayType, "Directdebit">
     event?: Extract<WebhookEvent, `payments.directdebit.${string}`> | null
 }
@@ -222,6 +243,9 @@ export type VirtualAccountPaymentWebhookNotification = PaymentWebhookCommonField
     | "use_static_virtual_account"
     | "use_exact_deposit_amount"
 >> & {
+    /**
+     * Payment method type. Always `Virtualaccount` on this notification.
+     */
     pay_type: Extract<PayType, "Virtualaccount">
     event?: Extract<WebhookEvent, `payments.virtualaccount.${string}`> | null
 
@@ -245,6 +269,9 @@ export type VirtualAccountPaymentWebhookNotification = PaymentWebhookCommonField
  * - `card.**`
  */
 export type CardWebhookNotification = {
+    /**
+     * Forwarding destination of the payment.
+     */
     forward?: string | null
     shop_id?: string | null
     customer_group_id?: string | null
@@ -275,6 +302,9 @@ export type CardWebhookNotification = {
  * Fields both subscription notifications carry.
  */
 type SubscriptionWebhookCommonFields = {
+    /**
+     * Shop ID the event happened on.
+     */
     shop_id?: string | null
     subscription_id?: string | null
     plan_id?: string | null
@@ -288,6 +318,9 @@ type SubscriptionWebhookCommonFields = {
     client_field_2?: string | null
     client_field_3?: string | null
 
+    /**
+     * Date the subscription starts charging.
+     */
     start_date?: string | null
     stop_date?: string | null
     next_charge_date?: string | null
@@ -315,6 +348,9 @@ export type SubscriptionWebhookNotification =
  * Webhook Notification for a card subscription
  */
 export type CardSubscriptionWebhookNotification = SubscriptionWebhookCommonFields & {
+    /**
+     * Payment method type. Always `Card` on this notification.
+     */
     pay_type: Extract<PayType, "Card">
 
     /**
@@ -327,8 +363,14 @@ export type CardSubscriptionWebhookNotification = SubscriptionWebhookCommonField
      */
     default_card_flag?: "0" | "1" | null
 
+    /**
+     * Date the operation ran.
+     */
     process_date?: string | null
 
+    /**
+     * Event that triggered this notification.
+     */
     event?: Extract<WebhookEvent, `subscription.card.${string}`> | null
 }
 
@@ -336,6 +378,9 @@ export type CardSubscriptionWebhookNotification = SubscriptionWebhookCommonField
  * Webhook Notification for a direct debit subscription
  */
 export type DirectDebitSubscriptionWebhookNotification = SubscriptionWebhookCommonFields & {
+    /**
+     * Payment method type. Always `Directdebit` on this notification.
+     */
     pay_type: Extract<PayType, "Directdebit">
 
     /**
@@ -353,6 +398,9 @@ export type DirectDebitSubscriptionWebhookNotification = SubscriptionWebhookComm
      */
     remarks?: string | null
 
+    /**
+     * Event that triggered this notification.
+     */
     event?: Extract<WebhookEvent, `subscription.directdebit.${string}`> | null
 }
 
@@ -360,6 +408,9 @@ export type DirectDebitSubscriptionWebhookNotification = SubscriptionWebhookComm
  * Fields both recurring batch notifications carry.
  */
 type RecurringWebhookCommonFields = {
+    /**
+     * Shop ID the event happened on.
+     */
     shop_id?: string | null
 
     /**
@@ -377,6 +428,9 @@ type RecurringWebhookCommonFields = {
      */
     total?: string | null
 
+    /**
+     * Date the operation ran.
+     */
     process_date?: string | null
 
     /**
@@ -402,6 +456,9 @@ export type RecurringWebhookNotification =
  * Webhook Notification for the card recurring charge batch
  */
 export type CardRecurringWebhookNotification = RecurringWebhookCommonFields & {
+    /**
+     * Payment method type. Always `Card` on this notification.
+     */
     pay_type: Extract<PayType, "Card">
 
     /**
@@ -409,6 +466,9 @@ export type CardRecurringWebhookNotification = RecurringWebhookCommonFields & {
      */
     retry_scheduled?: string | null
 
+    /**
+     * Event that triggered this notification.
+     */
     event?: Extract<WebhookEvent, `recurring.card.${string}`> | null
 }
 
@@ -416,8 +476,14 @@ export type CardRecurringWebhookNotification = RecurringWebhookCommonFields & {
  * Webhook Notification for the direct debit recurring charge batch
  */
 export type DirectDebitRecurringWebhookNotification = RecurringWebhookCommonFields & {
+    /**
+     * Payment method type. Always `Directdebit` on this notification.
+     */
     pay_type: Extract<PayType, "Directdebit">
 
+    /**
+     * Event that triggered this notification.
+     */
     event?: Extract<WebhookEvent, `recurring.directdebit.${string}`> | null
 }
 
@@ -425,6 +491,9 @@ export type DirectDebitRecurringWebhookNotification = RecurringWebhookCommonFiel
  * Fields both bulk payment notifications carry.
  */
 type PaymentBulkWebhookCommonFields = {
+    /**
+     * Shop ID the event happened on.
+     */
     shop_id?: string | null
     bulk_payment_id?: string | null
 
@@ -433,6 +502,9 @@ type PaymentBulkWebhookCommonFields = {
      */
     file_name?: string | null
 
+    /**
+     * Status at the time of the notification.
+     */
     status?: PaymentBulkStatus | null
 
     /**
@@ -478,8 +550,14 @@ export type RegisteringPaymentBulkWebhookNotification = PaymentBulkWebhookCommon
      */
     bulk_search_url?: string | null
 
+    /**
+     * Error code of the most recent error, when there was one.
+     */
     error_code?: string | null
 
+    /**
+     * Event that triggered this notification.
+     */
     event?: Extract<WebhookEvent, `payments.bulk.${string}.regist`> | null
 }
 
@@ -506,6 +584,9 @@ export type BatchPaymentBulkWebhookNotification = PaymentBulkWebhookCommonFields
      */
     total_count?: string | null
 
+    /**
+     * Event that triggered this notification.
+     */
     event?: Extract<WebhookEvent, `payments.bulk.${string}.batch`> | null
 }
 
@@ -513,6 +594,9 @@ export type BatchPaymentBulkWebhookNotification = PaymentBulkWebhookCommonFields
  * Webhook Notification for Contract process
  */
 export type ContractWebhookNotification = {
+    /**
+     * Shop ID the event happened on.
+     */
     shop_id?: string | null
     /**
      * - `contracts.status_code.updated`: the contract status changed.
@@ -522,6 +606,9 @@ export type ContractWebhookNotification = {
 }
 
 export type ContractInformation = {
+    /**
+     * Acquirer the examination is for.
+     */
     acquirer?: ContractAcquirer | null
     examination_task?: string | null
     status_code?: ExaminationStatusCode | null
@@ -535,6 +622,9 @@ export type ContractInformation = {
  * - `card.updater.complete`
  */
 export type CardUpdaterCompleteWebhookNotification = {
+    /**
+     * Shop ID the event happened on.
+     */
     shop_id?: string | null
 
     /**
@@ -559,6 +649,9 @@ export type CardUpdaterCompleteWebhookNotification = {
      */
     processed_count?: number | null
 
+    /**
+     * Event that triggered this notification.
+     */
     event?: Extract<WebhookEvent, "card.updater.complete"> | null
 }
 
@@ -569,6 +662,9 @@ export type CardUpdaterCompleteWebhookNotification = {
  * - `invoice.**`
  */
 export type InvoiceWebhookNotification = {
+    /**
+     * Shop ID the event happened on.
+     */
     shop_id?: string | null
 
     /**
@@ -712,8 +808,14 @@ export type PaymentMethodWebhookNotification =
  * - `customers.payment_methods.updated`
  */
 export type PaymentMethodCardWebhookNotification = {
+    /**
+     * Payment method type. Always `Card` on this notification.
+     */
     pay_type: Extract<PayType, "Card">
 
+    /**
+     * Shop ID the event happened on.
+     */
     shop_id?: string | null
 
     /**
@@ -731,6 +833,9 @@ export type PaymentMethodCardWebhookNotification = {
      */
     customer_group_id?: string | null
 
+    /**
+     * Customer ID.
+     */
     customer_id?: string | null
 
     /**
@@ -738,6 +843,9 @@ export type PaymentMethodCardWebhookNotification = {
      */
     card_id?: string | null
 
+    /**
+     * Date the operation ran.
+     */
     process_date?: string | null
 
     /**
@@ -763,6 +871,9 @@ export type PaymentMethodCardWebhookNotification = {
      */
     forward?: string | null
 
+    /**
+     * Whether this is the customer's default.
+     */
     default_flag?: "0" | "1" | null
 
     /**
@@ -777,10 +888,19 @@ export type PaymentMethodCardWebhookNotification = {
      */
     status?: "AUTHENTICATED" | "CHECK" | null
 
+    /**
+     * Access ID of the payment.
+     */
     access_id?: string | null
 
+    /**
+     * Transaction ID given by the acquirer.
+     */
     transaction_id?: string | null
 
+    /**
+     * Approval number given by the acquirer.
+     */
     approve?: string | null
 
     /**
@@ -790,8 +910,14 @@ export type PaymentMethodCardWebhookNotification = {
     client_field_2?: string | null
     client_field_3?: string | null
 
+    /**
+     * Error code of the most recent error, when there was one.
+     */
     error_code?: string | null
 
+    /**
+     * Event that triggered this notification.
+     */
     event?: Extract<WebhookEvent, "customers.payment_methods.updated"> | null
 }
 
@@ -802,10 +928,19 @@ export type PaymentMethodCardWebhookNotification = {
  * - `customers.payment_methods.updated`
  */
 export type PaymentMethodDirectDebitWebhookNotification = {
+    /**
+     * Payment method type. Always `Directdebit` on this notification.
+     */
     pay_type: Extract<PayType, "Directdebit">
 
+    /**
+     * Shop ID the event happened on.
+     */
     shop_id?: string | null
 
+    /**
+     * Customer ID.
+     */
     customer_id?: string | null
 
     /**
@@ -813,6 +948,9 @@ export type PaymentMethodDirectDebitWebhookNotification = {
      */
     payment_method_id?: string | null
 
+    /**
+     * Date the operation ran.
+     */
     process_date?: string | null
 
     /**
@@ -832,6 +970,9 @@ export type PaymentMethodDirectDebitWebhookNotification = {
      */
     directdebit?: WebhookPaymentMethodDirectDebit | null
 
+    /**
+     * Event that triggered this notification.
+     */
     event?: Extract<WebhookEvent, "customers.payment_methods.updated"> | null
 }
 
@@ -846,8 +987,14 @@ export type PaymentMethodDirectDebitWebhookNotification = {
  * - `customers.payment_methods.deleted`
  */
 export type PaymentMethodVirtualAccountWebhookNotification = {
+    /**
+     * Payment method type. Always `Virtualaccount` on this notification.
+     */
     pay_type: Extract<PayType, "Virtualaccount">
 
+    /**
+     * Shop ID the event happened on.
+     */
     shop_id?: string | null
 
     /**
@@ -855,8 +1002,14 @@ export type PaymentMethodVirtualAccountWebhookNotification = {
      */
     id?: string | null
 
+    /**
+     * Customer ID.
+     */
     customer_id?: string | null
 
+    /**
+     * Date the operation ran.
+     */
     process_date?: string | null
 
     /**
@@ -864,8 +1017,14 @@ export type PaymentMethodVirtualAccountWebhookNotification = {
      */
     status?: PaymentMethodStatus | null
 
+    /**
+     * Whether this is the customer's default.
+     */
     default_flag?: "0" | "1" | null
 
+    /**
+     * Whether the payment method was deleted.
+     */
     delete_flag?: "0" | "1" | null
 
     /**
@@ -875,8 +1034,14 @@ export type PaymentMethodVirtualAccountWebhookNotification = {
     client_field_2?: string | null
     client_field_3?: string | null
 
+    /**
+     * Date the payment method was registered.
+     */
     created?: string | null
 
+    /**
+     * Date the payment method was last updated.
+     */
     updated?: string | null
 
     /**
@@ -885,6 +1050,9 @@ export type PaymentMethodVirtualAccountWebhookNotification = {
      */
     virtual_account?: PaymentMethodVirtualAccount | null
 
+    /**
+     * Event that triggered this notification.
+     */
     event?: Extract<WebhookEvent,
         | "customers.payment_methods.created"
         | "customers.payment_methods.updated"
