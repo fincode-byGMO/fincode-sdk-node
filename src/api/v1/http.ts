@@ -7,6 +7,7 @@ import { HttpsProxyAgent } from "https-proxy-agent"
 const BASE_URL = "https://api.fincode.jp"
 const BASE_URL_TEST = "https://api.test.fincode.jp"
 
+
 /**
  * Build a query string from a query parameter object.
  * 
@@ -104,7 +105,7 @@ const createFincodeRequestFetch = (
 
     const _headers = createFincodeRequestHeader({
         apiVersion: config.options.version,
-        authorization: `Bearer ${config.apiKey}`,
+        authorization: `Bearer ${config.getApiKey()}`,
         idempotentKey: headers?.idempotentKey,
         tenantShopId: headers?.tenantShopId,
         contentType: headers?.contentType || "application/json",

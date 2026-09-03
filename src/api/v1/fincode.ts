@@ -22,18 +22,26 @@ import { PaymentMethod } from "./paymentMethod";
 export type FincodeInitOptions = {
     version?: string;
     proxyAgent?: string | URL;
+
     timeout?: number;
 };
 
 /**
- * @typedef {object} FincodeConfig
- * @property {boolean} isTest - Whether to use the fincode test environment
- * @property {string} apiKey - API key (secret key)
- * @property {FincodeInitOptions} options - Fincode initialization options
+ * Configuration shared by every resource of a `Fincode` instance.
+ * 
+ * The API key is held behind `getApiKey` rather than as a plain property. A
+ * string property would appear in `JSON.stringify(fincode)` and in
+ * `console.log(fincode)`, which is how secret keys reach log aggregators by
+ * accident.
  */
 type FincodeConfig = {
     isLiveMode: boolean;
-    apiKey: string;
+
+    /**
+     * Returns the secret API key.
+     */
+    getApiKey: () => string;
+
     options: FincodeInitOptions;
 };
 
@@ -57,9 +65,10 @@ class Fincode {
             throw new Error("isLiveMode should be a boolean value");
         }
 
-        const config = {
+        const apiKey = initArgs.apiKey;
+        const config: FincodeConfig = {
             isLiveMode: initArgs.isLiveMode,
-            apiKey: initArgs.apiKey,
+            getApiKey: () => apiKey,
             options: initArgs.options ?? {},
         };
         this.config = config;
