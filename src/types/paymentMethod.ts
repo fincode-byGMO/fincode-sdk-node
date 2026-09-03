@@ -1,5 +1,5 @@
 import { CardBrand, CardType, CardUpdaterMode } from "./card";
-import { DirectDebitResultCode, PayType, ThreeDSecure2Status } from "./payment";
+import { DirectDebitResultCode, PayType, ThreeDSecure2RequestFields, ThreeDSecure2Status } from "./payment";
 
 export type PaymentMethodObject = {
     /**
@@ -985,6 +985,139 @@ export type RetrievingPaymentMethodQueryParams = {
      * - `Virtualaccount`: Bank transfer (virtual account)
      */
     pay_type: PaymentMethodPayType
+}
+
+/**
+ * Request Body of Updating Payment Method (used for PUT /v1/customers/{customer_id}/payment_methods/{id})
+ */
+export type UpdatingPaymentMethodRequest = {
+    /**
+     * Payment method type
+     * 
+     * - `Card`: Card
+     * - `Virtualaccount`: Bank transfer (virtual account)
+     */
+    pay_type: Extract<PaymentMethodPayType, "Card" | "Virtualaccount">
+
+    /**
+     * Default flag
+     * 
+     * Only `"1"` is accepted, so this can make the payment method the default
+     * one but cannot undo it.
+     */
+    default_flag: "1"
+
+    /**
+     * URL to redirect upon successful registration.
+     * 
+     * Only for `pay_type: "Card"`.
+     */
+    return_url?: string | null
+
+    /**
+     * URL to redirect upon registration failure.
+     * 
+     * Only for `pay_type: "Card"`.
+     */
+    return_url_on_failure?: string | null
+
+    /**
+     * Fields where merchants can freely set values
+     * 
+     * Only for `pay_type: "Card"`.
+     */
+    client_field_1?: string | null
+    client_field_2?: string | null
+    client_field_3?: string | null
+
+    /**
+     * Card information.
+     * 
+     * Only for `pay_type: "Card"`. The card number itself cannot be changed.
+     * Leave this out to update `default_flag` and `client_field_*` alone.
+     */
+    card?: {
+        /**
+         * Card token responded from fincodeJS (Fincode.tokens(...))
+         * 
+         * Updates the card details from the token. Leave it out to set
+         * `expire`, `holder_name` and `security_code` directly.
+         */
+        token?: string | null
+
+        /**
+         * The expiring date of the card.
+         * 
+         * Required when `token` is not given.
+         * 
+         * Format: `YYMM`
+         */
+        expire?: string | null
+
+        /**
+         * Holder name of the card.
+         * 
+         * Can only be given when `token` is not.
+         */
+        holder_name?: string | null
+
+        /**
+         * Security code (CVC/CVV)
+         * 
+         * Can only be given when `token` is not.
+         */
+        security_code?: string | null
+
+        /**
+         * Whether the card updater should keep this card's details up to date.
+         * 
+         * Only updated when given.
+         */
+        card_updater_mode?: CardUpdaterMode | null
+
+        /**
+         * Defines the behavior of 3D Secure 2 on this update.
+         * 
+         * Required when the card details (`token`, `holder_name`, `expire`
+         * and the like) are updated.
+         * 
+         * - `0`: Not use.
+         * - `2`: Use 3D Secure 2 Authentication
+         */
+        tds_type?: "0" | "2" | null
+
+        /**
+         * Defines the behavior when the card does not support 3D Secure 2.
+         * 
+         * - `2`: fincode API will return HTTP Error(400).
+         * - `3`: fincode API will continue without 3D Secure 2 authentication.
+         */
+        tds2_type?: "2" | "3" | null
+
+        /**
+         * The value will be used as your business name in redirect page of 3D Secure.
+         */
+        td_tenant_name?: string | null
+
+        /**
+         * URL the customer is returned to after 3D Secure 2 authentication.
+         */
+        tds2_ret_url?: string | null
+    } & ThreeDSecure2RequestFields
+}
+
+/**
+ * Request Body of Inactivating or Reactivating a Payment Method
+ * (used for PUT /v1/customers/{customer_id}/payment_methods/{id}/inactivate
+ * and PUT /v1/customers/{customer_id}/payment_methods/{id}/reactivate)
+ */
+export type SwitchingPaymentMethodStateRequest = {
+    /**
+     * Payment method type
+     * 
+     * - `Virtualaccount`: Bank transfer (virtual account)
+     */
+    pay_type: Extract<PaymentMethodPayType, "Virtualaccount">
 }
 
 /**

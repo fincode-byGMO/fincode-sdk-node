@@ -4,6 +4,8 @@ import {
     PaymentMethodObject,
     ListResponse,
     DeletingPaymentMethodQueryParams,
+    UpdatingPaymentMethodRequest,
+    SwitchingPaymentMethodStateRequest,
     RetrievingPaymentMethodQueryParams,
 } from "../../types"
 import { FincodeConfig } from "./fincode"
@@ -83,6 +85,87 @@ class PaymentMethod {
         return executeRequest<PaymentMethodObject>(this._config, "GET", `/v1/customers/${customerId}/payment_methods/${id}`, {
             headers,
             queryParams,
+        })
+    }
+
+    /**
+     * **Update a payment method**
+     * 
+     * corresponds to `PUT /v1/customers/{customerId}/payment_methods/{id}`
+     * 
+     * The card number itself cannot be changed. Accepts `Card` and
+     * `Virtualaccount` payment methods.
+     * 
+     * @param {string} customerId - customer id
+     * @param {string} id - payment method id
+     * @param {UpdatingPaymentMethodRequest} body - request body
+     * @param {FincodeRequestHeaders} [headers] - request header
+     * 
+     * @returns {Promise<PaymentMethodObject>} - updated payment method object
+     */
+    public update(
+        customerId: string,
+        id: string,
+        body: UpdatingPaymentMethodRequest,
+        headers?: FincodeRequestHeaders
+    ): Promise<PaymentMethodObject> {
+        return executeRequest<PaymentMethodObject>(this._config, "PUT", `/v1/customers/${customerId}/payment_methods/${id}`, {
+            body: JSON.stringify(body),
+            headers,
+        })
+    }
+
+    /**
+     * **Inactivate a payment method**
+     * 
+     * corresponds to `PUT /v1/customers/{customerId}/payment_methods/{id}/inactivate`
+     * 
+     * An inactivated payment method cannot be used for payments until it is
+     * reactivated. Accepts `Virtualaccount` payment methods.
+     * 
+     * @param {string} customerId - customer id
+     * @param {string} id - payment method id
+     * @param {SwitchingPaymentMethodStateRequest} body - request body
+     * @param {FincodeRequestHeaders} [headers] - request header
+     * 
+     * @returns {Promise<PaymentMethodObject>} - inactivated payment method object
+     */
+    public inactivate(
+        customerId: string,
+        id: string,
+        body: SwitchingPaymentMethodStateRequest,
+        headers?: FincodeRequestHeaders
+    ): Promise<PaymentMethodObject> {
+        return executeRequest<PaymentMethodObject>(this._config, "PUT", `/v1/customers/${customerId}/payment_methods/${id}/inactivate`, {
+            body: JSON.stringify(body),
+            headers,
+        })
+    }
+
+    /**
+     * **Reactivate a payment method**
+     * 
+     * corresponds to `PUT /v1/customers/{customerId}/payment_methods/{id}/reactivate`
+     * 
+     * Puts an inactivated payment method back into use. Accepts
+     * `Virtualaccount` payment methods.
+     * 
+     * @param {string} customerId - customer id
+     * @param {string} id - payment method id
+     * @param {SwitchingPaymentMethodStateRequest} body - request body
+     * @param {FincodeRequestHeaders} [headers] - request header
+     * 
+     * @returns {Promise<PaymentMethodObject>} - reactivated payment method object
+     */
+    public reactivate(
+        customerId: string,
+        id: string,
+        body: SwitchingPaymentMethodStateRequest,
+        headers?: FincodeRequestHeaders
+    ): Promise<PaymentMethodObject> {
+        return executeRequest<PaymentMethodObject>(this._config, "PUT", `/v1/customers/${customerId}/payment_methods/${id}/reactivate`, {
+            body: JSON.stringify(body),
+            headers,
         })
     }
 
