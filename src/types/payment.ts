@@ -1,6 +1,7 @@
 import { Modify } from "../utils/utilTypes"
 import * as Card from "./card"
 import { Pagination } from "./pagination"
+import { DirectDebitSettlementRoute } from "./paymentMethod"
 
 /**
  * Payment Object
@@ -330,6 +331,13 @@ export type PaymentObject = {
      */
     error_code?: string | null
 
+    /**
+     * Bill ID
+     * 
+     * Set when this payment was created from an invoice.
+     */
+    bill_id?: string | null
+
     // ---
     // Konbini Payment
     // ---
@@ -574,6 +582,14 @@ export type PaymentObject = {
      * Result code of direct debit payment (returned by the direct debit payment provider.)
      */
     result_code?: DirectDebitResultCode | null
+
+    /**
+     * Transfer service the bank account used in this payment is registered with.
+     * 
+     * - `1`: Direct debit on the 5th, 6th, 23rd and 27th.
+     * - `2`: Direct debit on the 1st, 5th, 20th and 26th.
+     */
+    settlement_route?: DirectDebitSettlementRoute | null
 
     // ---
     // Virtual Account Payment

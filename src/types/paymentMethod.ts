@@ -225,6 +225,14 @@ type PaymentMethodDirectDebit = {
     application_type: DirectDebitApplicationType
 
     /**
+     * Transfer service this bank account is registered with.
+     * 
+     * - `1`: Direct debit on the 5th, 6th, 23rd and 27th.
+     * - `2`: Direct debit on the 1st, 5th, 20th and 26th.
+     */
+    settlement_route?: DirectDebitSettlementRoute | null
+
+    /**
      * Expected billable date.
      * 
      * The date and time when payment requests are expected to be possible after account registration.
@@ -377,6 +385,16 @@ export type DirectDebitApplicationType = "ONLINE" | "PAPER"
  * - "1": JP Bank (Yucho Bank)
  */
 export type DirectDebitBankType = "0" | "1"
+
+/**
+ * Transfer service the bank account is registered with.
+ * 
+ * The service determines the days of the month on which the debit is taken.
+ * 
+ * - `1`: Direct debit on the 5th, 6th, 23rd and 27th.
+ * - `2`: Direct debit on the 1st, 5th, 20th and 26th.
+ */
+export type DirectDebitSettlementRoute = "1" | "2"
 
 /**
  * Request Body of Creating Payment Method (used for POST /v1/customers/{customer_id}/payment_methods)
@@ -759,6 +777,18 @@ export type CreatingPaymentMethodRequest = {
          * - `PAPER`: Paper application
          */
         application_type: DirectDebitApplicationType
+
+        /**
+         * Transfer service to register the bank account with.
+         * 
+         * The service determines the days of the month on which the debit is
+         * taken. Leave it out to register with the shop's default service,
+         * which is the one whose examination completed most recently.
+         * 
+         * - `1`: Direct debit on the 5th, 6th, 23rd and 27th.
+         * - `2`: Direct debit on the 1st, 5th, 20th and 26th.
+         */
+        settlement_route?: DirectDebitSettlementRoute | null
 
         /**
          * Bank code

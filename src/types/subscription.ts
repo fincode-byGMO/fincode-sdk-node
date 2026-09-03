@@ -1,6 +1,7 @@
 import { Modify } from "../utils/utilTypes"
 import { Pagination } from "./pagination"
 import { PayType } from "./payment"
+import { DirectDebitSettlementRoute } from "./paymentMethod"
 import { PlanIntervalCount, PlanIntervalPattern } from "./plan"
 
 /**
@@ -130,6 +131,16 @@ export type SubscriptionObject = {
     client_field_1?: string | null
     client_field_2?: string | null
     client_field_3?: string | null
+
+    /**
+     * Transfer service the bank account is registered with.
+     * 
+     * Only for `pay_type: "Directdebit"`.
+     * 
+     * - `1`: Direct debit on the 5th, 6th, 23rd and 27th.
+     * - `2`: Direct debit on the 1st, 5th, 20th and 26th.
+     */
+    settlement_route?: DirectDebitSettlementRoute | null
 
     /**
      * Interval Pattern.
@@ -545,6 +556,16 @@ export type SubscriptionResultObject = {
     client_field_1?: string | null
     client_field_2?: string | null
     client_field_3?: string | null
+
+    /**
+     * Transfer service the bank account is registered with.
+     * 
+     * Only for `pay_type: "Directdebit"`.
+     * 
+     * - `1`: Direct debit on the 5th, 6th, 23rd and 27th.
+     * - `2`: Direct debit on the 1st, 5th, 20th and 26th.
+     */
+    settlement_route?: DirectDebitSettlementRoute | null
 
     /**
      * Interval pattern
