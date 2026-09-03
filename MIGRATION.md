@@ -8,7 +8,7 @@ undici に変えたためです。`node-fetch`、`https-proxy-agent`、`form-dat
 なくなりました。
 
 移行にあたっては、まず `tsc` を通してください。誤った名前や型はコンパイルエラーに
-なります。ただし **コンパイルエラーにならない変更が4つ** あるので、そちらは
+なります。ただし **コンパイルエラーにならない変更が5つ** あるので、そちらは
 先に確認してください。
 
 ---
@@ -68,6 +68,24 @@ Webhook通知の `succeeded` / `failed` / `total` / `error_total_count` /
 `regist_total_count` / `succeeded_count` / `failed_count` / `total_count` は
 文字列で届きます。v1 の型に従って数値として足し算していた場合、文字列連結に
 なっていました。
+
+---
+
+### プロキシ環境変数
+
+`options.proxyAgent` を指定しない場合、`HTTP_PROXY` / `HTTPS_PROXY` / `NO_PROXY` から
+プロキシを読むようになりました。v1 はこれらを見なかったため、プロキシ配下では
+`options.proxyAgent` を渡さないと接続できませんでした。
+
+これらの環境変数が設定された環境で、fincode への通信だけはプロキシを経由させたく
+ない場合は、`NO_PROXY` に fincode のホストを加えてください。
+
+```
+NO_PROXY=api.fincode.jp,api.test.fincode.jp
+```
+
+`options.proxyAgent` を渡した場合は従来どおりそちらが使われます。この指定は
+`NO_PROXY` より優先されます。
 
 ---
 

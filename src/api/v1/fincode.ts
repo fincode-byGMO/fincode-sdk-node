@@ -16,11 +16,19 @@ import { PaymentMethod } from "./paymentMethod";
 /**
  * @typedef {object} FincodeInitOptions
  * @property {string} version - Fincode API version
- * @property {string | URL} proxyAgent - Proxy agent for Fincode API requests.
+ * @property {string | URL} proxyAgent - Proxy to send Fincode API requests through.
  * @property {number} timeout - Timeout for Fincode API requests
  */
 export type FincodeInitOptions = {
     version?: string;
+
+    /**
+     * Proxy to send requests through.
+     * 
+     * When this is not set, the proxy is taken from the `HTTP_PROXY`,
+     * `HTTPS_PROXY` and `NO_PROXY` environment variables. With none of those
+     * set the requests go out directly.
+     */
     proxyAgent?: string | URL;
 
     /**

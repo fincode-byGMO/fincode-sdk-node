@@ -1,4 +1,4 @@
-import { fetch, FormData, ProxyAgent } from "undici"
+import { EnvHttpProxyAgent, fetch, FormData, ProxyAgent } from "undici"
 import type { BodyInit, Dispatcher, RequestInit } from "undici"
 import { FincodeConfig } from "./fincode"
 import { FincodeSDKErrorKind } from "../../types/index"
@@ -105,16 +105,23 @@ const createFincodeRequestURL = (
 export { createFincodeRequestURL }
 
 const proxyDispatchers = new Map<string, ProxyAgent>()
+let envProxyDispatcher: EnvHttpProxyAgent | undefined
 
 /**
- * Reuse one dispatcher per proxy URL.
+ * Pick the dispatcher to send a request through.
  * 
- * A `ProxyAgent` owns a connection pool. Building one per request throws the
- * pool away each time, so every call pays for a new TLS handshake.
+ * Without `options.proxyAgent` the proxy is taken from `HTTP_PROXY`,
+ * `HTTPS_PROXY` and `NO_PROXY`, which is where a corporate proxy is usually
+ * configured. With none of those set the request goes out directly.
+ * 
+ * Dispatchers are reused. Each one owns a connection pool, so building one
+ * per request throws the pool away every time and every call pays for a new
+ * TLS handshake.
  */
-const getProxyDispatcher = (proxyAgent?: string | URL): Dispatcher | undefined => {
+const getProxyDispatcher = (proxyAgent?: string | URL): Dispatcher => {
     if (!proxyAgent) {
-        return undefined
+        envProxyDispatcher ??= new EnvHttpProxyAgent()
+        return envProxyDispatcher
     }
 
     const uri = String(proxyAgent)
