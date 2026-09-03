@@ -1,6 +1,7 @@
 export * from "./bulk.payment"
 export * from "./card"
 export * from "./changeRequest"
+export * from "./companyStamp"
 export * from "./chargeback"
 export * from "./customer"
 export * from "./fincode"
