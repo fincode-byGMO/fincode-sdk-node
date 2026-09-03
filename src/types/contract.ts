@@ -1325,3 +1325,177 @@ export type CorporateInformation_V2 = {
      */
     company_tel?: string | null
 }
+
+/**
+ * Kind of file submitted to the fincode examination team.
+ * 
+ * - `DRIVER_LICENSE_FRONT`: Identity document; driver's license (front). The back has to be submitted too.
+ * - `DRIVER_LICENSE_BACK`: Identity document; driver's license (back). The front has to be submitted too.
+ * - `SEAL_REGISTRATION_FRONT`: Identity document; seal registration certificate.
+ * - `RESIDENT_CARD_FRONT`: Identity document; residence card (front). The back has to be submitted too.
+ * - `RESIDENT_CARD_BACK`: Identity document; residence card (back). The front has to be submitted too.
+ * - `SPECIAL_PERMANENT_RESIDENT_FRONT`: Identity document; special permanent resident certificate (front). The back has to be submitted too.
+ * - `SPECIAL_PERMANENT_RESIDENT_BACK`: Identity document; special permanent resident certificate (back). The front has to be submitted too.
+ * - `CERTIFICATE_OF_RESIDENCE_FRONT`: Identity document; certificate of residence.
+ * - `MY_NUMBER_CARD_FRONT`: Identity document; My Number card.
+ * - `PRODUCT_IMAGE_1`: Goods examination; image for `product_content_info.content1_*`.
+ * - `PRODUCT_IMAGE_2`: Goods examination; image for `product_content_info.content2_*`.
+ * - `PRODUCT_IMAGE_3`: Goods examination; image for `product_content_info.content3_*`.
+ * - `APP_IMAGE_TOP`: App examination; screenshot of the app's top screen. For a native app with no website at the time of examination.
+ * - `APP_IMAGE_ICON`: App examination; the app's icon.
+ * - `SALES_LICENSE_1`: Sales license. Some goods and services need one, and it has to be held in the contracting name.
+ * - `SALES_LICENSE_2`: Sales license, second file.
+ * - `SALES_LICENSE_3`: Sales license, third file.
+ */
+export type ExaminationFileType =
+    | "DRIVER_LICENSE_FRONT"
+    | "DRIVER_LICENSE_BACK"
+    | "SEAL_REGISTRATION_FRONT"
+    | "RESIDENT_CARD_FRONT"
+    | "RESIDENT_CARD_BACK"
+    | "SPECIAL_PERMANENT_RESIDENT_FRONT"
+    | "SPECIAL_PERMANENT_RESIDENT_BACK"
+    | "CERTIFICATE_OF_RESIDENCE_FRONT"
+    | "MY_NUMBER_CARD_FRONT"
+    | "PRODUCT_IMAGE_1"
+    | "PRODUCT_IMAGE_2"
+    | "PRODUCT_IMAGE_3"
+    | "APP_IMAGE_TOP"
+    | "APP_IMAGE_ICON"
+    | "SALES_LICENSE_1"
+    | "SALES_LICENSE_2"
+    | "SALES_LICENSE_3"
+
+/**
+ * Request body of Uploading an examination file
+ * (used for POST /v1/contracts/examinations/tenants/{id}/files)
+ */
+export type UploadingExaminationFileRequest = {
+    /**
+     * Kind of file being uploaded.
+     */
+    type: ExaminationFileType
+
+    /**
+     * File to upload.
+     */
+    data: Buffer | string
+
+    /**
+     * File name of the `data`, including the extension.
+     */
+    fileName: string
+
+    /**
+     * MIME type of the `data`.
+     * 
+     * Defaults to `application/octet-stream`.
+     */
+    contentType?: string
+}
+
+/**
+ * Response object of Uploading an examination file
+ * (used for POST /v1/contracts/examinations/tenants/{id}/files)
+ */
+export type UploadingExaminationFileResponse = {
+    examination_files?: {
+        /**
+         * Shop ID the file was accepted for.
+         */
+        shop_id?: string | null
+
+        /**
+         * Kind of the uploaded file, as the numeric code the API answers with.
+         * 
+         * The request takes the name (`DRIVER_LICENSE_FRONT`) while the
+         * response gives the code (`200`).
+         */
+        type?: number | null
+
+        /**
+         * File name including the extension.
+         */
+        filename?: string | null
+
+        /**
+         * File size in bytes.
+         */
+        filesize?: number | null
+    }[] | null
+}
+
+/**
+ * Payment method a tenant can apply for.
+ * 
+ * - `PAYSLE`: Konbini
+ * - `PAYPAY`: PayPay
+ * - `APPLE_PAY_UC`: Apple Pay (VISA / Mastercard, UC Card)
+ * - `APPLE_PAY_JCB_AMEX`: Apple Pay (JCB / American Express)
+ * - `GOOGLE_PAY_UC`: Google Pay (VISA / Mastercard, UC Card)
+ * - `GOOGLE_PAY_TFC`: Google Pay (VISA / Mastercard, Toyota Finance)
+ * - `GOOGLE_PAY_ORICO`: Google Pay (VISA / Mastercard, Orient Corporation)
+ * - `GOOGLE_PAY_AFS`: Google Pay (VISA / Mastercard, AEON Financial Service)
+ * - `GOOGLE_PAY_MUN`: Google Pay (VISA / Mastercard, Mitsubishi UFJ Nicos)
+ * - `GOOGLE_PAY_JCB_AMEX`: Google Pay (JCB / American Express)
+ * - `GOOGLE_PAY_DINERS`: Google Pay (Diners Club)
+ * - `DIRECT_DEBIT`: Direct debit on the 5th, 6th, 23rd and 27th
+ * - `DIRECT_DEBIT_MIZUHO`: Direct debit on the 1st, 5th, 20th and 26th
+ * - `VIRTUAL_ACCOUNT`: Bank transfer (virtual account)
+ * - `VIRTUAL_ACCOUNT_BULK`: Bulk payment (virtual account)
+ * - `CARD_UPDATER`: Card updater
+ */
+export type PaymentProvider =
+    | "PAYSLE"
+    | "PAYPAY"
+    | "APPLE_PAY_UC"
+    | "APPLE_PAY_JCB_AMEX"
+    | "GOOGLE_PAY_UC"
+    | "GOOGLE_PAY_TFC"
+    | "GOOGLE_PAY_ORICO"
+    | "GOOGLE_PAY_AFS"
+    | "GOOGLE_PAY_MUN"
+    | "GOOGLE_PAY_JCB_AMEX"
+    | "GOOGLE_PAY_DINERS"
+    | "DIRECT_DEBIT"
+    | "DIRECT_DEBIT_MIZUHO"
+    | "VIRTUAL_ACCOUNT"
+    | "VIRTUAL_ACCOUNT_BULK"
+    | "CARD_UPDATER"
+
+/**
+ * Request body of Applying for payment methods
+ * (used for POST /v1/contracts/examinations/tenants/{id}/providers/reserve)
+ */
+export type ReservingProviderRequest = {
+    /**
+     * Payment methods to apply for.
+     */
+    provider: PaymentProvider[]
+}
+
+/**
+ * Response object of Applying for payment methods
+ * (used for POST /v1/contracts/examinations/tenants/{id}/providers/reserve)
+ */
+export type ReservingProviderResponse = {
+    /**
+     * Payment methods currently under application.
+     */
+    reservation_list?: {
+        /**
+         * Application ID.
+         */
+        reservation_id?: number | null
+
+        /**
+         * Shop ID the application is for.
+         */
+        shop_id?: string | null
+
+        /**
+         * Payment method applied for.
+         */
+        provider?: PaymentProvider | null
+    }[] | null
+}

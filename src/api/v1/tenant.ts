@@ -14,7 +14,12 @@ import {
     ExaminationInfo_V2,
     UpdatingExaminationInfoRequest_V2,
     RetrievingTenantShopListQueryParams,
+    UploadingExaminationFileRequest,
+    UploadingExaminationFileResponse,
+    ReservingProviderRequest,
+    ReservingProviderResponse,
 } from "../../types/index"
+import { FormData } from "undici"
 import { FincodeConfig } from "./fincode"
 import { FincodeRequestHeaders } from "./http"
 import { executeRequest } from "./_request"
@@ -222,6 +227,66 @@ class Tenant {
         return executeRequest<ListResponse<ShopObject>>(this._config, "GET", "/v1/tenants", {
             headers,
             queryParams,
+        })
+    }
+
+    /**
+     * **Upload an examination file of a tenant**
+     * 
+     * corresponds to `POST /v1/contracts/examinations/tenants/:id/files`
+     * 
+     * Submits an image to the fincode examination team. Which files can be
+     * uploaded depends on the tenant's examination status.
+     * 
+     * @param {string} id - tenant shop id
+     * @param {UploadingExaminationFileRequest} body - request body
+     * @param {FincodeRequestHeaders} [headers] - request header
+     * 
+     * @returns {Promise<UploadingExaminationFileResponse>} - accepted file
+     */
+    public uploadExaminationFile(
+        id: string,
+        body: UploadingExaminationFileRequest,
+        headers?: Omit<FincodeRequestHeaders, "tenantShopId">
+    ): Promise<UploadingExaminationFileResponse> {
+
+        // multipart/form-data
+        const formData = new FormData()
+        formData.append("type", body.type)
+        formData.append(
+            "data",
+            new Blob([body.data], { type: body.contentType ?? "application/octet-stream" }),
+            body.fileName,
+        )
+
+        return executeRequest<UploadingExaminationFileResponse>(this._config, "POST", `/v1/contracts/examinations/tenants/${id}/files`, {
+            body: formData,
+            headers: { ...headers, tenantShopId: id },
+        })
+    }
+
+    /**
+     * **Apply for payment methods of a tenant**
+     * 
+     * corresponds to `POST /v1/contracts/examinations/tenants/:id/providers/reserve`
+     * 
+     * Applies for the payment methods to be added to a tenant. It can take up
+     * to a day for the application to show up in the dashboard.
+     * 
+     * @param {string} id - tenant shop id
+     * @param {ReservingProviderRequest} body - request body
+     * @param {FincodeRequestHeaders} [headers] - request header
+     * 
+     * @returns {Promise<ReservingProviderResponse>} - payment methods under application
+     */
+    public reserveProvider(
+        id: string,
+        body: ReservingProviderRequest,
+        headers?: Omit<FincodeRequestHeaders, "tenantShopId">
+    ): Promise<ReservingProviderResponse> {
+        return executeRequest<ReservingProviderResponse>(this._config, "POST", `/v1/contracts/examinations/tenants/${id}/providers/reserve`, {
+            body: JSON.stringify(body),
+            headers: { ...headers, tenantShopId: id },
         })
     }
 
