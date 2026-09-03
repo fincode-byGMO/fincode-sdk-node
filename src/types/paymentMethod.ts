@@ -12,8 +12,9 @@ export type PaymentMethodObject = {
      * 
      * - `Card`: this payment method is a card
      * - `Directdebit`: this payment method is a bank account for direct debit payment
+     * - `Virtualaccount`: this payment method is a bank transfer (virtual account)
      */
-    pay_type: Extract<PayType, "Card" | "Directdebit">;
+    pay_type: PaymentMethodPayType;
 
     /**
      * Customer ID that this payment method belongs to
@@ -120,6 +121,14 @@ export type PaymentMethodObject = {
      * If this payment method is a bank account for direct debit payment, this field will be filled.
      */
     directdebit?: PaymentMethodDirectDebit | null
+
+    /**
+     * Virtual account information.
+     * 
+     * If this payment method is a bank transfer (virtual account), this field
+     * will be filled.
+     */
+    virtualaccount?: PaymentMethodVirtualAccount | null
 }
 
 type PaymentMethodCard = {
@@ -232,6 +241,54 @@ type PaymentMethodCard = {
      * Format: `yyyy/MM/dd HH:mm:ss.SSS`
      */
     card_updater_last_attempt_date?: string | null
+}
+
+type PaymentMethodVirtualAccount = {
+    /**
+     * Branch code of this virtual account.
+     */
+    va_branch_code?: string | null
+
+    /**
+     * Branch name of this virtual account.
+     */
+    va_branch_name?: string | null
+
+    /**
+     * Account number of this virtual account.
+     */
+    va_account_number?: string | null
+
+    /**
+     * Account holder name of this virtual account.
+     */
+    va_account_name?: string | null
+
+    /**
+     * Virtual account identifier.
+     */
+    virtual_account_id?: string | null
+
+    /**
+     * The date this virtual account was assigned.
+     * 
+     * Format: `yyyy/MM/dd HH:mm:ss.SSS`
+     */
+    account_assignment_date?: string | null
+
+    /**
+     * The date this virtual account was activated most recently.
+     * 
+     * Format: `yyyy/MM/dd HH:mm:ss.SSS`
+     */
+    last_activated_date?: string | null
+
+    /**
+     * The date of the most recent transaction on this virtual account.
+     * 
+     * Format: `yyyy/MM/dd`
+     */
+    latest_transaction_date?: string | null
 }
 
 type PaymentMethodDirectDebit = {
@@ -387,6 +444,15 @@ type PaymentMethodDirectDebit = {
 export type PaymentMethodStatus = "INACTIVATED" | "AWAITING_CUSTOMER_ACTION" | "ACTIVATED" | "FAILED";
 
 /**
+ * Payment method types the payment method API works with.
+ * 
+ * - `Card`: Card
+ * - `Directdebit`: Direct Debit
+ * - `Virtualaccount`: Bank transfer (virtual account)
+ */
+export type PaymentMethodPayType = Extract<PayType, "Card" | "Directdebit" | "Virtualaccount">
+
+/**
  * Direct Debit Application Type
  * 
  * - `ONLINE`: Online application
@@ -425,8 +491,9 @@ export type CreatingPaymentMethodRequest = {
      * 
      * - `Card`: Card
      * - `Directdebit`: Direct Debit
+     * - `Virtualaccount`: Bank transfer (virtual account)
      */
-    pay_type: Extract<PayType, "Card" | "Directdebit">
+    pay_type: PaymentMethodPayType
 
     /**
      * Default flag
@@ -899,9 +966,11 @@ export type RetrievingPaymentMethodListQueryParams = {
     /**
      * Payment method type
      * 
+     * - `Card`: Card
      * - `Directdebit`: Direct Debit
+     * - `Virtualaccount`: Bank transfer (virtual account)
      */
-    pay_type: Extract<PayType, "Directdebit">
+    pay_type: PaymentMethodPayType
 }
 
 /**
@@ -911,9 +980,11 @@ export type RetrievingPaymentMethodQueryParams = {
     /**
      * Payment method type
      * 
+     * - `Card`: Card
      * - `Directdebit`: Direct Debit
+     * - `Virtualaccount`: Bank transfer (virtual account)
      */
-    pay_type: Extract<PayType, "Directdebit">
+    pay_type: PaymentMethodPayType
 }
 
 /**
