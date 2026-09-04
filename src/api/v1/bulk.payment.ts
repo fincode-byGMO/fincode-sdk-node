@@ -91,6 +91,9 @@ class PaymentBulk {
      * account one with {@link VirtualAccountPaymentBulkDetailObject}. Neither
      * carries `pay_type`, so the query is what tells the two apart.
      * 
+     * Passing a `pay_type` that is not a literal, such as the one read off a
+     * bulk payment in a list, answers with both shapes as a union.
+     * 
      * @param {string} id - payment bulk id
      * @param {RetrievingPaymentBulkDetailQueryParams} queryParams - query parameters
      * @param {FincodeRequestHeaders} [headers] - request header
@@ -107,6 +110,11 @@ class PaymentBulk {
         queryParams: Modify<RetrievingPaymentBulkDetailQueryParams, { pay_type: Extract<PaymentBulkPayType, "Virtualaccount"> }>,
         headers?: FincodeRequestHeaders,
     ): Promise<ListWithErrors<VirtualAccountPaymentBulkDetailObject>>
+    public retrieveDetailList(
+        id: string,
+        queryParams: RetrievingPaymentBulkDetailQueryParams,
+        headers?: FincodeRequestHeaders,
+    ): Promise<ListWithErrors<PaymentBulkDetailObject | VirtualAccountPaymentBulkDetailObject>>
     public retrieveDetailList(
         id: string,
         queryParams: RetrievingPaymentBulkDetailQueryParams,
