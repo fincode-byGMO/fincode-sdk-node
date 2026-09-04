@@ -26,8 +26,9 @@ APIリファレンスが定義する fincode の90オペレーションすべて
 
 リクエストのタイムアウトに既定値（60秒）を設けました。`options.timeout` を
 指定しない場合、node-fetch に `undefined` が渡って無制限として扱われ、応答が
-返らないリクエストが返らないまま残っていました。決済SDKでは、応答が返らないと
-決済が成立したか判断できません。`0` を渡せば従来どおり無制限になります。
+来ないままリクエストが残り続けていました。決済が成立したかは応答を見ないと
+判断できないため、60秒で打ち切って `FincodeSDKError` を返します。`0` を渡せば
+従来どおり無制限になります。
 
 `tenants.retrieveExaminationInfoV2` が通信エラーのときに解決しませんでした。
 通信エラーの catch が JSON 解析の catch に連鎖しており、外側に catch が
@@ -192,10 +193,6 @@ HTTPクライアントを node-fetch から undici に置き換えました。`n
 
 68メソッドが持っていた同一の定型処理を共通の1箇所にまとめました。公開型は
 変わりません。
-
-`options.proxyAgent` を指定しない場合、`HTTP_PROXY` / `HTTPS_PROXY` / `NO_PROXY`
-からプロキシを読むようにしました。v1 はこれらを見ないため、プロキシ配下では
-`options.proxyAgent` を渡さないと接続できませんでした。
 
 `PaymentMethodObject` に `virtualaccount` ブロックを追加し、`pay_type` の値域に
 `Virtualaccount` を加えました。あわせて `PaymentSessionObject.transaction.pay_type`

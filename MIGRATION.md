@@ -92,8 +92,8 @@ NO_PROXY=api.fincode.jp,api.test.fincode.jp
 ### リクエストのタイムアウト
 
 タイムアウトの既定値が60秒になりました。v1 では `options.timeout` を指定しない
-場合、node-fetch に `undefined` が渡って「無制限」として扱われ、応答が返らない
-リクエストが返らないまま残っていました。
+場合、node-fetch に `undefined` が渡って無制限として扱われ、応答が来ないまま
+リクエストが残り続けていました。
 
 決済SDKでこれが問題になるのは、応答が返らないと決済が成立したか判断できないこと
 です。60秒で打ち切り、`FincodeSDKError` を返します。
@@ -380,7 +380,7 @@ v1 ではタイムアウトも接続失敗もJSONの解析失敗も、すべて
 | `kind` | 意味 |
 |:--|:--|
 | `timeout` | `options.timeout` 内に終わらなかった |
-| `network` | fincode に届かなかった（名前解決・接続・TLS） |
+| `network` | fincode に届かなかった（名前解決や接続、TLSの失敗） |
 | `response_body` | 応答は来たが本文がJSONではなかった |
 | `unknown` | それ以外 |
 
@@ -396,9 +396,9 @@ catch (e) {
 `timeout` と `network` の違いは再送の判断で逆になります。`network` は届いて
 いないので同じリクエストを送り直せますが、`timeout` は届いているかもしれません。
 
-再送可否そのものはSDKが持ちません。同じ失敗でも、決済登録の再送は二重決済に
-なりうる一方で一覧取得なら安全で、冪等キーの有無でも変わるため、SDKが一律に
-決められる値ではないという判断です。
+再送するかどうかはSDKでは判定しません。同じ失敗でも、決済登録の再送は二重決済に
+なりうる一方で一覧取得なら安全で、冪等キーを付けているかどうかでも変わります。
+呼び出している操作に応じて決めてください。
 
 本文がJSONでない場合は `status` にHTTPステータスが入ります。fincode 自身はJSONを
 返しますが、手前のプロキシやWAFが 502 や 503 でHTMLを返すことがあります。
@@ -498,7 +498,7 @@ await fincode.paymentMethods.delete(customerId, id, { pay_type: "Card" })
 ## 14. 決済セッションの pay_type の値域
 
 `PaymentSessionObject.transaction.pay_type` に `Virtualaccount` が加わりました。
-この配列の要素で網羅的に分岐していた場合は分岐の追加が必要です。
+この配列の要素を `switch` で網羅していた場合、分岐が1つ足りなくなります。
 
 リクエスト側にも `virtualaccount` ブロックが加わりました。v1 では
 リクエスト・レスポンスとも無く、バーチャル口座を含む決済URLを型どおりには
@@ -549,7 +549,7 @@ switch (notification.pay_type) {
 
 3つとも `pay_type` が `Card` に固定されており、口座振替とバーチャル口座を
 表現できませんでした。共用体にして値域を広げています。一括決済だけは分岐の軸が
-決済種別ではなく操作（登録とバッチ）です。
+操作（登録とバッチ）です。
 
 ### 決済手段の通知が加わりました
 
@@ -591,7 +591,6 @@ const p: InvoiceWebhookNotification = { event: "payments.card.regist" }
 ---
 
 ## 16. 一括決済のバーチャル口座
-
 
 `pay_type` が3箇所で `Card` に固定されており、バーチャル口座の一括決済は登録も
 照会もできませんでした。
