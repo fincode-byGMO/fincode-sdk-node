@@ -518,11 +518,43 @@ await fincode.paymentSessions.create({
 
 ## 15. Webhook通知の型
 
-### 決済手段の通知が共用体になりました
+通知型を6つから20に増やし、決済種別ごとの共用体にしました。
 
-`customers.payment_methods.**` の通知は、決済種別ごとに構造が違います。v1 には
-型が無かったため新規追加ですが、フラットな型を期待して自前で書いていた場合は
-`pay_type` での分岐が必要です。
+### 決済の通知が共用体になりました
+
+`PaymentWebhookNotification` は1つのフラットな型で、口座振替とバーチャル口座、
+Google Pay の項目を持っていませんでした。これらの通知は型どおりには読めません。
+決済種別ごとに7つの変種に分けたので、分岐が必要になります。
+
+```ts
+// v1
+const konbini = notification.konbini_code
+
+// v2
+switch (notification.pay_type) {
+    case "Card":           return notification.approve
+    case "Konbini":        return notification.konbini_code
+    case "Virtualaccount": return notification.va_account_number
+    // ...
+}
+```
+
+7種別すべてに共通する13項目は分岐なしで読めます。`shop_id`、`order_id`、
+`access_id`、`status`、`customer_id`、`client_field_1` から `client_field_3`、
+`amount`、`tax`、`error_code`、`pay_type`、`event` です。
+
+通知の `amount` と `tax` は文字列です。決済APIが返す数値とは違います。
+
+### サブスクリプションと定期課金バッチ、一括決済も分かれました
+
+3つとも `pay_type` が `Card` に固定されており、口座振替とバーチャル口座を
+表現できませんでした。共用体にして値域を広げています。一括決済だけは分岐の軸が
+決済種別ではなく操作（登録とバッチ）です。
+
+### 決済手段の通知が加わりました
+
+`customers.payment_methods.**` の通知は v1 に型がありませんでした。決済種別ごとに
+構造が違うので、フラットな型を期待して自前で書いていた場合は分岐が必要です。
 
 ```ts
 const receive = (p: PaymentMethodWebhookNotification) => {
@@ -542,12 +574,45 @@ const receive = (p: PaymentMethodWebhookNotification) => {
 バーチャル口座だけで、カードと口座振替は `customers.payment_methods.updated`
 のみです。
 
+### 未対応だった4つを追加しました
+
+カード更新完了、インボイス、チャージバック、変更申請です。
+
 ### event を型で絞りました
 
-新しく追加した通知型は `event` を届きうるイベントだけに絞っています。届かない
-イベントを書くとコンパイルエラーになります。
+20の通知型すべてで、`event` は届きうるイベントだけを受けます。そのエンドポイント
+に来ないイベントを書くとコンパイルエラーになります。
 
 ```ts
 // インボイスの受信処理にカード決済のイベントは来ない
 const p: InvoiceWebhookNotification = { event: "payments.card.regist" }
 ```
+
+---
+
+## 16. 一括決済のバーチャル口座
+
+
+`pay_type` が3箇所で `Card` に固定されており、バーチャル口座の一括決済は登録も
+照会もできませんでした。
+
+```ts
+// v2
+await fincode.paymentBulks.create(
+    { pay_type: "Virtualaccount", process_plan_date: "2030/01/01" },
+    { file, fileName: "bulk.json" },
+)
+```
+
+明細取得の戻り値はクエリの `pay_type` で決まります。明細自体は `pay_type` を
+持たないため、リテラルを渡さないと形が確定しません。
+
+```ts
+const card = await fincode.paymentBulks.retrieveDetailList(id, { pay_type: "Card" })
+// PaymentBulkDetailObject
+const va = await fincode.paymentBulks.retrieveDetailList(id, { pay_type: "Virtualaccount" })
+// VirtualAccountPaymentBulkDetailObject
+```
+
+一覧から読んだ `pay_type` のように値が確定しない場合は、両方の共用体が返ります。
+共通の9項目は分岐なしで読めます。

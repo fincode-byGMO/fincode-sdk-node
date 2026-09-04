@@ -157,6 +157,19 @@ fincodeインスタンスが持つメソッドは下記のように各APIと対�
 |        | 一覧取得 | `GET /v1/customers/{customer_id}/cards`         | `fincode.cards.retrieveList(customerId)`            |
 |        | 取得     | `GET /v1/customers/{customer_id}/cards/{id}`    | `fincode.cards.retrieve(customerId, id)`            |
 |        | 削除     | `DELETE /v1/customers/{customer_id}/cards/{id}` | `fincode.cards.delete(customerId, id)`              |
+|        | 一覧取得（顧客情報共有グループ単位） | `GET /v1/cards`             | `fincode.cards.retrieveGroupList()`                 |
+
+### Payment Method API （決済手段API）
+
+| API      |          | URL                                                                | 呼び出し方                                                              |
+| :------- | :------- | :----------------------------------------------------------------- | :---------------------------------------------------------------------- |
+| 決済手段 | 登録     | `POST /v1/customers/{customer_id}/payment_methods`                  | `fincode.paymentMethods.create(customerId, requestBody)`               |
+|          | 一覧取得 | `GET /v1/customers/{customer_id}/payment_methods`                   | `fincode.paymentMethods.retrieveList(customerId, { pay_type })`        |
+|          | 取得     | `GET /v1/customers/{customer_id}/payment_methods/{id}`              | `fincode.paymentMethods.retrieve(customerId, id, { pay_type })`        |
+|          | 更新     | `PUT /v1/customers/{customer_id}/payment_methods/{id}`              | `fincode.paymentMethods.update(customerId, id, requestBody)`           |
+|          | 停止     | `PUT /v1/customers/{customer_id}/payment_methods/{id}/inactivate`   | `fincode.paymentMethods.inactivate(customerId, id, requestBody)`       |
+|          | 再有効化 | `PUT /v1/customers/{customer_id}/payment_methods/{id}/reactivate`   | `fincode.paymentMethods.reactivate(customerId, id, requestBody)`       |
+|          | 削除     | `DELETE /v1/customers/{customer_id}/payment_methods/{id}`           | `fincode.paymentMethods.delete(customerId, id, { pay_type })`          |
 
 ### Plan API (プランAPI)
 
@@ -188,12 +201,35 @@ fincodeインスタンスが持つメソッドは下記のように各APIと対�
 
 ### Payment Bulk API (一括決済API)
 
-| API              |          | URL                             | 呼び出し方                                                                  |
-| :--------------- | :------- | :------------------------------ | :-------------------------------------------------------------------------- |
-| 一括決済         | 登録     | `POST /v1/payments/bulk`        | `fincode.bulkPayments.create(pay_type, process_plan_date, file, file_name)` |
-|                  | 一覧取得 | `GET /v1/payments/bulk`         | `fincode.bulkPayments.retrieveList()`                                       |
-|                  | 削除     | `DELETE /v1/payments/bulk/{id}` | `fincode.bulkPayments.delete(id)`                                           |
-| 一括決済詳細情報 | 一覧取得 | `GET /v1/payments/bulk/{id}`    | `fincode.bulkPayments.retrieveDetailList(id)`                               |
+| API              |          | URL                             | 呼び出し方                                                        |
+| :--------------- | :------- | :------------------------------ | :---------------------------------------------------------------- |
+| 一括決済         | 登録     | `POST /v1/payments/bulk`        | `fincode.paymentBulks.create(queryParams, requestBody)`           |
+|                  | 一覧取得 | `GET /v1/payments/bulk`         | `fincode.paymentBulks.retrieveList()`                             |
+|                  | 削除     | `DELETE /v1/payments/bulk/{id}` | `fincode.paymentBulks.delete(id)`                                 |
+| 一括決済詳細情報 | 一覧取得 | `GET /v1/payments/bulk/{id}`    | `fincode.paymentBulks.retrieveDetailList(id, { pay_type })`       |
+
+### Invoice API (インボイスAPI)
+
+| API        |                | URL                                                | 呼び出し方                                             |
+| :--------- | :------------- | :------------------------------------------------- | :----------------------------------------------------- |
+| インボイス | 登録           | `POST /v1/invoices`                                | `fincode.invoices.create(requestBody)`                 |
+|            | 一覧取得       | `GET /v1/invoices`                                 | `fincode.invoices.retrieveList()`                      |
+|            | 取得           | `GET /v1/invoices/{id}`                            | `fincode.invoices.retrieve(id)`                        |
+|            | 更新           | `PUT /v1/invoices/{id}`                            | `fincode.invoices.update(id, requestBody)`             |
+|            | 削除           | `DELETE /v1/invoices/{id}`                         | `fincode.invoices.delete(id)`                          |
+|            | 発行           | `PUT /v1/invoices/{id}/open`                       | `fincode.invoices.open(id, requestBody)`               |
+|            | キャンセル     | `PUT /v1/invoices/{id}/cancel`                     | `fincode.invoices.cancel(id)`                          |
+|            | 外部支払マーク | `PUT /v1/invoices/{id}/paid_externally`            | `fincode.invoices.markPaidExternally(id, requestBody)` |
+|            | 口座再発行     | `PUT /v1/invoices/{id}/virtual_account/refresh`    | `fincode.invoices.refreshVirtualAccount(id)`           |
+
+### Chargeback API (チャージバックAPI)
+
+| API            |                    | URL                                       | 呼び出し方                                       |
+| :------------- | :----------------- | :---------------------------------------- | :----------------------------------------------- |
+| チャージバック | 一覧取得           | `GET /v1/shop_charge_backs`               | `fincode.chargebacks.retrieveList()`             |
+|                | 取得               | `GET /v1/shop_charge_backs/{id}`          | `fincode.chargebacks.retrieve(id)`               |
+|                | 回答登録           | `POST /v1/shop_charge_backs/{id}/reply`   | `fincode.chargebacks.reply(id, requestBody)`     |
+|                | 反証資料アップロード | `POST /v1/charge_backs/file_upload`     | `fincode.chargebacks.uploadFile(requestBody)`    |
 
 ### Platform API (プラットフォームAPI)
 
@@ -217,14 +253,30 @@ fincodeインスタンスが持つメソッドは下記のように各APIと対�
 | :----------------------- | :--------------------- | :----------------------------------------------- | :--------------------------------------------------------- |
 | テナント                 | 一覧取得               | `GET /v1/tenants`                                | `fincode.tenants.retrieveList()`                           |
 |                          | 取得                   | `GET /v1/tenants/{id}`                           | `fincode.tenants.retrieve(id)`                             |
+|                          | 更新                   | `PUT /v1/tenants/{id}`                           | `fincode.tenants.update(id, requestBody)`                  |
 |                          | 新規作成(新規ユーザー) | `POST /v1/tenant_entries`                        | `fincode.tenants.createWithNewUser(requestBody)`           |
 |                          | 新規作成(既存ユーザー) | `POST /v1/tenant_entries`                        | `fincode.tenants.createWithExistingUser(requestBody)`      |
 | テナント本番環境申請情報 | 取得                   | `GET /v1/contracts/examinations_v2/tenants/{id}` | `fincode.tenants.retrieveExaminationInfoV2(id)`            |
 |                          | 更新                   | `PUT /v1/contracts/examinations_v2/tenants/{id}` | `fincode.tenants.updateExaminationInfoV2(id, requestBody)` |
 | テナント契約情報         | 取得                   | `GET /v1/contracts/{id}`                         | `fincode.tenants.retrieveContract(id)`                     |
 | 本番環境                 | 申請                   | `POST /v1/contracts/examinations`                | `fincode.tenants.requestExamination(requestBody)`          |
-| 審査ファイル             | アップロード           |                                                  |                                                            |
-| テナント決済手段追加     | 申請                   |                                                  |                                                            |
+| 審査ファイル             | アップロード           | `POST /v1/contracts/examinations/tenants/{id}/files` | `fincode.tenants.uploadExaminationFile(id, requestBody)` |
+| テナント決済手段追加     | 申請                   | `POST /v1/contracts/examinations/tenants/{id}/providers/reserve` | `fincode.tenants.reserveProvider(id, requestBody)` |
+
+### Change Request API (テナント変更申請API)
+
+| API      |      | URL                                | 呼び出し方                                            |
+| :------- | :--- | :--------------------------------- | :---------------------------------------------------- |
+| 変更申請 | 登録 | `POST /v1/change_requests`         | `fincode.changeRequests.register(requestBody)`        |
+|          | 取得 | `GET /v1/change_requests/{shopId}` | `fincode.changeRequests.retrieve(shopId)`             |
+
+### Company Stamp API (社印API)
+
+| API  |      | URL                          | 呼び出し方                                     |
+| :--- | :--- | :--------------------------- | :--------------------------------------------- |
+| 社印 | 登録 | `POST /v1/company_stamps`    | `fincode.companyStamps.register(requestBody)`  |
+|      | 取得 | `GET /v1/company_stamps`     | `fincode.companyStamps.retrieve()`             |
+|      | 削除 | `DELETE /v1/company_stamps`  | `fincode.companyStamps.delete()`               |
 
 ### Account API (売上入金API)
 
