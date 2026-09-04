@@ -1,6 +1,9 @@
 import { FormData } from "undici"
+import { Modify } from "../../utils/utilTypes"
 import {
     DeletingPaymentBulkResponse,
+    PaymentBulkPayType,
+    VirtualAccountPaymentBulkDetailObject,
     ListResponse,
     ListWithErrors,
     PaymentBulkDetailObject,
@@ -83,19 +86,34 @@ class PaymentBulk {
      * 
      * corresponds to `GET /v1/payments/bulk/:id`
      * 
+     * The shape of each detail follows `queryParams.pay_type`. A card bulk
+     * payment answers with {@link PaymentBulkDetailObject} and a virtual
+     * account one with {@link VirtualAccountPaymentBulkDetailObject}. Neither
+     * carries `pay_type`, so the query is what tells the two apart.
+     * 
      * @param {string} id - payment bulk id
-     * @param {RetrievingPaymentBulkDetailQueryParams} [queryParams] - query parameters
+     * @param {RetrievingPaymentBulkDetailQueryParams} queryParams - query parameters
      * @param {FincodeRequestHeaders} [headers] - request header
      * 
-     * @returns {Promise<PaymentBulkDetailObject>} - retrieved payment bulk detail object
+     * @returns {Promise<ListWithErrors<PaymentBulkDetailObject>>} - retrieved payment bulk detail object list
      */
+    public retrieveDetailList(
+        id: string,
+        queryParams: Modify<RetrievingPaymentBulkDetailQueryParams, { pay_type: Extract<PaymentBulkPayType, "Card"> }>,
+        headers?: FincodeRequestHeaders,
+    ): Promise<ListWithErrors<PaymentBulkDetailObject>>
+    public retrieveDetailList(
+        id: string,
+        queryParams: Modify<RetrievingPaymentBulkDetailQueryParams, { pay_type: Extract<PaymentBulkPayType, "Virtualaccount"> }>,
+        headers?: FincodeRequestHeaders,
+    ): Promise<ListWithErrors<VirtualAccountPaymentBulkDetailObject>>
     public retrieveDetailList(
         id: string,
         queryParams: RetrievingPaymentBulkDetailQueryParams,
         headers?: FincodeRequestHeaders,
-    ): Promise<ListWithErrors<PaymentBulkDetailObject>> {
+    ): Promise<ListWithErrors<PaymentBulkDetailObject | VirtualAccountPaymentBulkDetailObject>> {
 
-        return executeRequest<ListWithErrors<PaymentBulkDetailObject>>(this._config, "GET", `/v1/payments/bulk/${id}`, {
+        return executeRequest<ListWithErrors<PaymentBulkDetailObject | VirtualAccountPaymentBulkDetailObject>>(this._config, "GET", `/v1/payments/bulk/${id}`, {
             headers,
             queryParams,
         })

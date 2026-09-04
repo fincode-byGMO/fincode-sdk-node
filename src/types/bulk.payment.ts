@@ -1,6 +1,6 @@
 import { Modify } from "../utils/utilTypes"
 import { Pagination } from "./pagination"
-import { CardPayTimesResponse, PayType } from "./payment"
+import { CardPayTimesResponse, PaymentObject, PayType } from "./payment"
 
 /**
      * Bulk payment object
@@ -37,7 +37,7 @@ export type PaymentBulkObject = {
     /**
      * Payment method type.
      */
-    pay_type: Extract<PayType, "Card">
+    pay_type: PaymentBulkPayType
 
     /**
      * File name.
@@ -130,7 +130,7 @@ export type RetrievingPaymentBulkQueryParams = Modify<Pagination, {
     /**
      * Payment method type.
      */
-    pay_type?: "Card" | null
+    pay_type?: PaymentBulkPayType | null
 
     /**
      * File name.
@@ -177,9 +177,11 @@ export type CreatingPaymentBulkRequest = {
 export type CreatingPaymentBulkQueryParams = {
     /**
      * Payment method type.
-     * - `Card`: Card payment.
+     * 
+     * - `Card`: Card
+     * - `Virtualaccount`: Bank transfer (virtual account)
      */
-    pay_type: "Card",
+    pay_type: PaymentBulkPayType,
     /**
      * Date the process is planned.
      * 
@@ -193,9 +195,12 @@ export type CreatingPaymentBulkQueryParams = {
  */
 export type RetrievingPaymentBulkDetailQueryParams = Modify<Pagination, {
     /**
-     * Payment method types
+     * Payment method type. Decides the shape of each detail.
+     * 
+     * - `Card`: Card
+     * - `Virtualaccount`: Bank transfer (virtual account)
      */
-    pay_type: "Card"
+    pay_type: PaymentBulkPayType
 
     /**
      * Order ID.
@@ -369,3 +374,91 @@ export type PaymentBulkStatus = 'CHECKING' | 'CHECKED' | 'RUNNING' | 'COMPLETED'
  * - `FAILED`: Failed.
  */
 export type PaymentStatusInBulkPayment = 'CHECKED' | 'SUCCEEDED' | 'FAILED'
+
+/**
+ * Payment methods bulk payment works with.
+ * 
+ * - `Card`: Card
+ * - `Virtualaccount`: Bank transfer (virtual account)
+ */
+export type PaymentBulkPayType = Extract<PayType, "Card" | "Virtualaccount">
+
+/**
+ * Bulk payment detail of a bank transfer (virtual account) payment.
+ * 
+ * The detail of a card payment is {@link PaymentBulkDetailObject}. Neither
+ * carries `pay_type`, so which shape arrives follows the `pay_type` given in
+ * the query.
+ */
+export type VirtualAccountPaymentBulkDetailObject = Partial<Pick<PaymentObject,
+    | "shop_id"
+    | "access_id"
+    | "customer_id"
+    | "billing_amount"
+    | "billing_tax"
+    | "billing_total_amount"
+    | "payment_method_id"
+    | "va_branch_code"
+    | "va_branch_name"
+    | "va_account_number"
+    | "va_account_name"
+    | "virtual_account_id"
+    | "account_assignment_date"
+    | "transaction_date"
+    | "value_date"
+    | "remitter_account_name"
+    | "remitter_bank_name"
+    | "remitter_branch_name"
+    | "overpayment_flag"
+    | "cancel_overpayment_flag"
+    | "expire_overpayment_flag"
+    | "client_field_1"
+    | "client_field_2"
+    | "client_field_3"
+    | "payment_term_day"
+    | "payment_term"
+    | "use_exact_deposit_amount"
+>> & {
+    /**
+     * Bulk payment ID this detail belongs to.
+     */
+    id?: string | null
+
+    /**
+     * Order ID of the payment.
+     */
+    order_id?: string | null
+
+    /**
+     * Status of this payment.
+     * 
+     * - `CHECKED`: Checked.
+     * - `SUCCEEDED`: Succeeded.
+     * - `FAILED`: Failed.
+     */
+    status?: PaymentStatusInBulkPayment | null
+
+    /**
+     * Order ID whose virtual account this payment reuses.
+     */
+    reference_order_id?: string | null
+
+    /**
+     * Error code of the most recent error, when there was one.
+     */
+    error_code?: string | null
+
+    /**
+     * Date this detail was created.
+     * 
+     * Format: `yyyy/MM/dd HH:mm:ss.SSS`
+     */
+    created?: string | null
+
+    /**
+     * Date this detail was updated.
+     * 
+     * Format: `yyyy/MM/dd HH:mm:ss.SSS`
+     */
+    updated?: string | null
+}
