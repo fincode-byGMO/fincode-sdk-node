@@ -218,6 +218,7 @@ export type PaymentObject = {
      * 
      * - `1`: The customer will be charged for this payment in a lump-sum.
      * - `2`: The customer will be charged for this payment in several installments.
+     * - `5`: The customer will be charged for this payment on a revolving basis.
      */
     method?: "1" | "2" | "5" | null
 
@@ -1853,6 +1854,7 @@ export type ExecutingCardPaymentRequest =
      * 
      * - `1`: The customer will be charged for this payment in a lump-sum.
      * - `2`: The customer will be charged for this payment in several installments.
+     * - `5`: The customer will be charged for this payment on a revolving basis.
      * 
      * Required when `job_code` is `AUTH` or `CAPTURE`.
      */
@@ -2027,6 +2029,7 @@ export type ExecutingGooglePayPaymentRequest =
      * 
      * - `1`: The customer will be charged for this payment in a lump-sum.
      * - `2`: The customer will be charged for this payment in several installments.
+     * - `5`: The customer will be charged for this payment on a revolving basis.
      * 
      */
     method: "1" | "2" | "5"
@@ -2151,6 +2154,7 @@ type CardInstallmentFields = {
      * 
      * - `1`: The customer will be charged for this payment in a lump-sum.
      * - `2`: The customer will be charged for this payment in several installments.
+     * - `5`: The customer will be charged for this payment on a revolving basis.
      * 
      * Can be set for a payment in the `CANCELED` status.
      */
@@ -2283,6 +2287,7 @@ export type ReauthorizingPaymentRequest = {
      * 
      * - `1`: The customer will be charged for this payment in a lump-sum.
      * - `2`: The customer will be charged for this payment in several installments.
+     * - `5`: The customer will be charged for this payment on a revolving basis.
      */
     method: "1" | "2" | "5"
 

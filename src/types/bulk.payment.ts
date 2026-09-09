@@ -278,6 +278,7 @@ export type PaymentBulkDetailObject = {
      * 
      * - `1`: The customer will be charged for this payment in a lump-sum.
      * - `2`: The customer will be charged for this payment in several installments.
+     * - `5`: The customer will be charged for this payment on a revolving basis.
      */
     method?: "1" | "2" | "5" | null
 
