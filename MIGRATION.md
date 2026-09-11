@@ -4,8 +4,11 @@ v2.0.0 では、型定義をfincode APIの実際の挙動に合わせ直し、�
 作り直しました。
 
 **Node.js 20.18.1 以上が必要になります。** HTTPクライアントを node-fetch から
-undici に変えたためです。`node-fetch`、`https-proxy-agent`、`form-data` への依存は
-なくなりました。
+undici に変えたためです。次の3つへの依存はなくなりました。
+
+- `node-fetch`
+- `https-proxy-agent`
+- `form-data`
 
 移行にあたっては、まず `tsc` を通してください。誤った名前や型はコンパイルエラーに
 なります。ただし **コンパイルエラーにならない変更が5つ** あるので、そちらは
@@ -56,13 +59,13 @@ v1 はリストを同じキーの繰り返しで送っていました。fincode 
 APIが数値で返す項目を `string`、文字列で返す項目を `number` と宣言していました。
 `typeof` 判定やリテラル比較をしている箇所は動作が変わります。
 
-| 項目 | v1 | v2 |
-|:--|:--|:--|
+| 項目                             | v1       | v2       |
+| :--                              | :--      | :--      |
 | `payment_term_day`（レスポンス） | `string` | `number` |
-| `pay_times`（レスポンス） | `string` | `number` |
-| `destination_type` | `string` | `number` |
-| `log_keep_days` | `string` | `number` |
-| Webhook通知の件数系8項目 | `number` | `string` |
+| `pay_times`（レスポンス）        | `string` | `number` |
+| `destination_type`               | `string` | `number` |
+| `log_keep_days`                  | `string` | `number` |
+| Webhook通知の件数系8項目         | `number` | `string` |
 
 Webhook通知の `succeeded` / `failed` / `total` / `error_total_count` /
 `regist_total_count` / `succeeded_count` / `failed_count` / `total_count` は
@@ -167,12 +170,12 @@ await fincode.payments.execute(created.id, {
 
 v1 では型に無く呼べなかった組み合わせです。
 
-| 操作 | v2 で追加された種別 |
-|:--|:--|
-| 売上確定 | Applepay、Googlepay |
-| 再オーソリ | Googlepay |
-| 金額変更 | Googlepay、Directdebit |
-| 認証後決済 | Googlepay |
+| 操作       | v2 で追加された種別    |
+| :--        | :--                    |
+| 売上確定   | Applepay、Googlepay    |
+| 再オーソリ | Googlepay              |
+| 金額変更   | Googlepay、Directdebit |
+| 認証後決済 | Googlepay              |
 
 金額変更で PayPay または口座振替を使う場合、`job_code` は渡せません。この2種別に
 `job_code` は存在しないため、v1 で必須にしていたのが誤りでした。
@@ -183,10 +186,10 @@ v1 では型に無く呼べなかった組み合わせです。
 
 更新日時での絞り込みは、決済種別によって項目名が違います。
 
-| 項目名 | 決済種別 |
-|:--|:--|
-| `update_date_from` / `update_date_to` | Card、Applepay、Googlepay |
-| `updated_from` / `updated_to` | Konbini、Paypay、Directdebit、Virtualaccount |
+| 項目名                                | 決済種別                                     |
+| :--                                   | :--                                          |
+| `update_date_from` / `update_date_to` | Card、Applepay、Googlepay                    |
+| `updated_from` / `updated_to`         | Konbini、Paypay、Directdebit、Virtualaccount |
 
 v1 は `update_date_from` / `update_date_to` しか持っていなかったため、後者の4種別では
 更新日時での絞り込みが効いていませんでした。
@@ -197,41 +200,41 @@ v1 は `update_date_from` / `update_date_to` しか持っていなかったた�
 
 ### 型名
 
-| v1 | v2 |
-|:--|:--|
-| `ContractAquirer` | `ContractAcquirer` |
+| v1                                                | v2                                                |
+| :--                                               | :--                                               |
+| `ContractAquirer`                                 | `ContractAcquirer`                                |
 | `RetrievinggPlatformAccountSummaryListPagination` | `RetrievingPlatformAccountSummaryListQueryParams` |
 
 ### レスポンスのフィールド
 
 APIが返すキー名と一致しておらず、常に `undefined` になっていた項目です。
 
-| v1 | v2 |
-|:--|:--|
-| `cpde_expiry_date` | `code_expiry_date` |
-| `payment_result_code` | `paypay_result_code` |
-| `card.card_type` | `card.type` |
-| `created_date` / `updated_date`（サブスクリプション解約） | `created` / `updated` |
-| `schedled_deposit_date` | `scheduled_deposit_date` |
-| `stop_cancel_memo` | `stop_cancelaltion_memo` |
-| `aquirer`（契約状況Webhook） | `acquirer` |
-| `enable_immediate_use`（本番環境申請のレスポンス） | `status_code` |
-| `konbini_receipt_mail_send_flag` | `konbini_reception_mail_send_flag` |
+| v1                                                        | v2                                 |
+| :--                                                       | :--                                |
+| `cpde_expiry_date`                                        | `code_expiry_date`                 |
+| `payment_result_code`                                     | `paypay_result_code`               |
+| `card.card_type`                                          | `card.type`                        |
+| `created_date` / `updated_date`（サブスクリプション解約） | `created` / `updated`              |
+| `schedled_deposit_date`                                   | `scheduled_deposit_date`           |
+| `stop_cancel_memo`                                        | `stop_cancelaltion_memo`           |
+| `aquirer`（契約状況Webhook）                              | `acquirer`                         |
+| `enable_immediate_use`（本番環境申請のレスポンス）        | `status_code`                      |
+| `konbini_receipt_mail_send_flag`                          | `konbini_reception_mail_send_flag` |
 
 ### リクエストのフィールド
 
 送信時のキー名が誤っており、指定した値がAPIに届いていなかった項目です。
 
-| v1 | v2 |
-|:--|:--|
-| `tds2_pre_order_purchaselnd` | `tds2_pre_order_purchase_ind` |
-| `tds2_recuring_expiry` | `tds2_recurring_expiry` |
-| `tds2_recuring_frequency` | `tds2_recurring_frequency` |
-| `id`（テナントショップ更新） | `examination_master_id` |
-| `deoisut_cycle_master_id` | `deposit_cycle_master_id` |
-| `bank_account`（審査情報更新） | `contract_bank_account` |
-| `konbini_reception_mail_flag` | `konbini_reception_mail_send_flag` |
-| `provides.digital_content`（審査情報V2） | `provides.digital_contents` |
+| v1                                       | v2                                 |
+| :--                                      | :--                                |
+| `tds2_pre_order_purchaselnd`             | `tds2_pre_order_purchase_ind`      |
+| `tds2_recuring_expiry`                   | `tds2_recurring_expiry`            |
+| `tds2_recuring_frequency`                | `tds2_recurring_frequency`         |
+| `id`（テナントショップ更新）             | `examination_master_id`            |
+| `deoisut_cycle_master_id`                | `deposit_cycle_master_id`          |
+| `bank_account`（審査情報更新）           | `contract_bank_account`            |
+| `konbini_reception_mail_flag`            | `konbini_reception_mail_send_flag` |
+| `provides.digital_content`（審査情報V2） | `provides.digital_contents`        |
 
 ---
 
@@ -279,11 +282,11 @@ fincode.platformAccounts.retrieve(id)   // PlatformAccountObject
 
 ## 6. null を返しうるようになった項目
 
-| 項目 | 補足 |
-|:--|:--|
-| `SubscriptionObject.next_charge_date` | 解約済みと未完了のサブスクリプションでは入らない |
-| `SubscriptionObject.plan_name` | |
-| 決済手段の `card.expire` / `card.type` / `card.brand` | |
+| 項目                                                  | 補足                                             |
+| :--                                                   | :--                                              |
+| `SubscriptionObject.next_charge_date`                 | 解約済みと未完了のサブスクリプションでは入らない |
+| `SubscriptionObject.plan_name`                        |                                                  |
+| 決済手段の `card.expire` / `card.type` / `card.brand` |                                                  |
 
 `SubscriptionObject.payment_method_id` と `end_month_flag` は任意になりました。
 前者はカード決済のサブスクリプションでは返らず、後者は口座振替では返りません。
@@ -292,12 +295,12 @@ fincode.platformAccounts.retrieve(id)   // PlatformAccountObject
 
 ## 7. 指定が必須になった項目
 
-| 項目 | 省略時のAPIの応答 |
-|:--|:--|
-| プラットフォームショップ更新の `examination_master_id` | 審査種別マスタIDが指定されていません |
+| 項目                                                     | 省略時のAPIの応答                                    |
+| :--                                                      | :--                                                  |
+| プラットフォームショップ更新の `examination_master_id`   | 審査種別マスタIDが指定されていません                 |
 | 決済URL作成の `konbini.konbini_reception_mail_send_flag` | お支払い画面案内メール送信フラグが指定されていません |
-| 決済手段登録の `directdebit.bank_code` | null を渡せなくなった |
-| 審査情報V2更新の `bank_account_info` | 5項目すべてが必須。`bank_name` などは渡せない |
+| 決済手段登録の `directdebit.bank_code`                   | null を渡せなくなった                                |
+| 審査情報V2更新の `bank_account_info`                     | 5項目すべてが必須。`bank_name` などは渡せない        |
 
 カード登録セッション作成の `expire` は逆に任意になりました。省略するとAPIが24時間後を
 既定値として設定します。
@@ -306,22 +309,22 @@ fincode.platformAccounts.retrieve(id)   // PlatformAccountObject
 
 ## 8. 値域が変わった enum
 
-| 型 | 変更 |
-|:--|:--|
-| `PayType` | `Googlepay` を追加 |
-| `PaymentStatus` | `AWAITING_PAYMENT_APPROVAL` を追加 |
-| `KonbiniCode` | `00030`（ファミリーマート）を追加 |
-| `DirectDebitResultCode` | `"7"` と `"8"` を追加 |
-| `method` | `"5"`（リボ払い）を追加 |
-| `pay_pattern` | `bulk` を追加 |
-| `tds2_status` | `"2" \| "3"` から `ThreeDSecure2Status` に差し替え |
-| `tds2_ship_ind` | `string` から `"01"`〜`"07"` に |
-| `tds2_reorder_items_ind` / `tds2_pre_order_purchase_ind` | `string` から `"01" \| "02"` に |
-| `ExaminationMaster` | 3値から12値に |
-| `DepositCycleMasterId` | `3`、`4`、`5` を削除 |
-| `SalesDepositStatusCode` | `503` を削除 |
-| `PlatformRateConfig.id` | `string` から `ExaminationMaster` に |
-| `WebhookEvent` | 28イベントから77イベントに |
+| 型                                                       | 変更                                               |
+| :--                                                      | :--                                                |
+| `PayType`                                                | `Googlepay` を追加                                 |
+| `PaymentStatus`                                          | `AWAITING_PAYMENT_APPROVAL` を追加                 |
+| `KonbiniCode`                                            | `00030`（ファミリーマート）を追加                  |
+| `DirectDebitResultCode`                                  | `"7"` と `"8"` を追加                              |
+| `method`                                                 | `"5"`（リボ払い）を追加                            |
+| `pay_pattern`                                            | `bulk` を追加                                      |
+| `tds2_status`                                            | `"2" \| "3"` から `ThreeDSecure2Status` に差し替え |
+| `tds2_ship_ind`                                          | `string` から `"01"`〜`"07"` に                    |
+| `tds2_reorder_items_ind` / `tds2_pre_order_purchase_ind` | `string` から `"01" \| "02"` に                    |
+| `ExaminationMaster`                                      | 3値から12値に                                      |
+| `DepositCycleMasterId`                                   | `3`、`4`、`5` を削除                               |
+| `SalesDepositStatusCode`                                 | `503` を削除                                       |
+| `PlatformRateConfig.id`                                  | `string` から `ExaminationMaster` に               |
+| `WebhookEvent`                                           | 28イベントから77イベントに                         |
 
 ---
 
@@ -329,13 +332,13 @@ fincode.platformAccounts.retrieve(id)   // PlatformAccountObject
 
 APIが受け取らない、あるいは返さない項目です。指定していてもAPIに無視されていました。
 
-| 型 | 削除した項目 |
-|:--|:--|
-| 決済登録リクエスト | `token` |
-| 決済実行リクエスト | `expire`、`account_shop_name` |
-| PayPay決済のWebhook通知 | `merchant_capture_id` |
-| カードのWebhook通知 | `order_id`、`error_code` |
-| 一括決済のWebhook通知 | `process_plan_date` |
+| 型                             | 削除した項目                                                         |
+| :--                            | :--                                                                  |
+| 決済登録リクエスト             | `token`                                                              |
+| 決済実行リクエスト             | `expire`、`account_shop_name`                                        |
+| PayPay決済のWebhook通知        | `merchant_capture_id`                                                |
+| カードのWebhook通知            | `order_id`、`error_code`                                             |
+| 一括決済のWebhook通知          | `process_plan_date`                                                  |
 | `PlatformAccountSummaryObject` | `deposit_date`、`settlement_amount`、`bank_transfer_fee`、`verified` |
 
 カードのWebhook通知には代わりに `customer_id` と `process_type` が入りました。
@@ -377,12 +380,12 @@ v1 ではタイムアウトも接続失敗もJSONの解析失敗も、すべて
 
 `kind` を見てください。
 
-| `kind` | 意味 |
-|:--|:--|
-| `timeout` | `options.timeout` 内に終わらなかった |
-| `network` | fincode に届かなかった（名前解決や接続、TLSの失敗） |
-| `response_body` | 応答は来たが本文がJSONではなかった |
-| `unknown` | それ以外 |
+| `kind`          | 意味                                                |
+| :--             | :--                                                 |
+| `timeout`       | `options.timeout` 内に終わらなかった                |
+| `network`       | fincode に届かなかった（名前解決や接続、TLSの失敗） |
+| `response_body` | 応答は来たが本文がJSONではなかった                  |
+| `unknown`       | それ以外                                            |
 
 ```ts
 catch (e) {
@@ -447,12 +450,12 @@ JSON.stringify(fincode)
 
 通信の内部実装が公開APIに出ていたので、公開から外しました。
 
-| 識別子 | 用途 |
-|:--|:--|
-| `buildQueryString` | クエリ文字列の組み立て |
-| `createFincodeRequestURL` | URLの組み立て |
-| `createFincodeRequestFetch` | fetch の組み立て |
-| `createFincodeRequestHeader` | ヘッダの組み立て |
+| 識別子                       | 用途                            |
+| :--                          | :--                             |
+| `buildQueryString`           | クエリ文字列の組み立て          |
+| `createFincodeRequestURL`    | URLの組み立て                   |
+| `createFincodeRequestFetch`  | fetch の組み立て                |
+| `createFincodeRequestHeader` | ヘッダの組み立て                |
 | `FincodeRequestHeader`（型） | `Record<string, string>` の別名 |
 
 各メソッドの引数に現れる `FincodeRequestHeaders`（末尾が s）は引き続き import
@@ -539,9 +542,19 @@ switch (notification.pay_type) {
 }
 ```
 
-7種別すべてに共通する13項目は分岐なしで読めます。`shop_id`、`order_id`、
-`access_id`、`status`、`customer_id`、`client_field_1` から `client_field_3`、
-`amount`、`tax`、`error_code`、`pay_type`、`event` です。
+7種別すべてに共通する13項目は分岐なしで読めます。
+
+- `shop_id`
+- `order_id`
+- `access_id`
+- `status`
+- `customer_id`
+- `client_field_1` から `client_field_3`
+- `amount`
+- `tax`
+- `error_code`
+- `pay_type`
+- `event`
 
 通知の `amount` と `tax` は文字列です。決済APIが返す数値とは違います。
 

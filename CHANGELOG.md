@@ -61,9 +61,14 @@ reject していました。同じ失敗が呼び出し箇所によって違う�
 APIが最初の値しか読まないため、2つ目以降の条件とソートの第2キー以降が無視されて
 いました。`null` を渡すと送信前に `TypeError` で落ちる問題も併せて解消しています。
 
-数値と文字列を取り違えていた項目を揃えました。レスポンスの `payment_term_day` と
-`pay_times`、`destination_type`、`log_keep_days` は数値、Webhook通知の件数系
-8項目は文字列です。
+数値と文字列を取り違えていた項目を揃えました。
+
+| 項目                                          | 正しい型 |
+| :--                                           | :--      |
+| レスポンスの `payment_term_day` / `pay_times` | 数値     |
+| `destination_type`                            | 数値     |
+| `log_keep_days`                               | 数値     |
+| Webhook通知の件数系8項目                      | 文字列   |
 
 売上入金明細（`AccountDetailObject`）の型を組み直しました。売上入金そのものの形を
 していて、明細固有の項目を1つも持っていませんでした。
@@ -98,17 +103,34 @@ Apple Pay と Google Pay、再オーソリの Google Pay、金額変更の Googl
 認証後決済の Google Pay です。
 
 決済一覧取得のクエリも決済種別ごとに分け、欠けていた絞り込み項目を追加しました。
-全種別共通の `client_field_1`〜3 と `keyword`、`customer_id`、`process_date_from` /
-`to`、`total_amount_min` / `max`、およびカードの `last_four_digits` や
-バーチャル口座の `amount_pattern` などです。
+
+全種別共通のものは次のとおりです。
+
+- `client_field_1`〜3
+- `keyword`
+- `customer_id`
+- `process_date_from` / `process_date_to`
+- `total_amount_min` / `total_amount_max`
+
+決済種別ごとのものには、カードの `last_four_digits` やバーチャル口座の
+`amount_pattern` などがあります。
 
 `WebhookEvent` を28イベントから77イベントに拡張しました。Google Pay と口座振替、
 バーチャル口座、決済手段、インボイス、チャージバック、変更申請、洗替の通知を
 購読できます。
 
-enum に不足していた値を追加しました。`PayType` の `Googlepay`、`PaymentStatus` の
-`AWAITING_PAYMENT_APPROVAL`、`KonbiniCode` の `00030`、`DirectDebitResultCode` の
-`"7"` と `"8"`、`method` の `"5"`、`pay_pattern` の `bulk` などです。
+enum に不足していた値を追加しました。
+
+| 型                      | 追加した値                  |
+| :--                     | :--                         |
+| `PayType`               | `Googlepay`                 |
+| `PaymentStatus`         | `AWAITING_PAYMENT_APPROVAL` |
+| `KonbiniCode`           | `00030`                     |
+| `DirectDebitResultCode` | `"7"` / `"8"`               |
+| `method`                | `"5"`                       |
+| `pay_pattern`           | `bulk`                      |
+
+ほかにもいくつかあります。
 
 `retrieveDetailList` と `retrieveSummaryList` がクエリパラメータを受け取るように
 なりました。型は定義済みでしたが、メソッドが引数として受け取っていませんでした。
@@ -187,9 +209,13 @@ HTTPクライアントを node-fetch から undici に置き換えました。`n
 区別できます。v1 では区別する手段が node-fetch の内部表現である `e.child.type`
 しかありませんでした。本文がJSONでない場合はHTTPステータスも `status` に残ります。
 
-通信の内部実装を公開APIから外しました。`buildQueryString`、
-`createFincodeRequestURL`、`createFincodeRequestFetch`、
-`createFincodeRequestHeader`、型 `FincodeRequestHeader` です。
+通信の内部実装を公開APIから外しました。
+
+- `buildQueryString`
+- `createFincodeRequestURL`
+- `createFincodeRequestFetch`
+- `createFincodeRequestHeader`
+- 型 `FincodeRequestHeader`
 
 68メソッドが持っていた同一の定型処理を共通の1箇所にまとめました。公開型は
 変わりません。
