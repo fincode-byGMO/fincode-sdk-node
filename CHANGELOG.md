@@ -149,8 +149,8 @@ enum に不足していた値を追加しました。
 おり、登録も照会もできませんでした。明細の型も決済種別ごとに分け、
 `retrieveDetailList` はクエリの `pay_type` で戻り値の形が決まります。
 
-バーチャル口座の機能拡張に対応しました。決済手段として登録する顧客固定バーチャル
-口座（`pay_type: "Virtualaccount"`）、入金可能額設定
+バーチャル口座の機能拡張に対応しました。決済手段として登録する固定バーチャル口座
+（`pay_type: "Virtualaccount"`）、入金可能額設定
 （`use_exact_deposit_amount`）、決済セッションの `virtualaccount` ブロックです。
 
 口座振替の振替サービス（`settlement_route`）を追加しました。振替日の組み合わせが

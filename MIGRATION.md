@@ -492,7 +492,7 @@ await fincode.paymentMethods.delete(customerId, id, { pay_type: "Card" })
 
 `PaymentMethodObject.pay_type` と `RetrievingPaymentMethodQueryParams.pay_type` に
 `Virtualaccount` が加わりました。後者は v1 では `Directdebit` しか受け付けず、
-カードとバーチャル口座の決済手段は取得すらできませんでした。
+カードと固定バーチャル口座は取得すらできませんでした。
 
 `pay_type` で網羅的に分岐していた場合は分岐の追加が必要です。
 
@@ -583,9 +583,8 @@ const receive = (p: PaymentMethodWebhookNotification) => {
 は3Dセキュア2.0認証の状態（`AUTHENTICATED` / `CHECK`）で、決済手段の状態は
 `card_status` に入ります。
 
-発火するイベントも種別ごとに違います。5つのイベントが発生するのは顧客固定
-バーチャル口座だけで、カードと口座振替は `customers.payment_methods.updated`
-のみです。
+発火するイベントも種別ごとに違います。5つのイベントが発生するのは固定バーチャル
+口座だけで、カードと口座振替は `customers.payment_methods.updated` のみです。
 
 ### 未対応だった4つを追加しました
 

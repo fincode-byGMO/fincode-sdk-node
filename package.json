@@ -50,7 +50,7 @@
   },
   "scripts": {
     "lint": "eslint . --ext .ts,.js",
-    "test": "jest src/api/v1/http.test.ts src/api/v1/_request.test.ts",
+    "test": "jest --testPathIgnorePatterns \"src/api/v1/(account\\.test\\.ts|bulk\\.payment\\.test\\.ts|card\\.test\\.ts|customer\\.test\\.ts|payment\\.test\\.ts|paymentMethod\\.test\\.ts|plan\\.test\\.ts|platform\\.test\\.ts|platform_account\\.test\\.ts|session\\.cardRegistration\\.test\\.ts|session\\.payment\\.test\\.ts|subscription\\.test\\.ts|tenant\\.test\\.ts|webhookSetting\\.test\\.ts)\"",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "build": "tsup src/main.ts",
     "test:v1/http": "jest ./src/api/v1/http.test.ts --silent=false --verbose false --no-cache",
