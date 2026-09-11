@@ -263,8 +263,23 @@ export type PaymentObject = {
     /**
      * - [PayPay]: Customer will be redirected after finishing payment on PayPay app/website.
      * - [Card]: Payment with 3-D Secure 2 authentication will be started by accessing this URL by customer.
+     *
+     * Only returned when `tds2_ret_url` was left out, so that fincode runs
+     * the 3D Secure 2 authentication with the customer's browser and then
+     * redirects to `return_url` or `return_url_on_failure`.
      */
     redirect_url?: string | null
+
+    /**
+     * URL that starts the 3D Secure 2 authentication.
+     *
+     * Use this when the shop implements the authentication calls and the
+     * callback itself. Sending the customer here starts the authentication,
+     * and fincode posts the data for the following steps to `tds2_ret_url`.
+     *
+     * Only returned when `tds2_ret_url` was given.
+     */
+    acs_url?: string | null
 
     /**
      * Fields where merchants can freely set values
