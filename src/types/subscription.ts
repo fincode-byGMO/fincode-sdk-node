@@ -1,6 +1,7 @@
 import { Modify } from "../utils/utilTypes"
 import { Pagination } from "./pagination"
 import { PayType } from "./payment"
+import { DirectDebitSettlementRoute } from "./paymentMethod"
 import { PlanIntervalCount, PlanIntervalPattern } from "./plan"
 
 /**
@@ -28,7 +29,7 @@ export type SubscriptionObject = {
     /**
      * Plan name.
      */
-    plan_name: string
+    plan_name?: string | null
 
     /**
      * Amount
@@ -78,7 +79,7 @@ export type SubscriptionObject = {
     /**
      * Payment method ID.
      */
-    payment_method_id: string
+    payment_method_id?: string | null
 
     /**
      * Subscription status.
@@ -109,7 +110,7 @@ export type SubscriptionObject = {
      * 
      * Format: `yyyy/MM/dd HH:mm:ss.SSS`
      */
-    next_charge_date: string
+    next_charge_date?: string | null
 
     /**
      * Flag that means this subscription charges at the end of the month.
@@ -117,10 +118,10 @@ export type SubscriptionObject = {
      * - `0`: No. This subscription charges at *dd* of `start_date`.
      * - `1`: Yes. This subscription charges at the end of the month.
      */
-    end_month_flag: "0" | "1"
+    end_month_flag?: "0" | "1" | null
 
     /**
-     * Send URL.
+     * @deprecated This is a closed feature.
      */
     send_url?: string | null
 
@@ -130,6 +131,13 @@ export type SubscriptionObject = {
     client_field_1?: string | null
     client_field_2?: string | null
     client_field_3?: string | null
+
+    /**
+     * Transfer service the bank account is registered with.
+     * 
+     * Only for `pay_type: "Directdebit"`.
+     */
+    settlement_route?: DirectDebitSettlementRoute | null
 
     /**
      * Interval Pattern.
@@ -143,6 +151,21 @@ export type SubscriptionObject = {
      * Interval Count.
      */
     interval_count: PlanIntervalCount
+
+    /**
+     * Retry setting of the plan this subscription uses.
+     * 
+     * - `enabled`: retried when a charge fails.
+     * - `disabled`: not retried.
+     */
+    subscription_retry_mode?: SubscriptionRetryMode | null
+
+    /**
+     * Whether a retry is scheduled.
+     * 
+     * `true` when a charge has failed and a retry is scheduled for it.
+     */
+    is_retry_scheduled?: boolean | null
 
     /**
      * Error code.
@@ -237,7 +260,7 @@ export type CreatingSubscriptionRequest = {
     end_month_flag?: "0" | "1" | null
 
     /**
-     * Webhook target URL.
+     * @deprecated This is a closed feature.
      */
     send_url?: string | null
 
@@ -290,12 +313,12 @@ export type RetrievingSubscriptionListQueryParams = Modify<Pagination, {
     /**
      * Minimam total amount
      */
-    total_amount_min?: string | null
+    total_amount_min?: number | null
 
     /**
      * Maximum total amount
      */
-    total_amount_max?: string | null
+    total_amount_max?: number | null
 
     /**
      * Interval Pattern.
@@ -454,158 +477,10 @@ export type CancelingSubscriptionQueryParams = {
 
 /**
  * Response object for Canceling a subscription (used for `DELETE /v1/subscriptions/:id`)
+ * 
+ * The API returns the same object as the other subscription endpoints.
  */
-export type CancelingSubscriptionResponse = {
-    /**
-     * Subscription ID.
-     */
-    id: string
-
-    /**
-     * PayType
-     * 
-     * - `Card`: Card
-     * - `Directdebit`: Direct Debit
-     */
-    pay_type: Extract<PayType, "Card" | "Directdebit">
-
-    /**
-     * Plan ID.
-     */
-    plan_id: string
-
-    /**
-     * Plan name.
-     */
-    plan_name: string
-
-    /**
-     * Amount.
-     */
-    amount: number
-
-    /**
-     * Tax.
-     */
-    tax: number
-
-    /**
-     * Total amount.
-     */
-    total_amount: number
-
-    /**
-     * Initial amount.
-     */
-    initial_amount: number
-
-    /**
-     * Initial tax.
-     */
-    initial_tax: number
-
-    /**
-     * Initial total amount.
-     */
-    initial_total_amount: number
-
-    /**
-     * Customer ID.
-     */
-    customer_id: string
-
-    /**
-     * Shop ID.
-     */
-    shop_id: string
-
-    /**
-     * Card ID.
-     */
-    card_id: string
-
-    /**
-     * Status
-     * 
-     * - `ACTIVE`: Active
-     * - `RUNNING`: Running
-     * - `CANCELED`: Canceled
-     * - `INCOMPLETE`: Incomplete
-     */
-    status: SubscriptionStatus
-
-    /**
-     * Start date.
-     * 
-     * Format: `yyyy/MM/dd HH:mm:ss.SSS`
-     */
-    start_date: string
-
-    /**
-     * Stop date.
-     * 
-     * Format: `yyyy/MM/dd HH:mm:ss.SSS`
-     */
-    stop_date?: string | null
-
-    /**
-     * Next charge date.
-     * 
-     * Format: `yyyy/MM/dd HH:mm:ss.SSS`
-     */
-    next_charge_date?: string | null
-
-    /**
-     * Whether or not this subscription charges at the end of the month.
-     */
-    end_month_flag: "0" | "1"
-
-    /**
-     * Webhook URL.
-     */
-    send_url?: string | null
-
-    /**
-     * Fields where merchants can freely set values
-     */
-    client_field_1?: string | null
-    client_field_2?: string | null
-    client_field_3?: string | null
-
-    /**
-     * Interval pattern
-     * 
-     * - `month`: Monthly
-     * - `year`: Yearly
-     */
-    interval_pattern: PlanIntervalPattern
-
-    /**
-     * Interval count
-     * 
-     * How many intervals are there in a cycle.
-     */
-    interval_count: PlanIntervalCount
-
-    /**
-     * Error code
-     */
-    error_code?: string | null
-
-    /**
-     * Created date.
-     * 
-     * Format: `yyyy/MM/dd HH:mm:ss.SSS`
-     */
-    created_date: string
-
-    /**
-     * Updated date.
-     * 
-     * Format: `yyyy/MM/dd HH:mm:ss.SSS`
-     */
-    updated_date: string
-}
+export type CancelingSubscriptionResponse = SubscriptionObject
 
 /**
  * Pagination object for Retrieving subscription result list (used for `GET /v1/subscriptions/{id}/result`)
@@ -648,6 +523,11 @@ export type SubscriptionResultObject = {
     process_date: string
 
     /**
+     * Plan ID
+     */
+    plan_id: string
+
+    /**
      * Amount
      */
     amount: number
@@ -678,12 +558,17 @@ export type SubscriptionResultObject = {
     card_id?: string | null
 
     /**
+     * Masked number of the card used in this charge. (e.g. `************9999`)
+     */
+    card_no?: string | null
+
+    /**
      * Access ID
      */
     access_id: string
 
     /**
-     * Webhook URL
+     * @deprecated This is a closed feature.
      */
     send_url?: string | null
 
@@ -693,6 +578,13 @@ export type SubscriptionResultObject = {
     client_field_1?: string | null
     client_field_2?: string | null
     client_field_3?: string | null
+
+    /**
+     * Transfer service the bank account is registered with.
+     * 
+     * Only for `pay_type: "Directdebit"`.
+     */
+    settlement_route?: DirectDebitSettlementRoute | null
 
     /**
      * Interval pattern
@@ -708,6 +600,18 @@ export type SubscriptionResultObject = {
      * How many intervals are there in a cycle.
      */
     interval_count: PlanIntervalCount
+
+    /**
+     * Whether this charge came from the retry batch.
+     * 
+     * `true` when the retry batch executed it rather than the regular cycle.
+     */
+    is_retry_scheduled?: boolean | null
+
+    /**
+     * The kind of processing that produced this charge log.
+     */
+    process_interface?: string | null
 
     /**
      * Error code
@@ -731,6 +635,14 @@ export type SubscriptionResultObject = {
  * - `INCOMPLETE`: Incomplete
  */
 export type SubscriptionStatus = "ACTIVE" | "RUNNING" | "CANCELED" | "INCOMPLETE"
+
+/**
+ * Retry setting of a subscription.
+ * 
+ * - `enabled`: a failed charge is retried.
+ * - `disabled`: a failed charge is not retried.
+ */
+export type SubscriptionRetryMode = "enabled" | "disabled"
 
 /**
  * Result Status

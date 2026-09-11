@@ -119,7 +119,7 @@ export type ContractObject = {
     /**
      * Stop cancelation memo
      */
-    stop_cancel_memo?: string | null
+    stop_cancelaltion_memo?: string | null
 
     /**
      * Obligations notice
@@ -149,7 +149,7 @@ export type ContractObject = {
     /**
      * Contract virtual bank account
      */
-    contract_virtual_bank?: Omit<ContractBankAccount, "bank_name_kana" | "bank_code" | "branch_code" | "branch_name_kana" | "account_kind"> | null
+    contract_virtual_bank?: ContractBankAccount | null
 
     /**
      * Examination information
@@ -159,7 +159,7 @@ export type ContractObject = {
     /**
      * Contract card destination
      */
-    contract_card_destination?: ContractDestination | null
+    contract_card_destination?: ContractDestination[] | null
 
     /**
      * Card payment setting
@@ -667,6 +667,42 @@ export type ContractDetail = {
     deals_long_apply_content?: boolean | null
 }
 
+/**
+ * Bank account information accepted when updating the V2 examination info.
+ * 
+ * The API takes only these five fields and requires all of them. Responses
+ * carry the bank and branch names as well. See `ContractBankAccount`.
+ */
+export type BankAccountInformation_V2 = {
+    /**
+     * Bank code
+     */
+    bank_code: string
+
+    /**
+     * Branch code
+     */
+    branch_code: string
+
+    /**
+     * Account type
+     * 
+     * - `0`: Savings account (普通預金)
+     * - `1`: Current account (当座預金)
+     */
+    account_kind: 0 | 1
+
+    /**
+     * Account number
+     */
+    account_number: string
+
+    /**
+     * Account holder name
+     */
+    account_name: string
+}
+
 export type ContractBankAccount = {
     /**
      * Bank name
@@ -701,8 +737,8 @@ export type ContractBankAccount = {
     /**
      * Account type
      * 
-     * - `0`: Deposit account
-     * - `1`: Current account
+     * - `0`: Savings account (普通預金)
+     * - `1`: Current account (当座預金)
      */
     account_kind?: 0 | 1 | null
 
@@ -719,23 +755,14 @@ export type ContractBankAccount = {
 
 export type Examination = {
     /**
-     * Examination master ID
-     * 
-     * - `1`: VISA / Mastercard (UC Card)
-     * - `2`: JCB / American Express / Diners Club
-     * - `3`: VISA / Mastercard (Toyota Finance)
-     * - `101`: Konbini (Densan System)
+     * Examination master ID.
      */
-    examination_master_id?: 1 | 2 | 3 | 101 | null
+    examination_master_id?: ContractExaminationMasterId | null
 
     /**
-     * Status code
-     * 
-     * - `1`: Examination is now in progress.
-     * - `2`: Examination has been successfully completed.
-     * - `3`: Examination has been failed.
+     * Result of this payment provider's examination.
      */
-    status_code?: 1 | 2 | 3 | null
+    status_code?: ExaminationStatus | null
 
     /**
      * Marchant Member code
@@ -764,7 +791,7 @@ export type ContractDestination = {
     contract_card_info_master_id?: number | null
     examination_master_id?: number | null
     destination?: string | null
-    destination_type?: string | null
+    destination_type?: number | null
 }
 
 export type CardPaymentSetting = {
@@ -807,20 +834,19 @@ export type CardPaymentSetting = {
 export type ContractStatus = 101 | 102 | 103 | 105 | 106 | 107
 
 /**
- * Sales deposit status code
+ * Status of the identity verification required before sales can be deposited.
  * 
- * - `501`: Before procedure
- * - `502`: Receivable
- * - `503`: Withholding
+ * - `501`: The procedure required for deposits has not been completed.
+ * - `502`: Deposits are available.
  */
-export type SalesDepositStatusCode = 501 | 502 | 503
+export type SalesDepositStatusCode = 501 | 502
 
 /**
  * Status updated notification
  */
 export type StatusUpdatedNotification = {
     /**
-     * Aquirer
+     * Acquirer of this examination.
      * 
      * - `UC`: UC Card (VISA / Mastercard)
      * - `TFC`: Toyota Finance (VISA / Mastercard)
@@ -828,7 +854,7 @@ export type StatusUpdatedNotification = {
      * - `DINERS`: Diners Club (JCB)
      * - `PAYSLE`: Konbini (Denan System)
      */
-    aquirer?: 'UC' | 'TFC' | 'JCB/AMEX' | 'DINERS' | 'PAYSLE' | null
+    acquirer?: ContractAcquirer | null
 
     /**
      * Examination task
@@ -892,7 +918,101 @@ export type StatusUpdatedNotification = {
  */
 export type ExaminationStatusCode = 701 | 702 | 703 | 704 | 705 | 706 | 707 | 708 | 709
 
-export type ContractAquirer = "UC" | "TFC" | "JCB/AMEX" | "DINERS" | "APPLE PAY UC" | "APPLE PAY JCB/AMEX" | "PAYSLE" | "PAYPAY"
+/**
+ * The acquirer or payment provider that an examination targets.
+ * 
+ * - `UC`: VISA / Mastercard (UC Card)
+ * - `TFC`: VISA / Mastercard (Toyota Finance)
+ * - `ORICO`: VISA / Mastercard (Orient Corporation)
+ * - `AFS`: VISA / Mastercard (AEON Financial Service)
+ * - `MUN`: VISA / Mastercard (Mitsubishi UFJ Nicos)
+ * - `JCB/AMEX`: JCB / American Express (JCB)
+ * - `DINERS`: Diners Club (JCB)
+ * - `APPLE PAY UC`: Apple Pay (UC Card)
+ * - `APPLE PAY JCB/AMEX`: Apple Pay (JCB)
+ * - `GOOGLE PAY UC`: Google Pay (UC Card)
+ * - `GOOGLE PAY TFC`: Google Pay (Toyota Finance)
+ * - `GOOGLE PAY ORICO`: Google Pay (Orient Corporation)
+ * - `GOOGLE PAY AFS`: Google Pay (AEON Financial Service)
+ * - `GOOGLE PAY MUN`: Google Pay (Mitsubishi UFJ Nicos)
+ * - `GOOGLE PAY JCB/AMEX`: Google Pay (JCB)
+ * - `GOOGLE PAY DINERS`: Google Pay (Diners Club)
+ * - `PAYSLE`: Konbini (Densan System)
+ * - `PAYPAY`: Konbini (PayPay)
+ * - `DIRECT DEBIT`: Direct Debit (withdrawal on the 5th, 6th, 23rd and 27th)
+ * - `DIRECT DEBIT MIZUHO`: Direct Debit (withdrawal on the 1st, 5th, 20th and 26th)
+ * - `VIRTUAL ACCOUNT`: Bank transfer (Virtual Account)
+ * - `VIRTUAL ACCOUNT BULK`: Bulk payment (Virtual Account)
+ * - `CARD UPDATER`: Card Updater
+ */
+export type ContractAcquirer =
+    | "UC"
+    | "TFC"
+    | "ORICO"
+    | "AFS"
+    | "MUN"
+    | "JCB/AMEX"
+    | "DINERS"
+    | "APPLE PAY UC"
+    | "APPLE PAY JCB/AMEX"
+    | "GOOGLE PAY UC"
+    | "GOOGLE PAY TFC"
+    | "GOOGLE PAY ORICO"
+    | "GOOGLE PAY AFS"
+    | "GOOGLE PAY MUN"
+    | "GOOGLE PAY JCB/AMEX"
+    | "GOOGLE PAY DINERS"
+    | "PAYSLE"
+    | "PAYPAY"
+    | "DIRECT DEBIT"
+    | "DIRECT DEBIT MIZUHO"
+    | "VIRTUAL ACCOUNT"
+    | "VIRTUAL ACCOUNT BULK"
+    | "CARD UPDATER"
+
+/**
+ * Examination status of a payment provider.
+ * 
+ * - `1`: In progress. This payment method cannot accept payments yet.
+ * - `2`: Passed. This payment method can accept payments.
+ * - `3`: Rejected. This payment method cannot accept payments.
+ */
+export type ExaminationStatus = 1 | 2 | 3
+
+/**
+ * Examination master ID. Identifies which payment method an examination is for.
+ * 
+ * - `1`: Card (VISA / Mastercard, UC Card)
+ * - `2`: Card (JCB / American Express / Diners Club / Discover)
+ * - `3`: Card (VISA / Mastercard, Toyota Finance)
+ * - `4`: Card (VISA / Mastercard, Orient Corporation)
+ * - `5`: Card (VISA / Mastercard, AEON Financial Service)
+ * - `6`: Card (VISA / Mastercard, Mitsubishi UFJ Nicos)
+ * - `51`: Apple Pay (VISA / Mastercard, UC Card)
+ * - `52`: Apple Pay (JCB / American Express)
+ * - `56`: Google Pay (VISA / Mastercard, UC Card)
+ * - `57`: Google Pay (JCB / American Express / Diners Club)
+ * - `58`: Google Pay (VISA / Mastercard, Toyota Finance)
+ * - `59`: Google Pay (VISA / Mastercard, Orient Corporation)
+ * - `60`: Google Pay (VISA / Mastercard, AEON Financial Service)
+ * - `61`: Google Pay (VISA / Mastercard, Mitsubishi UFJ Nicos)
+ * - `101`: Konbini
+ * - `201`: PayPay
+ * - `301`: Direct Debit (withdrawal on the 5th, 6th, 23rd and 27th)
+ * - `302`: Direct Debit (withdrawal on the 1st, 5th, 20th and 26th)
+ * - `401`: Bank transfer (Virtual Account)
+ * - `403`: Bulk payment (Virtual Account)
+ * - `701`: Card Updater
+ */
+export type ContractExaminationMasterId =
+    | 1 | 2 | 3 | 4 | 5 | 6
+    | 51 | 52
+    | 56 | 57 | 58 | 59 | 60 | 61
+    | 101
+    | 201
+    | 301 | 302
+    | 401 | 403
+    | 701
 
 /**
  * Contract status (v2)
@@ -1204,4 +1324,181 @@ export type CorporateInformation_V2 = {
      * Company info: TEL
      */
     company_tel?: string | null
+}
+
+/**
+ * Kind of file submitted to the fincode examination team.
+ * 
+ * - `DRIVER_LICENSE_FRONT`: Identity document; driver's license (front). The back has to be submitted too.
+ * - `DRIVER_LICENSE_BACK`: Identity document; driver's license (back). The front has to be submitted too.
+ * - `SEAL_REGISTRATION_FRONT`: Identity document; seal registration certificate.
+ * - `RESIDENT_CARD_FRONT`: Identity document; residence card (front). The back has to be submitted too.
+ * - `RESIDENT_CARD_BACK`: Identity document; residence card (back). The front has to be submitted too.
+ * - `SPECIAL_PERMANENT_RESIDENT_FRONT`: Identity document; special permanent resident certificate (front). The back has to be submitted too.
+ * - `SPECIAL_PERMANENT_RESIDENT_BACK`: Identity document; special permanent resident certificate (back). The front has to be submitted too.
+ * - `CERTIFICATE_OF_RESIDENCE_FRONT`: Identity document; certificate of residence.
+ * - `MY_NUMBER_CARD_FRONT`: Identity document; My Number card.
+ * - `PRODUCT_IMAGE_1`: Goods examination; image for `product_content_info.content1_*`.
+ * - `PRODUCT_IMAGE_2`: Goods examination; image for `product_content_info.content2_*`.
+ * - `PRODUCT_IMAGE_3`: Goods examination; image for `product_content_info.content3_*`.
+ * - `APP_IMAGE_TOP`: App examination; screenshot of the app's top screen. For a native app with no website at the time of examination.
+ * - `APP_IMAGE_ICON`: App examination; the app's icon.
+ * - `SALES_LICENSE_1`: Sales license. Some goods and services need one, and it has to be held in the contracting name.
+ * - `SALES_LICENSE_2`: Sales license, second file.
+ * - `SALES_LICENSE_3`: Sales license, third file.
+ */
+export type ExaminationFileType =
+    | "DRIVER_LICENSE_FRONT"
+    | "DRIVER_LICENSE_BACK"
+    | "SEAL_REGISTRATION_FRONT"
+    | "RESIDENT_CARD_FRONT"
+    | "RESIDENT_CARD_BACK"
+    | "SPECIAL_PERMANENT_RESIDENT_FRONT"
+    | "SPECIAL_PERMANENT_RESIDENT_BACK"
+    | "CERTIFICATE_OF_RESIDENCE_FRONT"
+    | "MY_NUMBER_CARD_FRONT"
+    | "PRODUCT_IMAGE_1"
+    | "PRODUCT_IMAGE_2"
+    | "PRODUCT_IMAGE_3"
+    | "APP_IMAGE_TOP"
+    | "APP_IMAGE_ICON"
+    | "SALES_LICENSE_1"
+    | "SALES_LICENSE_2"
+    | "SALES_LICENSE_3"
+
+/**
+ * Request body of Uploading an examination file
+ * (used for POST /v1/contracts/examinations/tenants/{id}/files)
+ */
+export type UploadingExaminationFileRequest = {
+    /**
+     * Kind of file being uploaded.
+     */
+    type: ExaminationFileType
+
+    /**
+     * File to upload.
+     */
+    data: Buffer | string
+
+    /**
+     * File name of the `data`, including the extension.
+     */
+    fileName: string
+
+    /**
+     * MIME type of the `data`.
+     * 
+     * Defaults to `application/octet-stream`.
+     */
+    contentType?: string
+}
+
+/**
+ * Response object of Uploading an examination file
+ * (used for POST /v1/contracts/examinations/tenants/{id}/files)
+ */
+export type UploadingExaminationFileResponse = {
+    /**
+     * Files accepted for the examination.
+     */
+    examination_files?: {
+        /**
+         * Shop ID the file was accepted for.
+         */
+        shop_id?: string | null
+
+        /**
+         * Kind of the uploaded file, as the numeric code the API answers with.
+         * 
+         * The request takes the name (`DRIVER_LICENSE_FRONT`) while the
+         * response gives the code (`200`).
+         */
+        type?: number | null
+
+        /**
+         * File name including the extension.
+         */
+        filename?: string | null
+
+        /**
+         * File size in bytes.
+         */
+        filesize?: number | null
+    }[] | null
+}
+
+/**
+ * Payment method a tenant can apply for.
+ * 
+ * - `PAYSLE`: Konbini
+ * - `PAYPAY`: PayPay
+ * - `APPLE_PAY_UC`: Apple Pay (VISA / Mastercard, UC Card)
+ * - `APPLE_PAY_JCB_AMEX`: Apple Pay (JCB / American Express)
+ * - `GOOGLE_PAY_UC`: Google Pay (VISA / Mastercard, UC Card)
+ * - `GOOGLE_PAY_TFC`: Google Pay (VISA / Mastercard, Toyota Finance)
+ * - `GOOGLE_PAY_ORICO`: Google Pay (VISA / Mastercard, Orient Corporation)
+ * - `GOOGLE_PAY_AFS`: Google Pay (VISA / Mastercard, AEON Financial Service)
+ * - `GOOGLE_PAY_MUN`: Google Pay (VISA / Mastercard, Mitsubishi UFJ Nicos)
+ * - `GOOGLE_PAY_JCB_AMEX`: Google Pay (JCB / American Express)
+ * - `GOOGLE_PAY_DINERS`: Google Pay (Diners Club)
+ * - `DIRECT_DEBIT`: Direct debit on the 5th, 6th, 23rd and 27th
+ * - `DIRECT_DEBIT_MIZUHO`: Direct debit on the 1st, 5th, 20th and 26th
+ * - `VIRTUAL_ACCOUNT`: Bank transfer (virtual account)
+ * - `VIRTUAL_ACCOUNT_BULK`: Bulk payment (virtual account)
+ * - `CARD_UPDATER`: Card updater
+ */
+export type PaymentProvider =
+    | "PAYSLE"
+    | "PAYPAY"
+    | "APPLE_PAY_UC"
+    | "APPLE_PAY_JCB_AMEX"
+    | "GOOGLE_PAY_UC"
+    | "GOOGLE_PAY_TFC"
+    | "GOOGLE_PAY_ORICO"
+    | "GOOGLE_PAY_AFS"
+    | "GOOGLE_PAY_MUN"
+    | "GOOGLE_PAY_JCB_AMEX"
+    | "GOOGLE_PAY_DINERS"
+    | "DIRECT_DEBIT"
+    | "DIRECT_DEBIT_MIZUHO"
+    | "VIRTUAL_ACCOUNT"
+    | "VIRTUAL_ACCOUNT_BULK"
+    | "CARD_UPDATER"
+
+/**
+ * Request body of Applying for payment methods
+ * (used for POST /v1/contracts/examinations/tenants/{id}/providers/reserve)
+ */
+export type ReservingProviderRequest = {
+    /**
+     * Payment methods to apply for.
+     */
+    provider: PaymentProvider[]
+}
+
+/**
+ * Response object of Applying for payment methods
+ * (used for POST /v1/contracts/examinations/tenants/{id}/providers/reserve)
+ */
+export type ReservingProviderResponse = {
+    /**
+     * Payment methods currently under application.
+     */
+    reservation_list?: {
+        /**
+         * Application ID.
+         */
+        reservation_id?: number | null
+
+        /**
+         * Shop ID the application is for.
+         */
+        shop_id?: string | null
+
+        /**
+         * Payment method applied for.
+         */
+        provider?: PaymentProvider | null
+    }[] | null
 }

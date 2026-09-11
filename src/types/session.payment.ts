@@ -1,6 +1,6 @@
 /**
-     * Payment session object
-     */
+ * Payment session object
+ */
 export type PaymentSessionObject = {
     /** 
      * ID
@@ -77,7 +77,7 @@ export type PaymentSessionObject = {
         /**
          * Payment method types used for this session.
          */
-        pay_type: ("Card" | "Konbini" | "Paypay")[]
+        pay_type: PaymentSessionPayType[]
 
         /**
          * Order ID.
@@ -102,7 +102,7 @@ export type PaymentSessionObject = {
         client_field_3?: string | null
 
         /**
-         * Webhook URL
+         * URL the payment result is posted to.
          */
         send_url?: string | null
     }
@@ -163,7 +163,7 @@ export type PaymentSessionObject = {
         /**
          * Flag to send barcode payment email or not.
          */
-        konbini_receipt_mail_send_flag?: "0" | "1" | null
+        konbini_reception_mail_send_flag?: "0" | "1" | null
     }
 
     /**
@@ -180,6 +180,53 @@ export type PaymentSessionObject = {
          */
         order_description?: string | null
     }
+
+    /**
+     * Bank transfer (virtual account) payment object
+     */
+    virtualaccount: {
+        /**
+         * Payment URL
+         */
+        virtualaccount_reception_url?: string | null
+
+        /**
+         * Offset days from the date payment request has succeeded.
+         */
+        payment_term_day?: number | null
+
+        /**
+         * Flag to send the payment page guide email or not.
+         */
+        virtualaccount_reception_mail_send_flag?: "0" | "1" | null
+
+        /**
+         * Whether an exact deposit amount is set on the virtual account.
+         * 
+         * When set, the customer cannot transfer an amount other than the
+         * billed one.
+         */
+        use_exact_deposit_amount?: boolean | null
+    }
+
+    /**
+     * Bill ID
+     */
+    bill_id?: string | null
+
+    /**
+     * Date this session was created.
+     * 
+     * Format: yyyy/MM/dd HH:mm:ss.SSS
+     */
+    created?: string | null
+
+    /**
+     * Date this session was updated.
+     * 
+     * Format: yyyy/MM/dd HH:mm:ss.SSS
+     */
+    updated?: string | null
 }
 
 /**
@@ -245,8 +292,9 @@ export type CreatingPaymentSessionRequest = {
          * - `Card`: Card payment
          * - `Konbini`: Konbini payment
          * - `Paypay`: PayPay payment
+         * - `Virtualaccount`: Bank transfer (virtual account) payment
          */
-        pay_type?: ("Card" | "Konbini" | "Paypay")[] | null
+        pay_type?: PaymentSessionPayType[] | null
 
         /**
          * Order ID.
@@ -391,7 +439,7 @@ export type CreatingPaymentSessionRequest = {
          * - `05`: With 3rd Party authoriztion.
          * - `06`: With FIDO authorization.
          */
-        tds2_three_ds_req_auth_method?: "01" | "02" | "03" | "04" | "05" | null
+        tds2_three_ds_req_auth_method?: "01" | "02" | "03" | "04" | "05" | "06" | null
 
         /**
          * Date the customer logged in.
@@ -551,31 +599,45 @@ export type CreatingPaymentSessionRequest = {
         tds2_pre_order_date?: string | null
 
         /**
+         * Whether the product is already on sale or is a pre-order.
          * 
+         * - `01`: Already on sale.
+         * - `02`: Pre-order.
          */
-        tds2_pre_order_purchaselnd?: string | null
+        tds2_pre_order_purchase_ind?: "01" | "02" | null
 
         /**
+         * Whether this is a first-time order or a reorder.
          * 
+         * - `01`: First-time order.
+         * - `02`: Reorder.
          */
-        tds2_reorder_items_ind?: string | null
+        tds2_reorder_items_ind?: "01" | "02" | null
 
         /**
+         * Shipping method of the purchased product.
          * 
+         * - `01`: Ship to the cardholder's billing address.
+         * - `02`: Ship to an address the merchant has on file and has verified. (not the billing address)
+         * - `03`: Ship to an address that differs from the cardholder's billing address.
+         * - `04`: Ship to a store. (the store address is given as the shipping address)
+         * - `05`: Digital goods, including online services, electronic gift cards and redemption codes.
+         * - `06`: No shipping. (travel and event tickets)
+         * - `07`: Other, such as games, digital services that are not shipped, and digital media subscriptions.
          */
-        tds2_ship_ind?: string | null
+        tds2_ship_ind?: "01" | "02" | "03" | "04" | "05" | "06" | "07" | null
 
         /**
          * Expiring date of recurring billing.
          * 
          * Format: `yyyyMMdd`
          */
-        tds2_recuring_expiry?: string | null
+        tds2_recurring_expiry?: string | null
 
         /**
          * Minimum interval days of recurring billing.
          */
-        tds2_recuring_frequency?: string | null
+        tds2_recurring_frequency?: string | null
     }
 
     /**
@@ -593,10 +655,12 @@ export type CreatingPaymentSessionRequest = {
         /**
          * Flag to send reception email.
          * 
-         * - `0`: Not send. (default)
+         * Required when the `konbini` object is given.
+         * 
+         * - `0`: Not send.
          * - `1`: Send.
          */
-        konbini_reception_mail_flag?: "0" | "1" | null
+        konbini_reception_mail_send_flag: "0" | "1"
     }
 
     /**
@@ -616,6 +680,47 @@ export type CreatingPaymentSessionRequest = {
          */
         order_description?: string | null
     }
+
+    /**
+     * Bank transfer (virtual account) parameters.
+     * 
+     * Used when `transaction.pay_type` includes `Virtualaccount`.
+     */
+    virtualaccount?: {
+        /**
+         * Flag to send the payment page guide email or not.
+         * 
+         * - `0`: Do not send
+         * - `1`: Send
+         */
+        virtualaccount_reception_mail_send_flag: "0" | "1"
+
+        /**
+         * Offset days until the virtual account expires.
+         * 
+         * Accepts `"0"` to `"99"`. The account expires in the morning of the
+         * day after the given number of days: executing on 2024/4/1 with `"2"`
+         * expires it in the morning of 2024/4/4.
+         */
+        payment_term_day?: string | null
+
+        /**
+         * Order ID whose virtual account should be reused.
+         * 
+         * The referenced payment must have a `status` of `CAPTURED`,
+         * `CANCELED` or `EXPIRED`, and the transfer into its virtual account
+         * must have happened within the last 90 days.
+         */
+        reference_order_id?: string | null
+
+        /**
+         * Whether to set an exact deposit amount on the virtual account.
+         * 
+         * When set, the customer cannot transfer an amount other than the
+         * billed one. Defaults to `false`.
+         */
+        use_exact_deposit_amount?: boolean | null
+    }
 }
 
 /**
@@ -627,4 +732,14 @@ export type CreatingPaymentSessionRequest = {
  * - `PAYSUCCESS`: Payment has succeeded.
  * - `ERROR`: Error has occurred or the payment has been canceled.
  */
+/**
+ * Payment methods that can be offered on a payment session (redirect) page.
+ * 
+ * - `Card`: Card payment
+ * - `Konbini`: Konbini payment
+ * - `Paypay`: PayPay payment
+ * - `Virtualaccount`: Bank transfer (virtual account) payment
+ */
+export type PaymentSessionPayType = "Card" | "Konbini" | "Paypay" | "Virtualaccount"
+
 export type PaymentSessionStatus = "CREATE" | "PAYSTART" | "REQSUCCESS" | "PAYSUCCESS" | "ERROR"

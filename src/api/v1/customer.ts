@@ -4,14 +4,11 @@ import {
     DeletingCustomerResponse,
     ListResponse,
     UpdatingCustomerRequest,
-    APIErrorResponse,
-    FincodeAPIError,
-    FincodeSDKError,
     RetrievingCustomerListQueryParams,
 } from "../../types/index"
 import { FincodeConfig } from "./fincode"
-import { createFincodeRequestFetch, FincodeRequestHeaders } from "./http"
-import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_errorMessages"
+import { FincodeRequestHeaders } from "./http"
+import { executeRequest } from "./_request"
 
 class Customer {
 
@@ -35,34 +32,9 @@ class Customer {
         body: CreatingCustomerRequest,
         headers?: FincodeRequestHeaders
     ): Promise<CustomerObject> {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "POST",
-                "/v1/customers",
-                JSON.stringify(body),
-                headers,
-                undefined,
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const customer = json as CustomerObject
-                        resolve(customer)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const err = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(err)
-                    }
-                }).catch((e: unknown) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e: unknown) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
+        return executeRequest<CustomerObject>(this._config, "POST", "/v1/customers", {
+            body: JSON.stringify(body),
+            headers,
         })
     }
 
@@ -80,34 +52,9 @@ class Customer {
         queryParams?: RetrievingCustomerListQueryParams,
         headers?: FincodeRequestHeaders
     ): Promise<ListResponse<CustomerObject>> {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "GET",
-                "/v1/customers",
-                undefined,
-                headers,
-                queryParams,
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const list = json as ListResponse<CustomerObject>
-                        resolve(list)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const err = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(err)
-                    }
-                }).catch((e: unknown) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e: unknown) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
+        return executeRequest<ListResponse<CustomerObject>>(this._config, "GET", "/v1/customers", {
+            headers,
+            queryParams,
         })
     }
 
@@ -125,34 +72,8 @@ class Customer {
         id: string,
         headers?: FincodeRequestHeaders
     ): Promise<CustomerObject> {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "GET",
-                `/v1/customers/${id}`,
-                undefined,
-                headers,
-                undefined,
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const customer = json as CustomerObject
-                        resolve(customer)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const err = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(err)
-                    }
-                }).catch((e: unknown) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e: unknown) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
+        return executeRequest<CustomerObject>(this._config, "GET", `/v1/customers/${id}`, {
+            headers,
         })
     }
 
@@ -172,34 +93,9 @@ class Customer {
         body: UpdatingCustomerRequest,
         headers?: FincodeRequestHeaders
     ): Promise<CustomerObject> {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "PUT",
-                `/v1/customers/${id}`,
-                JSON.stringify(body),
-                headers,
-                undefined,
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const customer = json as CustomerObject
-                        resolve(customer)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const err = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(err)
-                    }
-                }).catch((e: unknown) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e: unknown) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
+        return executeRequest<CustomerObject>(this._config, "PUT", `/v1/customers/${id}`, {
+            body: JSON.stringify(body),
+            headers,
         })
     }
 
@@ -217,34 +113,8 @@ class Customer {
         id: string,
         headers?: FincodeRequestHeaders
     ): Promise<DeletingCustomerResponse> {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "DELETE",
-                `/v1/customers/${id}`,
-                undefined,
-                headers,
-                undefined,
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const customer = json as DeletingCustomerResponse
-                        resolve(customer)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const err = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(err)
-                    }
-                }).catch((e: unknown) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e: unknown) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
+        return executeRequest<DeletingCustomerResponse>(this._config, "DELETE", `/v1/customers/${id}`, {
+            headers,
         })
     }
 }

@@ -5,18 +5,14 @@ import {
     SubscriptionObject,
     UpdatingSubscriptionRequest,
     SubscriptionResultObject,
-
-    APIErrorResponse,
-    FincodeAPIError,
-    FincodeSDKError,
     RetrievingSubscriptionListQueryParams,
     RetrievingSubscriptionQueryParams,
     CancelingSubscriptionQueryParams,
     RetrievingSubscriptionResultListQueryParams,
 } from "../../types/index"
 import { FincodeConfig } from "./fincode"
-import { createFincodeRequestFetch, FincodeRequestHeaders } from "./http"
-import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_errorMessages"
+import { FincodeRequestHeaders } from "./http"
+import { executeRequest } from "./_request"
 
 class Subscription {
 
@@ -40,34 +36,9 @@ class Subscription {
         body: CreatingSubscriptionRequest,
         headers?: FincodeRequestHeaders
     ): Promise<SubscriptionObject> {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "POST",
-                "/v1/subscriptions",
-                JSON.stringify(body),
-                headers,
-                undefined,
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const subscription = json as SubscriptionObject
-                        resolve(subscription)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(e)
-                    }
-                }).catch((e: unknown) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e: unknown) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
+        return executeRequest<SubscriptionObject>(this._config, "POST", "/v1/subscriptions", {
+            body: JSON.stringify(body),
+            headers,
         })
     }
 
@@ -85,34 +56,9 @@ class Subscription {
         queryParams: RetrievingSubscriptionListQueryParams,
         headers?: FincodeRequestHeaders,
     ): Promise<ListResponse<SubscriptionObject>> {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "GET",
-                "/v1/subscriptions",
-                undefined,
-                headers,
-                queryParams,
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const list = json as ListResponse<SubscriptionObject>
-                        resolve(list)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(e)
-                    }
-                }).catch((e: unknown) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e: unknown) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
+        return executeRequest<ListResponse<SubscriptionObject>>(this._config, "GET", "/v1/subscriptions", {
+            headers,
+            queryParams,
         })
     }
 
@@ -132,34 +78,9 @@ class Subscription {
         queryParams: RetrievingSubscriptionQueryParams,
         headers?: FincodeRequestHeaders,
     ): Promise<SubscriptionObject> {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "GET",
-                `/v1/subscriptions/${id}`,
-                undefined,
-                headers,
-                queryParams,
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const subscription = json as SubscriptionObject
-                        resolve(subscription)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(e)
-                    }
-                }).catch((e: unknown) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e: unknown) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
+        return executeRequest<SubscriptionObject>(this._config, "GET", `/v1/subscriptions/${id}`, {
+            headers,
+            queryParams,
         })
     }
 
@@ -179,34 +100,9 @@ class Subscription {
         body: UpdatingSubscriptionRequest,
         headers?: FincodeRequestHeaders,
     ): Promise<SubscriptionObject> {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "PUT",
-                `/v1/subscriptions/${id}`,
-                JSON.stringify(body),
-                headers,
-                undefined,
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const subscription = json as SubscriptionObject
-                        resolve(subscription)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(e)
-                    }
-                }).catch((e: unknown) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e: unknown) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
+        return executeRequest<SubscriptionObject>(this._config, "PUT", `/v1/subscriptions/${id}`, {
+            body: JSON.stringify(body),
+            headers,
         })
     }
 
@@ -226,34 +122,9 @@ class Subscription {
         queryParams: CancelingSubscriptionQueryParams,
         headers?: FincodeRequestHeaders,
     ): Promise<CancelingSubscriptionResponse> {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "DELETE",
-                `/v1/subscriptions/${id}`,
-                undefined,
-                headers,
-                queryParams,
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const subscription = json as CancelingSubscriptionResponse
-                        resolve(subscription)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(e)
-                    }
-                }).catch((e: unknown) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e: unknown) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
+        return executeRequest<CancelingSubscriptionResponse>(this._config, "DELETE", `/v1/subscriptions/${id}`, {
+            headers,
+            queryParams,
         })
     }
 
@@ -273,34 +144,9 @@ class Subscription {
         queryParams?: RetrievingSubscriptionResultListQueryParams,
         headers?: FincodeRequestHeaders,
     ): Promise<ListResponse<SubscriptionResultObject>> {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "GET",
-                `/v1/subscriptions/${id}/result`,
-                undefined,
-                headers,
-                queryParams,
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const list = json as ListResponse<SubscriptionResultObject>
-                        resolve(list)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(e)
-                    }
-                }).catch((e: unknown) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e: unknown) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
+        return executeRequest<ListResponse<SubscriptionResultObject>>(this._config, "GET", `/v1/subscriptions/${id}/result`, {
+            headers,
+            queryParams,
         })
     }
 }

@@ -1,22 +1,21 @@
-import FormData from "form-data"
+import { FormData } from "undici"
+import { Modify } from "../../utils/utilTypes"
 import {
     DeletingPaymentBulkResponse,
+    PaymentBulkPayType,
+    VirtualAccountPaymentBulkDetailObject,
     ListResponse,
     ListWithErrors,
     PaymentBulkDetailObject,
     PaymentBulkObject,
     RetrievingPaymentBulkDetailQueryParams,
     RetrievingPaymentBulkQueryParams,
-
-    APIErrorResponse,
-    FincodeAPIError,
-    FincodeSDKError,
     CreatingPaymentBulkRequest,
     CreatingPaymentBulkQueryParams,
 } from "../../types/index"
 import { FincodeConfig } from "./fincode"
-import { createFincodeRequestFetch, FincodeRequestHeaders } from "./http"
-import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_errorMessages"
+import { FincodeRequestHeaders } from "./http"
+import { executeRequest } from "./_request"
 import { generateUUIDv4 } from "./../../utils/random"
 
 class PaymentBulk {
@@ -29,7 +28,7 @@ class PaymentBulk {
     /**
      * **Register a payment bulk**
      * 
-     * corresponds to `POST /v1/sessions`
+     * corresponds to `POST /v1/payments/bulk`
      * 
      * @param {CreatingPaymentBulkQueryParams} queryParams - request query parameters
      * @param {CreatingPaymentBulkRequest} body - request body
@@ -47,47 +46,17 @@ class PaymentBulk {
         const formData = new FormData()
         formData.append(
             "file",
-            body.file,
-            {
-                filename: body.fileName || `${generateUUIDv4()}.json`,
-                contentType: "application/json"
-            }
+            new Blob([body.file], { type: "application/json" }),
+            body.fileName || `${generateUUIDv4()}.json`,
         )
 
-        const fetch = createFincodeRequestFetch(
-            this._config,
-            "POST",
-            "/v1/payments/bulk",
-            formData,
-            {
-                ...headers,
-                contentType: `multipart/form-data; boundary=${formData.getBoundary()}`
-            },
-            {
+        return executeRequest<PaymentBulkObject>(this._config, "POST", "/v1/payments/bulk", {
+            body: formData,
+            headers,
+            queryParams: {
                 pay_type: queryParams.pay_type,
                 process_plan_date: queryParams.process_plan_date,
             },
-        )
-
-        return new Promise((resolve, reject) => {
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const bulk = json as PaymentBulkObject
-                        resolve(bulk)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const err = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(err)
-                    }
-                }).catch((e) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
         })
     }
 
@@ -105,34 +74,10 @@ class PaymentBulk {
         queryParams?: RetrievingPaymentBulkQueryParams,
         headers?: FincodeRequestHeaders,
     ): Promise<ListResponse<PaymentBulkObject>> {
-        const fetch = createFincodeRequestFetch(
-            this._config,
-            "GET",
-            "/v1/payments/bulk",
-            undefined,
+
+        return executeRequest<ListResponse<PaymentBulkObject>>(this._config, "GET", "/v1/payments/bulk", {
             headers,
             queryParams,
-        )
-
-        return new Promise((resolve, reject) => {
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const bulkList = json as ListResponse<PaymentBulkObject>
-                        resolve(bulkList)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const err = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(err)
-                    }
-                }).catch((e) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
         })
     }
 
@@ -141,46 +86,44 @@ class PaymentBulk {
      * 
      * corresponds to `GET /v1/payments/bulk/:id`
      * 
+     * The shape of each detail follows `queryParams.pay_type`. A card bulk
+     * payment answers with {@link PaymentBulkDetailObject} and a virtual
+     * account one with {@link VirtualAccountPaymentBulkDetailObject}. Neither
+     * carries `pay_type`, so the query is what tells the two apart.
+     * 
+     * Passing a `pay_type` that is not a literal, such as the one read off a
+     * bulk payment in a list, answers with both shapes as a union.
+     * 
      * @param {string} id - payment bulk id
-     * @param {RetrievingPaymentBulkDetailQueryParams} [queryParams] - query parameters
+     * @param {RetrievingPaymentBulkDetailQueryParams} queryParams - query parameters
      * @param {FincodeRequestHeaders} [headers] - request header
      * 
-     * @returns {Promise<PaymentBulkDetailObject>} - retrieved payment bulk detail object
+     * @returns {Promise<ListWithErrors<PaymentBulkDetailObject>>} - retrieved payment bulk detail object list
      */
+    public retrieveDetailList(
+        id: string,
+        queryParams: Modify<RetrievingPaymentBulkDetailQueryParams, { pay_type: Extract<PaymentBulkPayType, "Card"> }>,
+        headers?: FincodeRequestHeaders,
+    ): Promise<ListWithErrors<PaymentBulkDetailObject>>
+    public retrieveDetailList(
+        id: string,
+        queryParams: Modify<RetrievingPaymentBulkDetailQueryParams, { pay_type: Extract<PaymentBulkPayType, "Virtualaccount"> }>,
+        headers?: FincodeRequestHeaders,
+    ): Promise<ListWithErrors<VirtualAccountPaymentBulkDetailObject>>
     public retrieveDetailList(
         id: string,
         queryParams: RetrievingPaymentBulkDetailQueryParams,
         headers?: FincodeRequestHeaders,
-    ): Promise<ListWithErrors<PaymentBulkDetailObject>> {
+    ): Promise<ListWithErrors<PaymentBulkDetailObject | VirtualAccountPaymentBulkDetailObject>>
+    public retrieveDetailList(
+        id: string,
+        queryParams: RetrievingPaymentBulkDetailQueryParams,
+        headers?: FincodeRequestHeaders,
+    ): Promise<ListWithErrors<PaymentBulkDetailObject | VirtualAccountPaymentBulkDetailObject>> {
 
-        const fetch = createFincodeRequestFetch(
-            this._config,
-            "GET",
-            `/v1/payments/bulk/${id}`,
-            undefined,
+        return executeRequest<ListWithErrors<PaymentBulkDetailObject | VirtualAccountPaymentBulkDetailObject>>(this._config, "GET", `/v1/payments/bulk/${id}`, {
             headers,
             queryParams,
-        )
-
-        return new Promise((resolve, reject) => {
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const bulkDetailList = json as ListWithErrors<PaymentBulkDetailObject>
-                        resolve(bulkDetailList)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const err = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(err)
-                    }
-                }).catch((e) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
         })
     }
 
@@ -199,34 +142,8 @@ class PaymentBulk {
         headers?: FincodeRequestHeaders,
     ): Promise<DeletingPaymentBulkResponse> {
 
-        const fetch = createFincodeRequestFetch(
-            this._config,
-            "DELETE",
-            `/v1/payments/bulk/${id}`,
-            undefined,
+        return executeRequest<DeletingPaymentBulkResponse>(this._config, "DELETE", `/v1/payments/bulk/${id}`, {
             headers,
-            undefined,
-        )
-
-        return new Promise((resolve, reject) => {
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const deleteResult = json as DeletingPaymentBulkResponse
-                        resolve(deleteResult)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const err = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(err)
-                    }
-                }).catch((e) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
         })
     }
 }

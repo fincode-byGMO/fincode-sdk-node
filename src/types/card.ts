@@ -1,6 +1,19 @@
+import { Modify } from "../utils/utilTypes"
+import { PaymentMethodStatus } from "./paymentMethod"
+import { Pagination } from "./pagination"
+
 /**
-     * Card object
-     */
+ * Whether the card updater keeps this card's details up to date.
+ * 
+ * - `enabled`: update this card.
+ * - `disabled`: do not update this card.
+ * - `inherit`: follow the shop setting.
+ */
+export type CardUpdaterMode = "enabled" | "disabled" | "inherit"
+
+/**
+ * Card object
+ */
 export type CardObject = {
     /**
      * Customer ID of customer who owns this card.
@@ -83,6 +96,32 @@ export type CardObject = {
      * - `(empty string)`: Unknown card brand.
      */
     brand: CardBrand
+
+    /**
+     * Whether the card updater keeps this card's details up to date.
+     */
+    card_updater_mode?: CardUpdaterMode | null
+
+    /**
+     * Date the card details were last updated successfully.
+     * 
+     * Format: `yyyy/MM/dd HH:mm:ss.SSS`
+     */
+    card_updater_last_success_date?: string | null
+
+    /**
+     * Date an update of the card details was last attempted.
+     * 
+     * Format: `yyyy/MM/dd HH:mm:ss.SSS`
+     */
+    card_updater_last_attempt_date?: string | null
+
+    /**
+     * Status of this card.
+     * 
+     * Returned by `GET /v1/cards`.
+     */
+    status?: PaymentMethodStatus | null
 }
 
 /**
@@ -134,6 +173,11 @@ export type CreatingCardRequest = {
      * Security code (CVC/CVV)
      */
     security_code?: string | null
+
+    /**
+     * Whether the card updater should keep this card's details up to date.
+     */
+    card_updater_mode?: CardUpdaterMode | null
 }
 
 /**
@@ -164,6 +208,13 @@ export type UpdatingCardRequest = {
      * Format: YYMM
      */
     expire?: string | null
+
+    /**
+     * Whether the card updater should keep this card's details up to date.
+     * 
+     * Only updated when given.
+     */
+    card_updater_mode?: CardUpdaterMode | null
 }
 
 /**
@@ -188,3 +239,46 @@ export type DeletingCardResponse = {
      */
     delete_flag: "0" | "1"
 }
+
+/**
+ * Query parameters of Retrieving a list of cards. (used for GET /v1/cards)
+ */
+export type RetrievingCardListQueryParams = Modify<Pagination, {
+    /**
+     * Card ID
+     */
+    card_id?: string | null
+
+    /**
+     * Customer ID
+     */
+    customer_id?: string | null
+
+    /**
+     * Date the card details were last updated successfully (from)
+     * 
+     * Format: `yyyy/MM/dd`
+     */
+    card_updater_last_success_date_from?: string | null
+
+    /**
+     * Date the card details were last updated successfully (to)
+     * 
+     * Format: `yyyy/MM/dd`
+     */
+    card_updater_last_success_date_to?: string | null
+
+    /**
+     * Date an update of the card details was last attempted (from)
+     * 
+     * Format: `yyyy/MM/dd`
+     */
+    card_updater_last_attempt_date_from?: string | null
+
+    /**
+     * Date an update of the card details was last attempted (to)
+     * 
+     * Format: `yyyy/MM/dd`
+     */
+    card_updater_last_attempt_date_to?: string | null
+}>

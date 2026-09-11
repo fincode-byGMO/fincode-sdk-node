@@ -2,15 +2,11 @@ import {
     ListResponse,
     ShopObject,
     UpdatingPlatformRequest,
-
-    APIErrorResponse,
-    FincodeAPIError,
-    FincodeSDKError,
     RetrievingPlatformShopListQueryParams,
 } from "../../types/index"
 import { FincodeConfig } from "./fincode"
-import { createFincodeRequestFetch, FincodeRequestHeaders } from "./http"
-import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_errorMessages"
+import { FincodeRequestHeaders } from "./http"
+import { executeRequest } from "./_request"
 
 class Platform {
 
@@ -23,7 +19,7 @@ class Platform {
     /**
      * **Retrieve platform shop list**
      * 
-     * corresponds to `POST /v1/platforms`
+     * corresponds to `GET /v1/platforms`
      * 
      * @param {RetrievingPlatformShopListQueryParams} [queryParams] - query parameters
      * @param {FincodeRequestHeaders} [headers] - request header
@@ -34,34 +30,9 @@ class Platform {
         queryParams?: RetrievingPlatformShopListQueryParams,
         headers?: FincodeRequestHeaders
     ): Promise<ListResponse<ShopObject>> {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "GET",
-                "/v1/platforms",
-                undefined,
-                headers,
-                queryParams,
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const list = json as ListResponse<ShopObject>
-                        resolve(list)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(e)
-                    }
-                }).catch((e: unknown) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e: unknown) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
+        return executeRequest<ListResponse<ShopObject>>(this._config, "GET", "/v1/platforms", {
+            headers,
+            queryParams,
         })
     }
 
@@ -79,34 +50,8 @@ class Platform {
         id: string,
         headers?: FincodeRequestHeaders,
     ): Promise<ShopObject> {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "GET",
-                `/v1/platforms/${id}`,
-                undefined,
-                headers,
-                undefined,
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const shop = json as ShopObject
-                        resolve(shop)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(e)
-                    }
-                }).catch((e: unknown) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e: unknown) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
+        return executeRequest<ShopObject>(this._config, "GET", `/v1/platforms/${id}`, {
+            headers,
         })
     }
 
@@ -124,34 +69,9 @@ class Platform {
         body: UpdatingPlatformRequest,
         headers?: FincodeRequestHeaders,
     ): Promise<ShopObject> {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "PUT",
-                `/v1/platforms/${id}`,
-                JSON.stringify(body),
-                headers,
-                undefined,
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const shop = json as ShopObject
-                        resolve(shop)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(e)
-                    }
-                }).catch((e: unknown) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e: unknown) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
+        return executeRequest<ShopObject>(this._config, "PUT", `/v1/platforms/${id}`, {
+            body: JSON.stringify(body),
+            headers,
         })
     }
 }

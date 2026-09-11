@@ -45,7 +45,7 @@ export type ShopObject = {
     /**
      * Days to keep logs
      */
-    log_keep_days?: string | null
+    log_keep_days?: number | null
 
     /**
      * API version
@@ -103,24 +103,44 @@ export type ShopObject = {
 }
 
 /**
- * Examination master
+ * Examination master ID.
  * 
- * - `vm`: Visa/Mastercard
- * - `jad`: JCB/American Express/Diners
+ * Identifies which payment method a platform rate applies to.
+ * 
+ * - `vm`: Card (VISA / Mastercard)
+ * - `jad`: Card (JCB / American Express / Diners Club / Discover)
+ * - `applepay_vm`: Apple Pay (VISA / Mastercard)
+ * - `applepay_jad`: Apple Pay (JCB / American Express / Diners Club / Discover)
+ * - `googlepay_vm`: Google Pay (VISA / Mastercard)
+ * - `googlepay_jad`: Google Pay (JCB / American Express / Diners Club / Discover)
  * - `konbini`: Konbini
+ * - `paypay`: PayPay
+ * - `directdebit`: Direct Debit (withdrawal on the 5th, 6th, 23rd and 27th)
+ * - `directdebit_mizuho`: Direct Debit (withdrawal on the 1st, 5th, 20th and 26th)
+ * - `virtualaccount`: Bank transfer (Virtual Account)
+ * - `card_updater`: Card Updater
  */
-export type ExaminationMaster = "vm" | "jad" | "konbini"
+export type ExaminationMaster =
+    | "vm"
+    | "jad"
+    | "applepay_vm"
+    | "applepay_jad"
+    | "googlepay_vm"
+    | "googlepay_jad"
+    | "konbini"
+    | "paypay"
+    | "directdebit"
+    | "directdebit_mizuho"
+    | "virtualaccount"
+    | "card_updater"
 
 /**
  * Deposit cycle master ID
  * 
- * - `1`: 1 time closing per month  with payment on the last day of the following month
- * - `2`: 2 times closing per month with payment 15 days after each closing
- * - `3`: 3 times closing per month with payment 10 days after each closing (required to contact fincode support)
- * - `4`: 6 times closing per month with payment 5 days after each closing (required to contact fincode support)
- * - `5`: Daily closing with payment 3 business days after each closing (required to contact fincode support)
+ * - `1`: Closed at the end of the month, paid at the end of the following month.
+ * - `2`: Closed on the 15th and the last day of the month, paid 15 days after each closing.
  */
-export type DepositCycleMasterId = 1 | 2 | 3 | 4 | 5
+export type DepositCycleMasterId = 1 | 2
 
 /**
  * Shop Type
@@ -206,9 +226,9 @@ export type SpecifiedCommercialTransactionActInfo = {
     shop_charge_description?: string | null
 
     /**
-     * Product delivery time
+     * Time it takes to deliver the product.
      * 
-     * TODO: deliever -> delivery (API returns `delievery`)
+     * The key is misspelled to match what the API returns.
      */
     shop_product_delievery_time?: string | null
 
@@ -222,13 +242,9 @@ export type SpecifiedCommercialTransactionActInfo = {
  */
 export type PlatformRateConfig = {
     /**
-     * Examination master ID
-     * 
-     * - `vm`: Visa/Mastercard 
-     * - `jad`: JCB/American Express/Diners
-     * - `konbini`: Konbini
+     * Examination master ID.
      */
-    id: string
+    id: ExaminationMaster
 
     /**
      * Platform rate
@@ -421,7 +437,7 @@ export type ShopInformation_V2 = {
         /**
          * This shop provides some digital contents or not.
          */
-        digital_content?: boolean | null
+        digital_contents?: boolean | null
     }
 
     /**

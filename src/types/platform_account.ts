@@ -1,3 +1,4 @@
+import { DepositDestination, FeeAmountBreakdown } from "./account"
 import { Modify } from "../utils/utilTypes"
 import { Pagination } from "./pagination"
 
@@ -23,7 +24,7 @@ export type PlatformDepositStatusCode = 3001 | 3002 | 3003 | 3004 | 3005 | 3006 
 /**
  * Platform account object
  */
-export type PlatformAccountObject = {
+export type PlatformAccountObject = FeeAmountBreakdown & {
     /**
      * Account ID
      */
@@ -40,11 +41,14 @@ export type PlatformAccountObject = {
     shop_id: string
 
     /**
-     * Date of deposit
+     * Scheduled date of deposit.
+     * 
+     * This is the planned date, not the actual one. The date the deposit
+     * was actually made is returned in `deposit_date`.
      * 
      * Format: `yyyy/MM/dd HH:mm`
      */
-    schedled_deposit_date: string
+    scheduled_deposit_date: string
 
     /**
      * Date the aggregate deposit starts
@@ -119,7 +123,9 @@ export type PlatformAccountObject = {
     deposit_amount: number
 
     /**
-     * Verified flag
+     * Whether the income has been verified.
+     * 
+     * @deprecated This is a closed feature.
      */
     verified: boolean
 
@@ -136,7 +142,30 @@ export type PlatformAccountObject = {
      * Format: `yyyy/MM/dd HH:mm:ss.SSS`
      */
     updated?: string | null
+
+    /**
+     * Bank account the platform fee income is deposited into.
+     * 
+     * Returned when retrieving a single income, not in the list.
+     */
+    deposit_destination?: DepositDestination | null
 }
+
+/**
+ * A single item of the platform fee income list. (used for `GET /v1/platform_accounts`)
+ * 
+ * The list omits the fee breakdown and the deposit destination. Retrieve a
+ * single income to get those.
+ */
+export type PlatformAccountListItemObject = Omit<PlatformAccountObject,
+    | "taxable_fee_amount"
+    | "nontaxable_fee_amount"
+    | "web_registration_fee_amount"
+    | "platform_web_registration_fee_amount"
+    | "paper_registration_fee_amount"
+    | "platform_paper_registration_fee_amount"
+    | "deposit_destination"
+>
 
 /**
  * Query Params object for Retrieving platform accounts list
@@ -189,101 +218,99 @@ export type RetrievingPlatformAccountListQueryParams = Modify<Omit<Pagination, "
 }>
 
 /**
- * Account summary object
+ * One tenant's contribution to a platform fee income.
+ * (used for `GET /v1/platform_accounts/{id}/summary`)
+ * 
+ * The income is broken down per tenant shop, so each item carries the tenant
+ * shop it came from.
  */
-export type PlatformAccountSummaryObject = {
+export type PlatformAccountSummaryObject = FeeAmountBreakdown & {
     /**
      * Summary ID
      */
     summary_id: number
 
     /**
-     * Account ID
+     * Platform fee income ID this summary belongs to.
      */
     account_id: number
 
     /**
-     * Shop ID
+     * Shop ID of the platform shop.
      */
     shop_id: string
 
     /**
-     * Date the deposit is scheduled
+     * Tenant shop this summary is for.
+     */
+    tenant_shop_id?: string | null
+
+    /**
+     * Name of the tenant shop this summary is for.
+     */
+    tenant_shop_name?: string | null
+
+    /**
+     * Scheduled date of the income this summary belongs to.
      * 
      * Format: `yyyy/MM/dd HH:mm`
      */
-    scheduled_deposit_date: string
+    scheduled_deposit_date?: string | null
 
     /**
-     * Date the aggregate deposit starts
+     * Start of the aggregation term.
      * 
-     * Format: `yyyy/MM/dd HH:mm`
+     * Format: `yyyy/MM/dd`
      */
     aggregate_term_start: string
 
     /**
-     * Date the aggregate deposit ends
+     * End of the aggregation term.
      * 
-     * Format: `yyyy/MM/dd HH:mm`
+     * Format: `yyyy/MM/dd`
      */
     aggregate_term_end: string
 
     /**
-     * Deposit date
-     * 
-     * Format: `yyyy/MM/dd HH:mm`
-     */
-    deposit_date?: string | null
-
-    /**
-     * Count
+     * Number of payments aggregated into this summary.
      */
     count: number
 
     /**
-     * Settlement amount
-     */
-    settlement_amount: number
-
-    /**
-     * Bank transfer fee
-     */
-    bank_transfer_fee: number
-
-    /**
-     * Total amount
+     * Total amount of the payments aggregated into this summary.
      */
     total_amount: number
 
     /**
-     * Fee amount
+     * Total of the fees charged for this tenant shop.
      */
     fee_amount: number
 
+
     /**
-     * Platform fee amount
+     * Platform fee for this tenant shop, excluding consumption tax.
      */
     platform_fee_amount: number
 
     /**
-     * Platform fee tax amount
+     * Consumption tax on the platform fee.
      */
     platform_fee_tax_amount: number
 
     /**
-     * Tax amount
+     * Total consumption tax in this summary.
      */
     tax_amount: number
 
     /**
-     * Deposit amount
+     * Amount deposited to the platform from this tenant shop.
      */
     deposit_amount: number
 
     /**
-     * Verified flag
+     * Deposit IDs of the tenant shop that were aggregated into this summary.
      */
-    verified: boolean
+    tenant_account_process_id_list?: string[] | null
 
     /**
      * Created timestamp
@@ -303,7 +330,7 @@ export type PlatformAccountSummaryObject = {
 /**
  * Pagination object for Retrieving platform account summary list
  */
-export type RetrievinggPlatformAccountSummaryListPagination = Omit<Pagination, "sort"> & {
+export type RetrievingPlatformAccountSummaryListQueryParams = Omit<Pagination, "sort"> & {
     /**
      * Date the deposit is scheduled (from)
      * 

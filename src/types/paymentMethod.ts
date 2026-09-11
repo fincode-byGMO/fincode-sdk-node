@@ -1,5 +1,5 @@
-import { CardBrand, CardType } from "./card";
-import { DirectDebitResultCode, PayType } from "./payment";
+import { CardBrand, CardType, CardUpdaterMode } from "./card";
+import { DirectDebitResultCode, PayType, ThreeDSecure2RequestFields, ThreeDSecure2Status } from "./payment";
 
 export type PaymentMethodObject = {
     /**
@@ -12,8 +12,9 @@ export type PaymentMethodObject = {
      * 
      * - `Card`: this payment method is a card
      * - `Directdebit`: this payment method is a bank account for direct debit payment
+     * - `Virtualaccount`: this payment method is a bank transfer (virtual account)
      */
-    pay_type: Extract<PayType, "Card" | "Directdebit">;
+    pay_type: PaymentMethodPayType;
 
     /**
      * Customer ID that this payment method belongs to
@@ -119,7 +120,15 @@ export type PaymentMethodObject = {
      * 
      * If this payment method is a bank account for direct debit payment, this field will be filled.
      */
-    directdebit?: PaymentMehtodDirectDebit | null
+    directdebit?: PaymentMethodDirectDebit | null
+
+    /**
+     * Virtual account information.
+     * 
+     * If this payment method is a bank transfer (virtual account), this field
+     * will be filled.
+     */
+    virtualaccount?: PaymentMethodVirtualAccount | null
 }
 
 type PaymentMethodCard = {
@@ -134,7 +143,7 @@ type PaymentMethodCard = {
      * 
      * If any card have not been used in this payment yet, this field will be null.
      */
-    expire: string
+    expire?: string | null
 
     /**
      * Holder name of the card used in this payment.
@@ -158,7 +167,7 @@ type PaymentMethodCard = {
      * - `2`: Prepaid card.
      * - `3`: Credit card.
      */
-    card_type: CardType
+    type?: CardType | null
 
     /**
      * Card brands user can use in fincode.
@@ -171,7 +180,7 @@ type PaymentMethodCard = {
      * - `DISCOVER`: Discover card.
      * - `(empty string)`: Unknown card brand and Test card.
      */
-    brand: CardBrand
+    brand?: CardBrand | null
 
 
     /**
@@ -191,12 +200,18 @@ type PaymentMethodCard = {
     tds2_type?: "2" | "3" | null
 
     /**
-     * 3D Secure 2.0 Authentication Status
-     * - `AUTHENTICATING`: Authentication in progress
-     * - `CHALLENGE`: Challenge authentication required
-     * - `AUTHENTICATED`: Authentication completed
+     * The processing status of 3D Secure 2 authentication.
+     * 
+     * - `AUTHENTICATING`: Authentication is in progress.
+     * - `CHALLENGE`: Challenge authentication is required.
+     * - `AUTHENTICATED`: Authentication has completed.
      */
-    tds2_status?: "AUTHENTICATING" | "CHALLENGE" | "AUTHENTICATED" | null
+    tds2_status?: ThreeDSecure2Status | null
+
+    /**
+     * URL the customer returns to after the 3D Secure 2 authentication.
+     */
+    tds2_ret_url?: string | null
 
     /**
      * Merchant name that will be displayed on the 3D Secure 2 authentication screen.
@@ -209,12 +224,84 @@ type PaymentMethodCard = {
     access_id?: string | null
 
     /**
-     * acs
+     * Whether the ACS was called during 3D Secure authentication.
      */
+    /**
+     * Error code of the 3D Secure 2 authentication.
+     */
+    error_code?: string | null
+
     acs?: string | null
+
+    /**
+     * Whether the card updater keeps this card's details up to date.
+     */
+    card_updater_mode?: CardUpdaterMode | null
+
+    /**
+     * Date the card details were last updated successfully.
+     * 
+     * Format: `yyyy/MM/dd HH:mm:ss.SSS`
+     */
+    card_updater_last_success_date?: string | null
+
+    /**
+     * Date an update of the card details was last attempted.
+     * 
+     * Format: `yyyy/MM/dd HH:mm:ss.SSS`
+     */
+    card_updater_last_attempt_date?: string | null
 }
 
-type PaymentMehtodDirectDebit = {
+export type PaymentMethodVirtualAccount = {
+    /**
+     * Branch code of this virtual account.
+     */
+    va_branch_code?: string | null
+
+    /**
+     * Branch name of this virtual account.
+     */
+    va_branch_name?: string | null
+
+    /**
+     * Account number of this virtual account.
+     */
+    va_account_number?: string | null
+
+    /**
+     * Account holder name of this virtual account.
+     */
+    va_account_name?: string | null
+
+    /**
+     * Virtual account identifier.
+     */
+    virtual_account_id?: string | null
+
+    /**
+     * The date this virtual account was assigned.
+     * 
+     * Format: `yyyy/MM/dd HH:mm:ss.SSS`
+     */
+    account_assignment_date?: string | null
+
+    /**
+     * The date this virtual account was activated most recently.
+     * 
+     * Format: `yyyy/MM/dd HH:mm:ss.SSS`
+     */
+    last_activated_date?: string | null
+
+    /**
+     * The date of the most recent transaction on this virtual account.
+     * 
+     * Format: `yyyy/MM/dd`
+     */
+    latest_transaction_date?: string | null
+}
+
+type PaymentMethodDirectDebit = {
     /**
      * Direct debit application type
      * 
@@ -222,6 +309,11 @@ type PaymentMehtodDirectDebit = {
      * - `PAPER`: Paper application
      */
     application_type: DirectDebitApplicationType
+
+    /**
+     * Transfer service this bank account is registered with.
+     */
+    settlement_route?: DirectDebitSettlementRoute | null
 
     /**
      * Expected billable date.
@@ -290,10 +382,10 @@ type PaymentMehtodDirectDebit = {
     /**
      * Account type
      * 
-     * - `0`: Savings account (普通預金)
-     * - `1`: Current account (当座預金)
+     * - `1`: Savings account (普通預金)
+     * - `2`: Current account (当座預金)
      */
-    account_type?: "0" | "1" | null
+    account_type?: "1" | "2" | null
 
     /**
      * Account number
@@ -362,6 +454,15 @@ type PaymentMehtodDirectDebit = {
 export type PaymentMethodStatus = "INACTIVATED" | "AWAITING_CUSTOMER_ACTION" | "ACTIVATED" | "FAILED";
 
 /**
+ * Payment method types the payment method API works with.
+ * 
+ * - `Card`: Card
+ * - `Directdebit`: Direct Debit
+ * - `Virtualaccount`: Bank transfer (virtual account)
+ */
+export type PaymentMethodPayType = Extract<PayType, "Card" | "Directdebit" | "Virtualaccount">
+
+/**
  * Direct Debit Application Type
  * 
  * - `ONLINE`: Online application
@@ -378,6 +479,16 @@ export type DirectDebitApplicationType = "ONLINE" | "PAPER"
 export type DirectDebitBankType = "0" | "1"
 
 /**
+ * Transfer service the bank account is registered with.
+ * 
+ * The service determines the days of the month on which the debit is taken.
+ * 
+ * - `1`: Direct debit on the 5th, 6th, 23rd and 27th.
+ * - `2`: Direct debit on the 1st, 5th, 20th and 26th.
+ */
+export type DirectDebitSettlementRoute = "1" | "2"
+
+/**
  * Request Body of Creating Payment Method (used for POST /v1/customers/{customer_id}/payment_methods)
  */
 export type CreatingPaymentMethodRequest = {
@@ -390,8 +501,9 @@ export type CreatingPaymentMethodRequest = {
      * 
      * - `Card`: Card
      * - `Directdebit`: Direct Debit
+     * - `Virtualaccount`: Bank transfer (virtual account)
      */
-    pay_type: Extract<PayType, "Card" | "Directdebit">
+    pay_type: PaymentMethodPayType
 
     /**
      * Default flag
@@ -438,7 +550,12 @@ export type CreatingPaymentMethodRequest = {
          * Card token responded from fincodeJS (Fincode.tokens(...))
          */
         token: string
-        
+
+        /**
+         * Whether the card updater should keep this card's details up to date.
+         */
+        card_updater_mode?: CardUpdaterMode | null
+
         /**
          * Defines the behavior of 3D Secure 2 on this payment method registration.
          * 
@@ -546,7 +663,7 @@ export type CreatingPaymentMethodRequest = {
          * - `05`: With 3rd Party authoriztion.
          * - `06`: With FIDO authorization.
          */
-        tds2_three_ds_req_auth_method?: "01" | "02" | "03" | "04" | "05" | null
+        tds2_three_ds_req_auth_method?: "01" | "02" | "03" | "04" | "05" | "06" | null
 
         /**
          * Date the customer logged in.
@@ -706,31 +823,45 @@ export type CreatingPaymentMethodRequest = {
         tds2_pre_order_date?: string | null
 
         /**
+         * Whether the product is already on sale or is a pre-order.
          * 
+         * - `01`: Already on sale.
+         * - `02`: Pre-order.
          */
-        tds2_pre_order_purchaselnd?: string | null
+        tds2_pre_order_purchase_ind?: "01" | "02" | null
 
         /**
+         * Whether this is a first-time order or a reorder.
          * 
+         * - `01`: First-time order.
+         * - `02`: Reorder.
          */
-        tds2_reorder_items_ind?: string | null
+        tds2_reorder_items_ind?: "01" | "02" | null
 
         /**
+         * Shipping method of the purchased product.
          * 
+         * - `01`: Ship to the cardholder's billing address.
+         * - `02`: Ship to an address the merchant has on file and has verified. (not the billing address)
+         * - `03`: Ship to an address that differs from the cardholder's billing address.
+         * - `04`: Ship to a store. (the store address is given as the shipping address)
+         * - `05`: Digital goods, including online services, electronic gift cards and redemption codes.
+         * - `06`: No shipping. (travel and event tickets)
+         * - `07`: Other, such as games, digital services that are not shipped, and digital media subscriptions.
          */
-        tds2_ship_ind?: string | null
+        tds2_ship_ind?: "01" | "02" | "03" | "04" | "05" | "06" | "07" | null
 
         /**
          * Expiring date of recurring billing.
          * 
          * Format: `yyyyMMdd`
          */
-        tds2_recuring_expiry?: string | null
+        tds2_recurring_expiry?: string | null
 
         /**
          * Minimum interval days of recurring billing.
          */
-        tds2_recuring_frequency?: string | null
+        tds2_recurring_frequency?: string | null
     }
 
     /**
@@ -746,11 +877,23 @@ export type CreatingPaymentMethodRequest = {
         application_type: DirectDebitApplicationType
 
         /**
+         * Transfer service to register the bank account with.
+         * 
+         * The service determines the days of the month on which the debit is
+         * taken. Leave it out to register with the shop's default service,
+         * which is the one whose examination completed most recently.
+         * 
+         * - `1`: Direct debit on the 5th, 6th, 23rd and 27th.
+         * - `2`: Direct debit on the 1st, 5th, 20th and 26th.
+         */
+        settlement_route?: DirectDebitSettlementRoute | null
+
+        /**
          * Bank code
          * 
          * Example: `0001`
          */
-        bank_code: string | null
+        bank_code: string
 
         /**
          * Branch code
@@ -766,10 +909,10 @@ export type CreatingPaymentMethodRequest = {
          * 
          * required if `directdebit.bank_code` is not `9900`(JP Bank)
          * 
-         * - `0`: Savings account (普通預金)
-         * - `1`: Current account (当座預金)
+         * - `1`: Savings account (普通預金)
+         * - `2`: Current account (当座預金)
          */
-        account_type?: "0" | "1" | null
+        account_type?: "1" | "2" | null
 
         /**
          * Account number
@@ -833,9 +976,11 @@ export type RetrievingPaymentMethodListQueryParams = {
     /**
      * Payment method type
      * 
+     * - `Card`: Card
      * - `Directdebit`: Direct Debit
+     * - `Virtualaccount`: Bank transfer (virtual account)
      */
-    pay_type: Extract<PayType, "Directdebit">
+    pay_type: PaymentMethodPayType
 }
 
 /**
@@ -845,25 +990,156 @@ export type RetrievingPaymentMethodQueryParams = {
     /**
      * Payment method type
      * 
+     * - `Card`: Card
      * - `Directdebit`: Direct Debit
+     * - `Virtualaccount`: Bank transfer (virtual account)
      */
-    pay_type: Extract<PayType, "Directdebit">
+    pay_type: PaymentMethodPayType
 }
 
 /**
- * Response object of Deleting Payment method (used for DELETE /v1/customers/{customer_id}/payment_methods/{id})
+ * Request Body of Updating Payment Method (used for PUT /v1/customers/{customer_id}/payment_methods/{id})
  */
-export type DeletingPaymentMethodResponse = {
+export type UpdatingPaymentMethodRequest = {
     /**
-     * Payment Method ID that has just been deleted.
+     * Payment method type
+     * 
+     * - `Card`: Card
+     * - `Virtualaccount`: Bank transfer (virtual account)
      */
-    id: string
+    pay_type: Extract<PaymentMethodPayType, "Card" | "Virtualaccount">
 
     /**
-     * Flag this card has already been deleted or not.
+     * Default flag
      * 
-     * - `0`: Not deleted. This customer is still available.
-     * - `1`: Deleted. This customer is no longer available.
+     * Only `"1"` is accepted, so this can make the payment method the default
+     * one but cannot undo it.
      */
-    delete_flag: "0" | "1"
+    default_flag: "1"
+
+    /**
+     * URL to redirect upon successful registration.
+     * 
+     * Only for `pay_type: "Card"`.
+     */
+    return_url?: string | null
+
+    /**
+     * URL to redirect upon registration failure.
+     * 
+     * Only for `pay_type: "Card"`.
+     */
+    return_url_on_failure?: string | null
+
+    /**
+     * Fields where merchants can freely set values
+     * 
+     * Only for `pay_type: "Card"`.
+     */
+    client_field_1?: string | null
+    client_field_2?: string | null
+    client_field_3?: string | null
+
+    /**
+     * Card information.
+     * 
+     * Only for `pay_type: "Card"`. The card number itself cannot be changed.
+     * Leave this out to update `default_flag` and `client_field_*` alone.
+     */
+    card?: {
+        /**
+         * Card token responded from fincodeJS (Fincode.tokens(...))
+         * 
+         * Updates the card details from the token. Leave it out to set
+         * `expire`, `holder_name` and `security_code` directly.
+         */
+        token?: string | null
+
+        /**
+         * The expiring date of the card.
+         * 
+         * Required when `token` is not given.
+         * 
+         * Format: `YYMM`
+         */
+        expire?: string | null
+
+        /**
+         * Holder name of the card.
+         * 
+         * Can only be given when `token` is not.
+         */
+        holder_name?: string | null
+
+        /**
+         * Security code (CVC/CVV)
+         * 
+         * Can only be given when `token` is not.
+         */
+        security_code?: string | null
+
+        /**
+         * Whether the card updater should keep this card's details up to date.
+         * 
+         * Only updated when given.
+         */
+        card_updater_mode?: CardUpdaterMode | null
+
+        /**
+         * Defines the behavior of 3D Secure 2 on this update.
+         * 
+         * Required when the card details (`token`, `holder_name`, `expire`
+         * and the like) are updated.
+         * 
+         * - `0`: Not use.
+         * - `2`: Use 3D Secure 2 Authentication
+         */
+        tds_type?: "0" | "2" | null
+
+        /**
+         * Defines the behavior when the card does not support 3D Secure 2.
+         * 
+         * - `2`: fincode API will return HTTP Error(400).
+         * - `3`: fincode API will continue without 3D Secure 2 authentication.
+         */
+        tds2_type?: "2" | "3" | null
+
+        /**
+         * The value will be used as your business name in redirect page of 3D Secure.
+         */
+        td_tenant_name?: string | null
+
+        /**
+         * URL the customer is returned to after 3D Secure 2 authentication.
+         */
+        tds2_ret_url?: string | null
+    } & ThreeDSecure2RequestFields
+}
+
+/**
+ * Request Body of Inactivating or Reactivating a Payment Method
+ * (used for PUT /v1/customers/{customer_id}/payment_methods/{id}/inactivate
+ * and PUT /v1/customers/{customer_id}/payment_methods/{id}/reactivate)
+ */
+export type SwitchingPaymentMethodStateRequest = {
+    /**
+     * Payment method type
+     * 
+     * - `Virtualaccount`: Bank transfer (virtual account)
+     */
+    pay_type: Extract<PaymentMethodPayType, "Virtualaccount">
+}
+
+/**
+ * Request Query Parameters of Deleting a Payment Method (used for DELETE /v1/customers/{customer_id}/payment_methods/{id})
+ */
+export type DeletingPaymentMethodQueryParams = {
+    /**
+     * Payment method type
+     * 
+     * - `Card`: Card
+     * - `Directdebit`: Direct Debit
+     * - `Virtualaccount`: Bank transfer (virtual account)
+     */
+    pay_type: PaymentMethodPayType
 }

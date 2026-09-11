@@ -13,14 +13,11 @@ import {
     Retrieving3DSecureAuthResponse,
     GeneratingKonbiniPaymentBarcodeRequest,
     RetrievingPaymentListQueryParams,
-    APIErrorResponse,
-    FincodeAPIError,
-    FincodeSDKError,
     PayType,
 } from "../../types/index"
 import { FincodeConfig } from "./fincode"
-import { createFincodeRequestFetch, FincodeRequestHeaders } from "./http"
-import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_errorMessages"
+import { FincodeRequestHeaders } from "./http"
+import { executeRequest } from "./_request"
 
 class Payment {
 
@@ -44,34 +41,9 @@ class Payment {
         body: CreatingPaymentRequest,
         headers?: FincodeRequestHeaders
     ): Promise<PaymentObject> {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "POST",
-                "/v1/payments",
-                JSON.stringify(body),
-                headers,
-                undefined,
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const payment = json as PaymentObject
-                        resolve(payment)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const err = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(err)
-                    }
-                }).catch((e: unknown) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e: unknown) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
+        return executeRequest<PaymentObject>(this._config, "POST", "/v1/payments", {
+            body: JSON.stringify(body),
+            headers,
         })
     }
 
@@ -91,34 +63,9 @@ class Payment {
         body: ExecutingPaymentRequest,
         headers?: FincodeRequestHeaders
     ): Promise<PaymentObject> {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "PUT",
-                `/v1/payments/${id}`,
-                JSON.stringify(body),
-                headers,
-                undefined,
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const payment = json as PaymentObject
-                        resolve(payment)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const err = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(err)
-                    }
-                }).catch((e: unknown) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e: unknown) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
+        return executeRequest<PaymentObject>(this._config, "PUT", `/v1/payments/${id}`, {
+            body: JSON.stringify(body),
+            headers,
         })
     }
 
@@ -136,34 +83,9 @@ class Payment {
         queryParams?: RetrievingPaymentListQueryParams,
         headers?: FincodeRequestHeaders
     ): Promise<ListResponse<PaymentObject>> {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "GET",
-                "/v1/payments",
-                undefined,
-                headers,
-                queryParams
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const list = json as ListResponse<PaymentObject>
-                        resolve(list)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const err = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(err)
-                    }
-                }).catch((e: unknown) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e: unknown) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
+        return executeRequest<ListResponse<PaymentObject>>(this._config, "GET", "/v1/payments", {
+            headers,
+            queryParams,
         })
     }
 
@@ -182,34 +104,9 @@ class Payment {
         queryParams: { pay_type: PayType },
         headers?: FincodeRequestHeaders
     ): Promise<PaymentObject> {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "GET",
-                `/v1/payments/${id}`,
-                undefined,
-                headers,
-                queryParams,
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const payment = json as PaymentObject
-                        resolve(payment)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const err = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(err)
-                    }
-                }).catch((e: unknown) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e: unknown) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
+        return executeRequest<PaymentObject>(this._config, "GET", `/v1/payments/${id}`, {
+            headers,
+            queryParams,
         })
     }
 
@@ -228,34 +125,9 @@ class Payment {
         body: CapturingPaymentRequest,
         headers?: FincodeRequestHeaders
     ): Promise<PaymentObject> {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "PUT",
-                `/v1/payments/${id}/capture`,
-                JSON.stringify(body),
-                headers,
-                undefined,
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const payment = json as PaymentObject
-                        resolve(payment)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const err = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(err)
-                    }
-                }).catch((e: unknown) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e: unknown) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
+        return executeRequest<PaymentObject>(this._config, "PUT", `/v1/payments/${id}/capture`, {
+            body: JSON.stringify(body),
+            headers,
         })
     }
 
@@ -275,34 +147,9 @@ class Payment {
         body: CancelingPaymentRequest,
         headers?: FincodeRequestHeaders
     ): Promise<PaymentObject> {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "PUT",
-                `/v1/payments/${id}/cancel`,
-                JSON.stringify(body),
-                headers,
-                undefined,
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const payment = json as PaymentObject
-                        resolve(payment)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const err = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(err)
-                    }
-                }).catch((e: unknown) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e: unknown) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
+        return executeRequest<PaymentObject>(this._config, "PUT", `/v1/payments/${id}/cancel`, {
+            body: JSON.stringify(body),
+            headers,
         })
     }
 
@@ -322,34 +169,9 @@ class Payment {
         body: ReauthorizingPaymentRequest,
         headers?: FincodeRequestHeaders
     ): Promise<PaymentObject> {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "PUT",
-                `/v1/payments/${id}/auth`,
-                JSON.stringify(body),
-                headers,
-                undefined,
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const payment = json as PaymentObject
-                        resolve(payment)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const err = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(err)
-                    }
-                }).catch((e: unknown) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e: unknown) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
+        return executeRequest<PaymentObject>(this._config, "PUT", `/v1/payments/${id}/auth`, {
+            body: JSON.stringify(body),
+            headers,
         })
     }
 
@@ -369,34 +191,9 @@ class Payment {
         body: ChangingPaymentAmountRequest,
         headers?: FincodeRequestHeaders,
     ): Promise<PaymentObject> {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "PUT",
-                `/v1/payments/${id}/change`,
-                JSON.stringify(body),
-                headers,
-                undefined,
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const payment = json as PaymentObject
-                        resolve(payment)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const err = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(err)
-                    }
-                }).catch((e: unknown) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e: unknown) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
+        return executeRequest<PaymentObject>(this._config, "PUT", `/v1/payments/${id}/change`, {
+            body: JSON.stringify(body),
+            headers,
         })
     }
 
@@ -417,34 +214,9 @@ class Payment {
         body: ExecutingPaymentAfter3DSecureRequest,
         headers?: FincodeRequestHeaders,
     ): Promise<PaymentObject> {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "PUT",
-                `/v1/payments/${id}/secure`,
-                JSON.stringify(body),
-                headers,
-                undefined,
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const payment = json as PaymentObject
-                        resolve(payment)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const err = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(err)
-                    }
-                }).catch((e: unknown) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e: unknown) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
+        return executeRequest<PaymentObject>(this._config, "PUT", `/v1/payments/${id}/secure`, {
+            body: JSON.stringify(body),
+            headers,
         })
     }
 
@@ -464,34 +236,9 @@ class Payment {
         body: Executing3DSecureAuthRequest,
         headers?: FincodeRequestHeaders,
     ): Promise<Executing3DSecureAuthResponse> {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "PUT",
-                `/v1/secure2/${accessId}`,
-                JSON.stringify(body),
-                headers,
-                undefined,
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const auth = json as Executing3DSecureAuthResponse
-                        resolve(auth)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const err = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(err)
-                    }
-                }).catch((e: unknown) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e: unknown) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
+        return executeRequest<Executing3DSecureAuthResponse>(this._config, "PUT", `/v1/secure2/${accessId}`, {
+            body: JSON.stringify(body),
+            headers,
         })
     }
 
@@ -503,40 +250,14 @@ class Payment {
      * @param {string} accessId - access id
      * @param {FincodeRequestHeaders} [headers] - request header
      * 
-     * @returns {Promise<Retrieving3DSecureAuthResultResponse>} - retrieved 3D Secure authentication result
+     * @returns {Promise<Retrieving3DSecureAuthResponse>} - retrieved 3D Secure authentication result
      */
     public retrieve3DSecureAuthResult(
         accessId: string,
         headers?: FincodeRequestHeaders,
     ): Promise<Retrieving3DSecureAuthResponse> {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "GET",
-                `/v1/secure2/${accessId}`,
-                undefined,
-                headers,
-                undefined,
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const auth = json as Retrieving3DSecureAuthResponse
-                        resolve(auth)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const err = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(err)
-                    }
-                }).catch((e: unknown) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e: unknown) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
+        return executeRequest<Retrieving3DSecureAuthResponse>(this._config, "GET", `/v1/secure2/${accessId}`, {
+            headers,
         })
     }
 
@@ -556,34 +277,9 @@ class Payment {
         body: GeneratingKonbiniPaymentBarcodeRequest,
         headers?: FincodeRequestHeaders,
     ): Promise<PaymentObject> {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "PUT",
-                `/v1/payments/${id}/barcode`,
-                JSON.stringify(body),
-                headers,
-                undefined,
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const payment = json as PaymentObject
-                        resolve(payment)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const err = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(err)
-                    }
-                }).catch((e: unknown) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e: unknown) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
+        return executeRequest<PaymentObject>(this._config, "PUT", `/v1/payments/${id}/barcode`, {
+            body: JSON.stringify(body),
+            headers,
         })
     }
 }

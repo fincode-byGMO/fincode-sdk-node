@@ -337,7 +337,7 @@ export type UpdatingTenantRequest = {
      * - `jad`: JCB/American Express/Diners
      * - `konbini`: Konbini
      */
-    id?: Shop.ExaminationMaster | null
+    examination_master_id?: Shop.ExaminationMaster | null
 
     /**
      * Platform rate
@@ -368,7 +368,10 @@ export type RequestingExaminationRequest = {
     shop_id: string
 
     /**
-     * Challange to use VISA / Mastercard immediately 
+     * Whether to request immediate use of VISA / Mastercard.
+     * 
+     * Immediate use cannot be requested when the shop's site is not published
+     * yet, or when the shop deals in content that takes longer to examine.
      */
     enable_immediate_use: boolean
 }
@@ -383,13 +386,16 @@ export type RequestingExaminationResponse = {
     shop_id: string
 
     /**
-     * Result of challange to use VISA / Mastercard immediately
+     * Application status.
      * 
-     * - `1`: Success
-     * - `2`: Failure
-     * - `3`: Pending
+     * - `1`: OK. The application is complete and will be examined.
+     *   If `enable_immediate_use` was `true`, immediate use is granted and
+     *   VISA / Mastercard payments can be accepted.
+     * - `2`: NG. Use of fincode was not approved.
+     * - `3`: Pending. Immediate use was not granted. The application is
+     *   complete and examination continues.
      */
-    enable_immediate_use: 1 | 2 | 3
+    status_code: 1 | 2 | 3
 }
 
 /**
@@ -419,13 +425,10 @@ export type UpdatingExaminationInfoRequest = {
     /**
      * Deposit cycle master ID
      * 
-     * - `1`: 1 time closing per month  with payment on the last day of the following month
-     * - `2`: 2 times closing per month with payment 15 days after each closing
-     * - `3`: 3 times closing per month with payment 10 days after each closing (required to contact fincode support)
-     * - `4`: 6 times closing per month with payment 5 days after each closing (required to contact fincode support)
-     * - `5`: Daily closing with payment 3 business days after each closing (required to contact fincode support)
+     * - `1`: Closed at the end of the month, paid at the end of the following month.
+     * - `2`: Closed on the 15th and the last day of the month, paid 15 days after each closing.
      */
-    deoisut_cycle_master_id?: Shop.DepositCycleMasterId | null
+    deposit_cycle_master_id?: Shop.DepositCycleMasterId | null
 
     /**
      * Contract detail
@@ -440,7 +443,7 @@ export type UpdatingExaminationInfoRequest = {
     /**
      * Bank account
      */
-    bank_account?: Partial<Contract.ContractBankAccount> | null
+    contract_bank_account?: Partial<Contract.ContractBankAccount> | null
 }
 
 /**
@@ -482,11 +485,8 @@ export type ExaminationInfo = {
     /**
      * Deposit cycle master ID
      * 
-     * - `1`: 1 time closing per month  with payment on the last day of the following month
-     * - `2`: 2 times closing per month with payment 15 days after each closing
-     * - `3`: 3 times closing per month with payment 10 days after each closing (required to contact fincode support)
-     * - `4`: 6 times closing per month with payment 5 days after each closing (required to contact fincode support)
-     * - `5`: Daily closing with payment 3 business days after each closing (required to contact fincode support)
+     * - `1`: Closed at the end of the month, paid at the end of the following month.
+     * - `2`: Closed on the 15th and the last day of the month, paid 15 days after each closing.
      */
     deposit_cycle_master_id: Shop.DepositCycleMasterId
 
@@ -558,7 +558,7 @@ export type UpdatingExaminationInfoRequest_V2 = {
     /**
      * Bank account information
      */
-    bank_account_info?: Partial<Contract.ContractBankAccount> | null
+    bank_account_info?: Contract.BankAccountInformation_V2 | null
 
     /**
      * Deposit cycle information
@@ -567,11 +567,8 @@ export type UpdatingExaminationInfoRequest_V2 = {
         /**
          * Deposit cycle master ID
          * 
-         * - `1`: 1 time closing per month  with payment on the last day of the following month
-         * - `2`: 2 times closing per month with payment 15 days after each closing
-         * - `3`: 3 times closing per month with payment 10 days after each closing (required to contact fincode support)
-         * - `4`: 6 times closing per month with payment 5 days after each closing (required to contact fincode support)
-         * - `5`: Daily closing with payment 3 business days after each closing (required to contact fincode support)
+         * - `1`: Closed at the end of the month, paid at the end of the following month.
+         * - `2`: Closed on the 15th and the last day of the month, paid 15 days after each closing.
          */
         deposit_cycle_master_id?: Shop.DepositCycleMasterId | null
     }> | null
@@ -613,11 +610,8 @@ export type ExaminationInfo_V2 = {
         /**
          * Deposit cycle master ID
          * 
-         * - `1`: 1 time closing per month  with payment on the last day of the following month
-         * - `2`: 2 times closing per month with payment 15 days after each closing
-         * - `3`: 3 times closing per month with payment 10 days after each closing (required to contact fincode support)
-         * - `4`: 6 times closing per month with payment 5 days after each closing (required to contact fincode support)
-         * - `5`: Daily closing with payment 3 business days after each closing (required to contact fincode support)
+         * - `1`: Closed at the end of the month, paid at the end of the following month.
+         * - `2`: Closed on the 15th and the last day of the month, paid 15 days after each closing.
          */
         deposit_cycle_master_id: Shop.DepositCycleMasterId
     }

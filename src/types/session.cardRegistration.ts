@@ -117,7 +117,7 @@ export type CreatingCardRegistrationSessionRequest = {
      * - Max: 30 days.
      * - Min: 5 minutes.
      */
-    expire: string | null
+    expire?: string | null
 
     /**
      * Shop service name displayed on the registration page.

@@ -1,8 +1,16 @@
 export * from "./bulk.payment"
 export * from "./card"
+export * from "./changeRequest"
+export * from "./companyStamp"
+export * from "./chargeback"
 export * from "./customer"
 export * from "./fincode"
-export * from "./http"
+export * from "./invoice"
+// http.ts holds the transport: the fetch builder, the query-string builder
+// and the failure classifier. Exporting all of it made undici's own types
+// part of this package's public surface. Only the header type appears in the
+// resource method signatures, so only that is exported.
+export type { FincodeRequestHeaders } from "./http"
 export * from "./payment"
 export * from "./plan"
 export * from "./platform"

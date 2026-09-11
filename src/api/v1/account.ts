@@ -1,15 +1,14 @@
 import {
     ListResponse,
     AccountObject,
+    AccountListItemObject,
     AccountDetailObject,
     RetrievingAccountListQueryParams,
-    APIErrorResponse,
-    FincodeAPIError,
-    FincodeSDKError,
+    RetrievingAccountDetailListQueryParams,
 } from "../../types/index"
 import { FincodeConfig } from "./fincode"
-import { createFincodeRequestFetch, FincodeRequestHeaders } from "./http"
-import { getFetchErrorMessage, getResponseJSONParseErrorMessage } from "./_errorMessages"
+import { FincodeRequestHeaders } from "./http"
+import { executeRequest } from "./_request"
 
 class Account {
 
@@ -22,44 +21,20 @@ class Account {
     /**
      * **Retrieve account list **
      * 
-     * corresponds to `POST /v1/accounts`
+     * corresponds to `GET /v1/accounts`
      * 
      * @param {RetrievingAccountListQueryParams} [queryParams] - query parameters
      * @param {FincodeRequestHeaders} [headers] - request header
      * 
-     * @returns {Promise<ListResponse<AccountObject>>} - account object list
+     * @returns {Promise<ListResponse<AccountListItemObject>>} - account object list
     */
     public retrieveList(
         queryParams?: RetrievingAccountListQueryParams,
         headers?: FincodeRequestHeaders,
-    ): Promise<ListResponse<AccountObject>> {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "GET",
-                "/v1/accounts",
-                undefined,
-                headers,
-                queryParams,
-            )
-
-            fetch().then((res) => {
-                res.json().then((json: ListResponse<AccountObject>) => {
-                    if (res.ok) {
-                        resolve(json)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(e)
-                    }
-                }).catch((e: unknown) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e: unknown) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
+    ): Promise<ListResponse<AccountListItemObject>> {
+        return executeRequest<ListResponse<AccountListItemObject>>(this._config, "GET", "/v1/accounts", {
+            headers,
+            queryParams,
         })
     }
 
@@ -77,34 +52,8 @@ class Account {
         id: string,
         headers?: FincodeRequestHeaders,
     ): Promise<AccountObject> {
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "GET",
-                `/v1/accounts/${id}`,
-                undefined,
-                headers,
-                undefined,
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const platformAccount = json as AccountObject
-                        resolve(platformAccount)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(e)
-                    }
-                }).catch((e: unknown) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e: unknown) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
+        return executeRequest<AccountObject>(this._config, "GET", `/v1/accounts/${id}`, {
+            headers,
         })
     }
 
@@ -114,44 +63,20 @@ class Account {
      * corresponds to `GET /v1/accounts/:id/detail`
      * 
      * @param {string} id - account ID
+     * @param {RetrievingAccountDetailListQueryParams} [queryParams] - query parameters
      * @param {FincodeRequestHeaders} [headers] - request headers
      * 
-     * @returns {Promise<AccountObject>} - account object
+     * @returns {Promise<ListResponse<AccountDetailObject>>} - account detail object list
      */
 
     public retrieveDetailList(
         id: string,
+        queryParams?: RetrievingAccountDetailListQueryParams,
         headers?: FincodeRequestHeaders,
     ): Promise<ListResponse<AccountDetailObject>> {
-
-        return new Promise((resolve, reject) => {
-            const fetch = createFincodeRequestFetch(
-                this._config,
-                "GET",
-                `/v1/accounts/${id}/detail`,
-                undefined,
-                headers,
-                undefined,
-            )
-
-            fetch().then((res) => {
-                res.json().then((json) => {
-                    if (res.ok) {
-                        const list = json as ListResponse<AccountDetailObject>
-                        resolve(list)
-                    } else {
-                        const errRes = json as APIErrorResponse
-                        const e = new FincodeAPIError(errRes.errors, res.status, !!errRes.message)
-                        reject(e)
-                    }
-                }).catch((e: unknown) => {
-                    const err = new FincodeSDKError(getResponseJSONParseErrorMessage(), e)
-                    reject(err)
-                })
-            }).catch((e: unknown) => {
-                const err = new FincodeSDKError(getFetchErrorMessage(), e)
-                reject(err)
-            })
+        return executeRequest<ListResponse<AccountDetailObject>>(this._config, "GET", `/v1/accounts/${id}/detail`, {
+            headers,
+            queryParams,
         })
     }
 }
