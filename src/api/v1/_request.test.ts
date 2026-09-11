@@ -10,7 +10,7 @@ jest.mock("./http", () => ({
 }))
 
 const config: FincodeConfig = {
-    isLiveMode: false,
+    baseUrl: "https://api.test.fincode.jp",
     getApiKey: () => "m_test_dummy",
     options: {},
 }

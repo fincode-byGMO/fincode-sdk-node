@@ -107,7 +107,7 @@ NO_PROXY=api.fincode.jp,api.test.fincode.jp
 ```ts
 const fincode = createFincode({
     apiKey: "...",
-    isLiveMode: true,
+    environment: "prod",
     options: { timeout: 120000 },  // 2分
 })
 ```
@@ -627,3 +627,55 @@ const va = await fincode.paymentBulks.retrieveDetailList(id, { pay_type: "Virtua
 
 一覧から読んだ `pay_type` のように値が確定しない場合は、両方の共用体が返ります。
 共通の9項目は分岐なしで読めます。
+
+---
+
+## 17. 接続先の指定
+
+`isLiveMode` に代わって `environment` を追加しました。`"test"` と `"prod"` を取り、
+省略すると `"test"` になります。APIキーの接頭辞（`m_test_` / `m_prod_`）と同じ語です。
+
+```ts
+// v1
+createFincode({ apiKey: "...", isLiveMode: true })
+
+// v2
+createFincode({ apiKey: "...", environment: "prod" })
+```
+
+`isLiveMode` も引き続き使えます。`@deprecated` を付けてあるので、エディタ上では
+取り消し線で表示されます。両方を指定した場合は `environment` が優先されます。
+
+### FincodeConfig の isLiveMode
+
+`FincodeConfig` の `isLiveMode` が `baseUrl` に変わりました。実際に使う接続先が
+文字列で入ります。
+
+```ts
+fincode.config.isLiveMode   // v1: boolean
+fincode.config.baseUrl      // v2: "https://api.fincode.jp"
+```
+
+`createFincode` に `apiKey` と `environment` を渡す通常の使い方には影響しません。
+`FincodeConfig` を自分で組み立てていた場合や、`config.isLiveMode` を読んでいた場合は
+修正が必要です。
+
+### 接続先をURLで指定する
+
+`options.baseUrl` を追加しました。テストでモックサーバーへ向ける場合などに
+使います。
+
+```ts
+createFincode({
+    apiKey: "...",
+    options: { baseUrl: "https://api.example.com" },
+})
+```
+
+`https` 以外のURLと、資格情報を含むURL（`https://user:pw@host`）は受け付けません。
+シークレットキーはリクエストごとに `Authorization` ヘッダーへ載るため、この値が
+キーの送信先になります。外部から渡された値をそのまま指定しないでください。
+
+`environment` や `isLiveMode` との同時指定はエラーになります。URLで指定する場合は
+`environment` を外してください。消し忘れた `baseUrl` が `environment` を上書きして
+しまうと、設定と実際の送信先が食い違ったまま気づけません。

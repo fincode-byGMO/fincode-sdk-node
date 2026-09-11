@@ -5,9 +5,6 @@ import { FincodeSDKErrorKind } from "../../types/index"
 import { createFincodeRequestHeader } from "../../types/http"
 import { Sort } from "./../../types/index"
 
-const BASE_URL = "https://api.fincode.jp"
-const BASE_URL_TEST = "https://api.test.fincode.jp"
-
 /**
  * Timeout applied when `options.timeout` is not set, in milliseconds.
  * 
@@ -96,7 +93,7 @@ const createFincodeRequestURL = (
     }
 ): string => {
 
-    const baseUrl = config.isLiveMode ? BASE_URL : BASE_URL_TEST
+    const baseUrl = config.baseUrl
 
     const queryStr = queryParams ? `?${buildQueryString(queryParams)}` : ""
 

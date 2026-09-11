@@ -16,9 +16,6 @@ v2.0.0 では型定義をfincode APIの実際の挙動に合わせ直しまし�
 
 ```bash
 $ npm i @fincode/node
-
-# yarnやpnpmなど、npmと互換のあるパッケージ管理システムによるインストールも可能です。
-$ yarn add @fincode/node
 ```
 
 ## Usage
@@ -28,10 +25,7 @@ $ yarn add @fincode/node
 
 APIキーは**シークレットキー**である必要があります。
 
-### 2. パッケージマネージャーからインストール
-Getting Startedの手順に従い `@fincode/node` をプロジェクトにインストールします。
-
-### 3. fincodeインスタンスの作成
+### 2. fincodeインスタンスの作成
 
 `createFincode`メソッドを呼び出し、fincodeインスタンスを作成します。
 
@@ -40,7 +34,7 @@ import { createFincode } from "@fincode/node"
 
 const fincode = createFincode({
     apiKey: "m_****_**********", // Secret key
-    isLiveMode: true,  // fincode Environment. true: Live mode, false: Test mode. default: false
+    environment: "prod", // "test" or "prod". default: "test"
     
     // Optional,
     options: {   
@@ -87,6 +81,33 @@ const fincode = createFincode({
 })()
 
 ```
+
+### 3. 接続先の指定
+
+`environment` に `"test"` または `"prod"` を指定します。省略すると `"test"` です。
+APIキーの接頭辞（`m_test_` / `m_prod_`）と同じ語です。
+
+| `environment` | 接続先                        |
+| :--           | :--                           |
+| `"test"`      | `https://api.test.fincode.jp` |
+| `"prod"`      | `https://api.fincode.jp`      |
+
+接続先をURLで直接指定する場合は `options.baseUrl` を使います。`environment` との
+同時指定はエラーになります。
+
+```typescript
+const fincode = createFincode({
+    apiKey: "m_****_**********",
+    options: { baseUrl: "https://api.example.com" },
+})
+```
+
+`https` 以外のURLと、資格情報を含むURL（`https://user:pw@host`）は受け付けません。
+シークレットキーの送信先になるため、外部から渡された値を
+そのまま指定しないでください。
+
+`isLiveMode` も引き続き使えますが非推奨です。両方指定した場合は `environment` が
+優先されます。
 
 ## Call fincode API
 
