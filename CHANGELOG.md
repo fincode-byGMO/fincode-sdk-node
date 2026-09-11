@@ -220,6 +220,11 @@ HTTPクライアントを node-fetch から undici に置き換えました。`n
 68メソッドが持っていた同一の定型処理を共通の1箇所にまとめました。公開型は
 変わりません。
 
+決済手段のカード情報に2項目を追加しました。実APIが返すのに型にありませんでした。
+
+- `tds2_ret_url`
+- `error_code`
+
 `PaymentMethodObject` に `virtualaccount` ブロックを追加し、`pay_type` の値域に
 `Virtualaccount` を加えました。あわせて `PaymentSessionObject.transaction.pay_type`
 にも `Virtualaccount` を加えています。

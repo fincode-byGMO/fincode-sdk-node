@@ -209,6 +209,11 @@ type PaymentMethodCard = {
     tds2_status?: ThreeDSecure2Status | null
 
     /**
+     * URL the customer returns to after the 3D Secure 2 authentication.
+     */
+    tds2_ret_url?: string | null
+
+    /**
      * Merchant name that will be displayed on the 3D Secure 2 authentication screen.
      */
     merchant_name?: string | null
@@ -221,6 +226,11 @@ type PaymentMethodCard = {
     /**
      * Whether the ACS was called during 3D Secure authentication.
      */
+    /**
+     * Error code of the 3D Secure 2 authentication.
+     */
+    error_code?: string | null
+
     acs?: string | null
 
     /**
